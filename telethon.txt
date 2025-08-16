@@ -1,0 +1,1472 @@
+RPC Errors
+RPC stands for Remote Procedure Call, and when the library raises a RPCError, it’s because you have invoked some of the API methods incorrectly (wrong parameters, wrong permissions, or even something went wrong on Telegram’s server).
+
+You should import the errors from telethon.errors like so:
+
+from telethon import errors
+
+try:
+    async with client.takeout() as takeout:
+        ...
+
+except errors.TakeoutInitDelayError as e:
+    #  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ here we except TAKEOUT_INIT_DELAY
+    print('Must wait', e.seconds, 'before takeout')
+There isn’t any official list of all possible RPC errors, so the list of known errors is provided on a best-effort basis. When new methods are available, the list may be lacking since we simply don’t know what errors can raise from them.
+
+Once we do find out about a new error and what causes it, the list is updated, so if you see an error without a specific class, do report it (and what method caused it)!.
+
+This list is used to generate documentation for the raw API page. For example, if we want to know what errors can occur from messages.sendMessage we can simply navigate to its raw API page and find it has 24 known RPC errors at the time of writing.
+
+Base Errors
+All the “base” errors are listed in API Errors. Any other more specific error will be a subclass of these.
+
+If the library isn’t aware of a specific error just yet, it will instead raise one of these superclasses. This means you may find stuff like this:
+
+telethon.errors.rpcbaseerrors.BadRequestError: RPCError 400: MESSAGE_POLL_CLOSED (caused by SendVoteRequest)
+If you do, make sure to open an issue or send a pull request to update the list of known errors.
+
+Common Errors
+These are some of the errors you may normally need to deal with:
+
+FloodWaitError (420), the same request was repeated many times. Must wait .seconds (you can access this attribute). For example:
+
+...
+from telethon import errors
+
+try:
+    messages = await client.get_messages(chat)
+    print(messages[0].text)
+except errors.FloodWaitError as e:
+    print('Have to sleep', e.seconds, 'seconds')
+    time.sleep(e.seconds)
+SessionPasswordNeededError, if you have setup two-steps verification on Telegram and are trying to sign in.
+
+FilePartMissingError, if you have tried to upload an empty file.
+
+ChatAdminRequiredError, you don’t have permissions to perform said operation on a chat or channel. Try avoiding filters, i.e. when searching messages.
+
+The generic classes for different error codes are:
+
+InvalidDCError (303), the request must be repeated on another DC.
+
+BadRequestError (400), the request contained errors.
+
+UnauthorizedError (401), the user is not authorized yet.
+
+ForbiddenError (403), privacy violation error.
+
+NotFoundError (404), make sure you’re invoking Request‘s!
+
+If the error is not recognised, it will only be an RPCError.
+
+You can refer to all errors from Python through the telethon.errors module. If you don’t know what attributes they have, try printing their dir (like print(dir(e))).
+
+Attributes
+Some of the errors carry additional data in them. When they look like EMAIL_UNCONFIRMED_X, the _X value will be accessible from the error instance. The current list of errors that do this is the following:
+
+EmailUnconfirmedError has .code_length.
+
+FileMigrateError has .new_dc.
+
+FilePartMissingError has .which.
+
+FloodTestPhoneWaitError has .seconds.
+
+FloodWaitError has .seconds.
+
+InterdcCallErrorError has .dc.
+
+InterdcCallRichErrorError has .dc.
+
+NetworkMigrateError has .new_dc.
+
+PhoneMigrateError has .new_dc.
+
+SlowModeWaitError has .seconds.
+
+TakeoutInitDelayError has .seconds.
+
+UserMigrateError has .new_dc.
+
+Avoiding Limits
+Don’t spam. You won’t get FloodWaitError or your account banned or deleted if you use the library for legit use cases. Make cool tools. Don’t spam! Nobody knows the exact limits for all requests since they depend on a lot of factors, so don’t bother asking.
+
+Still, if you do have a legit use case and still get those errors, the library will automatically sleep when they are smaller than 60 seconds by default. You can set different “auto-sleep” thresholds:
+
+client.flood_sleep_threshold = 0  # Don't auto-sleep
+client.flood_sleep_threshold = 24 * 60 * 60  # Sleep always
+You can also except it and act as you prefer:
+
+from telethon.errors import FloodWaitError
+try:
+    ...
+except FloodWaitError as e:
+    print('Flood waited for', e.seconds)
+    quit(1)
+VoIP numbers are very limited, and some countries are more limited too.
+
+
+
+
+
+
+Client Reference
+This page contains a summary of all the important methods and properties that you may need when using Telethon. They are sorted by relevance and are not in alphabetical order.
+
+You should use this page to learn about which methods are available, and if you need a usage example or further description of the arguments, be sure to follow the links.
+
+Contents
+
+Client Reference
+
+TelegramClient
+
+Auth
+
+Base
+
+Messages
+
+Uploads
+
+Downloads
+
+Dialogs
+
+Users
+
+Chats
+
+Parse Mode
+
+Updates
+
+Bots
+
+Buttons
+
+Account
+
+TelegramClient
+This is a summary of the methods and properties you will find at TelegramClient.
+
+Auth
+start
+
+Starts the client (connects and logs in if necessary).
+
+send_code_request
+
+Sends the Telegram code needed to login to the given phone number.
+
+sign_in
+
+Logs in to Telegram to an existing user or bot account.
+
+qr_login
+
+Initiates the QR login procedure.
+
+log_out
+
+Logs out Telegram and deletes the current *.session file.
+
+edit_2fa
+
+Changes the 2FA settings of the logged in user.
+
+Base
+connect
+
+Connects to Telegram.
+
+disconnect
+
+Disconnects from Telegram.
+
+is_connected
+
+Returns True if the user has connected.
+
+disconnected
+
+Property with a Future that resolves upon disconnection.
+
+loop
+
+Property with the asyncio event loop used by this client.
+
+set_proxy
+
+Changes the proxy which will be used on next (re)connection.
+
+Messages
+send_message
+
+Sends a message to the specified user, chat or channel.
+
+edit_message
+
+Edits the given message to change its text or media.
+
+delete_messages
+
+Deletes the given messages, optionally "for everyone".
+
+forward_messages
+
+Forwards the given messages to the specified entity.
+
+iter_messages
+
+Iterator over the messages for the given chat.
+
+get_messages
+
+Same as iter_messages(), but returns a TotalList instead.
+
+pin_message
+
+Pins a message in a chat.
+
+unpin_message
+
+Unpins a message in a chat.
+
+send_read_acknowledge
+
+Marks messages as read and optionally clears mentions.
+
+Uploads
+send_file
+
+Sends message with the given file to the specified entity.
+
+upload_file
+
+Uploads a file to Telegram's servers, without sending it.
+
+Downloads
+download_media
+
+Downloads the given media from a message object.
+
+download_profile_photo
+
+Downloads the profile photo from the given user, chat or channel.
+
+download_file
+
+Low-level method to download files from their input location.
+
+iter_download
+
+Iterates over a file download, yielding chunks of the file.
+
+Dialogs
+iter_dialogs
+
+Iterator over the dialogs (open conversations/subscribed channels).
+
+get_dialogs
+
+Same as iter_dialogs(), but returns a TotalList instead.
+
+edit_folder
+
+Edits the folder used by one or more dialogs to archive them.
+
+iter_drafts
+
+Iterator over draft messages.
+
+get_drafts
+
+Same as iter_drafts(), but returns a list instead.
+
+delete_dialog
+
+Deletes a dialog (leaves a chat or channel).
+
+conversation
+
+Creates a Conversation with the given entity.
+
+Users
+get_me
+
+Gets "me", the current User who is logged in.
+
+is_bot
+
+Return True if the signed-in user is a bot, False otherwise.
+
+is_user_authorized
+
+Returns True if the user is authorized (logged in).
+
+get_entity
+
+Turns the given entity into a valid Telegram User, Chat or Channel.
+
+get_input_entity
+
+Turns the given entity into its input entity version.
+
+get_peer_id
+
+Gets the ID for the given entity.
+
+Chats
+iter_participants
+
+Iterator over the participants belonging to the specified chat.
+
+get_participants
+
+Same as iter_participants(), but returns a TotalList instead.
+
+kick_participant
+
+Kicks a user from a chat.
+
+iter_admin_log
+
+Iterator over the admin log for the specified channel.
+
+get_admin_log
+
+Same as iter_admin_log(), but returns a list instead.
+
+iter_profile_photos
+
+Iterator over a user's profile photos or a chat's photos.
+
+get_profile_photos
+
+Same as iter_profile_photos(), but returns a TotalList instead.
+
+edit_admin
+
+Edits admin permissions for someone in a chat.
+
+edit_permissions
+
+Edits user restrictions in a chat.
+
+get_permissions
+
+Fetches the permissions of a user in a specific chat or channel or get Default Restricted Rights of Chat or Channel.
+
+get_stats
+
+Retrieves statistics from the given megagroup or broadcast channel.
+
+action
+
+Returns a context-manager object to represent a "chat action".
+
+Parse Mode
+parse_mode
+
+This property is the default parse mode used when sending messages.
+
+Updates
+on
+
+Decorator used to add_event_handler more conveniently.
+
+run_until_disconnected
+
+Runs the event loop until the library is disconnected.
+
+add_event_handler
+
+Registers a new event handler callback.
+
+remove_event_handler
+
+Inverse operation of add_event_handler().
+
+list_event_handlers
+
+Lists all registered event handlers.
+
+catch_up
+
+"Catches up" on the missed updates while the client was offline.
+
+set_receive_updates
+
+Change the value of receive_updates.
+
+Bots
+inline_query
+
+Makes an inline query to the specified bot (@vote New Poll).
+
+Buttons
+build_reply_markup
+
+Builds a ReplyInlineMarkup or ReplyKeyboardMarkup for the given buttons.
+
+Account
+takeout
+
+Returns a TelegramClient which calls methods behind a takeout session.
+
+end_takeout
+
+Finishes the current takeout session.
+
+
+Events Reference
+Here you will find a quick summary of all the methods and properties that you can access when working with events.
+
+You can access the client that creates this event by doing event.client, and you should view the description of the events to find out what arguments it allows on creation and its attributes (the properties will be shown here).
+
+Important
+
+Remember that all events base ChatGetter! Please see FAQ if you don’t know what this means or the implications of it.
+
+Contents
+
+Events Reference
+
+NewMessage
+
+MessageEdited
+
+MessageDeleted
+
+MessageRead
+
+ChatAction
+
+UserUpdate
+
+CallbackQuery
+
+InlineQuery
+
+Album
+
+Raw
+
+NewMessage
+Occurs whenever a new text message or a message with media arrives.
+
+Note
+
+The new message event should be treated as a normal Message, with the following exceptions:
+
+pattern_match is the match object returned by pattern=.
+
+message is not the message string. It’s the Message object.
+
+Remember, this event is just a proxy over the message, so while you won’t see its attributes and properties, you can still access them. Please see the full documentation for examples.
+
+Full documentation for the NewMessage.
+
+MessageEdited
+Occurs whenever a message is edited. Just like NewMessage, you should treat this event as a Message.
+
+Full documentation for the MessageEdited.
+
+MessageDeleted
+Occurs whenever a message is deleted. Note that this event isn’t 100% reliable, since Telegram doesn’t always notify the clients that a message was deleted.
+
+It only has the deleted_id and deleted_ids attributes (in addition to the chat if the deletion happened in a channel).
+
+Full documentation for the MessageDeleted.
+
+MessageRead
+Occurs whenever one or more messages are read in a chat.
+
+Full documentation for the MessageRead.
+
+inbox
+
+True if you have read someone else's messages.
+
+message_ids
+
+The IDs of the messages which contents' were read.
+
+get_messages
+
+Returns the list of Message which contents' were read.
+
+is_read
+
+Returns True if the given message (or its ID) has been read.
+
+ChatAction
+Occurs on certain chat actions, such as chat title changes, user join or leaves, pinned messages, photo changes, etc.
+
+Full documentation for the ChatAction.
+
+added_by
+
+The user who added users, if applicable (None otherwise).
+
+kicked_by
+
+The user who kicked users, if applicable (None otherwise).
+
+user
+
+The first user that takes part in this action.
+
+input_user
+
+Input version of the self.user property.
+
+user_id
+
+Returns the marked signed ID of the first user, if any.
+
+users
+
+A list of users that take part in this action.
+
+input_users
+
+Input version of the self.users property.
+
+user_ids
+
+Returns the marked signed ID of the users, if any.
+
+respond
+
+Responds to the chat action message (not as a reply).
+
+reply
+
+Replies to the chat action message (as a reply).
+
+delete
+
+Deletes the chat action message.
+
+get_pinned_message
+
+If new_pin is True, this returns the Message object that was pinned.
+
+get_added_by
+
+Returns added_by but will make an API call if necessary.
+
+get_kicked_by
+
+Returns kicked_by but will make an API call if necessary.
+
+get_user
+
+Returns user but will make an API call if necessary.
+
+get_input_user
+
+Returns input_user but will make an API call if necessary.
+
+get_users
+
+Returns users but will make an API call if necessary.
+
+get_input_users
+
+Returns input_users but will make an API call if necessary.
+
+UserUpdate
+Occurs whenever a user goes online, starts typing, etc.
+
+Full documentation for the UserUpdate.
+
+user
+
+Alias for sender.
+
+input_user
+
+Alias for input_sender.
+
+user_id
+
+Alias for sender_id.
+
+get_user
+
+Alias for get_sender.
+
+get_input_user
+
+Alias for get_input_sender.
+
+typing
+
+True if the action is typing a message.
+
+uploading
+
+True if the action is uploading something.
+
+recording
+
+True if the action is recording something.
+
+playing
+
+True if the action is playing a game.
+
+cancel
+
+True if the action was cancelling other actions.
+
+geo
+
+True if what's being uploaded is a geo.
+
+audio
+
+True if what's being recorded/uploaded is an audio.
+
+round
+
+True if what's being recorded/uploaded is a round video.
+
+video
+
+True if what's being recorded/uploaded is an video.
+
+contact
+
+True if what's being uploaded (selected) is a contact.
+
+document
+
+True if what's being uploaded is document.
+
+photo
+
+True if what's being uploaded is a photo.
+
+last_seen
+
+Exact datetime.datetime when the user was last seen if known.
+
+until
+
+The datetime.datetime until when the user should appear online.
+
+online
+
+True if the user is currently online,
+
+recently
+
+True if the user was seen within a day.
+
+within_weeks
+
+True if the user was seen within 7 days.
+
+within_months
+
+True if the user was seen within 30 days.
+
+CallbackQuery
+Occurs whenever you sign in as a bot and a user clicks one of the inline buttons on your messages.
+
+Full documentation for the CallbackQuery.
+
+id
+
+Returns the query ID.
+
+message_id
+
+Returns the message ID to which the clicked inline button belongs.
+
+data
+
+Returns the data payload from the original inline button.
+
+chat_instance
+
+Unique identifier for the chat where the callback occurred.
+
+via_inline
+
+Whether this callback was generated from an inline button sent via an inline query or not.
+
+respond
+
+Responds to the message (not as a reply).
+
+reply
+
+Replies to the message (as a reply).
+
+edit
+
+Edits the message.
+
+delete
+
+Deletes the message.
+
+answer
+
+Answers the callback query (and stops the loading circle).
+
+get_message
+
+Returns the message to which the clicked inline button belongs.
+
+InlineQuery
+Occurs whenever you sign in as a bot and a user sends an inline query such as @bot query.
+
+Full documentation for the InlineQuery.
+
+id
+
+Returns the unique identifier for the query ID.
+
+text
+
+Returns the text the user used to make the inline query.
+
+offset
+
+The string the user's client used as an offset for the query.
+
+geo
+
+If the user location is requested when using inline mode and the user's device is able to send it, this will return the GeoPoint with the position of the user.
+
+builder
+
+Returns a new InlineBuilder instance.
+
+answer
+
+Answers the inline query with the given results.
+
+Album
+Occurs whenever you receive an entire album.
+
+Full documentation for the Album.
+
+grouped_id
+
+The shared grouped_id between all the messages.
+
+text
+
+The message text of the first photo with a caption, formatted using the client's default parse mode.
+
+raw_text
+
+The raw message text of the first photo with a caption, ignoring any formatting.
+
+is_reply
+
+True if the album is a reply to some other message.
+
+forward
+
+The Forward information for the first message in the album if it was forwarded.
+
+get_reply_message
+
+The Message that this album is replying to, or None.
+
+respond
+
+Responds to the album (not as a reply).
+
+reply
+
+Replies to the first photo in the album (as a reply).
+
+forward_to
+
+Forwards the entire album.
+
+edit
+
+Edits the first caption or the message, or the first messages' caption if no caption is set, iff it's outgoing.
+
+delete
+
+Deletes the entire album.
+
+mark_read
+
+Marks the entire album as read.
+
+pin
+
+Pins the first photo in the album.
+
+Raw
+Raw events are not actual events. Instead, they are the raw Update object that Telegram sends. You normally shouldn’t need these.
+
+
+Objects Reference
+This is the quick reference for those objects returned by client methods or other useful modules that the library has to offer. They are kept in a separate page to help finding and discovering them.
+
+Remember that this page only shows properties and methods, not attributes. Make sure to open the full documentation to find out about the attributes.
+
+Contents
+
+Objects Reference
+
+ChatGetter
+
+SenderGetter
+
+Message
+
+Properties
+
+Methods
+
+File
+
+Conversation
+
+AdminLogEvent
+
+Button
+
+InlineResult
+
+Dialog
+
+Draft
+
+Utils
+
+ChatGetter
+All events base ChatGetter, and some of the objects below do too, so it’s important to know its methods.
+
+chat
+
+Returns the User, Chat or Channel where this object belongs to.
+
+input_chat
+
+This InputPeer is the input version of the chat where the message was sent.
+
+chat_id
+
+Returns the marked chat integer ID.
+
+is_private
+
+True if the message was sent as a private message.
+
+is_group
+
+True if the message was sent on a group or megagroup.
+
+is_channel
+
+True if the message was sent on a megagroup or channel.
+
+get_chat
+
+Returns chat, but will make an API call to find the chat unless it's already cached.
+
+get_input_chat
+
+Returns input_chat, but will make an API call to find the input chat unless it's already cached.
+
+SenderGetter
+Similar to ChatGetter, a SenderGetter is the same, but it works for senders instead.
+
+sender
+
+Returns the User or Channel that sent this object.
+
+input_sender
+
+This InputPeer is the input version of the user/channel who sent the message.
+
+sender_id
+
+Returns the marked sender integer ID, if present.
+
+get_sender
+
+Returns sender, but will make an API call to find the sender unless it's already cached.
+
+get_input_sender
+
+Returns input_sender, but will make an API call to find the input sender unless it's already cached.
+
+Message
+The Message type is very important, mostly because we are working with a library for a messaging platform, so messages are widely used: in events, when fetching history, replies, etc.
+
+It bases ChatGetter and SenderGetter.
+
+Properties
+Note
+
+We document custom properties here, not all the attributes of the Message (which is the information Telegram actually returns).
+
+text
+
+The message text, formatted using the client's default parse mode.
+
+raw_text
+
+The raw message text, ignoring any formatting.
+
+is_reply
+
+True if the message is a reply to some other message.
+
+forward
+
+The Forward information if this message is a forwarded message.
+
+buttons
+
+Returns a list of lists of MessageButton, if any.
+
+button_count
+
+Returns the total button count (sum of all buttons rows).
+
+file
+
+Returns a File wrapping the photo or document in this message.
+
+photo
+
+The Photo media in this message, if any.
+
+document
+
+The Document media in this message, if any.
+
+web_preview
+
+The WebPage media in this message, if any.
+
+audio
+
+The Document media in this message, if it's an audio file.
+
+voice
+
+The Document media in this message, if it's a voice note.
+
+video
+
+The Document media in this message, if it's a video.
+
+video_note
+
+The Document media in this message, if it's a video note.
+
+gif
+
+The Document media in this message, if it's a "gif".
+
+sticker
+
+The Document media in this message, if it's a sticker.
+
+contact
+
+The MessageMediaContact in this message, if it's a contact.
+
+game
+
+The Game media in this message, if it's a game.
+
+geo
+
+The GeoPoint media in this message, if it has a location.
+
+invoice
+
+The MessageMediaInvoice in this message, if it's an invoice.
+
+poll
+
+The MessageMediaPoll in this message, if it's a poll.
+
+venue
+
+The MessageMediaVenue in this message, if it's a venue.
+
+action_entities
+
+Returns a list of entities that took part in this action.
+
+via_bot
+
+The bot User if the message was sent via said bot.
+
+via_input_bot
+
+Returns the input variant of via_bot.
+
+client
+
+Returns the TelegramClient that patched this message.
+
+Methods
+respond
+
+Responds to the message (not as a reply).
+
+reply
+
+Replies to the message (as a reply).
+
+forward_to
+
+Forwards the message.
+
+edit
+
+Edits the message if it's outgoing.
+
+delete
+
+Deletes the message.
+
+get_reply_message
+
+The Message that this message is replying to, or None.
+
+click
+
+Calls SendVote with the specified poll option or button.click on the specified button.
+
+mark_read
+
+Marks the message as read.
+
+pin
+
+Pins the message.
+
+download_media
+
+Downloads the media contained in the message, if any.
+
+get_entities_text
+
+Returns a list of (markup entity, inner text) (like bold or italics).
+
+get_buttons
+
+Returns buttons when that property fails (this is rarely needed).
+
+File
+The File type is a wrapper object returned by Message.file, and you can use it to easily access a document’s attributes, such as its name, bot-API style file ID, etc.
+
+id
+
+The old bot-API style file_id representing this file.
+
+name
+
+The file name of this document.
+
+ext
+
+The extension from the mime type of this file.
+
+mime_type
+
+The mime-type of this file.
+
+width
+
+The width in pixels of this media if it's a photo or a video.
+
+height
+
+The height in pixels of this media if it's a photo or a video.
+
+size
+
+The size in bytes of this file.
+
+duration
+
+The duration in seconds of the audio or video.
+
+title
+
+The title of the song.
+
+performer
+
+The performer of the song.
+
+emoji
+
+A string with all emoji that represent the current sticker.
+
+sticker_set
+
+The InputStickerSet to which the sticker file belongs.
+
+Conversation
+The Conversation object is returned by the client.conversation() method to easily send and receive responses like a normal conversation.
+
+It bases ChatGetter.
+
+send_message
+
+Sends a message in the context of this conversation.
+
+send_file
+
+Sends a file in the context of this conversation.
+
+mark_read
+
+Marks as read the latest received message if message is None.
+
+get_response
+
+Gets the next message that responds to a previous one.
+
+get_reply
+
+Gets the next message that explicitly replies to a previous one.
+
+get_edit
+
+Awaits for an edit after the last message to arrive.
+
+wait_read
+
+Awaits for the sent message to be marked as read.
+
+wait_event
+
+Waits for a custom event to occur.
+
+cancel
+
+Cancels the current conversation.
+
+cancel_all
+
+Calls cancel on all conversations in this chat.
+
+AdminLogEvent
+The AdminLogEvent object is returned by the client.iter_admin_log() method to easily iterate over past “events” (deleted messages, edits, title changes, leaving members…)
+
+These are all the properties you can find in it:
+
+id
+
+The ID of this event.
+
+date
+
+The date when this event occurred.
+
+user_id
+
+The ID of the user that triggered this event.
+
+action
+
+The original ChannelAdminLogEventAction.
+
+old
+
+The old value from the event.
+
+new
+
+The new value present in the event.
+
+changed_about
+
+Whether the channel's about was changed or not.
+
+changed_title
+
+Whether the channel's title was changed or not.
+
+changed_username
+
+Whether the channel's username was changed or not.
+
+changed_photo
+
+Whether the channel's photo was changed or not.
+
+changed_sticker_set
+
+Whether the channel's sticker set was changed or not.
+
+changed_message
+
+Whether a message in this channel was edited or not.
+
+deleted_message
+
+Whether a message in this channel was deleted or not.
+
+changed_admin
+
+Whether the permissions for an admin in this channel changed or not.
+
+changed_restrictions
+
+Whether a message in this channel was edited or not.
+
+changed_invites
+
+Whether the invites in the channel were toggled or not.
+
+joined
+
+Whether user joined through the channel's public username or not.
+
+joined_invite
+
+Whether a new user joined through an invite link to the channel or not.
+
+left
+
+Whether user left the channel or not.
+
+changed_hide_history
+
+Whether hiding the previous message history for new members in the channel was toggled or not.
+
+changed_signatures
+
+Whether the message signatures in the channel were toggled or not.
+
+changed_pin
+
+Whether a new message in this channel was pinned or not.
+
+changed_default_banned_rights
+
+Whether the default banned rights were changed or not.
+
+stopped_poll
+
+Whether a poll was stopped or not.
+
+Button
+The Button class is used when you login as a bot account to send messages with reply markup, such as inline buttons or custom keyboards.
+
+These are the static methods you can use to create instances of the markup:
+
+inline
+
+Creates a new inline button with some payload data in it.
+
+switch_inline
+
+Creates a new inline button to switch to inline query.
+
+url
+
+Creates a new inline button to open the desired URL on click.
+
+auth
+
+Creates a new inline button to authorize the user at the given URL.
+
+text
+
+Creates a new keyboard button with the given text.
+
+request_location
+
+Creates a new keyboard button to request the user's location on click.
+
+request_phone
+
+Creates a new keyboard button to request the user's phone on click.
+
+request_poll
+
+Creates a new keyboard button to request the user to create a poll.
+
+clear
+
+Clears all keyboard buttons after sending a message with this markup.
+
+force_reply
+
+Forces a reply to the message with this markup.
+
+InlineResult
+The InlineResult object is returned inside a list by the client.inline_query() method to make an inline query to a bot that supports being used in inline mode, such as @like.
+
+Note that the list returned is in fact a subclass of a list called InlineResults, which, in addition of being a list (iterator, indexed access, etc.), has extra attributes and methods.
+
+These are the constants for the types, properties and methods you can find the individual results:
+
+ARTICLE
+
+PHOTO
+
+GIF
+
+VIDEO
+
+VIDEO_GIF
+
+AUDIO
+
+DOCUMENT
+
+LOCATION
+
+VENUE
+
+CONTACT
+
+GAME
+
+type
+
+The always-present type of this result.
+
+message
+
+The always-present BotInlineMessage that will be sent if click is called on this result.
+
+title
+
+The title for this inline result.
+
+description
+
+The description for this inline result.
+
+url
+
+The URL present in this inline results.
+
+photo
+
+Returns either the WebDocument thumbnail for normal results or the Photo for media results.
+
+document
+
+Returns either the WebDocument content for normal results or the Document for media results.
+
+click
+
+Clicks this result and sends the associated message.
+
+download_media
+
+Downloads the media in this result (if there is a document, the document will be downloaded; otherwise, the photo will if present).
+
+Dialog
+The Dialog object is returned when you call client.iter_dialogs().
+
+send_message
+
+Sends a message to this dialog.
+
+archive
+
+Archives (or un-archives) this dialog.
+
+delete
+
+Deletes the dialog from your dialog list.
+
+Draft
+The Draft object is returned when you call client.iter_drafts().
+
+entity
+
+The entity that belongs to this dialog (user, chat or channel).
+
+input_entity
+
+Input version of the entity.
+
+get_entity
+
+Returns entity but will make an API call if necessary.
+
+get_input_entity
+
+Returns input_entity but will make an API call if necessary.
+
+text
+
+The markdown text contained in the draft.
+
+raw_text
+
+The raw (text without formatting) contained in the draft.
+
+is_empty
+
+Convenience bool to determine if the draft is empty or not.
+
+set_message
+
+Changes the draft message on the Telegram servers.
+
+send
+
+Sends the contents of this draft to the dialog.
+
+delete
+
+Deletes this draft, and returns True on success.
+
+Utils
+The telethon.utils module has plenty of methods that make using the library a lot easier. Only the interesting ones will be listed here.
+
+get_display_name
+
+Gets the display name for the given User, Chat or Channel.
+
+get_extension
+
+Gets the corresponding extension for any Telegram media.
+
+get_inner_text
+
+Gets the inner text that's surrounded by the given entities.
+
+get_peer_id
+
+Convert the given peer into its marked ID by default.
+
+resolve_id
+
+Given a marked ID, returns the original ID and its Peer type.
+
+pack_bot_file_id
+
+Inverse operation for resolve_bot_file_id.
+
+resolve_bot_file_id
+
+Given a Bot API-style file_id, returns the media it represents.
+
+resolve_invite_link
+
+Resolves the given invite link.
