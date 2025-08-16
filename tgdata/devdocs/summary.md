@@ -21,15 +21,15 @@ The Telegram Group Message Crawler is a comprehensive Python library for program
 
 ### 🛡️ Reliability & Safety
 - **Comprehensive error handling** for network issues
-- **Message deduplication** to prevent duplicate processing
+- **Incremental updates** with `after_id` parameter
 - **Session persistence** across runs
 - **Health checks** for connection monitoring
 
 ### 🔧 Flexibility
-- **Pluggable message trackers** (Redis, SQLite, MongoDB, etc.)
 - **Multiple export formats** (CSV, JSON)
 - **Date-based filtering** for targeted retrieval
 - **Custom progress callbacks** for monitoring
+- **Checkpoint-based resumption** for fault tolerance
 
 ## Quick Start
 
@@ -74,16 +74,8 @@ asyncio.run(main())
 │                │ │                  │
 │ • Connections  │ │ • Fetching       │
 │ • Rate limits  │ │ • Processing     │
-│ • Health check │ │ • Deduplication  │
+│ • Health check │ │ • Filtering      │
 └────────────────┘ └──────────────────┘
-                            │
-                   ┌────────▼─────────┐
-                   │MessageTracker    │
-                   │Interface         │
-                   │                  │
-                   │ • Any backend    │
-                   │ • Extensible     │
-                   └──────────────────┘
 ```
 
 ## Primary Use Cases
@@ -118,7 +110,7 @@ asyncio.run(main())
 - Efficiently retrieves large volumes of messages
 - Handles rate limits gracefully
 - Provides flexible data filtering and export
-- Supports custom storage backends
+- Supports incremental message fetching
 - Offers comprehensive error handling
 - Maintains session state across runs
 - Tracks progress for long operations
@@ -145,7 +137,7 @@ The library integrates seamlessly with:
 
 1. **Respect Rate Limits**: Use connection pooling and implement proper delays
 2. **Handle Errors Gracefully**: Implement retry logic and timeout handling
-3. **Use Deduplication**: Prevent reprocessing with message trackers
+3. **Use Incremental Fetching**: Use `after_id` to fetch only new messages
 4. **Monitor Progress**: Implement callbacks for long operations
 5. **Secure Credentials**: Never commit API credentials
 6. **Comply with Laws**: Ensure legal compliance for data collection

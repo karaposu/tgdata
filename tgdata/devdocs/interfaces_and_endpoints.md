@@ -11,30 +11,7 @@ class TgData:
     def __init__(self,
                  config_path: str = "config.ini",
                  connection_pool_size: int = 1,
-                 tracker: Optional[MessageTrackerInterface] = None,
-                 enable_deduplication: bool = True,
                  log_file: Optional[str] = None)
-```
-
-### 2. MessageTrackerInterface (Abstract)
-
-Interface for implementing custom message tracking backends.
-
-```python
-class MessageTrackerInterface(ABC):
-    @abstractmethod
-    async def is_processed(self, message_id: int, group_id: int) -> bool
-    
-    @abstractmethod
-    async def mark_processed(self, message_info: MessageInfo) -> None
-    
-    @abstractmethod
-    async def mark_batch_processed(self, messages: List[MessageInfo]) -> None
-    
-    @abstractmethod
-    async def get_unprocessed(self, messages: List[Dict], group_id: int) -> List[Dict]
-    
-    async def get_stats(self, group_id: Optional[int] = None) -> Dict[str, Any]
 ```
 
 ## Primary Endpoints
@@ -127,7 +104,7 @@ def filter_messages(
 
 #### `get_metrics() -> Dict[str, Any]`
 - **Purpose**: Get current session metrics
-- **Includes**: Cache size, tracker stats, connection health
+- **Includes**: Cache size, connection health
 - **Async**: Yes
 
 #### `export_metrics(filepath: str = "telegram_metrics.json") -> None`

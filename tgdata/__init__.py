@@ -7,16 +7,8 @@ A production-grade Python library for extracting and processing Telegram group a
 # Main class
 from .tgdata import TgData
 
-# Tracker interfaces and implementations
-from .message_tracker_interface import (
-    MessageTrackerInterface,
-    InMemoryTracker,
-    NoOpTracker
-)
-
 # Models
 from .models import (
-    MessageInfo,
     MessageData,
     GroupInfo,
     ConnectionConfig,
@@ -44,13 +36,7 @@ __all__ = [
     # Main class
     "TgData",
     
-    # Trackers
-    "MessageTrackerInterface",
-    "InMemoryTracker", 
-    "NoOpTracker",
-    
     # Models
-    "MessageInfo",
     "MessageData",
     "GroupInfo",
     "ConnectionConfig",

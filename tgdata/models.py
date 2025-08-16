@@ -7,15 +7,6 @@ from datetime import datetime
 from typing import Optional, Any, Dict
 
 
-@dataclass
-class MessageInfo:
-    """Information about a message for tracking"""
-    message_id: int
-    group_id: int
-    sender_id: int
-    date: datetime
-    content_hash: Optional[str] = None
-
 
 @dataclass
 class RateLimitInfo:

@@ -12,7 +12,6 @@ import pandas as pd
 
 from .connection_engine import ConnectionEngine
 from .message_engine import MessageEngine
-from .message_tracker_interface import MessageTrackerInterface
 from .models import GroupInfo
 from .utils import (
     format_message_for_display,
@@ -36,8 +35,6 @@ class TgData:
     def __init__(self,
                  config_path: str = "config.ini",
                  connection_pool_size: int = 1,
-                 tracker: Optional[MessageTrackerInterface] = None,
-                 enable_deduplication: bool = True,
                  log_file: Optional[str] = None):
         """
         Initialize Telegram group handler.
@@ -45,8 +42,6 @@ class TgData:
         Args:
             config_path: Path to configuration file
             connection_pool_size: Number of connections (1 = no pooling)
-            tracker: Optional message tracker for deduplication
-            enable_deduplication: Whether to enable message deduplication
             log_file: Optional log file path
         """
         # Set up logging
@@ -64,9 +59,7 @@ class TgData:
         )
         
         self.message_engine = MessageEngine(
-            connection_engine=self.connection_engine,
-            tracker=tracker,
-            enable_deduplication=enable_deduplication
+            connection_engine=self.connection_engine
         )
         
         # State
@@ -345,18 +338,8 @@ class TgData:
             'timestamp': datetime.now().isoformat(),
             'current_group': self.current_group.id if self.current_group else None,
             'connection_health': health_status,
-            'message_cache_size': len(self.message_engine._message_cache),
-            'tracker_stats': {}
+            'message_cache_size': len(self.message_engine._message_cache)
         }
-        
-        # Get tracker stats if available
-        if self.message_engine.tracker:
-            if self.current_group:
-                metrics['tracker_stats'] = await self.message_engine.tracker.get_stats(
-                    self.current_group.id
-                )
-            else:
-                metrics['tracker_stats'] = await self.message_engine.tracker.get_stats()
                 
         return metrics
         

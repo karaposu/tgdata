@@ -6,9 +6,9 @@ A production-grade Python library for extracting and processing Telegram group a
 
 - 🚀 **Production-Ready**: Built for reliability and scale in ETL pipelines
 - 📊 **Efficient Data Extraction**: Fetch messages from groups and channels with rate limit handling
-- 🔄 **Smart Deduplication**: Avoid reprocessing messages with pluggable tracker backends
+- 🔄 **Incremental Updates**: Fetch only new messages with `after_id` parameter
 - 📈 **Progress Tracking**: Monitor long-running operations with real-time progress
-- 🔌 **Extensible Architecture**: Support for Redis, MongoDB, SQLite, and custom storage backends
+- 🔌 **Clean Architecture**: Focused on data extraction with minimal dependencies
 - 🛡️ **Robust Error Handling**: Automatic retries with exponential backoff
 - 📁 **Multiple Export Formats**: Export to CSV, JSON, or integrate with your data pipeline
 - 🔔 **Real-time Updates**: Listen for new messages with event handlers
@@ -102,26 +102,33 @@ async def etl_pipeline():
 asyncio.run(etl_pipeline())
 ```
 
-### Message Deduplication with Redis
+### Incremental Message Fetching
 
 ```python
 from tgdata import TgData
-from tgdata.trackers import RedisTracker
 
-async def deduplicated_extraction():
-    # Use Redis to track processed messages
-    tracker = RedisTracker(host="localhost", port=6379)
-    tg = TgData(tracker=tracker)
+async def incremental_fetch():
+    tg = TgData()
     
-    # Only fetch new messages since last run
-    messages = await tg.get_messages(
+    # Get the latest message ID from your storage
+    last_processed_id = load_checkpoint()  # Your implementation
+    
+    # Fetch only messages after that ID
+    new_messages = await tg.get_messages(
         group_id=-1001234567890,
-        limit=100
+        after_id=last_processed_id
     )
     
-    print(f"New messages: {len(messages)}")
+    if not new_messages.empty:
+        # Process new messages
+        process_messages(new_messages)
+        
+        # Save new checkpoint
+        save_checkpoint(new_messages['MessageId'].max())
+    
+    print(f"New messages: {len(new_messages)}")
 
-asyncio.run(deduplicated_extraction())
+asyncio.run(incremental_fetch())
 ```
 
 ### Progress Monitoring
@@ -203,14 +210,19 @@ Main class for interacting with Telegram groups and channels.
 - `poll_for_messages()` - Poll for new messages at intervals
 - `run_with_event_loop()` - Run client with event loop for real-time events
 
-### Message Trackers
+### Checkpoint Management
 
-Prevent duplicate processing across runs:
+For production ETL pipelines, implement your own checkpoint logic:
 
-- `InMemoryTracker` - Default, resets on restart
-- `RedisTracker` - Persistent Redis storage
-- `SQLiteTracker` - Local SQLite database
-- `MongoTracker` - MongoDB backend
+```python
+# Save last processed message ID to your database
+last_id = messages['MessageId'].max()
+await save_to_database(group_id, last_id)
+
+# On next run, fetch only new messages
+last_id = await load_from_database(group_id)
+new_messages = await tg.get_messages(group_id=group_id, after_id=last_id)
+```
 
 ## Production Deployment
 
@@ -242,7 +254,7 @@ Prevent duplicate processing across runs:
 ### Performance Tips
 
 - Use connection pooling for parallel operations
-- Enable message deduplication to avoid reprocessing
+- Implement checkpoint logic for incremental processing
 - Implement progress callbacks for visibility
 - Export data incrementally for large datasets
 

@@ -11,8 +11,7 @@ import pandas as pd
 from telethon.errors import FloodWaitError
 
 from .connection_engine import ConnectionEngine
-from .models import MessageInfo, MessageData
-from .message_tracker_interface import MessageTrackerInterface, InMemoryTracker
+from .models import MessageData
 from .progress import ProgressTracker
 
 logger = logging.getLogger(__name__)
@@ -24,25 +23,14 @@ class MessageEngine:
     """
     
     def __init__(self,
-                 connection_engine: ConnectionEngine,
-                 tracker: Optional[MessageTrackerInterface] = None,
-                 enable_deduplication: bool = True):
+                 connection_engine: ConnectionEngine):
         """
         Initialize message engine.
         
         Args:
             connection_engine: Connection engine instance
-            tracker: Optional message tracker for deduplication
-            enable_deduplication: Whether to enable deduplication
         """
         self.connection_engine = connection_engine
-        self.enable_deduplication = enable_deduplication
-        
-        # Set up tracker
-        if enable_deduplication:
-            self.tracker = tracker or InMemoryTracker()
-        else:
-            self.tracker = None
             
         # Message cache for performance
         self._message_cache: Dict[str, pd.DataFrame] = {}
@@ -138,16 +126,6 @@ class MessageEngine:
                     if message_data:
                         messages_data.append(message_data.to_dict())
                         
-                        # Track processed message
-                        if self.tracker:
-                            await self.tracker.mark_processed(
-                                MessageInfo(
-                                    message_id=msg.id,
-                                    group_id=group_id,
-                                    sender_id=message_data.sender_id,
-                                    date=msg.date
-                                )
-                            )
                             
                         processed_count += 1
                         

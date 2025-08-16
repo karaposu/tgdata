@@ -9,7 +9,7 @@ The Telegram Group Message Crawler is a Python library designed to programmatica
 This library serves as a bridge between the Telegram API (via Telethon) and your application, offering:
 
 1. **Message Retrieval**: Systematically fetch messages from Telegram groups/channels
-2. **Data Processing**: Filter, deduplicate, and transform message data
+2. **Data Processing**: Filter and transform message data
 3. **Progress Tracking**: Monitor long-running operations with callbacks
 4. **Connection Management**: Handle rate limits and connection pooling
 5. **Data Export**: Export messages in various formats (CSV, JSON)
@@ -26,10 +26,10 @@ This library serves as a bridge between the Telegram API (via Telethon) and your
 - Implements retry logic with exponential backoff
 - Supports connection pooling for better throughput
 
-### 3. **Message Deduplication**
-- Prevents downloading the same messages multiple times
-- Supports various storage backends for tracking
-- Enables resumable operations after interruptions
+### 3. **Incremental Updates**
+- Fetch only new messages using `after_id` parameter
+- Enables efficient polling and updates
+- Supports checkpoint-based resumable operations
 
 ### 4. **Large-Scale Data Handling**
 - Efficiently processes thousands of messages
@@ -65,7 +65,7 @@ This library is designed for:
 
 ```
 ┌─────────────────┐
-│  TgData  │  ← Main API Class
+│     TgData      │  ← Main API Class
 └────────┬────────┘
          │
     ┌────┴────┐
@@ -73,12 +73,7 @@ This library is designed for:
 ┌───▼──────┐ ┌▼──────────────┐
 │Connection│ │MessageEngine  │
 │Engine    │ │               │
-└──────────┘ └───────┬───────┘
-                     │
-              ┌──────▼───────┐
-              │MessageTracker│
-              │Interface     │
-              └──────────────┘
+└──────────┘ └───────────────┘
 ```
 
 ## Getting Started

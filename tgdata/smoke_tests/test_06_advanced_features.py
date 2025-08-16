@@ -10,55 +10,10 @@ import tempfile
 from datetime import datetime, timedelta
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from tgdata import TgData, MessageTrackerInterface, InMemoryTracker, NoOpTracker
+from tgdata import TgData
 import pandas as pd
 
 
-async def test_tracker_integration():
-    """Test message tracker integration"""
-    print("TEST: Message tracker integration...")
-    try:
-        # Test with default tracker (InMemoryTracker)
-        tg1 = TgData(enable_deduplication=True)
-        assert tg1.message_engine.tracker is not None
-        assert isinstance(tg1.message_engine.tracker, InMemoryTracker)
-        print("✓ Default tracker (InMemoryTracker) initialized")
-        
-        # Test with NoOpTracker
-        tg2 = TgData(
-            tracker=NoOpTracker(),
-            enable_deduplication=True
-        )
-        assert isinstance(tg2.message_engine.tracker, NoOpTracker)
-        print("✓ NoOpTracker accepted")
-        
-        # Test without deduplication
-        tg3 = TgData(enable_deduplication=False)
-        assert tg3.message_engine.tracker is None
-        print("✓ Deduplication can be disabled")
-        
-        # Test with custom tracker
-        class CustomTracker(MessageTrackerInterface):
-            async def is_processed(self, message_id: int, group_id: int) -> bool:
-                return False
-            
-            async def mark_processed(self, message_info) -> None:
-                pass
-            
-            async def mark_batch_processed(self, messages) -> None:
-                pass
-            
-            async def get_unprocessed(self, messages, group_id) -> list:
-                return messages
-        
-        tg4 = TgData(tracker=CustomTracker())
-        assert isinstance(tg4.message_engine.tracker, CustomTracker)
-        print("✓ Custom tracker implementation accepted")
-        
-        return True
-    except Exception as e:
-        print(f"✗ Tracker integration test failed: {e}")
-        return False
 
 
 async def test_connection_pooling():
@@ -259,7 +214,6 @@ async def main():
     print("=" * 50)
     
     tests = [
-        test_tracker_integration,
         test_connection_pooling,
         test_progress_tracking,
         test_date_filtering,
