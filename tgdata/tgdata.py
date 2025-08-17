@@ -131,7 +131,9 @@ class TgData:
                           with_progress: bool = False,
                           progress_callback: Optional[Callable] = None,
                           batch_size: Optional[int] = None,
-                          batch_callback: Optional[Callable] = None) -> pd.DataFrame:
+                          batch_callback: Optional[Callable] = None,
+                          batch_delay: float = 0.0,
+                          rate_limit_strategy: str = 'wait') -> pd.DataFrame:
         """
         Get messages from a group with various options.
         
@@ -146,6 +148,8 @@ class TgData:
             progress_callback: Optional callback for progress updates
             batch_size: If specified, process messages in batches of this size
             batch_callback: Optional async callback called for each batch (batch_df, batch_info)
+            batch_delay: Delay in seconds between batches to avoid rate limits (default: 0)
+            rate_limit_strategy: How to handle rate limits - 'wait' or 'exponential' (default: 'wait')
             
         Returns:
             DataFrame with messages
@@ -180,7 +184,9 @@ class TgData:
             include_profile_photos=include_profile_photos,
             progress_callback=progress_callback,
             batch_size=batch_size,
-            batch_callback=batch_callback
+            batch_callback=batch_callback,
+            batch_delay=batch_delay,
+            rate_limit_strategy=rate_limit_strategy
         )
         
         if with_progress:

@@ -294,10 +294,26 @@ class ConnectionEngine:
             logger.error(f"Connection validation failed: {e}")
             return False
             
-    async def handle_rate_limit(self, error: FloodWaitError, client: Optional[TelegramClient] = None):
-        """Handle rate limit errors"""
-        wait_time = error.seconds
-        logger.warning(f"Rate limit hit! Waiting {wait_time} seconds...")
+    async def handle_rate_limit(self, error: FloodWaitError, client: Optional[TelegramClient] = None, strategy: str = 'wait'):
+        """
+        Handle rate limit errors with configurable strategy.
+        
+        Args:
+            error: The FloodWaitError from Telegram
+            client: The client that hit the rate limit
+            strategy: 'wait' (wait exact time) or 'exponential' (exponential backoff)
+        """
+        base_wait_time = error.seconds
+        
+        if strategy == 'exponential':
+            # Add random jitter (0-30% extra) to prevent thundering herd
+            import random
+            jitter = random.uniform(0, 0.3)
+            wait_time = base_wait_time * (1 + jitter)
+            logger.warning(f"Rate limit hit! Using exponential backoff: waiting {wait_time:.1f}s (base: {base_wait_time}s)")
+        else:
+            wait_time = base_wait_time
+            logger.warning(f"Rate limit hit! Waiting {wait_time} seconds...")
         
         if self._pool and client:
             self._pool.mark_rate_limited(client, wait_time)

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='tgdata',  # Package name
-    version='0.0.0',  # Version of your package
+    version='0.0.1',  # Version of your package
     author='enes kuzucu',  # Your name
     
     description='A production-grade Python library for extracting and processing Telegram group and channel messages', 

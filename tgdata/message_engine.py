@@ -41,7 +41,9 @@ class MessageEngine:
                            progress_callback: Optional[Callable] = None,
                            min_id: Optional[int] = None,
                            batch_size: Optional[int] = None,
-                           batch_callback: Optional[Callable] = None) -> pd.DataFrame:
+                           batch_callback: Optional[Callable] = None,
+                           batch_delay: float = 0.0,
+                           rate_limit_strategy: str = 'wait') -> pd.DataFrame:
         """
         Fetch messages from a group with various filters.
         
@@ -55,6 +57,8 @@ class MessageEngine:
             min_id: Minimum message ID (for resuming)
             batch_size: If specified, process messages in batches of this size
             batch_callback: Optional async callback called for each batch (batch_df, batch_info)
+            batch_delay: Delay in seconds between batches to avoid rate limits (default: 0)
+            rate_limit_strategy: How to handle rate limits - 'wait' or 'exponential' (default: 'wait')
             
         Returns:
             DataFrame with messages
@@ -157,6 +161,11 @@ class MessageEngine:
                                 
                                 # Clear batch buffer
                                 batch_messages = []
+                                
+                                # Apply batch delay to avoid rate limits
+                                if batch_delay > 0:
+                                    logger.info(f"Waiting {batch_delay}s between batches to avoid rate limits...")
+                                    await asyncio.sleep(batch_delay)
                             
                         processed_count += 1
                         
@@ -182,7 +191,7 @@ class MessageEngine:
                     await batch_callback(batch_df, batch_info)
                             
         except FloodWaitError as e:
-            await self.connection_engine.handle_rate_limit(e, client)
+            await self.connection_engine.handle_rate_limit(e, client, strategy=rate_limit_strategy)
             # Retry after rate limit
             return await self.fetch_messages(
                 group_id=group_id,
