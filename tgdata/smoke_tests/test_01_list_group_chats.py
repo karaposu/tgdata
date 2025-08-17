@@ -2,7 +2,7 @@
 Smoke tests for listing group chats functionality
 This test bridges connection testing and full TgData testing
 """
-# To run: python -m tgdata.smoke_tests.test_00_list_group_chats
+# To run: python -m tgdata.smoke_tests.test_01_list_group_chats
 
 import asyncio
 import sys

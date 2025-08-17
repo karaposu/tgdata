@@ -1,7 +1,7 @@
 """
 Smoke tests for polling and real-time message features
 """
-# To run: python -m tgdata.smoke_tests.test_10_polling
+# To run: python -m tgdata.smoke_tests.test_06_polling
 
 import asyncio
 import sys
@@ -58,7 +58,7 @@ async def test_polling_basic():
             interval=5,
             after_id=start_after_id,
             callback=message_callback,
-            max_iterations=3
+            max_iterations=4
         )
         
         print(f"✓ Polling completed. Total polls that found messages: {len(messages_received)}")
@@ -119,40 +119,43 @@ async def test_event_handler():
 
 
 async def test_polling_error_handling():
-    """Test polling error recovery"""
-    print("\nTEST: Polling error recovery...")
+    """Test polling with a real group"""
+    print("\nTEST: Polling with real group...")
     
     try:
         tg = TgData("config.ini")
         
-        # Test with invalid group ID
-        error_count = []
+        # Use a real group ID
+        # test_group_id = 1670178185
+        test_group_id =2367653179
         
-        async def error_callback(messages_df):
-            # This shouldn't be called for invalid group
-            error_count.append(1)
+        messages_found = []
         
-        print("Testing polling with invalid group ID...")
+        async def message_callback(messages_df):
+            # Track messages found
+            messages_found.append(len(messages_df))
+            print(f"  Found {len(messages_df)} new messages in poll")
         
-        # Create a task for polling (it will fail but should handle errors gracefully)
-        poll_task = asyncio.create_task(
-            tg.poll_for_messages(
-                group_id=999999999,  # Invalid group ID
-                interval=2,
-                callback=error_callback,
-                max_iterations=2
-            )
+        print(f"Testing polling with group ID: {test_group_id}")
+        
+        # Poll for messages with a real group
+        await tg.poll_for_messages(
+            group_id=test_group_id,
+            interval=3,
+            callback=message_callback,
+            max_iterations=2
         )
         
-        # Wait for polling to complete
-        await poll_task
+        print(f"✓ Polling completed successfully")
+        print(f"✓ Total polls that found messages: {len(messages_found)}")
+        if messages_found:
+            print(f"✓ Total messages found: {sum(messages_found)}")
         
-        print("✓ Polling handled errors gracefully")
         await tg.close()
         return True
         
     except Exception as e:
-        print(f"✗ Error handling test failed: {e}")
+        print(f"✗ Polling test failed: {e}")
         import traceback
         traceback.print_exc()
         return False

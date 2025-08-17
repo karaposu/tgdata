@@ -31,9 +31,6 @@ class MessageEngine:
             connection_engine: Connection engine instance
         """
         self.connection_engine = connection_engine
-            
-        # Message cache for performance
-        self._message_cache: Dict[str, pd.DataFrame] = {}
         
     async def fetch_messages(self,
                            group_id: int,
@@ -41,9 +38,10 @@ class MessageEngine:
                            start_date: Optional[datetime] = None,
                            end_date: Optional[datetime] = None,
                            include_profile_photos: bool = False,
-                           use_cache: bool = True,
                            progress_callback: Optional[Callable] = None,
-                           min_id: Optional[int] = None) -> pd.DataFrame:
+                           min_id: Optional[int] = None,
+                           batch_size: Optional[int] = None,
+                           batch_callback: Optional[Callable] = None) -> pd.DataFrame:
         """
         Fetch messages from a group with various filters.
         
@@ -53,19 +51,14 @@ class MessageEngine:
             start_date: Get messages after this date
             end_date: Get messages before this date
             include_profile_photos: Whether to download profile photos
-            use_cache: Whether to use cached results
             progress_callback: Optional callback for progress updates
             min_id: Minimum message ID (for resuming)
+            batch_size: If specified, process messages in batches of this size
+            batch_callback: Optional async callback called for each batch (batch_df, batch_info)
             
         Returns:
             DataFrame with messages
         """
-        # Check cache
-        cache_key = f"{group_id}_{start_date}_{end_date}_{limit}"
-        if use_cache and cache_key in self._message_cache:
-            logger.info("Returning cached messages")
-            return self._message_cache[cache_key]
-            
         # Set up progress tracking
         progress_tracker = None
         if progress_callback:
@@ -77,6 +70,11 @@ class MessageEngine:
             
         messages_data = []
         processed_count = 0
+        batch_count = 0
+        
+        # Set up batching if requested
+        batch_messages = []
+        effective_batch_size = batch_size if batch_size and batch_callback else None
         
         try:
             client = await self.connection_engine.get_client()
@@ -93,28 +91,41 @@ class MessageEngine:
                 # Build kwargs for iter_messages
                 iter_kwargs = {
                     'entity': channel,
-                    'limit': limit,
+                    'limit': limit if limit else 100,  # Default limit for polling
                     'offset_date': offset_date,
                     'reverse': reverse
                 }
                 
                 # Only add min_id if it's not None
                 if min_id is not None:
+                    # Since min_id includes the ID itself (>= behavior), we already adjusted it in tgdata.py
                     iter_kwargs['min_id'] = min_id
+                    # When using min_id (for polling), we want chronological order
+                    iter_kwargs['reverse'] = True
+                    # Remove offset_date when using min_id to avoid conflicts
+                    iter_kwargs.pop('offset_date', None)
+                    logger.info(f"Polling with min_id={min_id}, limit={iter_kwargs.get('limit', 'no limit')}")
+                
+                # Track the original min_id to filter duplicates
+                original_min_id = min_id - 1 if min_id else None
                 
                 # Iterate through messages
                 async for msg in client.iter_messages(**iter_kwargs):
+                    # Skip messages we've already seen (when polling)
+                    if original_min_id is not None and msg.id <= original_min_id:
+                        logger.info(f"Skipping already-seen message {msg.id} <= {original_min_id}")
+                        continue
+                    
+                    # Log messages we're processing
+                    if min_id is not None:
+                        logger.info(f"Processing message {msg.id} (min_id was {min_id}, original_min_id was {original_min_id})")
+                        
                     # Apply date filters
                     if start_date and msg.date < start_date:
                         continue
                     if end_date and msg.date > end_date:
                         break
                         
-                    # Check deduplication
-                    if self.enable_deduplication and self.tracker:
-                        if await self.tracker.is_processed(msg.id, group_id):
-                            logger.debug(f"Skipping duplicate message {msg.id}")
-                            continue
                             
                     # Process message
                     message_data = await self._process_message(
@@ -126,6 +137,26 @@ class MessageEngine:
                     if message_data:
                         messages_data.append(message_data.to_dict())
                         
+                        # Handle batch processing
+                        if effective_batch_size:
+                            batch_messages.append(message_data.to_dict())
+                            
+                            # Process batch when it reaches the size
+                            if len(batch_messages) >= effective_batch_size:
+                                batch_count += 1
+                                batch_df = pd.DataFrame(batch_messages)
+                                batch_info = {
+                                    'batch_num': batch_count,
+                                    'batch_size': len(batch_messages),
+                                    'total_processed': processed_count + len(batch_messages),
+                                    'group_id': group_id
+                                }
+                                
+                                # Call the batch callback
+                                await batch_callback(batch_df, batch_info)
+                                
+                                # Clear batch buffer
+                                batch_messages = []
                             
                         processed_count += 1
                         
@@ -137,6 +168,19 @@ class MessageEngine:
                         if processed_count % 100 == 0:
                             logger.info(f"Processed {processed_count} messages...")
                             
+                # Process final batch if there are remaining messages
+                if effective_batch_size and batch_messages:
+                    batch_count += 1
+                    batch_df = pd.DataFrame(batch_messages)
+                    batch_info = {
+                        'batch_num': batch_count,
+                        'batch_size': len(batch_messages),
+                        'total_processed': processed_count,
+                        'group_id': group_id,
+                        'is_final': True
+                    }
+                    await batch_callback(batch_df, batch_info)
+                            
         except FloodWaitError as e:
             await self.connection_engine.handle_rate_limit(e, client)
             # Retry after rate limit
@@ -146,9 +190,10 @@ class MessageEngine:
                 start_date=start_date,
                 end_date=end_date,
                 include_profile_photos=include_profile_photos,
-                use_cache=use_cache,
                 progress_callback=progress_callback,
-                min_id=min_id
+                min_id=min_id,
+                batch_size=batch_size,
+                batch_callback=batch_callback
             )
             
         except Exception as e:
@@ -158,16 +203,12 @@ class MessageEngine:
         # Create DataFrame
         df = pd.DataFrame(messages_data)
         
-        # Cache results
-        if use_cache and not df.empty:
-            self._message_cache[cache_key] = df
+        # Sort by MessageId when using min_id (for polling)
+        if min_id is not None and not df.empty:
+            df = df.sort_values('MessageId', ascending=True)
             
         logger.info(f"Retrieved {len(df)} messages")
         
-        # Log tracker stats
-        if self.tracker:
-            stats = await self.tracker.get_stats(group_id)
-            logger.info(f"Tracker stats: {stats}")
             
         return df
         
@@ -212,23 +253,6 @@ class MessageEngine:
             return None
             
         
-    def clear_cache(self, group_id: Optional[int] = None):
-        """
-        Clear message cache.
-        
-        Args:
-            group_id: Optional group ID to clear cache for specific group
-        """
-        if group_id:
-            # Clear cache for specific group
-            keys_to_remove = [k for k in self._message_cache.keys() if k.startswith(f"{group_id}_")]
-            for key in keys_to_remove:
-                del self._message_cache[key]
-            logger.info(f"Cleared cache for group {group_id}")
-        else:
-            # Clear all cache
-            self._message_cache.clear()
-            logger.info("Cleared all message cache")
             
     async def get_message_count(self, group_id: int) -> int:
         """

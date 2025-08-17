@@ -1,7 +1,7 @@
 """
 Smoke tests for ConnectionEngine with real Telegram connections
 """
-# To run: python -m tgdata.smoke_tests.test_01_connection
+# To run: python -m tgdata.smoke_tests.test_00_connection
 
 import asyncio
 import sys

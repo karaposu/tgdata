@@ -112,10 +112,6 @@ class TgData:
         Args:
             group_id: Telegram group/channel ID
         """
-        # Clear cache for the OLD group before setting new one
-        if self.current_group:
-            self.message_engine.clear_cache(self.current_group.id)
-        
         self.current_group = GroupInfo(
             id=group_id,
             title="",  # Will be populated on first operation
@@ -133,7 +129,9 @@ class TgData:
                           after_id: int = 0,
                           include_profile_photos: bool = False,
                           with_progress: bool = False,
-                          progress_callback: Optional[Callable] = None) -> pd.DataFrame:
+                          progress_callback: Optional[Callable] = None,
+                          batch_size: Optional[int] = None,
+                          batch_callback: Optional[Callable] = None) -> pd.DataFrame:
         """
         Get messages from a group with various options.
         
@@ -146,6 +144,8 @@ class TgData:
             include_profile_photos: Whether to download profile photos
             with_progress: Enable progress tracking
             progress_callback: Optional callback for progress updates
+            batch_size: If specified, process messages in batches of this size
+            batch_callback: Optional async callback called for each batch (batch_df, batch_info)
             
         Returns:
             DataFrame with messages
@@ -176,9 +176,11 @@ class TgData:
             limit=limit,
             start_date=start_date,
             end_date=end_date,
-            min_id=after_id if after_id > 0 else None,
+            min_id=after_id + 1 if after_id > 0 else None,  # +1 to exclude the after_id message itself
             include_profile_photos=include_profile_photos,
-            progress_callback=progress_callback
+            progress_callback=progress_callback,
+            batch_size=batch_size,
+            batch_callback=batch_callback
         )
         
         if with_progress:
@@ -337,8 +339,7 @@ class TgData:
         metrics = {
             'timestamp': datetime.now().isoformat(),
             'current_group': self.current_group.id if self.current_group else None,
-            'connection_health': health_status,
-            'message_cache_size': len(self.message_engine._message_cache)
+            'connection_health': health_status
         }
                 
         return metrics
@@ -410,24 +411,44 @@ class TgData:
         from telethon import events
         
         def decorator(func):
-            async def wrapped_handler(event):
-                # If group_id specified, filter by it
-                if group_id and event.chat_id != group_id:
-                    return
-                await func(event)
+            # Store the handler function for later registration
+            if not hasattr(self, '_pending_handlers'):
+                self._pending_handlers = []
             
-            # Register the event handler on the client
-            async def register():
-                client = await self.connection_engine.get_client()
-                client.add_event_handler(wrapped_handler, events.NewMessage())
-                logger.info(f"Registered new message handler for group {group_id or 'all groups'}")
-            
-            # Schedule registration
-            asyncio.create_task(register())
+            self._pending_handlers.append((func, group_id))
+            logger.info(f"Queued handler for group {group_id or 'all groups'}")
             
             return func
         
         return decorator
+    
+    async def _register_pending_handlers(self):
+        """Register all pending event handlers"""
+        if not hasattr(self, '_pending_handlers'):
+            return
+            
+        from telethon import events
+        client = await self.connection_engine.get_client()
+        
+        for func, group_id in self._pending_handlers:
+            async def make_handler(f, gid):
+                async def wrapped_handler(event):
+                    # If group_id specified, filter by it
+                    if gid and event.chat_id != gid:
+                        return
+                    await f(event)
+                return wrapped_handler
+            
+            handler = await make_handler(func, group_id)
+            
+            if group_id:
+                client.add_event_handler(handler, events.NewMessage(chats=group_id))
+            else:
+                client.add_event_handler(handler, events.NewMessage())
+            
+            logger.info(f"Registered handler for group {group_id or 'all groups'}")
+        
+        self._pending_handlers.clear()
     
     async def poll_for_messages(self, 
                                group_id: int,
@@ -459,24 +480,44 @@ class TgData:
         
         current_after_id = after_id
         iterations = 0
+        seen_message_ids = set()  # Track all message IDs we've already processed
         
         while max_iterations is None or iterations < max_iterations:
             try:
                 # Get new messages since last check
+                logger.info(f"Poll iteration {iterations + 1}: Checking for messages after ID {current_after_id}")
                 new_messages = await self.get_messages(
                     group_id=group_id,
                     after_id=current_after_id
                 )
                 
                 if not new_messages.empty:
-                    # Update the after_id to the latest message
-                    current_after_id = new_messages['MessageId'].max()
+                    # Get all message IDs and filter out already seen ones
+                    all_message_ids = new_messages['MessageId'].tolist()
+                    new_message_ids = [msg_id for msg_id in all_message_ids if msg_id not in seen_message_ids]
                     
-                    logger.info(f"Poll iteration {iterations + 1}: Found {len(new_messages)} new messages")
-                    
-                    # Call the callback if provided
-                    if callback:
-                        await callback(new_messages)
+                    if new_message_ids:
+                        # Filter DataFrame to only include truly new messages
+                        truly_new_messages = new_messages[new_messages['MessageId'].isin(new_message_ids)]
+                        
+                        # Add new IDs to seen set
+                        seen_message_ids.update(new_message_ids)
+                        
+                        # Simply update to the maximum ID we've seen
+                        max_id = max(all_message_ids)
+                        logger.info(f"Poll iteration {iterations + 1}: Found {len(truly_new_messages)} new messages, IDs: {sorted(new_message_ids)}")
+                        logger.info(f"Updating after_id from {current_after_id} to {max_id}")
+                        current_after_id = max_id
+                        
+                        # Call the callback only with truly new messages
+                        if callback:
+                            await callback(truly_new_messages)
+                    else:
+                        # All messages were duplicates, but still update after_id to the max
+                        max_id = max(all_message_ids)
+                        logger.info(f"Poll iteration {iterations + 1}: Found {len(new_messages)} messages but all were duplicates")
+                        logger.info(f"Updating after_id from {current_after_id} to {max_id}")
+                        current_after_id = max_id
                 else:
                     logger.debug(f"Poll iteration {iterations + 1}: No new messages")
                 
@@ -488,8 +529,11 @@ class TgData:
                     
             except Exception as e:
                 logger.error(f"Error during polling: {e}")
-                # Continue polling after error
-                await asyncio.sleep(interval)
+                iterations += 1  # Increment even on error to respect max_iterations
+                
+                # Continue polling after error (unless we've reached max iterations)
+                if max_iterations is None or iterations < max_iterations:
+                    await asyncio.sleep(interval)
     
     async def run_with_event_loop(self):
         """
@@ -505,6 +549,9 @@ class TgData:
                 
             await tg.run_with_event_loop()
         """
+        # Register any pending handlers first
+        await self._register_pending_handlers()
+        
         client = await self.connection_engine.get_client()
         logger.info("Running with event loop. Press Ctrl+C to stop...")
         await client.run_until_disconnected()
