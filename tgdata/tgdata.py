@@ -90,6 +90,7 @@ class TgData:
                             'GroupID': entity.id,
                             'Title': entity.title,
                             'Username': f"@{entity.username}" if hasattr(entity, 'username') and entity.username else None,
+                            'Identifier': f"@{entity.username}" if hasattr(entity, 'username') and entity.username else str(entity.id),
                             'IsChannel': dialog.is_channel,
                             'IsMegagroup': getattr(entity, 'megagroup', False),
                             'ParticipantsCount': getattr(entity, 'participants_count', None)
@@ -220,7 +221,7 @@ class TgData:
         
         Args:
             query: Search query
-            group_id: Target group ID (uses current if not specified)
+            group_id: Target group ID or username (e.g., '@channelname') - uses current if not specified
             limit: Maximum number of results
             
         Returns:
@@ -401,13 +402,13 @@ class TgData:
         
     # ==================== Polling and Real-time Updates ====================
     
-    def on_new_message(self, group_id: Optional[int] = None):
+    def on_new_message(self, group_id: Optional[Union[int, str]] = None):
         """
         Decorator to register a handler for new messages in real-time.
         Uses Telethon's event system.
         
         Args:
-            group_id: Optional group ID to filter messages. If None, receives from all groups.
+            group_id: Optional group ID or username (e.g., '@channelname') to filter messages. If None, receives from all groups.
             
         Example:
             @tg.on_new_message(group_id=12345)
@@ -457,7 +458,7 @@ class TgData:
         self._pending_handlers.clear()
     
     async def poll_for_messages(self, 
-                               group_id: int,
+                               group_id: Union[int, str],
                                interval: int = 60,
                                after_id: int = 0,
                                callback: Optional[Callable] = None,
@@ -466,7 +467,7 @@ class TgData:
         Poll for new messages at specified intervals.
         
         Args:
-            group_id: Group ID to poll messages from
+            group_id: Group ID or username (e.g., '@channelname') to poll messages from
             interval: Polling interval in seconds (default: 60)
             after_id: Message ID to start polling after (default: 0)
             callback: Optional async callback function to process new messages

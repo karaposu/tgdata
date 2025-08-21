@@ -48,7 +48,7 @@ class MessageEngine:
         Fetch messages from a group with various filters.
         
         Args:
-            group_id: Telegram group/channel ID
+            group_id: Telegram group/channel ID or username (e.g., '@channelname')
             limit: Maximum number of messages to fetch
             start_date: Get messages after this date
             end_date: Get messages before this date
@@ -268,7 +268,7 @@ class MessageEngine:
         Get total message count for a group.
         
         Args:
-            group_id: Telegram group/channel ID
+            group_id: Telegram group/channel ID or username (e.g., '@channelname')
             
         Returns:
             Total message count
@@ -300,7 +300,7 @@ class MessageEngine:
         Search for messages containing specific text.
         
         Args:
-            group_id: Telegram group/channel ID
+            group_id: Telegram group/channel ID or username (e.g., '@channelname')
             query: Search query
             limit: Maximum number of results
             
