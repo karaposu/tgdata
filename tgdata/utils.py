@@ -30,7 +30,7 @@ def format_message_for_display(message: Dict[str, Any], max_length: int = 100) -
     return (
         f"{message.get('Date', 'Unknown date')} | "
         f"{message.get('Name', 'Unknown')} "
-        f"({message.get('Username', 'No username')}): "
+        f"({message.get('Username') or 'No username'}): "  # display-time wording; data stores None
         f"{msg_text or '[No text]'}"
     )
 
@@ -80,10 +80,11 @@ def export_to_csv(df: pd.DataFrame, filepath: str) -> None:
         filepath: Output file path
     """
     try:
-        # Remove binary data columns for CSV export
+        # Remove binary data columns for CSV export (bytes can't be written to CSV)
         export_df = df.copy()
-        if 'PhotoData' in export_df.columns:
-            export_df = export_df.drop('PhotoData', axis=1)
+        for col in ('PhotoData', 'MediaData'):
+            if col in export_df.columns:
+                export_df = export_df.drop(col, axis=1)
             
         export_df.to_csv(filepath, index=False, encoding='utf-8')
         logger.info(f"Exported {len(df)} messages to {filepath}")
@@ -198,7 +199,9 @@ def save_profile_photos(df: pd.DataFrame, output_dir: str) -> None:
     
     for _, row in df.iterrows():
         if row['PhotoData'] is not None:
-            filename = f"{row['SenderId']}_{row['Username'].replace('@', '')}.jpg"
+            username = row['Username'] if isinstance(row['Username'], str) else ''
+            suffix = f"_{username.replace('@', '')}" if username else ''
+            filename = f"{row['SenderId']}{suffix}.jpg"
             filepath = os.path.join(output_dir, filename)
             
             try:

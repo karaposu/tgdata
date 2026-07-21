@@ -34,24 +34,36 @@ class MessageData:
     message_id: int
     sender_id: int
     sender_name: str
-    username: str
+    username: Optional[str]  # '@handle' or None (no public username)
     message: Optional[str]
     date: datetime
     reply_to_id: Optional[int] = None
     forwarded_from: Optional[int] = None
     photo_data: Optional[bytes] = None
-    
+    chat_id: Optional[int] = None        # bare group/channel id (matches list_groups' GroupID)
+    media_type: Optional[str] = None     # 'photo', 'video', 'document', ...; None = text-only
+    grouped_id: Optional[int] = None     # album tag: messages sharing it form one multi-media post
+    message_link: Optional[str] = None   # t.me deep link to the original message (None if not linkable)
+    media_path: Optional[str] = None     # local file path if media was downloaded during fetch, else None
+    media_data: Optional[bytes] = None   # raw media bytes in-memory if include_media=True, else None
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for DataFrame creation"""
         return {
             'MessageId': self.message_id,
+            'ChatId': self.chat_id,
             'SenderId': self.sender_id,
             'Name': self.sender_name,
             'Username': self.username,
             'Message': self.message,
+            'MediaType': self.media_type,
+            'GroupedId': self.grouped_id,
+            'MediaPath': self.media_path,
             'Date': self.date,
             'ReplyToId': self.reply_to_id,
             'ForwardedFrom': self.forwarded_from,
+            'MessageLink': self.message_link,
+            'MediaData': self.media_data,
             'PhotoData': self.photo_data
         }
 

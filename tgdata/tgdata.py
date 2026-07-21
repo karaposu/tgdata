@@ -78,10 +78,9 @@ class TgData:
             DataFrame with group information
         """
         try:
-            client = await self.connection_engine.get_client()
             groups_data = []
-            
-            async with client:
+
+            async with self.connection_engine.session() as client:
                 async for dialog in client.iter_dialogs():
                     if dialog.is_group or dialog.is_channel:
                         entity = dialog.entity
@@ -134,7 +133,10 @@ class TgData:
                           batch_size: Optional[int] = None,
                           batch_callback: Optional[Callable] = None,
                           batch_delay: float = 0.0,
-                          rate_limit_strategy: str = 'wait') -> pd.DataFrame:
+                          rate_limit_strategy: str = 'wait',
+                          allow_full_fetch: bool = False,
+                          download_media_to: Optional[str] = None,
+                          include_media: bool = False) -> pd.DataFrame:
         """
         Get messages from a group with various options.
         
@@ -151,7 +153,19 @@ class TgData:
             batch_callback: Optional async callback called for each batch (batch_df, batch_info)
             batch_delay: Delay in seconds between batches to avoid rate limits (default: 0)
             rate_limit_strategy: How to handle rate limits - 'wait' or 'exponential' (default: 'wait')
-            
+            allow_full_fetch: With no limit given, fetches are bounded at 750 messages
+                (a warning is logged when the bound is hit); set True to permit a
+                genuinely unbounded fetch (default: False)
+            download_media_to: If set to a directory path, each message's own media
+                (photos/videos/...) is downloaded there during the fetch, with the
+                local path recorded in the MediaPath column. One call = data + files.
+                (default: None = references only). Note: downloads everything matched,
+                so scope with a limit/date range on large groups.
+            include_media: If True, each message's media is loaded in-memory as raw
+                bytes into the MediaData column (like include_profile_photos). Handy
+                for small scrapes; holds every file in RAM, so scope it. CSV export
+                drops MediaData; JSON stores a "[Binary data]" placeholder. (default: False)
+
         Returns:
             DataFrame with messages
         """
@@ -181,13 +195,16 @@ class TgData:
             limit=limit,
             start_date=start_date,
             end_date=end_date,
-            min_id=after_id + 1 if after_id > 0 else None,  # +1 to exclude the after_id message itself
+            min_id=after_id if after_id > 0 else None,  # Telethon's min_id is exclusive: returns ids > after_id
             include_profile_photos=include_profile_photos,
             progress_callback=progress_callback,
             batch_size=batch_size,
             batch_callback=batch_callback,
             batch_delay=batch_delay,
-            rate_limit_strategy=rate_limit_strategy
+            rate_limit_strategy=rate_limit_strategy,
+            allow_full_fetch=allow_full_fetch,
+            download_media_to=download_media_to,
+            include_media=include_media
         )
         
         if with_progress:
@@ -385,6 +402,37 @@ class TgData:
         """
         return await self.connection_engine.health_check()
         
+    async def download_media_by_id(self,
+                             group_id: Union[int, str],
+                             message_ids: Union[int, List[int]],
+                             output_dir: Optional[str] = None) -> Dict[int, Any]:
+        """
+        Download media attached to specific messages, on demand.
+
+        Pairs with the reference columns from get_messages (MediaType, GroupedId,
+        ChatId, MessageId): fetch references cheaply, then download only the
+        listings you keep. For a multi-photo album, pass every MessageId that
+        shares a GroupedId.
+
+        Args:
+            group_id: Target group id or '@username'
+            message_ids: A single MessageId, or a list of them
+            output_dir: Directory to save files into; if None, returns raw bytes
+
+        Returns:
+            {message_id: filepath | bytes | None}  (None = no downloadable media)
+
+        Example:
+            df = await tg.get_messages(group_id=gid, limit=50)
+            keep = df[df['MediaType'] == 'photo']
+            paths = await tg.download_media_by_id(gid, keep['MessageId'].tolist(), output_dir="photos")
+        """
+        return await self.message_engine.download_media_by_id(
+            group_id=group_id,
+            message_ids=message_ids,
+            output_dir=output_dir
+        )
+
     def save_photos(self, df: pd.DataFrame, output_dir: str) -> None:
         """
         Save profile photos from messages.
@@ -438,15 +486,19 @@ class TgData:
         client = await self.connection_engine.get_client()
         
         for func, group_id in self._pending_handlers:
-            async def make_handler(f, gid):
-                async def wrapped_handler(event):
-                    # If group_id specified, filter by it
-                    if gid and event.chat_id != gid:
-                        return
-                    await f(event)
-                return wrapped_handler
+            def make_safe_handler(f):
+                # Plain factory: binds f per iteration (avoids the loop-closure
+                # capture gotcha). Filtering is done ENTIRELY by Telethon's
+                # chats= filter below — it correctly handles numeric ids and
+                # @usernames; no manual re-check (see devdocs/scoped/7).
+                async def safe_handler(event):
+                    try:
+                        await f(event)
+                    except Exception:
+                        logger.exception(f"Unhandled error in message handler {getattr(f, '__name__', f)}")
+                return safe_handler
             
-            handler = await make_handler(func, group_id)
+            handler = make_safe_handler(func)
             
             if group_id:
                 client.add_event_handler(handler, events.NewMessage(chats=group_id))

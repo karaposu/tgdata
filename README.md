@@ -15,6 +15,7 @@ A production-grade Python library for extracting and processing Telegram group a
 - 🔔 **Real-time Updates**: Listen for new messages with event handlers
 - ⏱️ **Polling Support**: Poll for new messages at configurable intervals
 - 🎯 **Batch Processing**: Handle large groups with configurable batch sizes and delays
+- 🖼️ **Media Detection & Download**: Flag photos/videos per message (no download needed) and pull the files on demand or during the fetch
 
 ## Installation
 
@@ -192,6 +193,60 @@ async def incremental_fetch():
 asyncio.run(incremental_fetch())
 ```
 
+### Detecting & Downloading Media (photos / videos)
+
+Every fetched message carries media-reference columns, so you can tell whether a
+message has a photo **without downloading anything**:
+
+| Column | Meaning |
+|---|---|
+| `MediaType` | `'photo'`, `'video'`, `'document'`, `'webpage'`, … or `None` (text-only) |
+| `GroupedId` | album tag — rows sharing the same value are one multi-photo post (else `None`) |
+| `MessageLink` | `t.me` deep link to the original message |
+| `MediaPath` | local file path once media is downloaded (else `None`) |
+
+> ⚠️ **`'webpage'` is NOT a real photo.** It is a link-preview thumbnail, not an
+> attached image. Filter on the actual attachment type (`'photo'` / `'video'`) —
+> **never** on "`MediaType` is not null" — or you will count URL previews as media.
+
+```python
+messages = await tg.get_messages(group_id="@channelname", limit=100)
+
+# ✅ correct — real attached photos only
+photos = messages[messages['MediaType'] == 'photo']
+
+# ❌ wrong — also catches 'webpage' link previews, which are NOT real images
+# media = messages[messages['MediaType'].notna()]
+
+# how many photos each album/listing has
+photos.groupby('GroupedId').size()
+```
+
+Get the actual media in one of three ways:
+
+```python
+# A) On demand — fetch references cheaply, then download only what you keep.
+#    Pass every MessageId sharing a GroupedId to grab a whole album.
+paths = await tg.download_media_by_id("@channelname", [12345, 12346], output_dir="media")
+# -> {12345: "media/photo_....jpg", 12346: None}   (None = nothing downloadable, e.g. a webpage)
+
+# B) During the fetch, to disk — one call returns the data AND writes the files.
+messages = await tg.get_messages(
+    group_id="@channelname",
+    limit=100,
+    download_media_to="media",   # each file's path is recorded in the MediaPath column
+)
+
+# C) During the fetch, in memory — bytes land in the DataFrame itself (MediaData column).
+#    Great for small scrapes; holds every file in RAM, so scope it.
+messages = await tg.get_messages(
+    group_id="@channelname",
+    limit=100,
+    include_media=True,          # MediaData = raw bytes per row (None for text/webpage)
+)
+# Note: CSV export drops MediaData; JSON stores a "[Binary data]" placeholder.
+```
+
 ### Progress Monitoring
 
 ```python
@@ -272,7 +327,9 @@ await tg.run_with_event_loop()
 
 ### Performance Tips
 
-- Use connection pooling for parallel operations
+- The client authenticates once and keeps a single **persistent connection**,
+  reused across all calls; release it with `await tg.close()` or use
+  `async with TgData("config.ini") as tg:`
 - Implement checkpoint logic for incremental processing
 - Implement progress callbacks for visibility
 - Export data incrementally for large datasets

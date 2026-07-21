@@ -7,6 +7,7 @@ import asyncio
 import configparser
 import logging
 import time
+from contextlib import asynccontextmanager
 from typing import Optional, List, Dict, Any, Union
 from telethon import TelegramClient
 from telethon.errors import FloodWaitError, AuthKeyUnregisteredError
@@ -132,32 +133,46 @@ class ConnectionEngine:
         
     async def get_client(self) -> TelegramClient:
         """
-        Get a connected Telegram client.
-        Uses pooling if enabled, otherwise returns primary client.
+        Return a connected, authenticated client.
+
+        The connection is PERSISTENT: authentication happens once (on first use)
+        and the socket is kept open across operations. Prefer
+        ``async with engine.session() as client:`` at call sites so the
+        connection is reused rather than torn down after each call — only
+        close() disconnects.
         """
-        # Check if health check needed
-        current_time = time.time()
-        if current_time - self._last_health_check > self._health_check_interval:
-            await self.health_check()
-            self._last_health_check = current_time
-            
         # Use pool if enabled
         if self.pool_size > 1 and self._pool:
-            return await self._pool.get_connection()
-            
-        # Otherwise ensure primary client is connected
+            conn = await self._pool.get_connection()
+            await self._ensure_connected(conn)
+            return conn
+
+        # First use: create + authenticate the primary client exactly once
         if not self._primary_client:
             await self._init_primary_client()
-            
-        if not self._primary_client.is_connected():
-            await self._connect_with_retry(self._primary_client)
-            
+
+        # Runtime: cheaply re-open the socket only if it dropped (no re-auth)
+        await self._ensure_connected(self._primary_client)
         return self._primary_client
-        
+
+    @asynccontextmanager
+    async def session(self):
+        """
+        Yield the persistent, connected client for a unit of work WITHOUT
+        disconnecting on exit — the connection is long-lived and reused.
+
+        This replaces the old per-call ``async with client:`` pattern, which
+        ran start() and disconnect() on every operation (a full reconnect +
+        re-auth each time). Teardown happens only in close() / __aexit__.
+        """
+        client = await self.get_client()
+        yield client
+        # Intentionally NO disconnect here — the connection is persistent.
+
     async def _init_primary_client(self):
-        """Initialize the primary client"""
+        """Create and authenticate the primary client once (may be interactive)."""
         config = self._load_config()
-        
+
         # Use username as session name for compatibility with original code
         session_name = config.username if config.username else config.session_file
         self._primary_client = TelegramClient(
@@ -165,9 +180,9 @@ class ConnectionEngine:
             config.api_id,
             config.api_hash
         )
-        
-        await self._connect_with_retry(self._primary_client)
-        
+
+        await self._authenticate(self._primary_client)
+
         # Initialize pool if needed
         if self.pool_size > 1:
             await self._init_pool()
@@ -190,31 +205,54 @@ class ConnectionEngine:
                 config.api_hash
             )
             
-            await self._connect_with_retry(client)
+            await self._authenticate(client)
             self._pool.add_connection(client)
             
         logger.info(f"Initialized connection pool with {self.pool_size} connections")
         
-    async def _connect_with_retry(self, client: TelegramClient):
-        """Connect a client with retry logic"""
+    async def _authenticate(self, client: TelegramClient):
+        """
+        One-time authentication (login). Uses start(), which may prompt for a
+        login code on first run. Runs once per client — NOT per operation.
+        After this the session is authorized and its auth key persists on disk.
+        """
         config = self._load_config()
-        
+
         try:
-            # Use start() directly - it handles everything including retries
             await client.start(phone=config.phone)
-            logger.info("Successfully connected and authenticated!")
-            
+            logger.info("Authenticated with Telegram")
+
         except FloodWaitError as e:
             wait_time = e.seconds
-            logger.warning(f"Rate limited, waiting {wait_time} seconds...")
-            
+            logger.warning(f"Rate limited during authentication, waiting {wait_time} seconds...")
             if self._pool:
                 self._pool.mark_rate_limited(client, wait_time)
-                
             await asyncio.sleep(wait_time)
-            # Retry after rate limit
             await client.start(phone=config.phone)
-            
+
+        except Exception as e:
+            logger.error(f"Authentication failed: {e}")
+            raise ConnectionError(f"Failed to authenticate: {e}")
+
+    async def _ensure_connected(self, client: TelegramClient):
+        """
+        Runtime connect: ensure the socket is open. Non-interactive — it uses the
+        low-level connect() (never start()), so it never prompts, because the
+        session was already authorized by _authenticate(). No-ops when already
+        connected, so the persistent connection is reused instead of rebuilt.
+        """
+        if client.is_connected():
+            return
+
+        try:
+            await client.connect()
+        except FloodWaitError as e:
+            wait_time = e.seconds
+            logger.warning(f"Rate limited on connect, waiting {wait_time} seconds...")
+            if self._pool:
+                self._pool.mark_rate_limited(client, wait_time)
+            await asyncio.sleep(wait_time)
+            await client.connect()
         except Exception as e:
             logger.error(f"Connection failed: {e}")
             raise ConnectionError(f"Failed to connect: {e}")
