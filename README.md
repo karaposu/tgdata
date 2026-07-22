@@ -247,6 +247,15 @@ messages = await tg.get_messages(
 # Note: CSV export drops MediaData; JSON stores a "[Binary data]" placeholder.
 ```
 
+Downloaded files (modes A and B) are named `<ChatId>_<MessageId>.<ext>` — e.g.
+`1707717812_183019.jpg` — so every file is traceable to its exact message and
+group from the filename alone (and won't collide across groups sharing a folder).
+The precise path is also recorded per row in the `MediaPath` column.
+
+**Re-scraping is idempotent:** if a message's file is already on disk, it is
+reused, not re-downloaded — so pulling the same (or an overlapping) range again
+never duplicates files or re-fetches bytes. Each message maps to exactly one file.
+
 ### Progress Monitoring
 
 ```python

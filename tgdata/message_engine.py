@@ -9,6 +9,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import Optional, List, Dict, Any, Callable, Iterable, Union
 import pandas as pd
+from telethon import utils as tl_utils
 from telethon.errors import FloodWaitError
 from telethon.tl import types as tl_types
 
@@ -406,6 +407,36 @@ class MessageEngine:
             return 'poll'
         return 'other'
 
+    @staticmethod
+    def _media_stem(chat_id: Optional[int], message_id: int) -> str:
+        """
+        Deterministic, self-identifying filename stem for a message's media:
+        '<chat_id>_<message_id>' (falls back to just the message id if chat_id is
+        unknown). Passed WITHOUT an extension — Telethon appends the correct one
+        (.jpg/.mp4/...). This makes each file traceable to its exact message/group
+        from the filename alone, and unique across groups sharing one folder.
+        """
+        return f"{chat_id}_{message_id}" if chat_id is not None else str(message_id)
+
+    async def _download_or_reuse(self, client, msg, media_dir: str, chat_id: Optional[int]):
+        """
+        Download a message's media to '<media_dir>/<chat_id>_<message_id>.<ext>',
+        REUSING the file if it already exists (idempotent re-scrape).
+
+        The extension is predicted up-front with telethon.utils.get_extension (an
+        O(1) exists-check, no directory scan), so re-scraping an overlapping range
+        neither re-downloads the bytes nor produces Telethon's ' (1)' duplicates —
+        each message maps to exactly one file, forever.
+        """
+        stem = self._media_stem(chat_id, msg.id)
+        ext = tl_utils.get_extension(msg.media) or ''
+        target = os.path.join(media_dir, stem + ext)
+        if ext and os.path.exists(target):
+            logger.debug(f"Media for message {msg.id} already present ({stem}{ext}); reusing")
+            return target
+        # File doesn't exist yet: Telethon writes exactly to `target` (no rename).
+        return await client.download_media(msg, file=target)
+
     async def _process_message(self,
                              msg,
                              client,
@@ -454,7 +485,9 @@ class MessageEngine:
             # (e.g. text-only or a link-preview webpage).
             if media_dir and msg.media is not None:
                 try:
-                    message_data.media_path = await client.download_media(msg, file=media_dir)
+                    message_data.media_path = await self._download_or_reuse(
+                        client, msg, media_dir, chat_id
+                    )
                 except Exception as e:
                     logger.warning(f"Failed to download media for message {msg.id}: {e}")
 
@@ -519,10 +552,14 @@ class MessageEngine:
                         results[mid] = None
                         continue
                     try:
-                        target = output_dir if output_dir else bytes
-                        # download_media returns the saved path (dir target),
-                        # raw bytes (bytes target), or None (nothing to download)
-                        results[mid] = await client.download_media(msg, file=target)
+                        if output_dir:
+                            # Named '<chat_id>_<message_id>.<ext>', reused if already present
+                            results[mid] = await self._download_or_reuse(
+                                client, msg, output_dir, entity.id
+                            )
+                        else:
+                            # In-memory bytes when no output_dir was given
+                            results[mid] = await client.download_media(msg, file=bytes)
                     except Exception as e:
                         logger.warning(f"Failed to download media for message {mid}: {e}")
                         results[mid] = None
