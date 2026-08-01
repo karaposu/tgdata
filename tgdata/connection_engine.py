@@ -117,18 +117,38 @@ class ConnectionEngine:
         
         if telegram_section is None:
             raise ValueError("No [telegram] or [Telegram] section found in config file")
-        
+
+        def _unquote(value):
+            # INI values are raw text: `username = 'name'` yields the QUOTES as
+            # part of the value, and a quoted session name becomes a file
+            # literally called 'name'.session on disk. Strip surrounding
+            # quotes from every string we read.
+            return value.strip().strip("'\"") if isinstance(value, str) else value
+
+        section = config[telegram_section]
+        raw_session = _unquote(section.get('session_file'))
+        raw_username = _unquote(section.get('username'))
+
+        # Session naming precedence: an EXPLICIT session_file always wins — it
+        # is the documented home of the credential, and honoring it keeps the
+        # session's location independent of the process's working directory.
+        # The legacy behavior (username as the session name) applies only when
+        # no session_file is configured, so old username-only configs keep
+        # finding their existing sessions. 'telegram_session' is the final
+        # fallback when neither is set.
+        session_name = raw_session or raw_username or 'telegram_session'
+
         self._config = ConnectionConfig(
-            api_id=config[telegram_section]['api_id'],
-            api_hash=config[telegram_section]['api_hash'],
-            session_file=config[telegram_section].get('session_file', 'telegram_session'),
-            phone=config[telegram_section].get('phone'),
-            username=config[telegram_section].get('username'),
+            api_id=_unquote(section['api_id']),
+            api_hash=_unquote(section['api_hash']),
+            session_file=session_name,
+            phone=_unquote(section.get('phone')),
+            username=raw_username,
             max_retries=self.max_retries,
             retry_delay=self.retry_delay,
             exponential_backoff=self.exponential_backoff
         )
-        
+
         return self._config
         
     async def get_client(self) -> TelegramClient:
@@ -173,10 +193,12 @@ class ConnectionEngine:
         """Create and authenticate the primary client once (may be interactive)."""
         config = self._load_config()
 
-        # Use username as session name for compatibility with original code
-        session_name = config.username if config.username else config.session_file
+        # Session naming is resolved ONCE in _load_config (explicit
+        # session_file > username > default) — config.session_file IS the
+        # resolved name, so the primary client and the pool clients below
+        # can never disagree about where the session lives.
         self._primary_client = TelegramClient(
-            session_name,
+            config.session_file,
             config.api_id,
             config.api_hash
         )

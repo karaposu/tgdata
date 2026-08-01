@@ -41,9 +41,20 @@ tgdata supports 1 authentication at the moment.
 api_id = 1234566
 api_hash = a24adjfakjdfakjshdflkajsbdflk
 phone = +905064004949 # use full phone number including + and country code
-username = 'powerpuffdude'
 
+# Where the Telethon session lives (".session" is appended automatically).
+# Use an ABSOLUTE path — a bare name creates the file in whatever directory
+# the process happens to run from. Do not quote values: INI values are raw
+# text, so quotes become part of the value (tgdata strips them defensively
+# since 0.0.4, but don't rely on it).
+session_file = /absolute/path/to/my_session
 ```
+
+**Session naming precedence** (since 0.0.4): an explicit `session_file`
+always wins. A legacy `username` key is used as the session name only when
+no `session_file` is set — configs that relied on username-named sessions
+keep working, but new configs should set `session_file` and omit `username`
+(it plays no part in authentication).
 
 
 ## Quick Start
