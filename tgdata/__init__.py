@@ -7,6 +7,9 @@ A production-grade Python library for extracting and processing Telegram group a
 # Main class
 from .tgdata import TgData
 
+# Errors
+from .message_engine import GroupAccessError
+
 # Models
 from .models import (
     MessageData,
@@ -30,12 +33,15 @@ from .utils import (
 # Progress tracking
 from .progress import ProgressTracker
 
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 
 __all__ = [
     # Main class
     "TgData",
-    
+
+    # Errors
+    "GroupAccessError",
+
     # Models
     "MessageData",
     "GroupInfo",

@@ -29,6 +29,12 @@ DEFAULT_FETCH_LIMIT = 750
 MAX_FLOOD_RETRIES = 3
 
 
+class GroupAccessError(Exception):
+    """The account cannot see this group: it is not a member (or the id is
+    wrong). Raised only after a dialog sync ruled out the benign cause —
+    a fresh session whose entity cache simply hasn't met the id yet."""
+
+
 class MessageEngine:
     """
     Handles all message-related operations.
@@ -134,7 +140,10 @@ class MessageEngine:
             try:
                 async with self.connection_engine.session() as client:
                     # Get the entity
-                    channel = await client.get_entity(group_id)
+                    try:
+                        channel = await client.get_entity(group_id)
+                    except ValueError:
+                        channel = await self._entity_after_dialog_sync(client, group_id)
                     logger.info(f"Fetching messages from: {channel.title}")
 
                     # Per-chat context stamped onto every row (provenance / deep links)
@@ -363,6 +372,25 @@ class MessageEngine:
             # album ids (> 2^53) exactly and would corrupt GroupedId values
             df['GroupedId'] = df['GroupedId'].astype('Int64')
         return df
+
+    @staticmethod
+    async def _entity_after_dialog_sync(client, group_id):
+        """get_entity said "never seen this id" — an ambiguous error hiding two
+        different situations. Telegram sessions can only resolve ids they have
+        encountered, so a FRESH session fails even for groups the account IS a
+        member of. Sync the chat list (fills the entity cache) and retry once:
+        a member resolves and the fetch proceeds as if nothing happened; a
+        non-member fails again, and only then is it a real access problem —
+        reported as one, instead of Telethon's cache riddle."""
+        logger.info(f"Entity {group_id} unknown to this session — syncing dialogs to check membership")
+        await client.get_dialogs()
+        try:
+            return await client.get_entity(group_id)
+        except ValueError:
+            raise GroupAccessError(
+                f"account has no access to group {group_id} — the account is not "
+                f"a member (join the group with this account), or the id is wrong"
+            ) from None
 
     @staticmethod
     def _link_base(chat) -> Optional[str]:

@@ -166,6 +166,13 @@ messages = await tg.get_messages(
 )
 ```
 
+A numeric id resolves only if the session can actually see the group. On a
+cache miss tgdata syncs the account's chat list once and retries — so fresh
+sessions work for groups the account belongs to. If the group still can't be
+found it raises `tgdata.GroupAccessError` (the account is not a member, or
+the id is wrong) instead of Telethon's generic "Could not find the input
+entity" ValueError.
+
 ### get_messages with start_date parameter
 
 ```python
