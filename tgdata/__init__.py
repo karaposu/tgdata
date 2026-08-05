@@ -33,7 +33,7 @@ from .utils import (
 # Progress tracking
 from .progress import ProgressTracker
 
-__version__ = "0.0.6"
+__version__ = "0.0.7"
 
 __all__ = [
     # Main class
@@ -61,3 +61,4 @@ __all__ = [
     # Progress
     "ProgressTracker"
 ]
+from tgdata.connection_engine import AuthRequiredError  # noqa: E402,F401

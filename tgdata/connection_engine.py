@@ -67,6 +67,14 @@ class ConnectionPool:
         self.connections.clear()
 
 
+class AuthRequiredError(RuntimeError):
+    """The session is not authorized and this code path is non-interactive.
+
+    Raised by ephemeral_client() instead of Telethon's start() prompt —
+    a headless process must FAIL LOUDLY here, never sit on input().
+    Fix: run an interactive login for this account once, by hand."""
+
+
 class ConnectionEngine:
     """
     Manages Telegram connections with advanced features.
@@ -188,6 +196,34 @@ class ConnectionEngine:
         client = await self.get_client()
         yield client
         # Intentionally NO disconnect here — the connection is persistent.
+
+    @asynccontextmanager
+    async def ephemeral_client(self):
+        """USE-AND-CLOSE (2026-08-05): a fresh client on the same resolved
+        session, connected WITHOUT start() (never interactive), disconnected
+        in finally — for short, human-triggered lookups (identity fetch,
+        access probe) that must not park a live transport next to a standing
+        loop sharing the session file. The persistent session()/pool path
+        above is untouched — it remains correct for the loop's own fetches,
+        where ONE process owns the session for its lifetime.
+
+        Raises AuthRequiredError when the session is not authorized: the
+        one situation start() would have prompted for a login code and hung
+        a headless process on stdin forever."""
+        config = self._load_config()
+        client = TelegramClient(config.session_file, config.api_id, config.api_hash)
+        try:
+            await client.connect()
+            if not await client.is_user_authorized():
+                raise AuthRequiredError(
+                    f"session {config.session_file!r} is not authorized — "
+                    f"run an interactive login for this account once, then retry")
+            yield client
+        finally:
+            try:
+                await client.disconnect()
+            except Exception:  # noqa: BLE001 — teardown must never mask the work
+                pass
 
     async def _init_primary_client(self):
         """Create and authenticate the primary client once (may be interactive)."""
