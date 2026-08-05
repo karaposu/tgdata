@@ -136,7 +136,8 @@ class TgData:
                           rate_limit_strategy: str = 'wait',
                           allow_full_fetch: bool = False,
                           download_media_to: Optional[str] = None,
-                          include_media: bool = False) -> pd.DataFrame:
+                          include_media: bool = False,
+                          heartbeat: Optional[Callable] = None) -> pd.DataFrame:
         """
         Get messages from a group with various options.
         
@@ -204,7 +205,8 @@ class TgData:
             rate_limit_strategy=rate_limit_strategy,
             allow_full_fetch=allow_full_fetch,
             download_media_to=download_media_to,
-            include_media=include_media
+            include_media=include_media,
+            heartbeat=heartbeat
         )
         
         if with_progress:

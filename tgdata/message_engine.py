@@ -64,7 +64,8 @@ class MessageEngine:
                            rate_limit_strategy: str = 'wait',
                            allow_full_fetch: bool = False,
                            download_media_to: Optional[str] = None,
-                           include_media: bool = False) -> pd.DataFrame:
+                           include_media: bool = False,
+                           heartbeat: Optional[Callable] = None) -> pd.DataFrame:
         """
         Fetch messages from a group with various filters.
 
@@ -112,6 +113,19 @@ class MessageEngine:
             )
             progress_tracker.start()
 
+        # Liveness heartbeat: called with a phase label on EVERY sign of life —
+        # each message, each media chunk, each slice of a designed sleep. The
+        # caller's watchdog can then treat SILENCE as the hang signal with a
+        # small flat threshold, instead of guessing from total duration
+        # (which punishes big fetches). Exception-safe: a broken callback
+        # must never kill a fetch.
+        def _beat(phase: str) -> None:
+            if heartbeat is not None:
+                try:
+                    heartbeat(phase)
+                except Exception:  # noqa: BLE001
+                    pass
+
         messages_data = []
         processed_count = 0
         iterated_count = 0
@@ -143,7 +157,7 @@ class MessageEngine:
                     try:
                         channel = await client.get_entity(group_id)
                     except ValueError:
-                        channel = await self._entity_after_dialog_sync(client, group_id)
+                        channel = await self._entity_after_dialog_sync(client, group_id, _beat)
                     logger.info(f"Fetching messages from: {channel.title}")
 
                     # Per-chat context stamped onto every row (provenance / deep links)
@@ -222,6 +236,7 @@ class MessageEngine:
                             logger.debug(f"Processing message {msg.id} (min_id={min_id})")
 
                         # Apply date filters (direction-aware: stop as soon as the
+                        _beat("messages")
                         # iteration order guarantees no further in-window messages)
                         if start_date and msg.date < start_date:
                             if reverse:
@@ -244,7 +259,8 @@ class MessageEngine:
                             chat_id=chat_id,
                             link_base=link_base,
                             media_dir=download_media_to,
-                            include_media=include_media
+                            include_media=include_media,
+                            _beat=_beat
                         )
 
                         if message_data:
@@ -274,7 +290,14 @@ class MessageEngine:
                                     # Apply batch delay to avoid rate limits
                                     if batch_delay > 0:
                                         logger.info(f"Waiting {batch_delay}s between batches to avoid rate limits...")
-                                        await asyncio.sleep(batch_delay)
+                                        # sliced so the designed pause BEATS —
+                                        # a paused fetch is alive, not hung
+                                        _left = float(batch_delay)
+                                        while _left > 0:
+                                            _beat("pause")
+                                            _step = min(10.0, _left)
+                                            await asyncio.sleep(_step)
+                                            _left -= _step
 
                             processed_count += 1
 
@@ -328,7 +351,17 @@ class MessageEngine:
                     f"FloodWait #{flood_attempts}/{MAX_FLOOD_RETRIES}: waiting {e.seconds}s, "
                     f"then resuming after message id {last_seen_id}"
                 )
-                await self.connection_engine.handle_rate_limit(e, client, strategy=rate_limit_strategy)
+                if rate_limit_strategy == 'wait':
+                    # sliced locally so the mandated wait BEATS with its
+                    # remaining seconds — visible, alive, exact total.
+                    _left = float(e.seconds)
+                    while _left > 0:
+                        _beat(f"flood-wait {int(_left)}s")
+                        _step = min(10.0, _left)
+                        await asyncio.sleep(_step)
+                        _left -= _step
+                else:
+                    await self.connection_engine.handle_rate_limit(e, client, strategy=rate_limit_strategy)
                 # loop continues → resume from last_seen_id with identical settings
 
             except Exception as e:
@@ -374,7 +407,7 @@ class MessageEngine:
         return df
 
     @staticmethod
-    async def _entity_after_dialog_sync(client, group_id):
+    async def _entity_after_dialog_sync(client, group_id, _beat=lambda phase: None):
         """get_entity said "never seen this id" — an ambiguous error hiding two
         different situations. Telegram sessions can only resolve ids they have
         encountered, so a FRESH session fails even for groups the account IS a
@@ -383,7 +416,9 @@ class MessageEngine:
         non-member fails again, and only then is it a real access problem —
         reported as one, instead of Telethon's cache riddle."""
         logger.info(f"Entity {group_id} unknown to this session — syncing dialogs to check membership")
+        _beat("dialog-sync")
         await client.get_dialogs()
+        _beat("dialog-sync done")
         try:
             return await client.get_entity(group_id)
         except ValueError:
@@ -446,7 +481,7 @@ class MessageEngine:
         """
         return f"{chat_id}_{message_id}" if chat_id is not None else str(message_id)
 
-    async def _download_or_reuse(self, client, msg, media_dir: str, chat_id: Optional[int]):
+    async def _download_or_reuse(self, client, msg, media_dir: str, chat_id: Optional[int], _beat=lambda phase: None):
         """
         Download a message's media to '<media_dir>/<chat_id>_<message_id>.<ext>',
         REUSING the file if it already exists (idempotent re-scrape).
@@ -463,7 +498,10 @@ class MessageEngine:
             logger.debug(f"Media for message {msg.id} already present ({stem}{ext}); reusing")
             return target
         # File doesn't exist yet: Telethon writes exactly to `target` (no rename).
-        return await client.download_media(msg, file=target)
+        # progress_callback fires per chunk — a 50MB video beats continuously.
+        return await client.download_media(
+            msg, file=target,
+            progress_callback=lambda cur, tot: _beat("media"))
 
     async def _process_message(self,
                              msg,
@@ -472,7 +510,8 @@ class MessageEngine:
                              chat_id: Optional[int] = None,
                              link_base: Optional[str] = None,
                              media_dir: Optional[str] = None,
-                             include_media: bool = False) -> Optional[MessageData]:
+                             include_media: bool = False,
+                             _beat=lambda phase: None) -> Optional[MessageData]:
         """Process a single message"""
         try:
             sender = await msg.get_sender()
@@ -514,7 +553,7 @@ class MessageEngine:
             if media_dir and msg.media is not None:
                 try:
                     message_data.media_path = await self._download_or_reuse(
-                        client, msg, media_dir, chat_id
+                        client, msg, media_dir, chat_id, _beat
                     )
                 except Exception as e:
                     logger.warning(f"Failed to download media for message {msg.id}: {e}")

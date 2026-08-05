@@ -33,7 +33,7 @@ from .utils import (
 # Progress tracking
 from .progress import ProgressTracker
 
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 
 __all__ = [
     # Main class
