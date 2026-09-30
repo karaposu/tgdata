@@ -9,6 +9,8 @@ from .tgdata import TgData
 
 # Errors
 from .message_engine import GroupAccessError
+from .connection_engine import AuthRequiredError
+from .discovery_engine import DiscoveryInterrupted
 
 # Models
 from .models import (
@@ -27,13 +29,14 @@ from .utils import (
     filter_messages_by_content,
     get_message_statistics,
     save_profile_photos,
-    create_metrics_report
+    create_metrics_report,
+    build_search_queries
 )
 
 # Progress tracking
 from .progress import ProgressTracker
 
-__version__ = "0.0.7"
+__version__ = "0.0.8"
 
 __all__ = [
     # Main class
@@ -41,13 +44,15 @@ __all__ = [
 
     # Errors
     "GroupAccessError",
+    "AuthRequiredError",
+    "DiscoveryInterrupted",
 
     # Models
     "MessageData",
     "GroupInfo",
     "ConnectionConfig",
     "RateLimitInfo",
-    
+
     # Utilities
     "format_message_for_display",
     "export_to_json",
@@ -57,8 +62,8 @@ __all__ = [
     "get_message_statistics",
     "save_profile_photos",
     "create_metrics_report",
-    
+    "build_search_queries",
+
     # Progress
     "ProgressTracker"
 ]
-from tgdata.connection_engine import AuthRequiredError  # noqa: E402,F401

@@ -5,7 +5,7 @@ Utility functions for the Telegram Group Message Crawler.
 import json
 import os
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Iterable, List, Optional
 import pandas as pd
 import logging
 
@@ -248,3 +248,54 @@ def create_metrics_report(df: pd.DataFrame, group_info: Dict[str, Any]) -> Dict[
         }
         
     return report
+
+
+def build_search_queries(terms: Iterable[str],
+                         topics: Iterable[str] = (),
+                         prefixes: Iterable[str] = (),
+                         both_orders: bool = True) -> List[str]:
+    """
+    Search queries for Telegram's global search, which matches room NAMES
+    and @usernames only — rooms name themselves "place + topic", so the
+    queries are those combinations.
+
+    For every term: the term alone; each prefix + term ("Турция Анталия");
+    term + topic for every topic ("Анталия аренда"), and with both_orders
+    also topic + term ("аренда Анталия" — Telegram is not guaranteed to
+    treat the two alike). Deduplicated case-insensitively, order kept.
+
+    Args:
+        terms: The base words — place spellings, brand names, whatever rooms
+            put first in their names. One query group per term.
+        topics: Words rooms add after the term ("чат", "аренда", "новости").
+        prefixes: Words rooms put in front of the term ("Турция").
+        both_orders: Also emit topic + term for every topic (default True).
+
+    Returns:
+        Unique queries in generation order.
+
+    Example:
+        build_search_queries(["Анталия", "Antalya"], topics=["чат", "аренда"],
+                             prefixes=["Турция"])
+        -> ['Анталия', 'Турция Анталия', 'Анталия чат', 'Анталия аренда',
+            'чат Анталия', 'аренда Анталия', 'Antalya', 'Турция Antalya', ...]
+    """
+    topics = [w.strip() for w in topics if w and w.strip()]
+    prefixes = [p.strip() for p in prefixes if p and p.strip()]
+    out: List[str] = []
+    for term in terms:
+        term = (term or '').strip()
+        if not term:
+            continue
+        out.append(term)
+        out += [f"{p} {term}" for p in prefixes]
+        out += [f"{term} {w}" for w in topics]
+        if both_orders:
+            out += [f"{w} {term}" for w in topics]
+    seen, uniq = set(), []
+    for q in out:
+        key = q.lower()
+        if key not in seen:
+            seen.add(key)
+            uniq.append(q)
+    return uniq

@@ -67,6 +67,15 @@ python -m tgdata.smoke_tests.test_06_advanced_features
 python -m tgdata.smoke_tests.test_10_polling
 ```
 
+### 8. **test_11_discover_groups.py**
+Tests group discovery (`python -m tgdata.smoke_tests.test_11_discover_groups [config.ini]`):
+- `build_search_queries` and the empty/unresolved frame shapes (no network)
+- `search_groups`, `similar_groups`, `linked_groups` (unresolved, then resolved with a budget of 3)
+- `discover_groups` with `found_callback`, `heartbeat` and the link-source cap
+- a `get_messages` round-trip on a discovered room
+
+Cost: about a dozen requests and three username resolutions on the live account. Do not scale it up.
+
 ### Custom Test Scripts:
 - **my_test.py** - Custom test script for specific scenarios
 

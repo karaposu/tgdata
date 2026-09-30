@@ -12,6 +12,7 @@ import pandas as pd
 
 from .connection_engine import ConnectionEngine
 from .message_engine import MessageEngine
+from .discovery_engine import DiscoveryEngine
 from .models import GroupInfo
 from .utils import (
     format_message_for_display,
@@ -61,7 +62,11 @@ class TgData:
         self.message_engine = MessageEngine(
             connection_engine=self.connection_engine
         )
-        
+
+        self.discovery_engine = DiscoveryEngine(
+            connection_engine=self.connection_engine
+        )
+
         # State
         self.current_group: Optional[GroupInfo] = None
         self._metrics: Dict[str, Any] = {}
@@ -256,6 +261,189 @@ class TgData:
             limit=limit
         )
         
+    # ==================== Group Discovery ====================
+
+    async def search_groups(self,
+                            query: str,
+                            limit: int = 100,
+                            pace: float = 2.0,
+                            max_flood_wait: int = 3600,
+                            max_offline: int = 3600,
+                            heartbeat: Optional[Callable] = None,
+                            found_callback: Optional[Callable] = None) -> pd.DataFrame:
+        """
+        Telegram's global search for groups and channels.
+
+        Matches room NAMES and @usernames only — never post content. A room
+        about your topic under an unrelated name is invisible to every query;
+        reach those with similar_groups and linked_groups.
+
+        Args:
+            query: The search text (rooms name themselves "place + topic";
+                build_search_queries() makes the combinations)
+            limit: Results to ask for (Telegram caps it lower; default 100)
+            pace: Seconds to sleep after each request (default 2.0 — the
+                proven pace for a personal account)
+            max_flood_wait: A rate-limit wait up to this many seconds is
+                obeyed exactly, with heartbeat ticks; a longer one raises
+                DiscoveryInterrupted (default 3600)
+            max_offline: How long to wait for a dropped connection to come
+                back before giving up (default 3600)
+            heartbeat: Liveness callback(phase) — see get_messages
+            found_callback: callback(row_dict) for every room as it is found,
+                sync or async, so a long run can be persisted incrementally;
+                an exception in it ends the run
+
+        Returns:
+            DataFrame with the list_groups columns plus FoundVia ('search')
+            and FoundBy (the query). Every row is already usable by
+            get_messages(row['GroupID']) — no dialog sync needed.
+
+        Raises:
+            DiscoveryInterrupted: carrying .found (everything collected so
+                far) and .retry_after — nothing found is lost.
+        """
+        return await self.discovery_engine.search_groups(
+            query, limit, pace=pace, max_flood_wait=max_flood_wait, max_offline=max_offline,
+            heartbeat=heartbeat, found_callback=found_callback)
+
+    async def similar_groups(self,
+                             seeds,
+                             rounds: int = 2,
+                             max_resolve: int = 100,
+                             pace: float = 2.0,
+                             max_flood_wait: int = 3600,
+                             max_offline: int = 3600,
+                             heartbeat: Optional[Callable] = None,
+                             found_callback: Optional[Callable] = None) -> pd.DataFrame:
+        """
+        Telegram's "similar channels" recommendations, `rounds` rounds out
+        from the seeds — rooms found without any keyword at all, matched by
+        shared subscribers.
+
+        Round one resolves the seeds; every later round asks about the
+        channel objects the previous round returned, so it costs no username
+        lookups. Two rounds by default — a third drifts off topic. Only
+        CHANNELS (broadcast or megagroup) can be asked; a basic-group seed is
+        skipped with a warning. Yield depends on the account: a Premium
+        account got 64 recommendations from one seed; a normal account
+        reportedly gets about 10.
+
+        Args:
+            seeds: One or a list of '@username', numeric id, or entity
+            rounds: How many rounds of recommendations (default 2)
+            max_resolve: Username lookups this call may spend on seeds
+                (default 100) — lookups are the request Telegram punishes
+                hardest, so they are budgeted and never waited out
+            pace, max_flood_wait, max_offline, heartbeat, found_callback:
+                as in search_groups
+
+        Returns:
+            DataFrame in the search_groups shape, FoundVia 'similar', FoundBy
+            the seed's '@name' or 'id:N'. Seeds themselves are never rows.
+        """
+        return await self.discovery_engine.similar_groups(
+            seeds, rounds, max_resolve=max_resolve, pace=pace, max_flood_wait=max_flood_wait,
+            max_offline=max_offline, heartbeat=heartbeat, found_callback=found_callback)
+
+    async def linked_groups(self,
+                            group_id,
+                            posts: int = 100,
+                            resolve: bool = False,
+                            max_resolve: int = 100,
+                            pace: float = 2.0,
+                            max_flood_wait: int = 3600,
+                            max_offline: int = 3600,
+                            heartbeat: Optional[Callable] = None,
+                            found_callback: Optional[Callable] = None) -> pd.DataFrame:
+        """
+        Rooms linked (t.me/name, t.me/name/123, t.me/s/name, t.me/boost/name,
+        telegram.me/name) from the last `posts` messages of one or more rooms.
+        Invite links (t.me/+...) and t.me/c/... are never followed — discovery
+        reads, it never joins.
+
+        Args:
+            group_id: One or a list of numeric id, '@username', or entity —
+                e.g. the GroupIDs a previous call found
+            posts: Messages to read per room (default 100)
+            resolve: False (default) returns each linked name as a row with
+                Username and Identifier only (GroupID and the flags are NA) —
+                this costs nothing. True resolves each new name to a full row
+                until max_resolve or the first rate-limit wait on lookups,
+                then returns the rest unresolved with a warning.
+            max_resolve: Username lookups this call may spend (default 100)
+            pace, max_flood_wait, max_offline, heartbeat, found_callback:
+                as in search_groups
+
+        Returns:
+            DataFrame in the search_groups shape, FoundVia 'link', FoundBy the
+            source room's '@name' or 'id:N'. Source rooms are never rows.
+        """
+        return await self.discovery_engine.linked_groups(
+            group_id, posts, resolve, max_resolve=max_resolve, pace=pace,
+            max_flood_wait=max_flood_wait, max_offline=max_offline,
+            heartbeat=heartbeat, found_callback=found_callback)
+
+    async def discover_groups(self,
+                              seeds=(),
+                              queries=(),
+                              similar_rounds: int = 2,
+                              mine_links: bool = False,
+                              link_posts: int = 100,
+                              link_sources: int = 50,
+                              resolve_links: bool = False,
+                              max_resolve: int = 100,
+                              pace: float = 2.0,
+                              max_flood_wait: int = 3600,
+                              max_offline: int = 3600,
+                              heartbeat: Optional[Callable] = None,
+                              found_callback: Optional[Callable] = None) -> pd.DataFrame:
+        """
+        The whole discovery pipeline on one session, deduplicated by id, in
+        cost order: similar channels (rounds), then every query, then link
+        mining from the first `link_sources` rooms found.
+
+        Args:
+            seeds: Seeds for similar_groups (one or a list; may be empty)
+            queries: Search strings (one or a list; may be empty) — see
+                build_search_queries()
+            similar_rounds: Rounds of recommendations (default 2)
+            mine_links: Also read the found rooms' posts for t.me links
+                (default False)
+            link_posts: Posts to read per mined room (default 100)
+            link_sources: Rooms to mine, taken in discovery order — seeds
+                first, then their neighbourhood — with a warning when the
+                bound truncates (default 50)
+            resolve_links: Resolve mined names to full rows (default False:
+                they come back as Username-only rows, which costs nothing).
+                Opt in knowingly — each resolution is one of the request type
+                that has earned accounts day-long lookup blocks.
+            max_resolve: Username lookups the whole call may spend, seeds and
+                links together (default 100)
+            pace, max_flood_wait, max_offline, heartbeat, found_callback:
+                as in search_groups
+
+        Returns:
+            DataFrame in the search_groups shape; FoundVia records the
+            cheapest route that found each room ('similar' | 'search' |
+            'link') and FoundBy the seed, query, or source room.
+
+        Raises:
+            DiscoveryInterrupted: carrying .found and .retry_after when a
+                rate-limit wait exceeds max_flood_wait or the network stays
+                down past max_offline — nothing found is lost.
+
+        Example:
+            df = await tg.discover_groups(
+                seeds=["@antalyadaa"],
+                queries=build_search_queries(["Анталия", "Antalya"], topics=["чат", "аренда"]),
+                mine_links=True, heartbeat=lambda phase: print(phase))
+        """
+        return await self.discovery_engine.discover_groups(
+            seeds, queries, similar_rounds, mine_links, link_posts, link_sources, resolve_links,
+            max_resolve, pace=pace, max_flood_wait=max_flood_wait, max_offline=max_offline,
+            heartbeat=heartbeat, found_callback=found_callback)
+
     # ==================== Message Display and Export ====================
     
     def print_messages(self, 

@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional, Any, Dict
 
+from telethon.tl import types as tl_types
+
 
 
 @dataclass
@@ -26,6 +28,33 @@ class GroupInfo:
     is_channel: bool = False
     is_megagroup: bool = False
     participants_count: Optional[int] = None
+
+    @classmethod
+    def from_entity(cls, entity) -> "GroupInfo":
+        """Build from a Telethon Channel or Chat — what search, recommendations
+        and dialogs hand back. is_channel mirrors Dialog.is_channel: True for
+        every Channel, megagroups included."""
+        return cls(
+            id=entity.id,
+            title=getattr(entity, 'title', '') or '',
+            username=getattr(entity, 'username', None),
+            is_channel=isinstance(entity, tl_types.Channel),
+            is_megagroup=bool(getattr(entity, 'megagroup', False)),
+            participants_count=getattr(entity, 'participants_count', None),
+        )
+
+    def to_dict(self) -> Dict[str, Any]:
+        """The list_groups row: same keys, same values."""
+        handle = f"@{self.username}" if self.username else None
+        return {
+            'GroupID': self.id,
+            'Title': self.title,
+            'Username': handle,
+            'Identifier': handle or str(self.id),
+            'IsChannel': self.is_channel,
+            'IsMegagroup': self.is_megagroup,
+            'ParticipantsCount': self.participants_count,
+        }
 
 
 @dataclass

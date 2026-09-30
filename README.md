@@ -2,6 +2,14 @@
 
 A production-grade Python library for extracting and processing Telegram group and channel messages. Designed for ETL pipelines, data analysis, and archival purposes.
 
+> **New in 0.0.8 — group discovery.** tgdata can now *find* groups and channels, not only read
+> them: Telegram's name search, its "similar channels" recommendations, and links mined from
+> posts, on the same persistent session, paced, flood-safe and budgeted. Four calls —
+> `search_groups`, `similar_groups`, `linked_groups`, `discover_groups` — return candidate rooms
+> in the `list_groups` row shape, already usable by `get_messages`. Quick start below under
+> [Group discovery](#group-discovery--finding-groups-you-are-not-in); the full guide to using it
+> properly is [`devdocs/guides/group_discovery.md`](devdocs/guides/group_discovery.md).
+
 ## Features
 
 - 🚀 **Production-Ready**: Built for reliability and scale in ETL pipelines
@@ -16,6 +24,7 @@ A production-grade Python library for extracting and processing Telegram group a
 - ⏱️ **Polling Support**: Poll for new messages at configurable intervals
 - 🎯 **Batch Processing**: Handle large groups with configurable batch sizes and delays
 - 🖼️ **Media Detection & Download**: Flag photos/videos per message (no download needed) and pull the files on demand or during the fetch
+- 🔎 **Group Discovery**: Find rooms you are not in — Telegram's name search, its "similar channels", and links mined from posts — paced, flood-safe, budgeted
 
 ## Installation
 
@@ -83,6 +92,78 @@ Outputs:
 ```
 Python Devs 10012312313
 ```
+
+### Group discovery — finding groups you are not in
+
+`list_groups` shows what the account already follows. To find *new* rooms there are three
+routes, all returning the same columns as `list_groups` plus `FoundVia` and `FoundBy`.
+This is the quick start; the rules for running discovery on a real account without earning
+a block — pacing, budgets, resumable runs, reading the output — are in
+[`devdocs/guides/group_discovery.md`](devdocs/guides/group_discovery.md).
+
+```python
+from tgdata import TgData, build_search_queries
+
+tg = TgData("config.ini")
+
+# 1. Telegram's global search — matches room NAMES and @usernames only, never post text
+df = await tg.search_groups("Анталия аренда")
+
+# 2. Telegram's "similar channels" — rooms whose subscribers overlap the seeds', no keyword needed
+df = await tg.similar_groups(["@antalyadaa", "@sprout_antalya"], rounds=2)
+
+# 3. t.me links found in a room's recent posts — usernames only (free), or resolved
+df = await tg.linked_groups(group_id, posts=100, resolve=False)
+
+# All three on one session, deduplicated by id, in cost order
+df = await tg.discover_groups(
+    seeds=["@antalyadaa"],
+    queries=build_search_queries(["Анталия", "Antalya"], topics=["чат", "аренда", "новости"],
+                                 prefixes=["Турция"]),
+    mine_links=True,
+    heartbeat=lambda phase: print(phase),      # liveness ticks: search / similar / links / pause / flood-wait Ns
+    found_callback=lambda row: rows.append(row),  # each room as it is found — persist as you go
+)
+```
+
+**The name-only rule.** Telegram's search matches names and @usernames, never what a room
+posts. A perfect room under an unrelated name is invisible to every query — that is what
+`similar_groups` and `linked_groups` are for. Rooms name themselves "place + topic", so
+`build_search_queries` combines your place spellings with topic words, in both word orders.
+
+| Column | Meaning |
+|---|---|
+| `GroupID` … `ParticipantsCount` | the `list_groups` columns; `ParticipantsCount` is present on search and similar-channel results, absent (`NA`) on rooms resolved from links — Telegram's lookup reply does not carry it |
+| `FoundVia` | `search` · `similar` · `link` — the cheapest route that found the room |
+| `FoundBy` | the query, the seed's `@name`, or the source room |
+
+Unresolved link rows carry only `Username`/`Identifier`; `GroupID` and the flags are `NA`
+(the columns are nullable, so dtypes never drift). Every row with an id is already usable
+by `get_messages(row['GroupID'])` — Telegram results land in the session cache with their
+access hash, no dialog sync needed.
+
+**Pacing and waits.** Every request is followed by `pace` seconds (default 2, the proven
+pace for a personal account). A rate-limit wait up to `max_flood_wait` is obeyed exactly,
+with heartbeat ticks so a watchdog sees life; a longer one raises `DiscoveryInterrupted`,
+which carries `.found` (everything collected so far) and `.retry_after`. A dropped connection
+is waited out up to `max_offline` and the same request retried. Nothing found is ever lost.
+
+**The budget.** Resolving a username to a room is the request Telegram punishes hardest —
+a production account lost 8 and 21 hours of lookups to it. So every call has `max_resolve`
+(default 100), `discover_groups` mines links from the first `link_sources` rooms only
+(default 50), `resolve_links` is off by default (mined names come back as text, which costs
+nothing), and a wait on a lookup is skipped or stopped, never waited out. A truncating cap
+logs a warning telling you which parameter lifts it.
+
+**Similar channels** work on channels and megagroups, not basic groups; two rounds by
+default (a third drifts off topic); the seeds themselves are never returned. Yield depends
+on the account — a Premium account got 64 recommendations from one seed, a normal account
+reportedly about 10.
+
+**Links** are read from the visible text, from hyperlinked text (where channels put nearly
+all of them) and from URL buttons. Accepted: `t.me/name`, `t.me/name/123`, `t.me/s/name`,
+`t.me/boost/name`, `telegram.me/name`. Skipped: invite links (`t.me/+…`), `t.me/c/…`,
+reserved paths, and bots (`…bot`). Discovery reads; it never joins.
 
 
 ### Get all messages of a chat 
