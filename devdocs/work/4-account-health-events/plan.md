@@ -5,6 +5,10 @@ effort: max
 
 # Plan — report account health states as events (issue #4)
 
+**Revision 2.**
+
+**Critic folded:** 2026-10-03 — 5 mitigations from `critic.md`, all robust: 4 steps changed (3, 4, 5, 6), 0 added. Risk 5 was folded into `desc.md`, which now records the polling and `validate_connection` decision as criterion 10.
+
 ## What is the task
 
 Make tgdata tell its caller every time Telegram says no to an account:
@@ -199,9 +203,25 @@ False. It is a deliberate behaviour change of a public method, which can now rai
 
 ---
 
-## Step 3 — The monitor, call context, events, recovery and delivery
+## Step 3 — The monitor, call context, events, recovery and delivery `[folded: Risks 1, 2, 3, 4 — robust]`
 
 ### Proposed changes
+
+**Folded from the critique** — these override the details below where they differ:
+- **Risk 1 — the reporting path never raises.**
+  - In `call()`, the classify, mark and emit work in the `except` branch runs inside its own `try/except Exception`, and so does `_recover` in the `else` branch.
+  - `report()` carries the same guard.
+  - A failure in health code logs `health reporting failed` once at WARNING with its traceback, then at DEBUG.
+  - The caller's exception is re-raised untouched, and a successful call's result is returned untouched.
+- **Risk 2 — owner-task attribution.** `_Call` records `task = asyncio.current_task()` at entry. A sleep, or a `report()`, coming from any other task — Telethon's updates loop, an event-handler task, a user task started during the call — is an account-level occurrence: `call=None`, no open-wait entry, no recovery. Only the call's own task is attributed to the call.
+- **Risk 3 — recovery bookkeeping.**
+  - A waiting finding whose source is `sleep` or `handled`, reported in the call's own active task, adds its request to `c.waited`. That wait was slept and the request retried.
+  - A `swallowed` wait does not: the request was skipped, not retried.
+  - Every account- or group-scope verdict reported during the call adds its scope key — `('account',)` or `('group', key)` — to `c.reported`.
+  - `_recover(c)` skips any scope key in `c.reported`, so a call never recovers from what it reported itself.
+- **Risk 4 — per-item groups.** `report(exc, source, group=None)` takes an explicit group, normalised. When given, it is the event's `group` and the no-access ledger key, instead of `call.group`.
+
+The original design follows.
 
 In `tgdata/health.py`:
 
@@ -309,9 +329,11 @@ contextvars and task copying, `contextlib.asynccontextmanager` exception flow, `
 
 ---
 
-## Step 4 — Silent-sleep capture
+## Step 4 — Silent-sleep capture `[folded: Risk 2 — robust]`
 
 ### Proposed changes
+
+**Folded from the critique.** The filter attributes a sleep to the call only when `call.active and asyncio.current_task() is call.task`. Every other sleep — no call, an ended call, or another task during a long call such as `run_with_event_loop` or `poll_for_messages` — becomes an account-level waiting occurrence: `call=None`, counted, never opened in the ledger.
 
 In `tgdata/health.py`, the mechanism validated in `probe_health_145.py` (S2–S8):
 
@@ -346,9 +368,15 @@ Python `logging` filters vs handlers, effective levels, `dictConfig(disable_exis
 
 ---
 
-## Step 5 — Wiring: the facade, the engines and the summary
+## Step 5 — Wiring: the facade, the engines and the summary `[folded: Risk 4 — robust]`
 
 ### Proposed changes
+
+**Folded from the critique.** Discovery's per-item report sites pass the item as the group:
+- `_similar` seed skips pass `group=seed`;
+- `_links` skips pass `group=name`.
+
+The decorator also guards its argument binding (`try … except TypeError: group = None`), so the method raises its own argument errors (critic Risk 7, Low).
 
 **`tgdata/tgdata.py`:**
 - **`TgData.__init__`** gains `health_callback: Optional[Callable] = None` and `account_label: Optional[str] = None`, and creates `self._health = health.HealthMonitor(health_callback, account_label, self._health_identity)`.
@@ -398,7 +426,7 @@ False. Every public method gains a wrapper, though behaviour is unchanged when n
 
 ---
 
-## Step 6 — Offline test `tgdata/smoke_tests/test_16_health_events.py`
+## Step 6 — Offline test `tgdata/smoke_tests/test_16_health_events.py` `[folded: Risks 1–4 — robust]`
 
 ### Proposed changes
 
@@ -442,6 +470,13 @@ The style of test_13 to test_15: numbered TESTs, `Passed: N/M`, exit code, no ne
 11. **`validate_connection`, the fix.** `get_client` raising `AuthRequiredError` from `AuthKeyUnregisteredError` returns `False`, with a logged-out event, `source='swallowed'`, and no "ok".
 12. **The real-time path.** `run_with_event_loop` with a stand-in client whose `run_until_disconnected` raises `AuthKeyUnregisteredError` gives a logged-out event, and the error propagates.
 13. **No callback.** A `TgData` without `health_callback` behaves as before: same exceptions, same results.
+14. **Fail-safe reporting** `[folded: Risk 1]`. With `HealthMonitor._emit` patched to raise, a failing call still raises its own exception, the same object, and a succeeding call still returns its result.
+15. **Owner task** `[folded: Risk 2]`. A sleep in a task started during a still-active call gives `call=None` and no open wait.
+16. **No self-recovery** `[folded: Risk 3]`:
+    - a discovery-style stand-in that swallows a logged-out error, then returns, gives no ok;
+    - a stand-in that handles a wait then succeeds gives ok for that request;
+    - one that swallows a lookup wait gives no ok for it.
+17. **Per-item group** `[folded: Risk 4]`. A swallowed `CHANNEL_PRIVATE` reported with `group='@RoomName'` gives an event with `group='roomname'` and a no-access ledger entry under that key.
 
 ### Output
 

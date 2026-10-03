@@ -38,6 +38,10 @@ That gives dashboards and test runs per-account totals, gives a future worker (#
 
 tgdata **reports and never acts**: no exception a caller catches today changes type or identity, and nothing is paused, retried or skipped because of a verdict.
 
+**Two exceptions,** decided by the maintainer on 2026-10-03 because both methods were hiding failures. Success criterion 10 has the detail.
+- **`poll_for_messages()` stops on what retrying cannot fix.** It raises when the account is logged out, banned or restricted, or has no access to the polled group, instead of retrying forever. Errors from the caller's callback now reach the caller.
+- **`validate_connection()` says why it failed.** It still returns `True` or `False`, and now logs and reports the reason.
+
 ## Success Criteria
 
 Every criterion below is verified offline, by tests that drive Telethon 1.45.0's real request code with a scripted stand-in for the connection.
@@ -145,9 +149,25 @@ Each event is also written to the logger `tgdata.tgdata.health`, so `log_file` u
 - **Without a `health_callback`,** tgdata behaves as before, apart from the new log lines and summary.
 - **Nothing regresses.** The offline suites — proxy, device identity, flood threshold and login checks — still pass.
 
+### 10. The two fixes the maintainer added
+
+**`poll_for_messages()`:**
+- **It stops with the real error** — the same object — when retrying cannot help:
+  - a logged-out, banned or restricted account;
+  - no access to the polled group, `GroupAccessError` included;
+  - `AuthRequiredError`;
+  - `ProxyConfigError`.
+- **It keeps today's behaviour for everything else.** Network errors, flood waits, the fetch loop's give-up, and unknown or server-side Telegram errors are logged and retried at the next interval.
+- **Callback errors reach the caller.**
+
+**`validate_connection()`:**
+- It still returns `True` or `False`.
+- On `False` it logs the classified reason — at WARNING when it is a Telegram verdict — and reports it as a `swallowed` health event.
+- A `False` result never counts as a recovery.
+
 ## Scope Boundaries
 
-- **No acting on verdicts:** no pausing, retrying, circuit-breaking or admission control. That belongs to #9 and #10.
+- **No acting on verdicts:** no pausing, retrying, circuit-breaking or admission control. That belongs to #9 and #10. The single exception is the polling stop in criterion 10.
 - **No building #3, #8, #9 or #10.** The `kind` field lets their events join the stream later.
 - **Transport is not a verdict.** Connectivity, proxies and configuration are not verdicts about the account.
 - **Background-only signals are a follow-up.** Telethon's updates loop logs two signals only at INFO: "Account is now banned in <channel>", and catch-up waits. They can be added through the same mechanism later.
