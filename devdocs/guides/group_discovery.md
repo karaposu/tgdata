@@ -172,6 +172,9 @@ seconds", discovery sleeps N seconds in ten-second slices, each one a heartbeat
 tick (`"flood-wait 50s"`, `"flood-wait 40s"`, …), then retries the *same*
 request. It never retries early and never works around a limit. A wait longer
 than `max_flood_wait` (default one hour) ends the run with `DiscoveryInterrupted`.
+Two steps keep Telethon's own handling instead: reading a room's posts for
+links, and the dialog sync for a numeric id — a wait of up to a minute there is
+slept without ticks.
 
 **Username resolution is the dangerous request.** Turning `@name` into a room
 (`ResolveUsername`) is rate-limited far more harshly than search: the reference
@@ -299,7 +302,7 @@ own username.
 
 | Symptom | Cause | What to do |
 |---|---|---|
-| `DiscoveryInterrupted` with `retry_after > 0` | Telegram demanded a wait above `max_flood_wait` | keep `.found`, wait the full `retry_after`, rerun with the queries not yet done |
+| `DiscoveryInterrupted` with `retry_after > 0` | Telegram demanded a wait above `max_flood_wait`, or a wait on looking up a `linked_groups` source (lookups are never slept through) | keep `.found`, wait the full `retry_after`, rerun with the queries not yet done |
 | `DiscoveryInterrupted` with `retry_after == 0` | offline longer than `max_offline` | keep `.found`, rerun when connected |
 | log: `Seed @x skipped — Telegram wants Ns on username lookups` | the account is under a lookup block | do not resolve anything until it passes; seeds from `list_groups` avoid lookups entirely |
 | log: `Stopped resolving links at the N-username bound` | `max_resolve` hit | intended; raise it knowingly, or resolve only what you keep |
