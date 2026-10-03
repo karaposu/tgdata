@@ -1,8 +1,8 @@
 # Make Telethon's per-request flood-wait threshold work in tgdata
 
-> **Session warmth:** already warm. This session wrote tgdata's discovery engine, and read `connection_engine.py`, `discovery_engine.py`, `tgdata.py` and Telethon 1.45.0's request path (`telethon/client/users.py`, `telegrambaseclient.py`) in full.
+> Session warmed at `f411c9c` (2026-10-03) — already warm, so `/arch-small-summary` and `/arch-intro` were not run. This session wrote tgdata's discovery engine, and read `connection_engine.py`, `discovery_engine.py`, `tgdata.py` and Telethon 1.45.0's request path (`telethon/client/users.py`, `telegrambaseclient.py`) in full. `devdocs/archaeology/` is unchanged.
 >
-> **Branch:** `fix/discovery-flood-threshold`, cut from `dev`. No GitHub issue exists for this work; it stays on the local branch.
+> **Branch:** `fix/discovery-flood-threshold`, cut from `dev` at `f411c9c`. There is no GitHub issue: the maintainer waived it for this fix on 2026-10-03.
 
 ## Problem Statement
 
