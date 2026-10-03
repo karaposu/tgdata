@@ -1,6 +1,8 @@
 # Load and save sessions through a pluggable session store (issue #5)
 
 > Session warmed at `110996c` (2026-10-03) — already warm, carried from #4 in this session, so `/arch-small-summary` and `/arch-intro` were not run. This session read `connection_engine.py`, `tgdata.py`, `message_engine.py`, `discovery_engine.py` and `health.py` in full, and Telethon 1.45.0's request, login and updates code. For this issue it also read Telethon's sessions package and every session save, close and delete call site. `devdocs/archaeology/` is unchanged.
+>
+> Amended at step 2 (2026-10-03), from what planning found on Telethon 1.45.0. Criterion 3 drops the sent-file cache: Telethon no longer uses it. Criterion 9 drops the oldest-version check, at the maintainer's direction: build and verify on the latest release.
 
 **Sources:**
 - issue #5's body;
@@ -54,11 +56,12 @@ Every client of the account uses the store under its name:
 No `.session` file is created.
 
 ### 3. The whole session is stored
-What is saved is one versioned string carrying what Telethon's own `.session` file keeps:
+What is saved is one versioned string carrying the state Telethon's own `.session` file keeps and still uses:
 - the auth key and the data centre;
 - the update states;
-- the group cache — entities and their access hashes;
-- the sent-file cache.
+- the group cache — entities and their access hashes.
+
+The `.session` file also has a sent-file cache. Telethon 1.45.0 never reads or writes it, so it is not stored.
 
 It is not Telethon's `StringSession`, which keeps only the auth key and the data centre. A session saved by one client and loaded by a new one reads a discovered room straight from its cache, with no lookup.
 
@@ -85,10 +88,8 @@ The persistent client and a use-and-close client save independently, and the lat
 ### 8. Health events keep their names
 Events and `health_check()["health"]` name the session by the configured name, as today.
 
-### 9. Telethon versions
-It works on the Telethon versions tgdata supports, `>=1.33,<2.0`. It is verified offline on 1.45.0.
-
-[ASSUMPTION] The in-memory session in the oldest supported version, 1.33, holds the same state. The plan checks this before building on it.
+### 9. Telethon version
+It is built and verified on Telethon 1.45.0, the latest release.
 
 ### 10. Documented
 The README says how to pass a store, what it receives, and that the default is unchanged.
