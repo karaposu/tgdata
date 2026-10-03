@@ -644,6 +644,10 @@ error, so both now confirm with Telegram whether the session is logged in.
   in one channel, and waits while catching up.
 - `restricted` follows Telegram's documentation; how a frozen account behaves
   when it only reads has not been observed.
+- Capturing Telethon's silent sleeps relies on Telethon creating its INFO
+  record: `logging.disable(logging.INFO)` or higher turns the capture off, and
+  a level set on `telethon.client.users` during a call applies from the next
+  call.
 
 ### Performance Tips
 
