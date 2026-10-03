@@ -571,6 +571,11 @@ Implemented in `94560f0`, with all eight steps as written. These details differ 
    - `ensure_sleep_capture()` re-attaches its filter if it was removed, and handles a logger that `dictConfig` disabled before the first call;
    - `normalise_group` does not read `t.me/joinchat/...` as a username, and accepts `t.me/boost/name`.
 9. **Docs** also gained a test_16 entry in `tgdata/smoke_tests/README.md`.
+10. **`health_check()` finds a hidden logout, too** — added after step 5 at the maintainer's request, in `a21eea5`. The engine's `health_check()` had the same blind spot as `validate_connection()`: `get_me()` returning `None` counted as healthy.
+    - Both now share `ConnectionEngine._confirm_logged_in()`.
+    - A verdict found is named in `errors` and reported as a swallowed event. The primary connection, which the pool also holds, is reported once.
+    - `TgData.health_check()` runs as one health call, opened by hand so `['health']` is read after recovery. Only a check that reached Telegram and found every connection logged in counts as a recovery.
+    - test_16 gained TEST 18, and is now 18/18.
 
 **Verify (step 8):** test_16 17/17, test_15 11/11, test_14 11/11, test_13 6/6, test_12 7/7, on Telethon 1.45.0.
 
