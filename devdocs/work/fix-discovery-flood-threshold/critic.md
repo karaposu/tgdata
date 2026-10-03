@@ -138,10 +138,10 @@ Telethon's "silent sleep" acted as an accidental shock absorber. While it slept,
 
 Catch `FloodPremiumWaitError` next to `FloodWaitError` only in `linked_groups`, so the public method raises `DiscoveryInterrupted` as documented. Leave the other sites as they are.
 
-- [x] selected   - [ ] elegant   - [x] last_resort
+- [ ] selected   - [ ] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* It closes this instance in the one file the plan already touches: discovery's five catch sites then mirror Telethon's sleep branch, which is the invariant the fix needs. The class-wide fix is better, but it changes the message engine's fetch loop and authentication, which are core read paths outside this plan. They need their own critique and tests, per the delicacy gate. This robust work survives the class fix — the tuple just moves to a shared home — so the class fix is future improvement, not a prerequisite.
+*Why chosen:* —
 *For future:* —
 
 #### Mitigation — Robust
@@ -159,11 +159,11 @@ Use it at all five discovery catch sites. Add a TEST to Step 3: a `FLOOD_PREMIUM
 
 **Why this is robust:** discovery then handles exactly what Telethon used to sleep for it. The invariant "everything Telethon would have slept, discovery now handles" holds by construction, in one file the plan already touches.
 
-- [ ] selected   - [x] elegant   - [ ] last_resort
+- [x] selected   - [ ] elegant   - [x] last_resort
 
 **Note**
-*Why chosen:* —
-*For future:* The better answer. One shared wait tuple at all eight `except FloodWaitError` sites — discovery (5), `message_engine.py:339`, and `connection_engine.py:506` and `:530` — so no module can again handle only one kind of wait. Not blocked by access, only by scope. Do it as its own small fix once this merges, with a test that drives a `FLOOD_PREMIUM_WAIT` over 60 s through the fetch loop.
+*Why chosen:* It closes this instance in the one file the plan already touches: discovery's five catch sites then mirror Telethon's sleep branch, which is the invariant the fix needs. The class-wide fix is better, but it changes the message engine's fetch loop and authentication, which are core read paths outside this plan. They need their own critique and tests, per the delicacy gate. This robust work survives the class fix — the tuple just moves to a shared home — so the class fix is future improvement, not a prerequisite.
+*For future:* —
 
 #### Mitigation — Long-term
 
@@ -171,11 +171,11 @@ Put the wait tuple in one shared place — for example `tgdata/utils.py` or the 
 
 **Why this is long term effective:** no tgdata module can again handle only one of Telegram's wait kinds. A new Telethon wait class is added in one place.
 
-- [x] selected   - [x] elegant   - [ ] last_resort
+- [ ] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* It closes the instance completely, and the grep makes the sweep's completeness checkable. The long-term alternative is not one mechanism: docstrings must stay self-contained for API users, so replacing them with links would need per-place exceptions. Robust wins on reach per extent.
-*For future:* —
+*Why chosen:* —
+*For future:* The better answer. One shared wait tuple at all eight `except FloodWaitError` sites — discovery (5), `message_engine.py:339`, and `connection_engine.py:506` and `:530` — so no module can again handle only one kind of wait. Not blocked by access, only by scope. Do it as its own small fix once this merges, with a test that drives a `FLOOD_PREMIUM_WAIT` over 60 s through the fetch loop.
 
 ---
 
@@ -230,10 +230,10 @@ README "Pacing and waits"; guide § waits and § 8 troubleshooting; `DiscoveryIn
 
 Add one sentence each to the `DiscoveryInterrupted` docstring and the guide's troubleshooting row: "a lookup wait on a `linked_groups` source also raises it".
 
-- [x] selected   - [x] elegant   - [ ] last_resort
+- [ ] selected   - [ ] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* There is no class: no other per-request setting in tgdata travels through a context variable. So long-term collapses into robust. A few lines in the file Step 1 already changes give exact per-request semantics, and the common path stays a single `ContextVar.get()`.
+*Why chosen:* —
 *For future:* —
 
 #### Mitigation — Robust
@@ -250,10 +250,10 @@ Add a check to Step 5: grep README, guide and `tgdata/*.py` for `max_flood_wait|
 
 **Why this is robust:** it closes this instance completely, and the grep makes the completeness of the sweep checkable rather than remembered.
 
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* It closes the instance completely, and the grep makes the sweep's completeness checkable. The long-term alternative is not one mechanism: docstrings must stay self-contained for API users, so replacing them with links would need per-place exceptions. Robust wins on reach per extent.
 *For future:* —
 
 #### Mitigation — Long-term
@@ -336,10 +336,10 @@ Add a TEST to Step 2: with a per-call value active in the task, a plain `client(
 
 **Why this is robust:** it gives exact per-request semantics, matching Telethon's documented meaning, for a few lines in the file the plan already changes. The common path stays one `ContextVar.get()`.
 
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* There is no class: no other per-request setting in tgdata travels through a context variable. So long-term collapses into robust. A few lines in the file Step 1 already changes give exact per-request semantics, and the common path stays a single `ContextVar.get()`.
 *For future:* —
 
 #### Mitigation — Long-term
