@@ -603,17 +603,23 @@ An event is a plain dict that survives `json.dumps`:
     discovery seed or link;
   - `recovery` — an `ok`.
 
-**"ok" only when a condition ended:**
+**"ok" only when Telegram shows a condition ended:**
 - **a wait** — the call that waited completes successfully;
-- **logged out or banned** — any later call completes successfully;
-- **restricted** — the same method that was refused later succeeds;
-- **no access** — a later call naming the same group succeeds.
+- **logged out or banned** — a call completes that Telegram answered after
+  the problem was recorded;
+- **restricted** — the same, from the method that was refused;
+- **no access** — the same, from a call naming that group.
+
+A call that merely completes proves nothing. A call Telegram answered before
+the problem was seen, or one that sent no request at all, never sends `ok`.
 
 **Delivery.** The event that ends a call is delivered before its exception
 reaches you. The callback may be a function or a coroutine function. If it
 raises, the error is logged — first at WARNING with its traceback, then at
 DEBUG — and nothing else changes. A wait Telethon sleeps through is delivered
 from inside the request: a function runs there, a coroutine is scheduled.
+The callback may call tgdata itself. Events caused by those calls are logged
+and counted, but not delivered back to it, so it never calls itself.
 
 **Summary.** `(await tg.health_check())['health']` holds, for this `TgData`,
 in memory:

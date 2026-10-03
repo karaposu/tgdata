@@ -4,7 +4,9 @@ Handles connection pooling, rate limiting, retries, health checks, and the
 account's proxy: every client is built by one function, _new_client(), which
 applies the configured proxy to every connection and never falls back to a
 direct one. Every client it builds also honours Telethon's per-request
-flood_sleep_threshold, which Telethon itself ignores (_PerCallFloodThreshold).
+flood_sleep_threshold, which Telethon itself ignores (_PerCallFloodThreshold),
+and notes each request Telegram answers for the health events
+(_AnswerEvidence).
 """
 
 import asyncio
@@ -97,12 +99,32 @@ class _PerCallFloodThreshold:
             _PER_CALL_FLOOD_THRESHOLD.reset(token)
 
 
+class _AnswerEvidence:
+    """Notes every request Telegram answers, for the health events (issue #4).
+
+    An "ok" for the account or a group needs evidence that the condition
+    ended: Telegram answering the call after the verdict was recorded. A call
+    merely completing is not that — a concurrent call may have been answered
+    before the verdict, and some calls send no request at all. Every request
+    tgdata sends passes through the client's __call__, so this is where an
+    answer is observed. Requests Telethon sends past __call__ (an exported
+    sender for media on another data centre) count as no evidence, which can
+    only delay an "ok", never fake one."""
+
+    async def __call__(self, request, ordered=False, flood_sleep_threshold=None):
+        result = await super().__call__(request, ordered=ordered,
+                                        flood_sleep_threshold=flood_sleep_threshold)
+        health.note_answer()
+        return result
+
+
 @functools.lru_cache(maxsize=None)
 def _client_class(base):
     """The client class _new_client() builds: `base` (Telethon's
     TelegramClient, or whatever stands in for it in a test) with
-    _PerCallFloodThreshold in front of it. Cached per base."""
-    return type(f"Tgdata{base.__name__}", (_PerCallFloodThreshold, base), {})
+    _AnswerEvidence and _PerCallFloodThreshold in front of it. Cached per
+    base."""
+    return type(f"Tgdata{base.__name__}", (_AnswerEvidence, _PerCallFloodThreshold, base), {})
 
 
 class ProxyConfigError(ValueError):
@@ -509,7 +531,8 @@ class ConnectionEngine:
         client(request, flood_sleep_threshold=0) raises a flood wait instead of
         sleeping through it — which Telethon itself ignores (see
         _PerCallFloodThreshold). Requests sent without one behave exactly as
-        Telethon's own.
+        Telethon's own. Each answered request is also noted for the health
+        events (_AnswerEvidence).
 
         Args:
             session_file: Session name for this client (default: the config's)

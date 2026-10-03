@@ -116,8 +116,10 @@ class TgData:
                 Telegram says no to this account — a wait, a logout, a ban, a
                 restriction, no access to a group — and with verdict "ok" when
                 that ends. A function or a coroutine function; an exception in
-                it is logged, never raised. See the README, "Account health
-                events". health_check()["health"] summarises the same events.
+                it is logged, never raised. Events caused by tgdata calls it
+                makes itself are logged and counted, not delivered back to it.
+                See the README, "Account health events".
+                health_check()["health"] summarises the same events.
             account_label: A name for this account in those events (default:
                 None; the session name and the account id are always included)
         """

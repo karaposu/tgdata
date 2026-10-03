@@ -9,11 +9,15 @@ long, and when it ended. It reports and never acts.
   classify()       Telegram's own error name -> verdict. Follows tgdata's
                    wrappers through the cause chain; never guesses from a
                    category.
-  HealthMonitor    one per TgData: the ledger, "ok" on recovery, exception-safe
-                   delivery to the callback, a log line per event, a snapshot.
+  HealthMonitor    one per TgData: the ledger, "ok" on Telegram's evidence that
+                   a condition ended, exception-safe delivery to the callback
+                   (never back into a callback for its own calls' events), a
+                   log line per event, a snapshot.
   call context     which public call — and which task — a report belongs to.
   report()         one line at every engine site that handles or swallows an
                    error.
+  note_answer()    called by tgdata's client class for every request Telegram
+                   answers: the evidence recovery needs.
   sleep capture    a filter on Telethon's own logger turns the waits it sleeps
                    through silently into events, without changing what anyone's
                    logging prints.
@@ -29,6 +33,7 @@ import asyncio
 import contextlib
 import contextvars
 import inspect
+import itertools
 import logging
 import re
 import sys
@@ -216,6 +221,12 @@ def _mark(exc: BaseException, finding: Finding) -> None:
 # ── the call context ────────────────────────────────────────────────────────
 
 _CURRENT: contextvars.ContextVar = contextvars.ContextVar('tgdata_health_call', default=None)
+# Set while the health callback runs: events from tgdata calls the callback
+# makes are recorded and logged, never delivered back to it (no re-entry).
+_DELIVERING: contextvars.ContextVar = contextvars.ContextVar('tgdata_health_delivering', default=False)
+# One order for verdicts and Telegram's answers: an answer recovers a verdict
+# only when it came after it.
+_TICKS = itertools.count(1)
 
 
 def _current_task():
@@ -229,7 +240,8 @@ class _Call:
     """One public TgData call in progress. Tasks created during the call
     inherit it through the context variable, so a report is attributed to the
     call only from the call's own task while the call is active (owner task)."""
-    __slots__ = ('monitor', 'method', 'group', 'task', 'parent', 'active', 'failed', 'waited', 'reported')
+    __slots__ = ('monitor', 'method', 'group', 'task', 'parent', 'active', 'failed', 'waited', 'reported',
+                 'answered')
 
     def __init__(self, monitor: 'HealthMonitor', method: str, group):
         self.monitor = monitor
@@ -241,6 +253,7 @@ class _Call:
         self.failed = False
         self.waited: set = set()       # request types slept or handled during the call
         self.reported: set = set()     # account / group scopes reported during the call
+        self.answered = 0              # tick of the last request Telegram answered for this call
 
     def owns_current_task(self) -> bool:
         return self.active and self.task is not None and _current_task() is self.task
@@ -274,12 +287,14 @@ class HealthMonitor:
         self.label = label
         self._identity = identity
         self._account = OK
+        self._account_tick = 0          # when the account verdict was recorded
         self._account_since: Optional[str] = None
         self._account_error: Optional[str] = None
         self._restricted_by: Optional[str] = None
         self._waiting: Dict[str, Dict[str, Any]] = {}
         self._waiting_until: Dict[str, float] = {}
         self._no_access: Dict[str, Dict[str, Any]] = {}
+        self._no_access_tick: Dict[str, int] = {}
         self._waits = 0
         self._wait_seconds = 0
         self._events = 0
@@ -356,6 +371,7 @@ class HealthMonitor:
                 self._waiting_until[finding.request] = now + (finding.wait_seconds or 0)
         elif verdict in (LOGGED_OUT, BANNED, RESTRICTED):
             self._account, self._account_since, self._account_error = verdict, when, finding.error
+            self._account_tick = next(_TICKS)
             self._restricted_by = attributed.method if verdict == RESTRICTED and attributed else None
             if call is not None:
                 call.note_reported(('account',))
@@ -363,6 +379,7 @@ class HealthMonitor:
             if group is not None:
                 key = str(group)
                 self._no_access[key] = {'since': when, 'error': finding.error}
+                self._no_access_tick[key] = next(_TICKS)
                 if call is not None:
                     call.note_reported(('group', key))
         elif verdict == UNCLASSIFIED:
@@ -398,23 +415,31 @@ class HealthMonitor:
     # -- recovery ------------------------------------------------------------
 
     async def _recover(self, c: _Call) -> None:
-        """"ok" for what a separate, later success proves has ended — never for
-        what this same call reported (it may have skipped it and carried on)."""
+        """"ok" for what this call proves has ended. A wait: the call slept or
+        handled it, and completed. A verdict about the account or a group:
+        Telegram answered this call after the verdict was recorded. A
+        completion alone proves nothing — a concurrent call answered before
+        the verdict, or a call that sent no request — and a call never
+        recovers what it reported itself (it may have skipped it and carried
+        on)."""
         events = []
         for request in sorted(c.waited):
             if request in self._waiting:
                 del self._waiting[request]
                 self._waiting_until.pop(request, None)
                 events.append(self._event(OK, 'request', None, c, request, None, None, 'recovery', _iso()))
-        if ('account',) not in c.reported and (
+        if ('account',) not in c.reported and c.answered > self._account_tick and (
                 self._account in (LOGGED_OUT, BANNED)
                 or (self._account == RESTRICTED and self._restricted_by == c.method)):
             self._account, self._account_since, self._account_error, self._restricted_by = OK, None, None, None
+            self._account_tick = 0
             events.append(self._event(OK, 'account', None, c, None, None, None, 'recovery', _iso()))
         if c.group is not None:
             key = str(c.group)
-            if key in self._no_access and ('group', key) not in c.reported:
+            if (key in self._no_access and ('group', key) not in c.reported
+                    and c.answered > self._no_access_tick.get(key, 0)):
                 del self._no_access[key]
+                self._no_access_tick.pop(key, None)
                 events.append(self._event(OK, 'group', c.group, c, None, None, None, 'recovery', _iso()))
         for event in events:
             await self._deliver(event)
@@ -424,22 +449,26 @@ class HealthMonitor:
     async def _deliver(self, event: Dict[str, Any]) -> None:
         self._log(event)
         callback = self.callback
-        if callback is None:
+        if callback is None or _DELIVERING.get():     # caused by the callback's own call: no re-entry
             return
+        token = _DELIVERING.set(True)
         try:
             result = callback(event)
             if inspect.isawaitable(result):
                 await result
         except Exception:  # noqa: BLE001 — a broken callback never breaks the caller
             self._callback_failed()
+        finally:
+            _DELIVERING.reset(token)
 
     def _deliver_now(self, event: Dict[str, Any]) -> None:
         """Synchronous delivery from inside Telethon's request (the sleep
         filter): a plain callback runs inline, a coroutine is scheduled."""
         self._log(event)
         callback = self.callback
-        if callback is None:
+        if callback is None or _DELIVERING.get():     # caused by the callback's own call: no re-entry
             return
+        token = _DELIVERING.set(True)
         try:
             result = callback(event)
             if inspect.isawaitable(result):
@@ -449,11 +478,13 @@ class HealthMonitor:
                     if inspect.iscoroutine(result):
                         result.close()
                     return
-                task = asyncio.ensure_future(result)
+                task = asyncio.ensure_future(_delivering(result))
                 self._tasks.add(task)
                 task.add_done_callback(self._task_done)
         except Exception:  # noqa: BLE001
             self._callback_failed()
+        finally:
+            _DELIVERING.reset(token)
 
     def _task_done(self, task) -> None:
         self._tasks.discard(task)
@@ -511,6 +542,25 @@ class HealthMonitor:
             'events': self._events,
             'last_unclassified': self._last_unclassified,
         }
+
+
+async def _delivering(awaitable) -> None:
+    """Run a scheduled async callback with the delivery guard set in its own
+    task, so the events of tgdata calls it makes are not delivered back."""
+    _DELIVERING.set(True)
+    await awaitable
+
+
+def note_answer() -> None:
+    """Telegram answered a request. Called by tgdata's client class for every
+    request that succeeds; the call whose own task sent it records when, which
+    is the evidence an "ok" for the account or a group needs. Never raises."""
+    try:
+        call = _CURRENT.get()
+        if call is not None and call.owns_current_task():
+            call.answered = next(_TICKS)
+    except Exception:  # noqa: BLE001 — never raise into Telethon's request
+        pass
 
 
 async def report(exc: BaseException, source: str = 'swallowed', group=None) -> Optional[Finding]:

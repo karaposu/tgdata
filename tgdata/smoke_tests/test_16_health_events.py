@@ -33,6 +33,9 @@ Sources and safety                                                             (
  15. a sleep in a task started during a call is the account's, not the call's
  16. a call never recovers from what it reported itself (discovery's real code)
  17. a per-item group is the item, normalised — and a later call naming it recovers it
+ 19. a call answered before a logout, finishing after it, is no recovery
+ 20. a call that sends no request recovers nothing
+ 21. a callback that calls tgdata is not called back for its own calls' events
 """
 # To run: python -m tgdata.smoke_tests.test_16_health_events
 
@@ -163,6 +166,17 @@ def scripted_client(t: TgData, script):
     client = t.connection_engine._new_client(os.path.join(TMP, f"client_{_file_no}"))
     client._sender = Scripted(script)
     return client
+
+
+def answered(t: TgData, value):
+    """A stand-in engine method whose work Telegram answers: one request
+    through a client from t's own factory, so the answer is observed where
+    tgdata observes every answer — then `value`. Recovery needs that evidence;
+    a bare return value is a call that never reached Telegram."""
+    async def stand_in(*args, **kwargs):
+        await scripted_client(t, [state()])(GetStateRequest())
+        return value
+    return stand_in
 
 
 class Capture(logging.Handler):
@@ -463,7 +477,7 @@ async def test_recovery():
     t = tg(events)
     t.message_engine.get_message_count = raising(rpc(401, 'AUTH_KEY_UNREGISTERED'))
     await caught(t.get_message_count(1))
-    t.message_engine.get_message_count = returning(5)
+    t.message_engine.get_message_count = answered(t, 5)
     await t.get_message_count(1)
     check(events.verdicts() == ['logged out', 'ok'], events.verdicts())
     check((events.list[1]['scope'], events.list[1]['source']) == ('account', 'recovery'), events.list[1])
@@ -473,10 +487,10 @@ async def test_recovery():
     t = tg(events)
     t.message_engine.fetch_messages = raising(rpc(420, 'FROZEN_METHOD_INVALID'))
     await caught(t.get_messages(group_id=9))
-    t.message_engine.get_message_count = returning(3)
+    t.message_engine.get_message_count = answered(t, 3)
     await t.get_message_count(9)
     check(events.verdicts() == ['restricted'], events.verdicts())
-    t.message_engine.fetch_messages = returning(pd.DataFrame())
+    t.message_engine.fetch_messages = answered(t, pd.DataFrame())
     await t.get_messages(group_id=9)
     check(events.verdicts() == ['restricted', 'ok'], events.verdicts())
     print("✓ restricted from get_messages: get_message_count succeeding is no ok; get_messages is")
@@ -485,7 +499,7 @@ async def test_recovery():
     t = tg(events)
     t.message_engine.get_message_count = raising(rpc(400, 'CHANNEL_PRIVATE'))
     await caught(t.get_message_count(123))
-    t.message_engine.get_message_count = returning(1)
+    t.message_engine.get_message_count = answered(t, 1)
     await t.get_message_count(456)
     check(events.verdicts() == ['no access'], events.verdicts())
     await t.get_message_count(123)
@@ -527,8 +541,8 @@ async def test_log_mirror():
                            (401, 'USER_DEACTIVATED_BAN'), (403, 'USER_RESTRICTED'), (401, 'SOMETHING_NEW_401')):
             t.message_engine.get_message_count = raising(rpc(code, name))
             await caught(t.get_message_count(8))
-        t.message_engine.get_message_count = returning(1)
-        await t.get_message_count(8)              # restricted by this same method: ok
+        t.message_engine.get_message_count = answered(t, 1)
+        await t.get_message_count(8)              # restricted by this same method, answered: ok
     levels = {}
     for record in log.records:
         verdict = record.getMessage().split('health: ', 1)[1].split(' [', 1)[0]
@@ -632,14 +646,8 @@ async def test_validate_connection():
     check(events.verdicts() == ['logged out', 'logged out'], events.verdicts())
     print("✓ a logout Telethon's get_me() turns into None is asked about directly: False, reported")
 
-    class Me:
-        id = 1
-
-    class Healthy:
-        async def get_me(self):
-            return Me()
-
-    t.connection_engine.get_client = returning(Healthy())
+    me = types.User(id=1, is_self=True, access_hash=1, first_name='me')
+    t.connection_engine.get_client = returning(scripted_client(t, [[me]]))
     check(await t.validate_connection() is True, "a healthy connection failed")
     check(events.verdicts() == ['logged out', 'logged out', 'ok'], events.verdicts())
     print("✓ a later True is a recovery: ok")
@@ -673,7 +681,7 @@ async def test_no_callback():
     t.message_engine.get_message_count = raising(error)
     _, raised = await caught(t.get_message_count(77))
     check(raised is error, f"raised {raised!r}")
-    t.message_engine.get_message_count = returning(42)
+    t.message_engine.get_message_count = answered(t, 42)
     check(await t.get_message_count(77) == 42, "a different result")
     t.message_engine.fetch_messages = returning(pd.DataFrame({'MessageId': [3]}))
     df = await t.get_messages(group_id=77)
@@ -702,7 +710,7 @@ async def test_fail_safe():
         t.message_engine.get_message_count = raising(error)
         _, raised = await caught(t.get_message_count(2))
         check(raised is error, f"a failing call raised {raised!r}")
-        t.message_engine.get_message_count = returning(11)
+        t.message_engine.get_message_count = answered(t, 11)
         check(await t.get_message_count(2) == 11, "a succeeding call lost its result")
 
         async def swallowing(group_id):
@@ -799,7 +807,7 @@ async def test_per_item_group():
     check(events.verdicts() == ['no access'], events.verdicts())
     check((events.list[0]['group'], events.list[0]['source']) == ('roomname', 'swallowed'), events.list[0])
     check(list(t._health.snapshot()['no_access']) == ['roomname'], t._health.snapshot()['no_access'])
-    t.message_engine.fetch_messages = returning(pd.DataFrame())
+    t.message_engine.fetch_messages = answered(t, pd.DataFrame())
     await t.get_messages(group_id="https://t.me/RoomName")
     check(events.verdicts() == ['no access', 'ok'] and events.list[1]['group'] == 'roomname', events.list)
     print("✓ group 'roomname' (from '@RoomName'); a later get_messages naming it recovered it")
@@ -823,13 +831,7 @@ async def test_health_check():
     json.dumps(status)
     print("✓ unhealthy; errors: 'logged out (AUTH_KEY_UNREGISTERED)'; one event; ['health'] agrees")
 
-    class Me:
-        id = 1
-
-    async def logged_in():
-        return Me()
-
-    client.get_me = logged_in                              # logged in again
+    client._sender.script.append([types.User(id=1, is_self=True, access_hash=1, first_name='me')])  # logged in again
     status = await t.health_check()
     check(status['primary_connection'] is True and not status['errors'], status)
     check(events.verdicts() == ['logged out', 'ok'], events.verdicts())
@@ -864,6 +866,88 @@ async def test_health_check():
     return True
 
 
+async def test_concurrent_answer():
+    print("\nTEST 19: a call answered before a logout, and finishing after it, is no recovery...")
+    events = Events()
+    t = tg(events)
+    t.connection_engine.session = yielding(scripted_client(t, {SearchRequest: [found()]}))
+    search = asyncio.create_task(t.search_groups("rooms", pace=0.3))     # answered at once, then paces
+    await asyncio.sleep(0.1)
+    t.message_engine.get_message_count = raising(rpc(401, 'AUTH_KEY_UNREGISTERED'))
+    await caught(t.get_message_count(1))                                   # the logout, while the search paces
+    await search
+    check(events.verdicts() == ['logged out'], events.verdicts())
+    check(t._health.snapshot()['verdict'] == 'logged out', "a call answered before the logout recovered it")
+    t.message_engine.get_message_count = answered(t, 2)
+    await t.get_message_count(1)                                           # answered after the logout
+    check(events.verdicts() == ['logged out', 'ok'], events.verdicts())
+    print("✓ no ok from the search answered before the logout; ok from a call answered after it")
+    return True
+
+
+async def test_no_request_call():
+    print("\nTEST 20: a call that sends no request recovers nothing...")
+    events = Events()
+    t = tg(events)
+    for error in (rpc(400, 'CHANNEL_PRIVATE'), rpc(401, 'AUTH_KEY_UNREGISTERED')):
+        t.message_engine.get_message_count = raising(error)
+        await caught(t.get_message_count(123))
+    check(await t.download_media_by_id(123, []) == {}, "the empty download changed")    # the real method
+    check(t.connection_engine._primary_client is None, "a client was built")
+    check(events.verdicts() == ['no access', 'logged out'], events.verdicts())
+    summary = t._health.snapshot()
+    check(summary['verdict'] == 'logged out' and '123' in summary['no_access'], summary)
+    print("✓ download_media_by_id(123, []) sent nothing and recovered neither the account nor group 123")
+    return True
+
+
+async def test_callback_reentry():
+    print("\nTEST 21: a callback that calls tgdata is not called back for its own calls' events...")
+    attempts, runs = [], []
+    t = None
+
+    async def recheck(event):
+        runs.append(event['verdict'])
+        if event['verdict'] == 'logged out':
+            await t.validate_connection()                  # "double-check before pausing the account"
+
+    t = tg(recheck)
+
+    async def logged_out_client():
+        attempts.append(1)
+        raise rpc(401, 'AUTH_KEY_UNREGISTERED')
+
+    t.connection_engine.get_client = logged_out_client
+    check(await t.validate_connection() is False, "validate_connection() changed")
+    check(len(attempts) == 2 and runs == ['logged out'], (len(attempts), runs))
+    check(t._health.snapshot()['events'] == 2, "the nested call's event was not recorded")
+    print("✓ one nested call and one callback run; the nested event recorded, not delivered back")
+
+    delivered, done = [], asyncio.Event()
+    t = None
+
+    async def on_wait(event):                              # scheduled: delivered from Telethon's sleep
+        delivered.append((event['verdict'], event['call']))
+        if event['verdict'] == 'waiting' and len(delivered) == 1:
+            await t.get_message_count(2)                   # whose own request waits too
+            done.set()
+
+    t = tg(on_wait)
+    clients = {1: scripted_client(t, [wait(1), state()]), 2: scripted_client(t, [wait(1), state()])}
+
+    async def count(group_id):
+        await clients[group_id](GetStateRequest())         # Telethon sleeps 1 s silently
+        return group_id
+
+    t.message_engine.get_message_count = count
+    await t.get_message_count(1)
+    await asyncio.wait_for(done.wait(), timeout=10)
+    check([d for d in delivered if d[0] == 'waiting'] == [('waiting', 'get_message_count')], delivered)
+    check(t._health.snapshot()['waits'] == 2, t._health.snapshot()['waits'])
+    print("✓ the scheduled path too: the callback's own call slept, was counted, and was not delivered back")
+    return True
+
+
 async def main():
     print("Account Health Event Tests")
     print("=" * 60)
@@ -871,7 +955,8 @@ async def main():
     tests = [test_classifier, test_boundary, test_delivery, test_silent_sleeps, test_two_accounts,
              test_counted_once, test_recovery, test_summary, test_log_mirror, test_polling,
              test_validate_connection, test_real_time, test_no_callback, test_fail_safe,
-             test_owner_task, test_no_self_recovery, test_per_item_group, test_health_check]
+             test_owner_task, test_no_self_recovery, test_per_item_group, test_health_check,
+             test_concurrent_answer, test_no_request_call, test_callback_reentry]
     results = []
     try:
         for test in tests:
