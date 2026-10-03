@@ -30,21 +30,24 @@ Measurement (views, writers per day) is a separate, planned feature.
 
 ## 2. Before the first run
 
-**The session must already be authorized.** `TgData(...)` opens the persistent
-client with Telethon's `start()`, which *prompts on stdin* for a phone and a
-code when the session is not logged in. In a background job there is nobody to
-answer, and the process hangs. For unattended runs, check first with the client
-that can never prompt:
+**The session must already be logged in.** tgdata asks Telegram whether it is
+before every first connection, and never asks Telegram for a login code on its
+own. A session that is not logged in raises `AuthRequiredError` — its
+`.reason` is Telegram's own name for the problem, and `.banned` is true when
+logging in again cannot help. The one exception is the first login of a
+brand-new session run by hand in a terminal, which prompts for the code as
+before. If Telegram later logs the account out, log in again by hand once with
+`TgData("config.ini", interactive_login=True)`. A background job should stop
+and alert someone on `AuthRequiredError`; retrying cannot log it back in.
 
 ```python
 from tgdata import TgData, AuthRequiredError
 
 tg = TgData("config.ini")
 try:
-    async with tg.connection_engine.ephemeral_client() as probe:
-        me = await probe.get_me()
-except AuthRequiredError:
-    raise SystemExit("session not logged in — run an interactive login once, by hand")
+    df = await tg.search_groups("Antalya")
+except AuthRequiredError as e:
+    raise SystemExit(f"not logged in ({e.reason}) — log in again by hand, interactive_login=True")
 ```
 
 **One live client per session file.** Two processes on the same `.session`
@@ -309,7 +312,7 @@ own username.
 | `similar_groups` returns nothing | a megagroup or basic-group seed, or a non-Premium account | seed with broadcast channels; expect ~10 per seed without Premium |
 | `GroupAccessError` for an int seed | the account cannot see that id | use the `@username`, or a room the account is in |
 | `ValueError: '@x' is not a group or channel` | the name is a user or a bot | drop it |
-| the process hangs at start with no output | `start()` waiting for a login code on stdin | authorize interactively once; use the `ephemeral_client` check from §2 |
+| `AuthRequiredError` at the first request | the session is not logged in: `.reason` says why (`AUTH_KEY_UNREGISTERED` or `SESSION_REVOKED` — logged out; `USER_DEACTIVATED_BAN` — banned, `.banned` is true) | log in again by hand once, `TgData(..., interactive_login=True)` in a terminal; a banned account cannot log in |
 | `sqlite3.OperationalError: database is locked` | another process holds the same session file | one live client per session; wait for the other to finish |
 | `ParticipantsCount` is `NA` | the row was resolved from a link | counts come with search and recommendation results only; fetch the full channel yourself if you need it |
 

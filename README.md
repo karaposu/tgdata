@@ -67,6 +67,25 @@ no `session_file` is set — configs that relied on username-named sessions
 keep working, but new configs should set `session_file` and omit `username`
 (it plays no part in authentication).
 
+### Logging in
+
+The first run of a new session, started by hand in a terminal, asks for the
+code Telegram sends you. After that, tgdata never asks Telegram for a login
+code on its own: before connecting it checks with Telegram whether the session
+is logged in, and if it is not, it raises `AuthRequiredError` instead of
+prompting.
+
+- `.reason` is Telegram's own name for the problem — `AUTH_KEY_UNREGISTERED`
+  or `SESSION_REVOKED` when Telegram logged the account out,
+  `USER_DEACTIVATED_BAN` when it is banned. `.banned` is true when logging in
+  again cannot help.
+- To log back in after Telegram logged the account out, run once by hand in a
+  terminal with `TgData("config.ini", interactive_login=True)`.
+  `interactive_login=False` forbids even the first-run prompt.
+- A background job should stop and alert someone on `AuthRequiredError`.
+  Retrying cannot log it back in — and, unlike before, it no longer sends the
+  owner a fresh login code on every retry.
+
 ### Connecting through a proxy (optional)
 
 With no `proxy` key, tgdata connects directly, exactly as before. Add one, and

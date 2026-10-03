@@ -36,14 +36,22 @@ class TgData:
     def __init__(self,
                  config_path: str = "config.ini",
                  connection_pool_size: int = 1,
-                 log_file: Optional[str] = None):
+                 log_file: Optional[str] = None,
+                 interactive_login: Optional[bool] = None):
         """
         Initialize Telegram group handler.
-        
+
         Args:
             config_path: Path to configuration file
             connection_pool_size: Number of connections (1 = no pooling)
             log_file: Optional log file path
+            interactive_login: When tgdata may ask Telegram for a login code
+                and wait for it on stdin. None (default): only the first
+                login of a brand-new session, run by hand in a terminal.
+                True: also log a session back in after Telegram logged it out —
+                run that by hand. False: never. Otherwise a session that is
+                not logged in raises AuthRequiredError (with .reason and
+                .banned), and no code is ever requested.
         """
         # Set up logging
         if log_file:
@@ -56,7 +64,8 @@ class TgData:
         # Initialize engines
         self.connection_engine = ConnectionEngine(
             config_path=config_path,
-            pool_size=connection_pool_size
+            pool_size=connection_pool_size,
+            interactive_login=interactive_login
         )
         
         self.message_engine = MessageEngine(
