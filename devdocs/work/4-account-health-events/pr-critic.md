@@ -408,3 +408,35 @@ Have `get_metrics()` call `self.health_check()`, or open the same health call ar
 ### Affected areas
 
 `TgData.get_metrics`, `TgData.export_metrics`
+
+---
+
+## After this critique — the maintainer's patch (`dd45f6c`)
+
+The maintainer chose a patch over §7.4's re-plan. The robust mitigation selected for each Medium was implemented as written above:
+- **Risk 1:** `_AnswerEvidence` and `health.note_answer()`, and the evidence check in `_recover`.
+- **Risk 2:** the `_DELIVERING` guard, on both delivery paths.
+
+**The probes that found them, re-run on the patched branch:**
+
+```
+P1 — a call whose Telegram work predates a logout completes after it
+   B's requests: ['SearchRequest']
+   events: [('logged out', 'get_message_count')]
+   summary verdict now: logged out — the last Telegram answer said AUTH_KEY_UNREGISTERED
+P2 — a call that sends no request at all
+   download_media_by_id(123, []) -> {} | a client was ever built: False
+   events: [('no access', 'group', 123, 'get_message_count'), ('logged out', 'account', 123, 'get_message_count')]
+P6:
+validate_connection() -> False
+connection attempts: 2, callback runs: 1, deepest nesting: 1, events counted: 2
+```
+
+**Regression tests.** test_16's tests 19–21 now carry P1, P2 and P6. A mutation check shows each catches its defect:
+- with the evidence rule removed, tests 19 and 20 fail — test_16 19/21;
+- with the guard removed, test 21 fails with 140 nested attempts — 20/21;
+- restored, 21/21.
+
+**The other suites:** test_15 11/11, test_14 11/11, test_13 6/6, test_12 7/7.
+
+**The three Lows stand as recorded,** consciously left: Risks 3, 4 and 5.

@@ -153,3 +153,7 @@ Yes, as far as it can be before this file commits:
 - T and steps 0–5 are ticked on #4, each naming its commit, and every one of those commits is pushed.
 - `desc.md` is posted on #4, and its merge-gate amendments follow as a second comment.
 - Step 6 is ticked once this file is committed and the PR is open. Step 7 is ticked once `pr-critic.md` is committed.
+
+## After the PR critic
+
+The PR critic rejected the first round on two Medium findings. The maintainer chose a patch over §7.4's re-plan, in `dd45f6c`. The patch is the critic's own selected mitigations — answers 1 to 3 above still hold — and it is recorded as implementation note 11 in `plan.md`. `desc.md` criteria 3 and 6 were amended to match it. The re-run probes and the suites are at the end of `pr-critic.md`.

@@ -576,6 +576,16 @@ Implemented in `94560f0`, with all eight steps as written. These details differ 
     - A verdict found is named in `errors` and reported as a swallowed event. The primary connection, which the pool also holds, is reported once.
     - `TgData.health_check()` runs as one health call, opened by hand so `['health']` is read after recovery. Only a check that reached Telegram and found every connection logged in counts as a recovery.
     - test_16 gained TEST 18, and is now 18/18.
+11. **Patch after the PR critic** — the maintainer chose a patch over §7.4's re-plan for `pr-critic.md`'s two Medium findings, in `dd45f6c`:
+    - **Recovery needs Telegram's answer.**
+      - `_AnswerEvidence`, a mixin in front of tgdata's client class, calls `health.note_answer()` after every successful request.
+      - The owning call records a tick.
+      - `_recover` recovers an account or group verdict only when the call's last answer came after the verdict's tick.
+    - **No re-entry.** `_DELIVERING` is set while the callback runs, on the awaited and the scheduled path. Events from the callback's own tgdata calls are recorded and logged, but not delivered back.
+    - **test_16.**
+      - The recovery tests get a real, scripted answer through the client class.
+      - Tests 19–21 are the critic's P1, P2 and P6, as regression tests. Each fails with its fix removed.
+      - The suite is 21/21.
 
 **Verify (step 8):** test_16 17/17, test_15 11/11, test_14 11/11, test_13 6/6, test_12 7/7, on Telethon 1.45.0.
 

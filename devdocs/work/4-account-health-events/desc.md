@@ -3,6 +3,8 @@
 > Session warmed at `c72eab4` (2026-10-03) — already warm, so `/arch-small-summary` and `/arch-intro` were not run. This session wrote tgdata's discovery, proxy, device-identity, flood-threshold and login code, and read `connection_engine.py`, `message_engine.py`, `discovery_engine.py`, `tgdata.py` and Telethon 1.45.0's request, login, updates and error paths in full. `devdocs/archaeology/` is unchanged.
 >
 > Amended at the merge gate (2026-10-03) to match the code: criteria 2 (`group`, `source`), 6 (a sleep outside any call) and 10 (the `health_check()` fix, and `validate_connection()`'s direct check).
+>
+> Amended after the PR critic (2026-10-03): criteria 3 (no re-entry) and 6 (recovery needs Telegram's answer). The maintainer chose a patch over the §7.4 re-plan.
 
 **Sources:**
 - `traverse/finding.md` — the decided meaning, on Telethon 1.45.0;
@@ -100,6 +102,7 @@ The `account` values:
 - **Registration.** `TgData(..., health_callback=fn, account_label=None)`. `fn` may be a function or a coroutine function.
 - **Never breaks the operation.** A callback that raises is logged: the first time at WARNING with its traceback, after that at DEBUG.
 - **Ordering.** An event that ends an operation is delivered before that operation's exception reaches the caller.
+- **No re-entry.** Events caused by tgdata calls the callback itself makes are logged and counted, but not delivered back to it.
 
 ### 4. Sources
 
@@ -121,9 +124,11 @@ The fetch loop waiting four times, then giving up, produces four waiting events,
 | Scope | Recovers when |
 |---|---|
 | waiting (a request type) | the call that waited completes successfully |
-| logged out, banned | any later call completes successfully |
-| restricted | only the same `TgData` method that was refused later completes successfully |
-| no access (a group) | a later call naming the same group completes successfully |
+| logged out, banned | a later call completes, and Telegram answered it after the verdict was recorded |
+| restricted | the same, from the same `TgData` method that was refused |
+| no access (a group) | the same, from a call naming that group |
+
+A call that merely completes proves nothing. A call Telegram answered before the verdict, or one that sent no request, never sends "ok".
 
 A sleep in a task whose call has ended, or in another task during a call, is an occurrence only, with no "ok" after it. A sleep in code that never ran inside a public call cannot be tied to an account, and is not reported.
 
