@@ -34,13 +34,14 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 
 import pandas as pd
-from telethon import errors as tl_errors
 from telethon import functions
 from telethon import utils as tl_utils
-from telethon.errors import FloodWaitError, RPCError
+from telethon.errors import RPCError
 from telethon.tl import types as tl_types
 
+from . import health
 from .connection_engine import ConnectionEngine
+from .health import WAIT_ERRORS as _WAIT_ERRORS
 from .message_engine import MessageEngine, GroupAccessError
 from .models import GroupInfo
 
@@ -55,15 +56,10 @@ SEARCH_LIMIT = 100               # Telegram caps lower; ask for the most
 LINK_POSTS = 100                 # posts read per room when mining links
 SIMILAR_ROUNDS = 2               # a third round drifts out of the topic
 NET_ERRORS = (ConnectionError, OSError, asyncio.TimeoutError, asyncio.IncompleteReadError)
-# Every wait Telethon's own sleep branch handles (UserMethods._call). Discovery
-# sends with a per-call flood threshold of 0, so Telethon never sleeps for it
-# and it must handle all of them itself — every one carries .seconds. getattr:
-# FloodPremiumWaitError is newer than the oldest supported Telethon (1.33).
-_WAIT_ERRORS = tuple(c for c in (FloodWaitError,
-                                 getattr(tl_errors, 'FloodPremiumWaitError', None),
-                                 getattr(tl_errors, 'SlowModeWaitError', None),
-                                 getattr(tl_errors, 'FloodTestPhoneWaitError', None))
-                     if c is not None)
+# _WAIT_ERRORS (from health.WAIT_ERRORS): every wait Telethon's own sleep branch
+# handles (UserMethods._call). Discovery sends with a per-call flood threshold
+# of 0, so Telethon never sleeps for it and it must handle all of them itself —
+# every one carries .seconds.
 COLUMNS = ['GroupID', 'Title', 'Username', 'Identifier', 'IsChannel', 'IsMegagroup',
            'ParticipantsCount', 'FoundVia', 'FoundBy']
 
@@ -276,6 +272,7 @@ class DiscoveryEngine:
                         f"(max_flood_wait={st.max_flood_wait}); {len(st.rows)} rooms found so far",
                         self._frame(st.rows), e.seconds) from e
                 logger.warning(f"FloodWait {e.seconds}s on {name} — waiting, then retrying")
+                await health.report(e, 'handled')
                 await self._sleep_beating(e.seconds, st.beat, "flood-wait")
             except NET_ERRORS as e:
                 logger.warning(f"Connection lost during {type(request).__name__} "
@@ -345,6 +342,7 @@ class DiscoveryEngine:
                                     st, "search")
         except RPCError as e:                       # an empty or too-short query, for instance
             logger.warning(f"Search {query!r} failed ({type(e).__name__}) — skipped")
+            await health.report(e, 'swallowed')
             await self._pause(st)
             return
         new = 0
@@ -364,12 +362,14 @@ class DiscoveryEngine:
                 entity = await self._resolve(client, seed, st)
             except _WAIT_ERRORS as e:
                 logger.warning(f"Seed {seed!r} skipped — Telegram wants {e.seconds}s on username lookups")
+                await health.report(e, 'swallowed', group=seed)
                 continue
             except _BudgetExhausted:
                 logger.warning(f"Seed {seed!r} skipped — resolution budget exhausted (max_resolve={st.max_resolve})")
                 continue
             except (ValueError, TypeError, GroupAccessError, RPCError) as e:
                 logger.warning(f"Seed {seed!r} skipped ({type(e).__name__}: {e})")
+                await health.report(e, 'swallowed', group=seed)
                 continue
             if not isinstance(entity, tl_types.Channel):
                 logger.warning(f"Seed {seed!r} is a basic group — Telegram only recommends similar CHANNELS; skipped")
@@ -392,6 +392,7 @@ class DiscoveryEngine:
                         st, "similar")
                 except (RPCError, TypeError) as e:  # a private channel, a min object, ...
                     logger.warning(f"similar: {by} skipped ({type(e).__name__})")
+                    await health.report(e, 'swallowed', group=entity)
                     await self._pause(st)
                     continue
                 new = 0
@@ -441,6 +442,7 @@ class DiscoveryEngine:
                         f"(max_flood_wait={st.max_flood_wait}); {len(st.rows)} rooms found so far",
                         self._frame(st.rows), e.seconds) from e
                 logger.warning(f"FloodWait {e.seconds}s while reading posts — waiting, then retrying")
+                await health.report(e, 'handled')
                 await self._sleep_beating(e.seconds, st.beat, "flood-wait")
             except NET_ERRORS as e:
                 logger.warning(f"Connection lost while reading posts ({type(e).__name__}) — waiting for the network")
@@ -468,6 +470,7 @@ class DiscoveryEngine:
                 names = await self._mine_room(client, entity, posts, st)
             except RPCError as e:
                 logger.warning(f"links: {by} skipped ({type(e).__name__})")
+                await health.report(e, 'swallowed', group=entity)
                 await self._pause(st)
                 continue
             new = 0
@@ -483,6 +486,7 @@ class DiscoveryEngine:
                         logger.warning(
                             f"Stopped resolving links — Telegram wants {e.seconds}s on username lookups; "
                             f"the remaining links are returned unresolved (Username only)")
+                        await health.report(e, 'swallowed', group=name)
                     except _BudgetExhausted:
                         st.resolve_stopped = True
                         logger.warning(
@@ -490,6 +494,7 @@ class DiscoveryEngine:
                             f"links are returned unresolved — pass max_resolve=... to resolve more")
                     except (ValueError, RPCError) as e:     # not a room, or a dead name
                         logger.debug(f"links: {name} dropped ({type(e).__name__})")
+                        await health.report(e, 'swallowed', group=name)
                         st.seen.add(key)
                         continue
                     else:

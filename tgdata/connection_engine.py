@@ -22,9 +22,10 @@ from urllib.parse import urlsplit, unquote
 from telethon import TelegramClient, functions
 from telethon.client.telegrambaseclient import TelegramBaseClient
 from telethon.errors import FloodWaitError, AuthKeyUnregisteredError, UnauthorizedError, AuthKeyError
-from telethon.errors import rpcerrorlist
 from telethon.sessions import StringSession
 
+from . import health
+from .health import telegram_error_name as _telegram_error_name
 from .models import ConnectionConfig, RateLimitInfo
 
 logger = logging.getLogger(__name__)
@@ -251,6 +252,9 @@ class AuthRequiredError(ConnectionError, RuntimeError):
     Telegram error itself is the exception's __cause__.
     .banned — True when the account is banned or deleted: logging in again
     will not help.
+    .first_login — True when the session has never been logged in: a
+    configuration step, not something Telegram did to the account, so it is
+    not reported as a health event.
 
     Both a ConnectionError (what the persistent path raised for a failed
     login before) and a RuntimeError (what this class was before), so
@@ -258,22 +262,16 @@ class AuthRequiredError(ConnectionError, RuntimeError):
     Fix a logout: log in again by hand, TgData(..., interactive_login=True)
     in a terminal."""
 
-    def __init__(self, message: str, reason: Optional[str] = None, banned: bool = False):
+    def __init__(self, message: str, reason: Optional[str] = None, banned: bool = False,
+                 first_login: bool = False):
         super().__init__(message)
         self.reason = reason
         self.banned = banned
+        self.first_login = first_login
 
 
-# Telegram's own names for the error classes Telethon knows, for .reason
-_TELEGRAM_NAMES = {cls: name for name, cls in getattr(rpcerrorlist, 'rpc_errors_dict', {}).items()}
 # The account itself is gone: logging in again cannot help
 _BANNED = {'USER_DEACTIVATED_BAN', 'USER_DEACTIVATED'}
-
-
-def _telegram_error_name(error: BaseException) -> str:
-    """Telegram's own name for an error: from Telethon's table for a class it
-    knows, else the raw name Telethon keeps in .message for one it does not."""
-    return _TELEGRAM_NAMES.get(type(error)) or getattr(error, 'message', None) or type(error).__name__
 
 
 def _human_at_terminal() -> bool:
@@ -684,6 +682,7 @@ class ConnectionEngine:
         except FloodWaitError as e:
             wait_time = e.seconds
             logger.warning(f"Rate limited during authentication, waiting {wait_time} seconds...")
+            await health.report(e, 'handled')
             if self._pool:
                 self._pool.mark_rate_limited(client, wait_time)
             await asyncio.sleep(wait_time)
@@ -751,7 +750,7 @@ class ConnectionEngine:
             return AuthRequiredError(
                 f"session {session_file!r} has never been logged in ({reason}), and there is no "
                 f"terminal to type the login code into — run it once by hand in a terminal, "
-                f"or pass interactive_login=True", reason=reason)
+                f"or pass interactive_login=True", reason=reason, first_login=True)
         return AuthRequiredError(
             f"session {session_file!r} is not logged in ({reason}) — Telegram logged it out. "
             f"tgdata never asks for a login code on its own; log in again by hand: "
@@ -772,6 +771,7 @@ class ConnectionEngine:
         except FloodWaitError as e:
             wait_time = e.seconds
             logger.warning(f"Rate limited on connect, waiting {wait_time} seconds...")
+            await health.report(e, 'handled')
             if self._pool:
                 self._pool.mark_rate_limited(client, wait_time)
             await asyncio.sleep(wait_time)
@@ -850,16 +850,31 @@ class ConnectionEngine:
     async def validate_connection(self) -> bool:
         """
         Validate that we have a working connection.
-        
+
+        Returns True or False, and on False says why: a Telegram verdict
+        (logged out, banned, restricted, a wait, ...) is logged at WARNING
+        with Telegram's name for it and reported as a health event; any other
+        failure keeps the ERROR line.
+
         Returns:
             True if connection is valid
         """
         try:
             client = await self.get_client()
-            await client.get_me()
+            if await client.get_me() is None:
+                # Telethon's get_me() answers a logout or a ban with None, not
+                # an error: ask Telegram directly, as the login check does
+                problem = await self._authorization_problem(client)
+                if problem is not None:
+                    raise problem
             return True
         except Exception as e:
-            logger.error(f"Connection validation failed: {e}")
+            finding = health.classify(e, include_reported=True)
+            if finding is not None:
+                logger.warning(f"Connection validation failed: {finding.verdict} ({finding.error})")
+            else:
+                logger.error(f"Connection validation failed: {e}")
+            await health.report(e, 'swallowed')
             return False
             
     async def handle_rate_limit(self, error: FloodWaitError, client: Optional[TelegramClient] = None, strategy: str = 'wait'):
