@@ -630,9 +630,14 @@ unclassified; INFO for waiting, no access and ok. Your own logging output is
 otherwise unchanged. The INFO lines in which Telethon logs its silent sleeps
 stay hidden unless you asked for them.
 
-**`validate_connection()`** still returns `True` or `False`. On `False` it now
-says why: at WARNING with Telegram's name when it is a verdict, and as an
-event.
+**`validate_connection()` and `health_check()` ask Telegram directly.**
+Telethon's `get_me()` answers a logout or a ban with `None` instead of an
+error, so both now confirm with Telegram whether the session is logged in.
+- `validate_connection()` still returns `True` or `False`. On `False` it says
+  why: at WARNING with Telegram's name when it is a verdict, and as an event.
+- `health_check()` marks such a connection unhealthy and names the verdict in
+  `errors`, e.g. `logged out (AUTH_KEY_UNREGISTERED)`. It reports it as an
+  event, and the same result's `['health']` already includes it.
 
 **Not covered yet.**
 - Signals that Telethon's background update loop only logs: an account banned

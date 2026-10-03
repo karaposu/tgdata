@@ -78,6 +78,13 @@ def _polling_cannot_recover(error: BaseException) -> bool:
     return finding is not None and finding.verdict in health.TERMINAL
 
 
+def _health_check_passed(status: Dict[str, Any]) -> bool:
+    """Whether a health_check() reached Telegram and found every connection
+    logged in — the only kind that may count as a recovery."""
+    return (status.get('primary_connection') is True
+            and all(entry.get('healthy') for entry in status.get('pool_connections', [])))
+
+
 class TgData:
     """
     Unified interface for Telegram group operations.
@@ -699,15 +706,26 @@ class TgData:
     async def health_check(self) -> Dict[str, Any]:
         """
         Perform health check.
+
+        A connection is healthy only when Telegram confirms its session is
+        logged in. A logout or a ban it finds is named in 'errors' —
+        'logged out (AUTH_KEY_UNREGISTERED)' — and reported as a health event.
         
         Returns:
             Health check results. ['health'] summarises this instance's
-            account health events (see health_callback): the account's
-            verdict and since when, open waits per request type, groups
-            without access, wait and event counts, the last unclassified
-            error. JSON-ready.
+            account health events (see health_callback), what this check
+            found included: the account's verdict and since when, open waits
+            per request type, groups without access, wait and event counts,
+            the last unclassified error. JSON-ready.
         """
-        status = await self.connection_engine.health_check()
+        # One health call, opened here rather than by @_reported, so the
+        # summary is read after it closes: a recovery this check proves is
+        # already in it. Only a check that reached Telegram and found every
+        # connection logged in counts as one.
+        async with self._health.call('health_check') as call:
+            status = await self.connection_engine.health_check()
+            if not _health_check_passed(status):
+                call.failed = True
         status['health'] = self._health.snapshot()
         return status
 

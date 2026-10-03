@@ -25,6 +25,7 @@ Classification and events                                                     (n
 The two fixes                                                                  (no network)
  10. polling stops on what retrying cannot fix; transient errors retried; callback errors propagate
  11. validate_connection(): False with the reason, reported, never a recovery
+ 18. health_check(): a logged-out connection is unhealthy, named, reported, and in ['health']
 Sources and safety                                                             (no network)
  12. the real-time listener's logout is reported, and still raised
  13. without a health_callback everything behaves as before
@@ -58,6 +59,7 @@ from telethon.tl.functions.updates import GetStateRequest
 
 from tgdata import TgData, AuthRequiredError, GroupAccessError
 from tgdata import health
+from tgdata.connection_engine import ConnectionPool
 
 TMP = tempfile.mkdtemp(prefix="tgdata_health_test_")
 API_HASH = "0123456789abcdef0123456789abcdef"
@@ -804,6 +806,64 @@ async def test_per_item_group():
     return True
 
 
+async def test_health_check():
+    print("\nTEST 18: health_check() asks Telegram — a logout behind get_me() is found and reported...")
+    events = Events()
+    t = tg(events)
+    client = scripted_client(t, [rpc(401, 'AUTH_KEY_UNREGISTERED'), rpc(401, 'AUTH_KEY_UNREGISTERED')])
+    client.is_connected = lambda: True
+    t.connection_engine._primary_client = client          # logged in once, logged out since
+    status = await t.health_check()
+    check(status['primary_connection'] is False, "a logged-out connection was called healthy")
+    check(status['errors'] == ["Primary connection error: logged out (AUTH_KEY_UNREGISTERED)"], status['errors'])
+    check(client._sender.sent == ['GetUsersRequest', 'GetStateRequest'], client._sender.sent)
+    check(events.verdicts() == ['logged out'], events.verdicts())
+    check((events.list[0]['source'], events.list[0]['call']) == ('swallowed', 'health_check'), events.list[0])
+    check(status['health']['verdict'] == 'logged out', "['health'] disagrees with the same result")
+    json.dumps(status)
+    print("✓ unhealthy; errors: 'logged out (AUTH_KEY_UNREGISTERED)'; one event; ['health'] agrees")
+
+    class Me:
+        id = 1
+
+    async def logged_in():
+        return Me()
+
+    client.get_me = logged_in                              # logged in again
+    status = await t.health_check()
+    check(status['primary_connection'] is True and not status['errors'], status)
+    check(events.verdicts() == ['logged out', 'ok'], events.verdicts())
+    check((events.list[1]['scope'], events.list[1]['source'], events.list[1]['call'])
+          == ('account', 'recovery', 'health_check'), events.list[1])
+    check(status['health']['verdict'] == 'ok', "the recovery is missing from the same result's ['health']")
+    print("✓ a later healthy check is a recovery, already in the same result's ['health']")
+
+    events = Events()
+    t = tg(events)
+    t.message_engine.get_message_count = raising(rpc(401, 'AUTH_KEY_UNREGISTERED'))
+    await caught(t.get_message_count(1))
+    status = await t.health_check()                        # no connection yet: Telegram never asked
+    check(status['primary_connection'] is False and events.verdicts() == ['logged out'], events.verdicts())
+    check(status['health']['verdict'] == 'logged out', status['health'])
+    print("✓ a check that never reached Telegram is no recovery")
+
+    events = Events()
+    t = tg(events)
+    primary = scripted_client(t, [rpc(401, 'AUTH_KEY_UNREGISTERED') for _ in range(4)])   # 4 separate answers
+    other = scripted_client(t, [rpc(401, 'SESSION_REVOKED'), rpc(401, 'SESSION_REVOKED')])
+    for c in (primary, other):
+        c.is_connected = lambda: True
+    t.connection_engine._primary_client = primary
+    t.connection_engine._pool = ConnectionPool(2)
+    t.connection_engine._pool.connections = [primary, other]   # the pool holds the primary too
+    status = await t.health_check()
+    check([entry['healthy'] for entry in status['pool_connections']] == [False, False], status['pool_connections'])
+    check(len(status['errors']) == 3, status['errors'])
+    check([e['error'] for e in events.list] == ['AUTH_KEY_UNREGISTERED', 'SESSION_REVOKED'], events.list)
+    print("✓ with a pool: every connection checked; the primary reported once, not twice")
+    return True
+
+
 async def main():
     print("Account Health Event Tests")
     print("=" * 60)
@@ -811,7 +871,7 @@ async def main():
     tests = [test_classifier, test_boundary, test_delivery, test_silent_sleeps, test_two_accounts,
              test_counted_once, test_recovery, test_summary, test_log_mirror, test_polling,
              test_validate_connection, test_real_time, test_no_callback, test_fail_safe,
-             test_owner_task, test_no_self_recovery, test_per_item_group]
+             test_owner_task, test_no_self_recovery, test_per_item_group, test_health_check]
     results = []
     try:
         for test in tests:

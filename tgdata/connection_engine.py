@@ -274,6 +274,13 @@ class AuthRequiredError(ConnectionError, RuntimeError):
 _BANNED = {'USER_DEACTIVATED_BAN', 'USER_DEACTIVATED'}
 
 
+def _describe_error(error: BaseException) -> str:
+    """An error as a health check reports it: a Telegram verdict by its name —
+    'logged out (AUTH_KEY_UNREGISTERED)' — anything else by its message."""
+    finding = health.classify(error, include_reported=True)
+    return f"{finding.verdict} ({finding.error})" if finding is not None else str(error)
+
+
 def _human_at_terminal() -> bool:
     """Whether someone could type a login code: stdin is an interactive
     terminal. A pseudo-terminal nobody watches (tmux, screen) passes too —
@@ -728,6 +735,18 @@ class ConnectionEngine:
         except (UnauthorizedError, AuthKeyError) as e:
             return e
 
+    async def _confirm_logged_in(self, client: TelegramClient) -> None:
+        """Raise Telegram's error when this client's session is not logged in.
+
+        Telethon's get_me() answers a logout or a ban with None instead of an
+        error, so a None is followed by asking Telegram directly, as the login
+        check does. A logged-in session costs the one get_me() request, as
+        before."""
+        if await client.get_me() is None:
+            problem = await self._authorization_problem(client)
+            if problem is not None:
+                raise problem
+
     def _may_prompt(self, problem: Exception, first_login: bool) -> bool:
         """Whether Telethon's interactive login may run: never for a banned
         account; as interactive_login says when set; otherwise only a first
@@ -783,6 +802,11 @@ class ConnectionEngine:
     async def health_check(self) -> Dict[str, Any]:
         """
         Perform health check on all connections.
+
+        A connection is healthy only when Telegram confirms its session is
+        logged in (see _confirm_logged_in). A Telegram verdict found here is
+        named in 'errors' — 'logged out (AUTH_KEY_UNREGISTERED)' — and
+        reported as a health event.
         
         Returns:
             Dictionary with health status
@@ -808,19 +832,20 @@ class ConnectionEngine:
             if self._primary_client:
                 try:
                     if self._primary_client.is_connected():
-                        await self._primary_client.get_me()
+                        await self._confirm_logged_in(self._primary_client)
                         status['primary_connection'] = True
                         logger.info("Primary connection healthy")
                 except Exception as e:
-                    status['errors'].append(f"Primary connection error: {e}")
-                    logger.warning(f"Primary connection unhealthy: {e}")
+                    status['errors'].append(f"Primary connection error: {_describe_error(e)}")
+                    logger.warning(f"Primary connection unhealthy: {_describe_error(e)}")
+                    await health.report(e, 'swallowed')
                     
             # Check pool connections
             if self._pool:
                 for i, conn in enumerate(self._pool.connections):
                     try:
                         if conn.is_connected():
-                            await conn.get_me()
+                            await self._confirm_logged_in(conn)
                             status['pool_connections'].append({
                                 'index': i,
                                 'healthy': True,
@@ -834,12 +859,14 @@ class ConnectionEngine:
                                 'healthy': False
                             })
                     except Exception as e:
-                        status['errors'].append(f"Pool connection {i} error: {e}")
+                        status['errors'].append(f"Pool connection {i} error: {_describe_error(e)}")
                         status['pool_connections'].append({
                             'index': i,
                             'healthy': False,
-                            'error': str(e)
+                            'error': _describe_error(e)
                         })
+                        if conn is not self._primary_client:    # the primary was reported above
+                            await health.report(e, 'swallowed')
                         
         except Exception as e:
             status['errors'].append(f"Health check error: {e}")
@@ -861,12 +888,7 @@ class ConnectionEngine:
         """
         try:
             client = await self.get_client()
-            if await client.get_me() is None:
-                # Telethon's get_me() answers a logout or a ban with None, not
-                # an error: ask Telegram directly, as the login check does
-                problem = await self._authorization_problem(client)
-                if problem is not None:
-                    raise problem
+            await self._confirm_logged_in(client)
             return True
         except Exception as e:
             finding = health.classify(e, include_reported=True)
