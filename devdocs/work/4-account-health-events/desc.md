@@ -1,6 +1,8 @@
 # Report account health states as events (issue #4)
 
 > Session warmed at `c72eab4` (2026-10-03) — already warm, so `/arch-small-summary` and `/arch-intro` were not run. This session wrote tgdata's discovery, proxy, device-identity, flood-threshold and login code, and read `connection_engine.py`, `message_engine.py`, `discovery_engine.py`, `tgdata.py` and Telethon 1.45.0's request, login, updates and error paths in full. `devdocs/archaeology/` is unchanged.
+>
+> Amended at the merge gate (2026-10-03) to match the code: criteria 2 (`group`, `source`), 6 (a sleep outside any call) and 10 (the `health_check()` fix, and `validate_connection()`'s direct check).
 
 **Sources:**
 - `traverse/finding.md` — the decided meaning, on Telethon 1.45.0;
@@ -81,12 +83,12 @@ It must survive `json.dumps` unchanged. Its fields:
 | `time` | UTC, ISO 8601 |
 | `account` | `label`, `session`, `user_id` |
 | `verdict`, `scope` | as in the table above |
-| `group` | the group as the caller named it: an int stays an int; a `@username` or t.me link becomes the lowercase username without `@`; `None` otherwise |
+| `group` | the group as the caller named it: an int stays an int, and so does a string of digits; a `@username` or t.me link becomes the lowercase username without `@`; any other string is lowercased; an entity gives its id; `None` otherwise, a list included |
 | `call` | the `TgData` method in progress, e.g. `get_messages` |
 | `request` | the Telegram request type when known, e.g. `GetHistoryRequest` |
 | `wait_seconds` | the wait length, for waiting |
 | `error` | Telegram's name |
-| `source` | `error`, `sleep`, `handled` or `swallowed` |
+| `source` | `error`, `sleep`, `handled` or `swallowed`; `recovery` for an `ok` |
 
 The `account` values:
 - **`label`** — the optional `account_label=`;
@@ -123,7 +125,7 @@ The fetch loop waiting four times, then giving up, produces four waiting events,
 | restricted | only the same `TgData` method that was refused later completes successfully |
 | no access (a group) | a later call naming the same group completes successfully |
 
-A sleep that happens outside any public call is an occurrence only, with no "ok" after it.
+A sleep in a task whose call has ended, or in another task during a call, is an occurrence only, with no "ok" after it. A sleep in code that never ran inside a public call cannot be tied to an account, and is not reported.
 
 ### 7. A per-instance summary in `health_check()["health"]`
 
@@ -149,7 +151,7 @@ Each event is also written to the logger `tgdata.tgdata.health`, so `log_file` u
 - **Without a `health_callback`,** tgdata behaves as before, apart from the new log lines and summary.
 - **Nothing regresses.** The offline suites — proxy, device identity, flood threshold and login checks — still pass.
 
-### 10. The two fixes the maintainer added
+### 10. The fixes the maintainer added
 
 **`poll_for_messages()`:**
 - **It stops with the real error** — the same object — when retrying cannot help:
@@ -162,8 +164,14 @@ Each event is also written to the logger `tgdata.tgdata.health`, so `log_file` u
 
 **`validate_connection()`:**
 - It still returns `True` or `False`.
+- A logout or a ban that Telethon's `get_me()` answers with `None` is a failure too: it asks Telegram directly.
 - On `False` it logs the classified reason — at WARNING when it is a Telegram verdict — and reports it as a `swallowed` health event.
 - A `False` result never counts as a recovery.
+
+**`health_check()`** — added after implementation, at the maintainer's request (`a21eea5`):
+- A connection is healthy only when Telegram confirms its session is logged in, so a logout hidden by `get_me()` is found.
+- A verdict it finds is named in `errors` and reported as a `swallowed` health event, and `["health"]` in the same result includes it.
+- Only a check that reached Telegram and found every connection logged in counts as a recovery.
 
 ## Scope Boundaries
 
