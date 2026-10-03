@@ -27,6 +27,7 @@ A production-grade Python library for extracting and processing Telegram group a
 - 🔎 **Group Discovery**: Find rooms you are not in — Telegram's name search, its "similar channels", and links mined from posts — paced, flood-safe, budgeted
 - 🛡️ **Proxy Support**: An optional per-account SOCKS5/SOCKS4/HTTP proxy for every connection, with `require_proxy` and no silent fallback to a direct line
 - 🪪 **Fixed Device Identity**: Optionally pin the device model, system and app version an account presents, so it looks the same from every machine and after Telethon upgrades
+- 🩺 **Account Health Events**: Every wait, logout, ban, restriction or lost group is reported as a plain-data event — through one callback, a log line and a per-account summary — and "ok" when it ends
 
 ## Installation
 
@@ -524,6 +525,16 @@ async def poll_messages():
     )
 ```
 
+Polling stops, raising the error, when polling again cannot help:
+- the account is logged out, banned or restricted;
+- it cannot read the group (`CHANNEL_PRIVATE`, `GroupAccessError`, ...);
+- the session is not logged in (`AuthRequiredError`);
+- the proxy setting is unusable (`ProxyConfigError`).
+
+Network errors, rate-limit waits and server errors are logged and retried at
+the next interval, as before. An exception raised by your callback now reaches
+you; it used to be logged, and those messages were skipped.
+
 
 ### Real-time Message Events
 
@@ -538,6 +549,111 @@ async def handle_message(event):
 await tg.run_with_event_loop()
 ```
 
+
+### Account health events
+
+Every time Telegram says no to an account, tgdata tells you:
+- which verdict;
+- about what — the account, one kind of request, or one group;
+- from which call;
+- for how long;
+- when it ended.
+
+It reports and never acts. No exception changes, and nothing is paused or
+retried because of a verdict.
+
+```python
+def on_health(event):                # or an async function
+    print(event['verdict'], event['scope'], event['error'], event['call'])
+
+tg = TgData("config.ini", health_callback=on_health, account_label="reader-7")
+```
+
+| Verdict | About | Telegram's names |
+|---|---|---|
+| `waiting` | one request type | `FLOOD_WAIT_X`, `FLOOD_PREMIUM_WAIT_X`, `SLOWMODE_WAIT_X`, `FLOOD_TEST_PHONE_WAIT_X` — with the seconds |
+| `logged out` | the account | `AUTH_KEY_UNREGISTERED`, `SESSION_REVOKED`, `SESSION_EXPIRED`, `AUTH_KEY_INVALID`, `AUTH_KEY_DUPLICATED` |
+| `banned` | the account | `USER_DEACTIVATED_BAN`, `USER_DEACTIVATED`, `PHONE_NUMBER_BANNED` |
+| `restricted` | the account | `FROZEN_METHOD_INVALID`, `FROZEN_PARTICIPANT_MISSING`, `USER_RESTRICTED`, `PEER_FLOOD` |
+| `no access` | one group | `CHANNEL_PRIVATE`, `CHAT_FORBIDDEN`, `CHANNEL_INVALID`, `USER_BANNED_IN_CHANNEL`, `CHANNEL_PUBLIC_GROUP_NA`, `CHANNEL_BANNED`, and tgdata's `GroupAccessError` |
+| `unclassified` | — | any other Telegram error in the 401, 403, 406 or 420 categories, with its name (file-reference errors excepted) |
+| `ok` | what recovered | — |
+
+Nothing else is an event: bad requests (400), server errors, network and proxy
+errors, a lookup that found nothing, or a session that was never logged in.
+
+An event is a plain dict that survives `json.dumps`:
+
+```python
+{'kind': 'health', 'time': '2026-10-03T14:02:11.418523+00:00',
+ 'account': {'label': 'reader-7', 'session': 'reader7', 'user_id': 123456789},
+ 'verdict': 'no access', 'scope': 'group', 'group': 'somegroup',
+ 'call': 'get_messages', 'request': 'GetHistoryRequest',
+ 'wait_seconds': None, 'error': 'CHANNEL_PRIVATE', 'source': 'error'}
+```
+
+- **`group`** is the group as you named it: an int stays an int; `@Name` and
+  t.me links become `name`.
+- **`call`** is the `TgData` method; **`request`** is Telegram's request type.
+- **`source`** says where it came from:
+  - `error` — it ended the call, and you also get the exception;
+  - `sleep` — Telethon slept through a wait of up to a minute, silently;
+  - `handled` — tgdata waited it out itself;
+  - `swallowed` — tgdata skipped the item and carried on, such as a
+    discovery seed or link;
+  - `recovery` — an `ok`.
+
+**"ok" only when Telegram shows a condition ended:**
+- **a wait** — the call that waited completes successfully;
+- **logged out or banned** — a call completes that Telegram answered after
+  the problem was recorded;
+- **restricted** — the same, from the method that was refused;
+- **no access** — the same, from a call naming that group.
+
+A call that merely completes proves nothing. A call Telegram answered before
+the problem was seen, or one that sent no request at all, never sends `ok`.
+
+**Delivery.** The event that ends a call is delivered before its exception
+reaches you. The callback may be a function or a coroutine function. If it
+raises, the error is logged — first at WARNING with its traceback, then at
+DEBUG — and nothing else changes. A wait Telethon sleeps through is delivered
+from inside the request: a function runs there, a coroutine is scheduled.
+The callback may call tgdata itself. Events caused by those calls are logged
+and counted, but not delivered back to it, so it never calls itself.
+
+**Summary.** `(await tg.health_check())['health']` holds, for this `TgData`,
+in memory:
+- the account's verdict, and since when;
+- the open waits per request type;
+- the groups without access;
+- the wait count and total seconds;
+- the event count;
+- the last unclassified name.
+
+**Log lines.** Each event is also logged on `tgdata.tgdata.health`, so
+`log_file=` receives it: WARNING for logged out, banned, restricted and
+unclassified; INFO for waiting, no access and ok. Your own logging output is
+otherwise unchanged. The INFO lines in which Telethon logs its silent sleeps
+stay hidden unless you asked for them.
+
+**`validate_connection()` and `health_check()` ask Telegram directly.**
+Telethon's `get_me()` answers a logout or a ban with `None` instead of an
+error, so both now confirm with Telegram whether the session is logged in.
+- `validate_connection()` still returns `True` or `False`. On `False` it says
+  why: at WARNING with Telegram's name when it is a verdict, and as an event.
+- `health_check()` marks such a connection unhealthy and names the verdict in
+  `errors`, e.g. `logged out (AUTH_KEY_UNREGISTERED)`. It reports it as an
+  event, and the same result's `['health']` already includes it.
+
+**Not covered yet.**
+- Signals that Telethon's background update loop only logs: an account banned
+  in one channel, and waits while catching up.
+- `restricted` follows Telegram's documentation; how a frozen account behaves
+  when it only reads has not been observed.
+- Capturing Telethon's silent sleeps relies on Telethon creating its INFO
+  record: `logging.disable(logging.INFO)` or higher turns the capture off, and
+  a level set on `telethon.client.users` during a call applies from the next
+  call.
 
 ### Performance Tips
 

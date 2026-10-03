@@ -13,6 +13,7 @@ from telethon import utils as tl_utils
 from telethon.errors import FloodWaitError
 from telethon.tl import types as tl_types
 
+from . import health
 from .connection_engine import ConnectionEngine
 from .models import MessageData
 from .progress import ProgressTracker
@@ -33,6 +34,9 @@ class GroupAccessError(Exception):
     """The account cannot see this group: it is not a member (or the id is
     wrong). Raised only after a dialog sync ruled out the benign cause —
     a fresh session whose entity cache simply hasn't met the id yet."""
+
+
+health.register(GroupAccessError, health.NO_ACCESS, 'group')
 
 
 class MessageEngine:
@@ -337,6 +341,9 @@ class MessageEngine:
                 break  # fetch completed
 
             except FloodWaitError as e:
+                # every wait is reported here, the give-up's included; the boundary
+                # then skips the RuntimeError's (already reported) cause: counted once
+                await health.report(e, 'handled')
                 flood_attempts += 1
                 total_flood_wait += e.seconds
                 if flood_attempts > MAX_FLOOD_RETRIES:

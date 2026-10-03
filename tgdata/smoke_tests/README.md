@@ -98,6 +98,16 @@ Tests the fixed device identity (`python -m tgdata.smoke_tests.test_13_device_id
 
 Whether Telegram's active-sessions list *shows* the pinned values needs a logged-in account and is not checked here.
 
+### 11. **test_16_health_events.py**
+Tests account health events (`python -m tgdata.smoke_tests.test_16_health_events`) — entirely offline, no config needed:
+- the verdict table, by Telegram's own error names, through tgdata's wrappers
+- the event shape and its delivery: the same exception re-raised, the event first, a raising callback harmless
+- Telethon's silent sleeps become events, per account and per call, with console output unchanged
+- "ok" only on recovery; the summary in `health_check()["health"]`; the log mirror's levels
+- polling stops on what retrying cannot fix; `validate_connection()` and `health_check()` find a logout Telethon's `get_me()` hides, and say why
+
+Engine methods are replaced by stand-ins, and Telethon's real request code runs on a scripted connection.
+
 ### Custom Test Scripts:
 - **my_test.py** - Custom test script for specific scenarios
 

@@ -4,13 +4,17 @@ Single class with all features, delegating to specialized engines.
 """
 
 import asyncio
+import functools
+import inspect
 import json
 import logging
+import os
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any, Union, Callable
 import pandas as pd
 
-from .connection_engine import ConnectionEngine
+from . import health
+from .connection_engine import ConnectionEngine, AuthRequiredError, ProxyConfigError
 from .message_engine import MessageEngine
 from .discovery_engine import DiscoveryEngine
 from .models import GroupInfo
@@ -27,6 +31,60 @@ from .utils import (
 
 logger = logging.getLogger(__name__)
 
+
+def _reported(group_param: Optional[str] = None, recover: bool = True,
+              success_if: Optional[Callable[[Any], bool]] = None):
+    """Run a public method that talks to Telegram as one health call (issue
+    #4): a Telegram verdict that escapes it is reported, then re-raised
+    unchanged; a success sends "ok" for what it proves has ended.
+
+    group_param names the argument holding the group (the current group when
+    it is not given); recover=False leaves recovering to the calls made inside;
+    success_if marks a result that means failure, so it is never a recovery."""
+    def decorate(method):
+        signature = inspect.signature(method)
+        name = method.__name__
+
+        @functools.wraps(method)
+        async def wrapper(self, *args, **kwargs):
+            monitor = getattr(self, '_health', None)
+            if monitor is None:
+                return await method(self, *args, **kwargs)
+            group = None
+            if group_param is not None:
+                try:
+                    group = signature.bind_partial(self, *args, **kwargs).arguments.get(group_param)
+                except TypeError:              # a wrong call: the method raises its own error
+                    group = None
+                current = getattr(self, 'current_group', None)
+                if group is None and current is not None:
+                    group = current.id
+            async with monitor.call(name, health.normalise_group(group), recover) as call:
+                result = await method(self, *args, **kwargs)
+                if success_if is not None and not success_if(result):
+                    call.failed = True
+                return result
+        return wrapper
+    return decorate
+
+
+def _polling_cannot_recover(error: BaseException) -> bool:
+    """Whether polling again at the next interval cannot help: the session is
+    not logged in, the proxy setting is unusable, or Telegram's verdict is that
+    the account is logged out, banned or restricted, or cannot read the group."""
+    if isinstance(error, (AuthRequiredError, ProxyConfigError)):
+        return True
+    finding = health.classify(error, include_reported=True)
+    return finding is not None and finding.verdict in health.TERMINAL
+
+
+def _health_check_passed(status: Dict[str, Any]) -> bool:
+    """Whether a health_check() reached Telegram and found every connection
+    logged in — the only kind that may count as a recovery."""
+    return (status.get('primary_connection') is True
+            and all(entry.get('healthy') for entry in status.get('pool_connections', [])))
+
+
 class TgData:
     """
     Unified interface for Telegram group operations.
@@ -37,7 +95,9 @@ class TgData:
                  config_path: str = "config.ini",
                  connection_pool_size: int = 1,
                  log_file: Optional[str] = None,
-                 interactive_login: Optional[bool] = None):
+                 interactive_login: Optional[bool] = None,
+                 health_callback: Optional[Callable] = None,
+                 account_label: Optional[str] = None):
         """
         Initialize Telegram group handler.
 
@@ -52,6 +112,16 @@ class TgData:
                 run that by hand. False: never. Otherwise a session that is
                 not logged in raises AuthRequiredError (with .reason and
                 .banned), and no code is ever requested.
+            health_callback: Called with a plain, JSON-ready dict every time
+                Telegram says no to this account — a wait, a logout, a ban, a
+                restriction, no access to a group — and with verdict "ok" when
+                that ends. A function or a coroutine function; an exception in
+                it is logged, never raised. Events caused by tgdata calls it
+                makes itself are logged and counted, not delivered back to it.
+                See the README, "Account health events".
+                health_check()["health"] summarises the same events.
+            account_label: A name for this account in those events (default:
+                None; the session name and the account id are always included)
         """
         # Set up logging
         if log_file:
@@ -79,11 +149,32 @@ class TgData:
         # State
         self.current_group: Optional[GroupInfo] = None
         self._metrics: Dict[str, Any] = {}
+        self._health = health.HealthMonitor(health_callback, account_label, self._health_identity)
         
         logger.info("TgData initialized")
-        
+
+    def _health_identity(self):
+        """(session, user_id) for health events: the session file's name
+        without folder or .session, and the account id Telethon restored for
+        the client, when known. Never raises."""
+        session = user_id = None
+        try:
+            config = self.connection_engine._config      # read only once loaded: no side effect
+            if config is not None and config.session_file:
+                name = os.path.basename(str(config.session_file))
+                session = name[:-len('.session')] if name.endswith('.session') else name
+        except Exception:  # noqa: BLE001
+            pass
+        try:
+            client = self.connection_engine._primary_client
+            user_id = client._self_id if client is not None else None
+        except Exception:  # noqa: BLE001
+            pass
+        return session, user_id
+
     # ==================== Group Management ====================
     
+    @_reported()
     async def list_groups(self) -> pd.DataFrame:
         """
         List all accessible groups/channels.
@@ -135,6 +226,7 @@ class TgData:
         
     # ==================== Message Operations ====================
     
+    @_reported('group_id')
     async def get_messages(self,
                           group_id: Optional[int] = None,
                           limit: Optional[int] = None,
@@ -229,6 +321,7 @@ class TgData:
         return df
         
         
+    @_reported('group_id')
     async def get_message_count(self, group_id: Optional[int] = None) -> int:
         """
         Get total message count for a group without fetching all messages.
@@ -245,6 +338,7 @@ class TgData:
             
         return await self.message_engine.get_message_count(target_group_id)
         
+    @_reported('group_id')
     async def search_messages(self,
                             query: str,
                             group_id: Optional[int] = None,
@@ -272,6 +366,7 @@ class TgData:
         
     # ==================== Group Discovery ====================
 
+    @_reported()
     async def search_groups(self,
                             query: str,
                             limit: int = 100,
@@ -321,6 +416,7 @@ class TgData:
             query, limit, pace=pace, max_flood_wait=max_flood_wait, max_offline=max_offline,
             heartbeat=heartbeat, found_callback=found_callback)
 
+    @_reported()
     async def similar_groups(self,
                              seeds,
                              rounds: int = 2,
@@ -360,6 +456,7 @@ class TgData:
             seeds, rounds, max_resolve=max_resolve, pace=pace, max_flood_wait=max_flood_wait,
             max_offline=max_offline, heartbeat=heartbeat, found_callback=found_callback)
 
+    @_reported('group_id')
     async def linked_groups(self,
                             group_id,
                             posts: int = 100,
@@ -402,6 +499,7 @@ class TgData:
             max_flood_wait=max_flood_wait, max_offline=max_offline,
             heartbeat=heartbeat, found_callback=found_callback)
 
+    @_reported()
     async def discover_groups(self,
                               seeds=(),
                               queries=(),
@@ -592,10 +690,16 @@ class TgData:
         
     # ==================== Utility Methods ====================
     
+    @_reported(success_if=bool)
     async def validate_connection(self) -> bool:
         """
         Validate connection status.
-        
+
+        Still True or False — and on False it says why: a Telegram verdict
+        (logged out, banned, restricted, a wait, ...) is logged at WARNING
+        with Telegram's name for it and reported as a health event; any other
+        failure is logged at ERROR. A False result never counts as recovery.
+
         Returns:
             True if connection is valid
         """
@@ -604,11 +708,28 @@ class TgData:
     async def health_check(self) -> Dict[str, Any]:
         """
         Perform health check.
+
+        A connection is healthy only when Telegram confirms its session is
+        logged in. A logout or a ban it finds is named in 'errors' —
+        'logged out (AUTH_KEY_UNREGISTERED)' — and reported as a health event.
         
         Returns:
-            Health check results
+            Health check results. ['health'] summarises this instance's
+            account health events (see health_callback), what this check
+            found included: the account's verdict and since when, open waits
+            per request type, groups without access, wait and event counts,
+            the last unclassified error. JSON-ready.
         """
-        return await self.connection_engine.health_check()
+        # One health call, opened here rather than by @_reported, so the
+        # summary is read after it closes: a recovery this check proves is
+        # already in it. Only a check that reached Telegram and found every
+        # connection logged in counts as one.
+        async with self._health.call('health_check') as call:
+            status = await self.connection_engine.health_check()
+            if not _health_check_passed(status):
+                call.failed = True
+        status['health'] = self._health.snapshot()
+        return status
 
     def device_identity(self) -> Dict[str, Any]:
         """
@@ -632,6 +753,7 @@ class TgData:
         """
         return self.connection_engine.device_identity()
 
+    @_reported('group_id')
     async def download_media_by_id(self,
                              group_id: Union[int, str],
                              message_ids: Union[int, List[int]],
@@ -739,6 +861,7 @@ class TgData:
         
         self._pending_handlers.clear()
     
+    @_reported('group_id', recover=False)
     async def poll_for_messages(self, 
                                group_id: Union[int, str],
                                interval: int = 60,
@@ -747,6 +870,15 @@ class TgData:
                                max_iterations: Optional[int] = None) -> None:
         """
         Poll for new messages at specified intervals.
+
+        A failure polling again cannot fix ends the polling with that error
+        (the same exception object): the account is logged out, banned or
+        restricted, it cannot read this group (CHANNEL_PRIVATE,
+        GroupAccessError, ...), the session is not logged in
+        (AuthRequiredError) or the proxy setting is unusable
+        (ProxyConfigError). Any other failure — the network, a rate-limit
+        wait, a server error — is logged and retried at the next interval.
+        An exception raised by `callback` propagates, like batch_callback's.
         
         Args:
             group_id: Group ID or username (e.g., '@channelname') to poll messages from
@@ -772,58 +904,63 @@ class TgData:
         seen_message_ids = set()  # Track all message IDs we've already processed
         
         while max_iterations is None or iterations < max_iterations:
+            # Get new messages since last check
+            logger.info(f"Poll iteration {iterations + 1}: Checking for messages after ID {current_after_id}")
             try:
-                # Get new messages since last check
-                logger.info(f"Poll iteration {iterations + 1}: Checking for messages after ID {current_after_id}")
                 new_messages = await self.get_messages(
                     group_id=group_id,
                     after_id=current_after_id
                 )
-                
-                if not new_messages.empty:
-                    # Get all message IDs and filter out already seen ones
-                    all_message_ids = new_messages['MessageId'].tolist()
-                    new_message_ids = [msg_id for msg_id in all_message_ids if msg_id not in seen_message_ids]
-                    
-                    if new_message_ids:
-                        # Filter DataFrame to only include truly new messages
-                        truly_new_messages = new_messages[new_messages['MessageId'].isin(new_message_ids)]
-                        
-                        # Add new IDs to seen set
-                        seen_message_ids.update(new_message_ids)
-                        
-                        # Simply update to the maximum ID we've seen
-                        max_id = max(all_message_ids)
-                        logger.info(f"Poll iteration {iterations + 1}: Found {len(truly_new_messages)} new messages, IDs: {sorted(new_message_ids)}")
-                        logger.info(f"Updating after_id from {current_after_id} to {max_id}")
-                        current_after_id = max_id
-                        
-                        # Call the callback only with truly new messages
-                        if callback:
-                            await callback(truly_new_messages)
-                    else:
-                        # All messages were duplicates, but still update after_id to the max
-                        max_id = max(all_message_ids)
-                        logger.info(f"Poll iteration {iterations + 1}: Found {len(new_messages)} messages but all were duplicates")
-                        logger.info(f"Updating after_id from {current_after_id} to {max_id}")
-                        current_after_id = max_id
-                else:
-                    logger.debug(f"Poll iteration {iterations + 1}: No new messages")
-                
-                iterations += 1
-                
-                # Wait for next interval (unless this is the last iteration)
-                if max_iterations is None or iterations < max_iterations:
-                    await asyncio.sleep(interval)
-                    
             except Exception as e:
+                if _polling_cannot_recover(e):
+                    logger.error(f"Polling {group_id} stopped: {e}")
+                    raise
                 logger.error(f"Error during polling: {e}")
                 iterations += 1  # Increment even on error to respect max_iterations
                 
                 # Continue polling after error (unless we've reached max iterations)
                 if max_iterations is None or iterations < max_iterations:
                     await asyncio.sleep(interval)
+                continue
+            
+            if not new_messages.empty:
+                # Get all message IDs and filter out already seen ones
+                all_message_ids = new_messages['MessageId'].tolist()
+                new_message_ids = [msg_id for msg_id in all_message_ids if msg_id not in seen_message_ids]
+                
+                if new_message_ids:
+                    # Filter DataFrame to only include truly new messages
+                    truly_new_messages = new_messages[new_messages['MessageId'].isin(new_message_ids)]
+                    
+                    # Add new IDs to seen set
+                    seen_message_ids.update(new_message_ids)
+                    
+                    # Simply update to the maximum ID we've seen
+                    max_id = max(all_message_ids)
+                    logger.info(f"Poll iteration {iterations + 1}: Found {len(truly_new_messages)} new messages, IDs: {sorted(new_message_ids)}")
+                    logger.info(f"Updating after_id from {current_after_id} to {max_id}")
+                    current_after_id = max_id
+                    
+                    # Call the callback only with truly new messages — an
+                    # exception in it propagates instead of losing them silently
+                    if callback:
+                        await callback(truly_new_messages)
+                else:
+                    # All messages were duplicates, but still update after_id to the max
+                    max_id = max(all_message_ids)
+                    logger.info(f"Poll iteration {iterations + 1}: Found {len(new_messages)} messages but all were duplicates")
+                    logger.info(f"Updating after_id from {current_after_id} to {max_id}")
+                    current_after_id = max_id
+            else:
+                logger.debug(f"Poll iteration {iterations + 1}: No new messages")
+            
+            iterations += 1
+            
+            # Wait for next interval (unless this is the last iteration)
+            if max_iterations is None or iterations < max_iterations:
+                await asyncio.sleep(interval)
     
+    @_reported()
     async def run_with_event_loop(self):
         """
         Run the Telegram client with event loop to handle real-time events.
