@@ -30,21 +30,24 @@ Measurement (views, writers per day) is a separate, planned feature.
 
 ## 2. Before the first run
 
-**The session must already be authorized.** `TgData(...)` opens the persistent
-client with Telethon's `start()`, which *prompts on stdin* for a phone and a
-code when the session is not logged in. In a background job there is nobody to
-answer, and the process hangs. For unattended runs, check first with the client
-that can never prompt:
+**The session must already be logged in.** tgdata asks Telegram whether it is
+before every first connection, and never asks Telegram for a login code on its
+own. A session that is not logged in raises `AuthRequiredError` — its
+`.reason` is Telegram's own name for the problem, and `.banned` is true when
+logging in again cannot help. The one exception is the first login of a
+brand-new session run by hand in a terminal, which prompts for the code as
+before. If Telegram later logs the account out, log in again by hand once with
+`TgData("config.ini", interactive_login=True)`. A background job should stop
+and alert someone on `AuthRequiredError`; retrying cannot log it back in.
 
 ```python
 from tgdata import TgData, AuthRequiredError
 
 tg = TgData("config.ini")
 try:
-    async with tg.connection_engine.ephemeral_client() as probe:
-        me = await probe.get_me()
-except AuthRequiredError:
-    raise SystemExit("session not logged in — run an interactive login once, by hand")
+    df = await tg.search_groups("Antalya")
+except AuthRequiredError as e:
+    raise SystemExit(f"not logged in ({e.reason}) — log in again by hand, interactive_login=True")
 ```
 
 **One live client per session file.** Two processes on the same `.session`
@@ -172,6 +175,9 @@ seconds", discovery sleeps N seconds in ten-second slices, each one a heartbeat
 tick (`"flood-wait 50s"`, `"flood-wait 40s"`, …), then retries the *same*
 request. It never retries early and never works around a limit. A wait longer
 than `max_flood_wait` (default one hour) ends the run with `DiscoveryInterrupted`.
+Two steps keep Telethon's own handling instead: reading a room's posts for
+links, and the dialog sync for a numeric id — a wait of up to a minute there is
+slept without ticks.
 
 **Username resolution is the dangerous request.** Turning `@name` into a room
 (`ResolveUsername`) is rate-limited far more harshly than search: the reference
@@ -299,14 +305,14 @@ own username.
 
 | Symptom | Cause | What to do |
 |---|---|---|
-| `DiscoveryInterrupted` with `retry_after > 0` | Telegram demanded a wait above `max_flood_wait` | keep `.found`, wait the full `retry_after`, rerun with the queries not yet done |
+| `DiscoveryInterrupted` with `retry_after > 0` | Telegram demanded a wait above `max_flood_wait`, or a wait on looking up a `linked_groups` source (lookups are never slept through) | keep `.found`, wait the full `retry_after`, rerun with the queries not yet done |
 | `DiscoveryInterrupted` with `retry_after == 0` | offline longer than `max_offline` | keep `.found`, rerun when connected |
 | log: `Seed @x skipped — Telegram wants Ns on username lookups` | the account is under a lookup block | do not resolve anything until it passes; seeds from `list_groups` avoid lookups entirely |
 | log: `Stopped resolving links at the N-username bound` | `max_resolve` hit | intended; raise it knowingly, or resolve only what you keep |
 | `similar_groups` returns nothing | a megagroup or basic-group seed, or a non-Premium account | seed with broadcast channels; expect ~10 per seed without Premium |
 | `GroupAccessError` for an int seed | the account cannot see that id | use the `@username`, or a room the account is in |
 | `ValueError: '@x' is not a group or channel` | the name is a user or a bot | drop it |
-| the process hangs at start with no output | `start()` waiting for a login code on stdin | authorize interactively once; use the `ephemeral_client` check from §2 |
+| `AuthRequiredError` at the first request | the session is not logged in: `.reason` says why (`AUTH_KEY_UNREGISTERED` or `SESSION_REVOKED` — logged out; `USER_DEACTIVATED_BAN` — banned, `.banned` is true) | log in again by hand once, `TgData(..., interactive_login=True)` in a terminal; a banned account cannot log in |
 | `sqlite3.OperationalError: database is locked` | another process holds the same session file | one live client per session; wait for the other to finish |
 | `ParticipantsCount` is `NA` | the row was resolved from a link | counts come with search and recommendation results only; fetch the full channel yourself if you need it |
 

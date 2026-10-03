@@ -36,14 +36,22 @@ class TgData:
     def __init__(self,
                  config_path: str = "config.ini",
                  connection_pool_size: int = 1,
-                 log_file: Optional[str] = None):
+                 log_file: Optional[str] = None,
+                 interactive_login: Optional[bool] = None):
         """
         Initialize Telegram group handler.
-        
+
         Args:
             config_path: Path to configuration file
             connection_pool_size: Number of connections (1 = no pooling)
             log_file: Optional log file path
+            interactive_login: When tgdata may ask Telegram for a login code
+                and wait for it on stdin. None (default): only the first
+                login of a brand-new session, run by hand in a terminal.
+                True: also log a session back in after Telegram logged it out —
+                run that by hand. False: never. Otherwise a session that is
+                not logged in raises AuthRequiredError (with .reason and
+                .banned), and no code is ever requested.
         """
         # Set up logging
         if log_file:
@@ -56,7 +64,8 @@ class TgData:
         # Initialize engines
         self.connection_engine = ConnectionEngine(
             config_path=config_path,
-            pool_size=connection_pool_size
+            pool_size=connection_pool_size,
+            interactive_login=interactive_login
         )
         
         self.message_engine = MessageEngine(
@@ -286,7 +295,12 @@ class TgData:
                 proven pace for a personal account)
             max_flood_wait: A rate-limit wait up to this many seconds is
                 obeyed exactly, with heartbeat ticks; a longer one raises
-                DiscoveryInterrupted (default 3600)
+                DiscoveryInterrupted (default 3600). A wait on a username
+                lookup is never slept: it skips the seed or stops resolving
+                (for a linked_groups source it raises DiscoveryInterrupted).
+                Reading a room's posts for links, and the dialog sync for a
+                numeric id, keep Telethon's own handling: a wait of up to a
+                minute there is slept without ticks.
             max_offline: How long to wait for a dropped connection to come
                 back before giving up (default 3600)
             heartbeat: Liveness callback(phase) — see get_messages
@@ -378,6 +392,10 @@ class TgData:
         Returns:
             DataFrame in the search_groups shape, FoundVia 'link', FoundBy the
             source room's '@name' or 'id:N'. Source rooms are never rows.
+
+        Raises:
+            DiscoveryInterrupted: when looking up a source room's name must
+                wait (lookups are never slept through), or as in search_groups.
         """
         return await self.discovery_engine.linked_groups(
             group_id, posts, resolve, max_resolve=max_resolve, pace=pace,

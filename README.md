@@ -67,6 +67,25 @@ no `session_file` is set — configs that relied on username-named sessions
 keep working, but new configs should set `session_file` and omit `username`
 (it plays no part in authentication).
 
+### Logging in
+
+The first run of a new session, started by hand in a terminal, asks for the
+code Telegram sends you. After that, tgdata never asks Telegram for a login
+code on its own: before connecting it checks with Telegram whether the session
+is logged in, and if it is not, it raises `AuthRequiredError` instead of
+prompting.
+
+- `.reason` is Telegram's own name for the problem — `AUTH_KEY_UNREGISTERED`
+  or `SESSION_REVOKED` when Telegram logged the account out,
+  `USER_DEACTIVATED_BAN` when it is banned. `.banned` is true when logging in
+  again cannot help.
+- To log back in after Telegram logged the account out, run once by hand in a
+  terminal with `TgData("config.ini", interactive_login=True)`.
+  `interactive_login=False` forbids even the first-run prompt.
+- A background job should stop and alert someone on `AuthRequiredError`.
+  Retrying cannot log it back in — and, unlike before, it no longer sends the
+  owner a fresh login code on every retry.
+
 ### Connecting through a proxy (optional)
 
 With no `proxy` key, tgdata connects directly, exactly as before. Add one, and
@@ -229,14 +248,17 @@ access hash, no dialog sync needed.
 **Pacing and waits.** Every request is followed by `pace` seconds (default 2, the proven
 pace for a personal account). A rate-limit wait up to `max_flood_wait` is obeyed exactly,
 with heartbeat ticks so a watchdog sees life; a longer one raises `DiscoveryInterrupted`,
-which carries `.found` (everything collected so far) and `.retry_after`. A dropped connection
+which carries `.found` (everything collected so far) and `.retry_after`. Two steps keep
+Telethon's own handling: reading a room's posts for links, and the dialog sync for a numeric
+id — a wait of up to a minute there is slept without ticks. A dropped connection
 is waited out up to `max_offline` and the same request retried. Nothing found is ever lost.
 
 **The budget.** Resolving a username to a room is the request Telegram punishes hardest —
 a production account lost 8 and 21 hours of lookups to it. So every call has `max_resolve`
 (default 100), `discover_groups` mines links from the first `link_sources` rooms only
 (default 50), `resolve_links` is off by default (mined names come back as text, which costs
-nothing), and a wait on a lookup is skipped or stopped, never waited out. A truncating cap
+nothing), and a wait on a lookup is skipped or stopped, never waited out — for a
+`linked_groups` source it ends the call with `DiscoveryInterrupted`. A truncating cap
 logs a warning telling you which parameter lifts it.
 
 **Similar channels** work on channels and megagroups, not basic groups; two rounds by
