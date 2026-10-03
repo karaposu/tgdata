@@ -40,6 +40,10 @@ setup(
         # (used for GroupedId album ids > 2^53) needs pandas >= 1.0.
         'pandas>=1.0',
     ],
+    extras_require={
+        # Only needed when the config sets `proxy = socks5://…` (or socks4 / http).
+        'proxy': ['python-socks[asyncio]>=2.0'],
+    },
 
     classifiers=[
         'Development Status :: 3 - Alpha',  # Development status

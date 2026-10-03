@@ -76,6 +76,17 @@ Tests group discovery (`python -m tgdata.smoke_tests.test_11_discover_groups [co
 
 Cost: about a dozen requests and three username resolutions on the live account. Do not scale it up.
 
+### 9. **test_12_proxy.py**
+Tests proxy support (`python -m tgdata.smoke_tests.test_12_proxy [config.ini]`):
+- proxy URL parsing, masking, and the forms that are refused (no network)
+- config loading: no key = direct, `require_proxy` refusal, inline comments, password kept out of `repr` (no network)
+- every client (main and pool) is built with the proxy (no network)
+- a dead proxy and a proxy that refuses the tunnel both FAIL; nothing falls back to a direct line (loopback only)
+- a local SOCKS5 relay with a user name and password carries a full round trip to Telegram for a throwaway, never-logged-in session
+- a real proxy from the config, when the config has a `proxy` key (pending a real proxy)
+
+Items 3–6 need `pip install 'tgdata[proxy]'`. Item 6 reads only `api_id`/`api_hash` from the config; the account's own session is never opened.
+
 ### Custom Test Scripts:
 - **my_test.py** - Custom test script for specific scenarios
 

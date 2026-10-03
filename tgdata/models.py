@@ -2,7 +2,7 @@
 Data models for the Telegram Group Message Crawler.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional, Any, Dict
 
@@ -108,3 +108,8 @@ class ConnectionConfig:
     max_retries: int = 3
     retry_delay: float = 1.0
     exponential_backoff: bool = True
+    # The account's proxy, parsed into Telethon's dict form; None = direct.
+    # Kept out of repr: it carries the proxy password.
+    proxy: Optional[Dict[str, Any]] = field(default=None, repr=False)
+    proxy_display: Optional[str] = None   # the proxy URL with the password masked — safe to log
+    require_proxy: bool = False           # refuse to connect when no proxy is configured

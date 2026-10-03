@@ -9,7 +9,7 @@ from .tgdata import TgData
 
 # Errors
 from .message_engine import GroupAccessError
-from .connection_engine import AuthRequiredError
+from .connection_engine import AuthRequiredError, ProxyConfigError
 from .discovery_engine import DiscoveryInterrupted
 
 # Models
@@ -45,6 +45,7 @@ __all__ = [
     # Errors
     "GroupAccessError",
     "AuthRequiredError",
+    "ProxyConfigError",
     "DiscoveryInterrupted",
 
     # Models

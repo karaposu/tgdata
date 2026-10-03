@@ -25,6 +25,7 @@ A production-grade Python library for extracting and processing Telegram group a
 - 🎯 **Batch Processing**: Handle large groups with configurable batch sizes and delays
 - 🖼️ **Media Detection & Download**: Flag photos/videos per message (no download needed) and pull the files on demand or during the fetch
 - 🔎 **Group Discovery**: Find rooms you are not in — Telegram's name search, its "similar channels", and links mined from posts — paced, flood-safe, budgeted
+- 🛡️ **Proxy Support**: An optional per-account SOCKS5/SOCKS4/HTTP proxy for every connection, with `require_proxy` and no silent fallback to a direct line
 
 ## Installation
 
@@ -64,6 +65,45 @@ always wins. A legacy `username` key is used as the session name only when
 no `session_file` is set — configs that relied on username-named sessions
 keep working, but new configs should set `session_file` and omit `username`
 (it plays no part in authentication).
+
+### Connecting through a proxy (optional)
+
+With no `proxy` key, tgdata connects directly, exactly as before. Add one, and
+**every** connection to Telegram goes through it — the persistent client, each
+pool connection, and every short lookup. All of them are built by one function
+in the connection engine, so there is no second way in.
+
+```ini
+[Telegram]
+api_id = 1234566
+api_hash = a24adjfakjdfakjshdflkajsbdflk
+session_file = /absolute/path/to/my_session
+proxy = socks5://user:password@203.0.113.7:1080
+require_proxy = true
+```
+
+- **Forms:** `socks5://host:port`, `socks5://user:pass@host:port`,
+  `socks4://…`, `http://…` (an HTTP CONNECT proxy). Percent-encode special
+  characters in the user name or password (`@` as `%40`, `:` as `%3A`).
+- **`require_proxy = true`** refuses to connect when no proxy is configured.
+  Use it on accounts that must never touch Telegram from the machine's own
+  IP.
+- **No fallback, ever.** A malformed URL, a missing proxy library, or
+  `require_proxy` without a proxy raises `tgdata.ProxyConfigError` before any
+  connection opens. A proxy that is down or refuses the tunnel makes the
+  connection fail with `ConnectionError`. Nothing retries without the proxy.
+- **Install the extra:** `pip install 'tgdata[proxy]'`, which pulls in
+  `python-socks[asyncio]`.
+- **Logs and health checks show the proxy masked**
+  (`socks5://user:***@203.0.113.7:1080`); the password never appears in a
+  log line or a repr. The engine logs once whether connections are direct or
+  via a proxy.
+- **Not supported:** MTProto proxies (`tg://proxy?…`, `t.me/proxy?…`); they
+  are refused with a clear error.
+- One `proxy` per config file, and the account pool has one config per
+  account, so each account gets its own proxy.
+- An existing session keeps working through a proxy; a session file is not
+  tied to an IP.
 
 
 ## Quick Start
