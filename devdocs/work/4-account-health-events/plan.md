@@ -552,3 +552,26 @@ the CONTRIBUTING process guard (commits allowed on `feat/*`), the unrelated work
 ### Hardness Lvl
 
 1
+
+---
+
+## Implementation notes — step 5, 2026-10-03
+
+Implemented in `94560f0`, with all eight steps as written. These details differ from the plan or were added; none is structural.
+
+1. **`validate_connection()` and a logout hidden by `get_me()`.** Telethon's `get_me()` answers a logout or a ban with `None`, so a session logged out after connecting validated `True`, and criterion 10 could not hold. When `get_me()` returns `None`, it now asks Telegram directly — `GetState`, as the login check does — and fails with the real error. Test 11 covers this.
+2. **`classify()` reads `AuthRequiredError.reason`.** It applies to an exception with `.banned` and a `.reason` in the table, so one without a cause is still classified (desc criterion 4).
+3. **A silent sleep's error name.** The plan left `error` unspecified for sleeps. It is Telegram's exact wait name, read from the exception Telethon is handling when it logs the sleep. It is `None` for an early sleep, a wait already known before sending.
+4. **Open waits.** Every wait attributed to a call opens a ledger entry, a swallowed one included: a skipped lookup wait is still an open wait for that request type. Only a slept or handled wait is recoverable by the call, as folded from Risk 3.
+5. **Nested calls.** `_Call.parent` records the enclosing call. A scope reported inside a nested public call — poll → `get_messages`, or a callback that makes a public call — is noted on every enclosing active call, so an outer call never recovers what an inner one reported.
+6. **No report line in the poll loop's retry branch.** The inner `get_messages` boundary already reports and marks every verdict, so a report there would always be a no-op. Criterion 4's "the poll loop reports every Telegram verdict it swallows" holds through it, with `call=get_messages` and `source=error`.
+7. **The fetch loop** reports each wait as its first statement, as Step 5 says. All four waits are `handled`, and the boundary skips the give-up's marked cause.
+8. **Small hardening:**
+   - the decorator runs the method unwrapped on an instance without a monitor;
+   - `ensure_sleep_capture()` re-attaches its filter if it was removed, and handles a logger that `dictConfig` disabled before the first call;
+   - `normalise_group` does not read `t.me/joinchat/...` as a username, and accepts `t.me/boost/name`.
+9. **Docs** also gained a test_16 entry in `tgdata/smoke_tests/README.md`.
+
+**Verify (step 8):** test_16 17/17, test_15 11/11, test_14 11/11, test_13 6/6, test_12 7/7, on Telethon 1.45.0.
+
+One test-side correction was made during the run. The scripted connection now stamps every error with the request it answers, as Telegram's real answers do; a helper's default had stamped the wrong request name in test 16.
