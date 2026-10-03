@@ -18,8 +18,10 @@ Two rules, learned the hard way on a production account:
 
 Everything else the engine does is paced (`pace` seconds after each request),
 obeys flood waits exactly and visibly (per-call threshold 0 + a beating
-sleep), waits for a dropped connection to come back, and never loses what it
-has found: an interruption raises DiscoveryInterrupted carrying `.found`.
+sleep; reading posts for links and the dialog sync for a numeric id keep
+Telethon's own silent sleeps of up to a minute), waits for a dropped
+connection to come back, and never loses what it has found: an interruption
+raises DiscoveryInterrupted carrying `.found`.
 """
 
 from __future__ import annotations
@@ -62,7 +64,7 @@ _WAIT_ERRORS = tuple(c for c in (FloodWaitError,
                                  getattr(tl_errors, 'SlowModeWaitError', None),
                                  getattr(tl_errors, 'FloodTestPhoneWaitError', None))
                      if c is not None)
-COLUMNS =['GroupID', 'Title', 'Username', 'Identifier', 'IsChannel', 'IsMegagroup',
+COLUMNS = ['GroupID', 'Title', 'Username', 'Identifier', 'IsChannel', 'IsMegagroup',
            'ParticipantsCount', 'FoundVia', 'FoundBy']
 
 # t.me/<name>, t.me/<name>/123, t.me/s/<name> (web preview), t.me/boost/<name>,
