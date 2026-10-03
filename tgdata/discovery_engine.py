@@ -18,8 +18,10 @@ Two rules, learned the hard way on a production account:
 
 Everything else the engine does is paced (`pace` seconds after each request),
 obeys flood waits exactly and visibly (per-call threshold 0 + a beating
-sleep), waits for a dropped connection to come back, and never loses what it
-has found: an interruption raises DiscoveryInterrupted carrying `.found`.
+sleep; reading posts for links and the dialog sync for a numeric id keep
+Telethon's own silent sleeps of up to a minute), waits for a dropped
+connection to come back, and never loses what it has found: an interruption
+raises DiscoveryInterrupted carrying `.found`.
 """
 
 from __future__ import annotations
@@ -32,6 +34,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 
 import pandas as pd
+from telethon import errors as tl_errors
 from telethon import functions
 from telethon import utils as tl_utils
 from telethon.errors import FloodWaitError, RPCError
@@ -52,6 +55,15 @@ SEARCH_LIMIT = 100               # Telegram caps lower; ask for the most
 LINK_POSTS = 100                 # posts read per room when mining links
 SIMILAR_ROUNDS = 2               # a third round drifts out of the topic
 NET_ERRORS = (ConnectionError, OSError, asyncio.TimeoutError, asyncio.IncompleteReadError)
+# Every wait Telethon's own sleep branch handles (UserMethods._call). Discovery
+# sends with a per-call flood threshold of 0, so Telethon never sleeps for it
+# and it must handle all of them itself — every one carries .seconds. getattr:
+# FloodPremiumWaitError is newer than the oldest supported Telethon (1.33).
+_WAIT_ERRORS = tuple(c for c in (FloodWaitError,
+                                 getattr(tl_errors, 'FloodPremiumWaitError', None),
+                                 getattr(tl_errors, 'SlowModeWaitError', None),
+                                 getattr(tl_errors, 'FloodTestPhoneWaitError', None))
+                     if c is not None)
 COLUMNS = ['GroupID', 'Title', 'Username', 'Identifier', 'IsChannel', 'IsMegagroup',
            'ParticipantsCount', 'FoundVia', 'FoundBy']
 
@@ -67,7 +79,10 @@ RESERVED_PATHS = {"joinchat", "addstickers", "addemoji", "addtheme", "share", "p
 
 class DiscoveryInterrupted(RuntimeError):
     """The run could not continue: Telegram demanded a wait longer than
-    max_flood_wait, or the network stayed down past max_offline.
+    max_flood_wait, the network stayed down past max_offline, or — in
+    linked_groups — looking up a source room's name must wait. Lookups are
+    never slept through, so in that case retry_after can be below
+    max_flood_wait.
 
     Nothing found so far is lost: ``.found`` is the DataFrame collected up
     to the interruption, ``.retry_after`` the seconds Telegram asked for
@@ -241,7 +256,10 @@ class DiscoveryEngine:
 
     async def _request(self, client, request, st: _State, phase: str):
         """One raw request with EVERY wait surfaced: sent with a per-call
-        flood threshold of 0, so Telethon never sleeps silently. A wait
+        flood threshold of 0, so Telethon never sleeps silently (Telethon's
+        own __call__ ignores a per-call threshold; every client tgdata builds
+        honours it — connection_engine._PerCallFloodThreshold). Every kind of
+        wait Telethon would have slept is handled here (_WAIT_ERRORS). A wait
         within max_flood_wait is slept in beating slices and the same
         request retried; a longer one raises DiscoveryInterrupted with
         everything found so far. A transport failure waits for the network
@@ -250,7 +268,7 @@ class DiscoveryEngine:
             try:
                 st.beat(phase)
                 return await client(request, flood_sleep_threshold=0)
-            except FloodWaitError as e:
+            except _WAIT_ERRORS as e:
                 name = type(request).__name__
                 if e.seconds > st.max_flood_wait:
                     raise DiscoveryInterrupted(
@@ -272,10 +290,13 @@ class DiscoveryEngine:
 
         Entities pass through untouched. Otherwise the session cache is read
         directly (pure, no network). On a miss, a STRING sends ResolveUsername
-        through the per-call path with threshold 0 — never through _request —
-        so a FloodWaitError propagates unslept for the caller to skip or stop
-        on, and it counts against max_resolve; an INT uses the message
-        engine's dialog-sync fallback, so GroupAccessError keeps its meaning.
+        through the per-call path with threshold 0 — never through _request,
+        and honoured because tgdata's clients make that per-call threshold
+        work (connection_engine._PerCallFloodThreshold) — so a wait (any of
+        _WAIT_ERRORS) propagates unslept for the caller to skip or stop on,
+        and it counts against max_resolve; an INT uses the message engine's
+        dialog-sync fallback, so GroupAccessError keeps its meaning (that sync
+        is Telethon's own: a wait of up to a minute there is slept, silently).
         A cached peer becomes the full object by id + access hash
         (GetChannels / GetChats), which beats and carries no resolution risk."""
         if isinstance(ref, (tl_types.Channel, tl_types.Chat)):
@@ -341,7 +362,7 @@ class DiscoveryEngine:
         for seed in seeds:
             try:
                 entity = await self._resolve(client, seed, st)
-            except FloodWaitError as e:
+            except _WAIT_ERRORS as e:
                 logger.warning(f"Seed {seed!r} skipped — Telegram wants {e.seconds}s on username lookups")
                 continue
             except _BudgetExhausted:
@@ -413,7 +434,7 @@ class DiscoveryEngine:
                 async for m in client.iter_messages(entity, limit=posts):
                     texts.extend(self._link_sources_of(m))
                 break
-            except FloodWaitError as e:
+            except _WAIT_ERRORS as e:
                 if e.seconds > st.max_flood_wait:
                     raise DiscoveryInterrupted(
                         f"Telegram wants a {e.seconds}s wait while reading posts "
@@ -457,7 +478,7 @@ class DiscoveryEngine:
                 if resolve and not st.resolve_stopped:
                     try:
                         target = await self._resolve(client, name, st)
-                    except FloodWaitError as e:
+                    except _WAIT_ERRORS as e:
                         st.resolve_stopped = True
                         logger.warning(
                             f"Stopped resolving links — Telegram wants {e.seconds}s on username lookups; "
@@ -531,7 +552,7 @@ class DiscoveryEngine:
             for ref in self._as_list(group_id):
                 try:
                     entity = await self._resolve(client, ref, st)
-                except FloodWaitError as e:
+                except _WAIT_ERRORS as e:
                     raise DiscoveryInterrupted(
                         f"Telegram wants a {e.seconds}s wait to resolve {ref!r}",
                         self._frame(st.rows), e.seconds) from e

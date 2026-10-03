@@ -286,7 +286,12 @@ class TgData:
                 proven pace for a personal account)
             max_flood_wait: A rate-limit wait up to this many seconds is
                 obeyed exactly, with heartbeat ticks; a longer one raises
-                DiscoveryInterrupted (default 3600)
+                DiscoveryInterrupted (default 3600). A wait on a username
+                lookup is never slept: it skips the seed or stops resolving
+                (for a linked_groups source it raises DiscoveryInterrupted).
+                Reading a room's posts for links, and the dialog sync for a
+                numeric id, keep Telethon's own handling: a wait of up to a
+                minute there is slept without ticks.
             max_offline: How long to wait for a dropped connection to come
                 back before giving up (default 3600)
             heartbeat: Liveness callback(phase) — see get_messages
@@ -378,6 +383,10 @@ class TgData:
         Returns:
             DataFrame in the search_groups shape, FoundVia 'link', FoundBy the
             source room's '@name' or 'id:N'. Source rooms are never rows.
+
+        Raises:
+            DiscoveryInterrupted: when looking up a source room's name must
+                wait (lookups are never slept through), or as in search_groups.
         """
         return await self.discovery_engine.linked_groups(
             group_id, posts, resolve, max_resolve=max_resolve, pace=pace,

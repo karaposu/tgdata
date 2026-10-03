@@ -3,11 +3,14 @@ Connection management engine for Telegram.
 Handles connection pooling, rate limiting, retries, health checks, and the
 account's proxy: every client is built by one function, _new_client(), which
 applies the configured proxy to every connection and never falls back to a
-direct one.
+direct one. Every client it builds also honours Telethon's per-request
+flood_sleep_threshold, which Telethon itself ignores (_PerCallFloodThreshold).
 """
 
 import asyncio
 import configparser
+import contextvars
+import functools
 import importlib.util
 import logging
 import re
@@ -16,12 +19,87 @@ from contextlib import asynccontextmanager
 from typing import Optional, List, Dict, Any, Tuple, Union
 from urllib.parse import urlsplit, unquote
 from telethon import TelegramClient
+from telethon.client.telegrambaseclient import TelegramBaseClient
 from telethon.errors import FloodWaitError, AuthKeyUnregisteredError
 from telethon.sessions import StringSession
 
 from .models import ConnectionConfig, RateLimitInfo
 
 logger = logging.getLogger(__name__)
+
+
+# ── a per-request flood threshold that actually works ──────────────────────
+#
+# (owner task, seconds) while a request sent with flood_sleep_threshold=N is
+# in flight; None otherwise.
+_PER_CALL_FLOOD_THRESHOLD = contextvars.ContextVar('tgdata_per_call_flood_threshold', default=None)
+
+
+class _PerCallFloodThreshold:
+    """Makes ``client(request, flood_sleep_threshold=N)`` do what Telethon
+    documents: use N, for this request only, instead of the client-wide value.
+
+    Telethon ignores the value. UserMethods.__call__ accepts it and calls
+    _call without it, and _call decides whether to sleep through a flood wait
+    by reading ``self.flood_sleep_threshold`` — the client-wide property —
+    both before sending (a wait already known for that request type) and
+    after a wait error. Checked in Telethon 1.33.1, 1.34.0, 1.40.0, 1.42.0,
+    1.44.0 and 1.45.0: identical in all of them. So a per-call 0 still sleeps
+    every wait up to the client threshold (60 s by default), silently.
+
+    This mixin overrides that property: while a request sent with its own
+    value is in flight, the property returns that value — but only to the
+    task that sent it. Telethon starts background tasks inside connect() (the
+    updates loop, keepalive), and connect() can run mid-request on a
+    data-centre switch; a task created then inherits the context variable,
+    and must not inherit the value. A request sent WITHOUT its own value
+    clears any value an enclosing request in the same task set (for example
+    a name Telethon resolves from inside that request), so a value applies to
+    exactly the request it was passed with. The value is also passed on to
+    Telethon, so a future Telethon that honours it natively behaves the same.
+
+    tgdata/smoke_tests/test_14_flood_threshold.py checks this against the
+    installed Telethon — run it after any Telethon upgrade.
+    """
+
+    @property
+    def flood_sleep_threshold(self):
+        held = _PER_CALL_FLOOD_THRESHOLD.get()
+        if held is not None:
+            try:
+                if asyncio.current_task() is held[0]:
+                    return held[1]
+            except RuntimeError:            # read outside a running loop: no per-call value
+                pass
+        return TelegramBaseClient.flood_sleep_threshold.fget(self)
+
+    @flood_sleep_threshold.setter
+    def flood_sleep_threshold(self, value):
+        TelegramBaseClient.flood_sleep_threshold.fset(self, value)    # keeps Telethon's 24 h cap
+
+    async def __call__(self, request, ordered=False, flood_sleep_threshold=None):
+        if flood_sleep_threshold is None:
+            if _PER_CALL_FLOOD_THRESHOLD.get() is None:                # the common path
+                return await super().__call__(request, ordered=ordered)
+            token = _PER_CALL_FLOOD_THRESHOLD.set(None)                # never inherit one
+            try:
+                return await super().__call__(request, ordered=ordered)
+            finally:
+                _PER_CALL_FLOOD_THRESHOLD.reset(token)
+        token = _PER_CALL_FLOOD_THRESHOLD.set((asyncio.current_task(), flood_sleep_threshold))
+        try:
+            return await super().__call__(request, ordered=ordered,
+                                          flood_sleep_threshold=flood_sleep_threshold)
+        finally:
+            _PER_CALL_FLOOD_THRESHOLD.reset(token)
+
+
+@functools.lru_cache(maxsize=None)
+def _client_class(base):
+    """The client class _new_client() builds: `base` (Telethon's
+    TelegramClient, or whatever stands in for it in a test) with
+    _PerCallFloodThreshold in front of it. Cached per base."""
+    return type(f"Tgdata{base.__name__}", (_PerCallFloodThreshold, base), {})
 
 
 class ProxyConfigError(ValueError):
@@ -366,6 +444,12 @@ class ConnectionEngine:
         Every client also carries the account's pinned device identity, if the
         config sets one; unpinned fields keep Telethon's machine defaults.
 
+        And every client honours a per-request flood_sleep_threshold —
+        client(request, flood_sleep_threshold=0) raises a flood wait instead of
+        sleeping through it — which Telethon itself ignores (see
+        _PerCallFloodThreshold). Requests sent without one behave exactly as
+        Telethon's own.
+
         Args:
             session_file: Session name for this client (default: the config's)
         """
@@ -382,7 +466,9 @@ class ConnectionEngine:
             else:
                 logger.info("Device identity not pinned: Telethon's defaults for this machine")
             self._route_logged = True
-        return TelegramClient(
+        # TelegramClient is looked up here, at call time, so a test that stands
+        # in for it (test_13) still controls what is built.
+        return _client_class(TelegramClient)(
             session_file or config.session_file,
             config.api_id,
             config.api_hash,
