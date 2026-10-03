@@ -10,6 +10,7 @@ import asyncio
 import configparser
 import importlib.util
 import logging
+import re
 import time
 from contextlib import asynccontextmanager
 from typing import Optional, List, Dict, Any, Tuple, Union
@@ -39,6 +40,10 @@ _PROXY_SCHEMES = {'socks5': 'socks5', 'socks5h': 'socks5',
                   'http': 'http'}
 _TRUE = {'1', 'true', 'yes', 'on'}
 _FALSE = {'', '0', 'false', 'no', 'off', 'none'}
+
+# The device identity Telegram is told on every connection (Telethon's
+# InitConnection), in the order a config snippet prints them.
+IDENTITY_KEYS = ('device_model', 'system_version', 'app_version', 'lang_code', 'system_lang_code')
 
 
 def parse_proxy_url(url: str) -> Tuple[Dict[str, Any], str]:
@@ -260,6 +265,33 @@ class ConnectionEngine:
                 f"require_proxy is set in {self.config_path} but no proxy is configured — "
                 f"refusing to connect to Telegram directly")
 
+        # The account's device identity (optional): what every connection tells
+        # Telegram it is running on. With no keys, Telethon derives it from the
+        # machine (CPU type, OS release) and from its own version, so the same
+        # account presents a different device on another machine, after an OS
+        # update, and after every Telethon upgrade. Pinned keys make it the
+        # same everywhere. Telethon sends it on EVERY connection, not only at
+        # login, so pinning applies to an existing session from its next
+        # connection — no new login.
+        # Values may contain spaces ("PC 64bit"), so the whole value is kept;
+        # an inline " ; comment" or " # comment" is dropped and surrounding
+        # quotes are stripped. Read RAW, like the proxy keys, so a '%' is never
+        # taken for ConfigParser interpolation.
+        def _identity_value(key):
+            value = section.get(key, raw=True)
+            if value is None:
+                return None
+            value = re.split(r'\s[;#]', value, maxsplit=1)[0].strip().strip("'\"").strip()
+            return value or None
+
+        identity = {key: _identity_value(key) for key in IDENTITY_KEYS}
+        # Telethon documents system_lang_code as defaulting to lang_code, but its
+        # constructor defaults both to 'en' independently; follow the documented
+        # intent, so `lang_code = ru` alone does not present an app in Russian
+        # on an English system.
+        if identity['lang_code'] and not identity['system_lang_code']:
+            identity['system_lang_code'] = identity['lang_code']
+
         self._config = ConnectionConfig(
             api_id=_unquote(section['api_id']),
             api_hash=_unquote(section['api_hash']),
@@ -271,10 +303,53 @@ class ConnectionEngine:
             exponential_backoff=self.exponential_backoff,
             proxy=proxy,
             proxy_display=proxy_display,
-            require_proxy=require_proxy
+            require_proxy=require_proxy,
+            **identity
         )
 
         return self._config
+
+    @staticmethod
+    def _identity_kwargs(config: ConnectionConfig) -> Dict[str, str]:
+        """The pinned identity fields as TelegramClient keyword arguments.
+        Unpinned fields are left out, so Telethon applies its own defaults."""
+        return {key: getattr(config, key) for key in IDENTITY_KEYS if getattr(config, key)}
+
+    def device_identity(self) -> Dict[str, Any]:
+        """
+        What every connection for this account tells Telegram it is running
+        on — computed locally, with no network and no session file.
+
+        Telethon itself is asked rather than its defaults re-derived: a client
+        on an in-memory session is built exactly as _new_client() would build
+        it (never connected), and the identity it would send is read back.
+
+        Returns:
+            {
+              'presented': {field: value} for all five fields,
+              'pinned': [the fields set in the config],
+              'config_lines': ready-to-paste [Telegram] lines that pin exactly
+                              what is presented now
+            }
+
+        Pinning: run it on the machine an account normally runs on, paste
+        `config_lines` into that account's config, and from then on the account
+        presents the same device from any machine and after any upgrade.
+        """
+        config = self._load_config()
+        probe = TelegramClient(StringSession(), config.api_id, config.api_hash,
+                               **self._identity_kwargs(config))
+        # _init_request is Telethon's InitConnection, the request that carries
+        # the identity to Telegram on every connect (stable through 1.x).
+        request = getattr(probe, '_init_request', None)
+        presented = {key: (getattr(request, key, None) if request is not None else getattr(config, key))
+                     for key in IDENTITY_KEYS}
+        return {
+            'presented': presented,
+            'pinned': [key for key in IDENTITY_KEYS if getattr(config, key)],
+            'config_lines': "\n".join(f"{key} = {presented[key]}" for key in IDENTITY_KEYS
+                                      if presented[key] is not None),
+        }
 
     def _new_client(self, session_file: Optional[str] = None) -> TelegramClient:
         """
@@ -288,21 +363,31 @@ class ConnectionEngine:
         The config is read first, so a ProxyConfigError (bad URL, missing
         library, require_proxy without a proxy) stops before any socket opens.
 
+        Every client also carries the account's pinned device identity, if the
+        config sets one; unpinned fields keep Telethon's machine defaults.
+
         Args:
             session_file: Session name for this client (default: the config's)
         """
         config = self._load_config()
+        identity = self._identity_kwargs(config)
         if not self._route_logged:
             if config.proxy:
                 logger.info(f"Telegram connections go via proxy {config.proxy_display}")
             else:
                 logger.info("Telegram connections are direct (no proxy configured)")
+            if identity:
+                logger.info("Device identity pinned: " +
+                            ", ".join(f"{key}={value!r}" for key, value in identity.items()))
+            else:
+                logger.info("Device identity not pinned: Telethon's defaults for this machine")
             self._route_logged = True
         return TelegramClient(
             session_file or config.session_file,
             config.api_id,
             config.api_hash,
-            proxy=dict(config.proxy) if config.proxy else None
+            proxy=dict(config.proxy) if config.proxy else None,
+            **identity
         )
         
     async def get_client(self) -> TelegramClient:
@@ -467,8 +552,14 @@ class ConnectionEngine:
             'primary_connection': False,
             'pool_connections': [],
             'proxy': self._config.proxy_display if self._config else None,  # masked; None = direct
+            'device_identity': None,   # what connections present; filled below once the config is read
             'errors': []
         }
+        if self._config:
+            try:
+                status['device_identity'] = self.device_identity()['presented']
+            except Exception as e:  # noqa: BLE001 — a health check reports, it never raises
+                status['errors'].append(f"Device identity unavailable: {e}")
         
         try:
             # Check primary connection

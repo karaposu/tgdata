@@ -113,3 +113,12 @@ class ConnectionConfig:
     proxy: Optional[Dict[str, Any]] = field(default=None, repr=False)
     proxy_display: Optional[str] = None   # the proxy URL with the password masked — safe to log
     require_proxy: bool = False           # refuse to connect when no proxy is configured
+    # The account's device identity — what every connection tells Telegram it
+    # is running on. None = Telethon's default, which it derives from the
+    # machine and from its own version, so it changes between machines and on
+    # Telethon upgrades. Pinned values are presented the same way everywhere.
+    device_model: Optional[str] = None
+    system_version: Optional[str] = None
+    app_version: Optional[str] = None
+    lang_code: Optional[str] = None
+    system_lang_code: Optional[str] = None

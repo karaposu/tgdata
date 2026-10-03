@@ -591,7 +591,29 @@ class TgData:
             Health check results
         """
         return await self.connection_engine.health_check()
-        
+
+    def device_identity(self) -> Dict[str, Any]:
+        """
+        What every connection for this account tells Telegram it is running
+        on: device model, system version, app version and language codes.
+        Computed locally — no network, no session file.
+
+        Without `device_model` / `system_version` / `app_version` /
+        `lang_code` / `system_lang_code` in the config, Telethon derives them
+        from the machine and its own version, so the same account presents a
+        different device on another machine and after a Telethon upgrade.
+        To pin it, paste `config_lines` into the account's [Telegram] section;
+        it applies from the next connection, without logging in again.
+
+        Returns:
+            {'presented': {field: value}, 'pinned': [fields set in the config],
+             'config_lines': ready-to-paste lines pinning what is presented now}
+
+        Example:
+            print(TgData("config.ini").device_identity()['config_lines'])
+        """
+        return self.connection_engine.device_identity()
+
     async def download_media_by_id(self,
                              group_id: Union[int, str],
                              message_ids: Union[int, List[int]],

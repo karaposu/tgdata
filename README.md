@@ -26,6 +26,7 @@ A production-grade Python library for extracting and processing Telegram group a
 - 🖼️ **Media Detection & Download**: Flag photos/videos per message (no download needed) and pull the files on demand or during the fetch
 - 🔎 **Group Discovery**: Find rooms you are not in — Telegram's name search, its "similar channels", and links mined from posts — paced, flood-safe, budgeted
 - 🛡️ **Proxy Support**: An optional per-account SOCKS5/SOCKS4/HTTP proxy for every connection, with `require_proxy` and no silent fallback to a direct line
+- 🪪 **Fixed Device Identity**: Optionally pin the device model, system and app version an account presents, so it looks the same from every machine and after Telethon upgrades
 
 ## Installation
 
@@ -104,6 +105,49 @@ require_proxy = true
   account, so each account gets its own proxy.
 - An existing session keeps working through a proxy; a session file is not
   tied to an IP.
+
+### A fixed device identity (optional)
+
+Every connection tells Telegram what device it is running on — a device
+model, a system version, an app version and language codes. Telegram shows
+them in the account's active-sessions list. Unless you pin them, Telethon
+derives them from the machine and from its own version, so the same account
+presents a different device on another machine, after an OS update, and after
+every Telethon upgrade. On a Mac today that is `arm64`, `25.6.0`, `1.40.0`.
+
+Pin them in the account's config, and every connection presents exactly
+that, from any machine:
+
+```ini
+[Telegram]
+device_model = PC 64bit
+system_version = Windows 11
+app_version = 4.16.8 x64
+lang_code = en
+system_lang_code = en
+```
+
+- **All five keys are optional.** No keys means Telethon's defaults, exactly
+  as before; a key you leave out keeps its default. `lang_code` alone also
+  sets `system_lang_code`. Values may contain spaces; quotes and an inline
+  `; comment` are stripped.
+- **You can add it later.** The identity is sent on every connection, not
+  only at login, so an existing session picks it up on its next connection —
+  no new login.
+- **To keep what an account shows today**, pin its current values instead of
+  inventing new ones (switching identity is itself a visible change). Run
+  this on the machine the account normally runs on and paste the output into
+  its config:
+
+```python
+print(TgData("config.ini").device_identity()['config_lines'])
+```
+
+  `device_identity()` needs no network and no session; it also returns the
+  presented values and which ones are pinned. `health_check()` reports the
+  presented identity too.
+- Whether Telegram cares about a changing identity has not been measured;
+  pinning is a precaution for accounts that move between machines.
 
 
 ## Quick Start

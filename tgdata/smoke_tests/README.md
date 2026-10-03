@@ -87,6 +87,17 @@ Tests proxy support (`python -m tgdata.smoke_tests.test_12_proxy [config.ini]`):
 
 Items 3–6 need `pip install 'tgdata[proxy]'`. Item 6 reads only `api_id`/`api_hash` from the config; the account's own session is never opened.
 
+### 10. **test_13_device_identity.py**
+Tests the fixed device identity (`python -m tgdata.smoke_tests.test_13_device_identity [config.ini]`):
+- no keys: Telethon's machine defaults, unchanged (no network)
+- pinned keys presented as written: spaces kept, quotes and inline comments stripped, `lang_code` alone sets `system_lang_code` (no network)
+- the use-and-close, persistent and pool clients all carry it — driven through the real code paths with a stand-in client that refuses to connect (no network)
+- `device_identity()`: pasting its `config_lines` back pins exactly the same identity (no network)
+- `health_check()` reports the presented identity (no network)
+- Telegram accepts a connection presenting a pinned identity (throwaway session, no login)
+
+Whether Telegram's active-sessions list *shows* the pinned values needs a logged-in account and is not checked here.
+
 ### Custom Test Scripts:
 - **my_test.py** - Custom test script for specific scenarios
 
