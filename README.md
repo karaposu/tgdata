@@ -92,28 +92,43 @@ prompting.
 Pass a store once to keep each account's session in your application's storage:
 
 ```python
+import sqlite3
 from tgdata import TgData
 
 class SessionStore:
-    def __init__(self):
-        self.sessions = {}
+    def __init__(self, path):
+        self.db = sqlite3.connect(path)
+        with self.db:
+            self.db.execute(
+                "CREATE TABLE IF NOT EXISTS sessions "
+                "(name TEXT PRIMARY KEY, data TEXT NOT NULL)"
+            )
 
     def load(self, name):
-        return self.sessions.get(name)  # None means no session saved yet
+        row = self.db.execute(
+            "SELECT data FROM sessions WHERE name = ?", (name,)
+        ).fetchone()
+        return row[0] if row else None
 
     def save(self, name, data):
-        self.sessions[name] = data
+        with self.db:
+            self.db.execute(
+                "INSERT OR REPLACE INTO sessions (name, data) VALUES (?, ?)",
+                (name, data),
+            )
 
     def delete(self, name):            # optional; used on Telegram log-out
-        self.sessions.pop(name, None)
+        with self.db:
+            self.db.execute("DELETE FROM sessions WHERE name = ?", (name,))
 
-store = SessionStore()                 # demonstration: lives only in memory
+store = SessionStore("accounts.sqlite3")
 tg = TgData("config.ini", session_store=store)
-# Use tg as usual, then await tg.close() to flush the final session state.
+# Use tg as usual. When finished, await tg.close(), then store.db.close().
 ```
 
-For persistence across restarts, supply your own store backed by a database or
-other storage. The methods are synchronous, not `async def`, and run on the
+This example keeps sessions in a small SQLite table across restarts. Supply
+your own store to use another database or storage service. The methods are
+synchronous, not `async def`, and run on the
 event loop: keep them quick, for example with a local database or an in-memory
 cache that writes behind. tgdata ships no storage backend.
 
