@@ -12,6 +12,8 @@
   - today's files stay the default.
 
 > Amended at step 2 (2026-10-05), by the maintainer's decisions: criterion 9 targets Telethon 1.45.0 only, and criterion 7 adds that Telethon's own copies of a session never write to the store. Amended again at step 2 (2026-10-05) for four risks the maintainer flagged before the plan: criterion 3 (only groups, channels and the account itself are kept), criterion 5 (no credential in logs) and criterion 7 (a login is never overwritten by a client that did not see it).
+>
+> Amended at the fold (2026-10-05). Criterion 3: the sent-file cache is not stored, because Telethon 1.45.0's client never uses it, and the stored string is opaque — critic Risk 6. Criterion 2: a store's methods run on the event loop and should be quick — critic Risk 5.
 
 **Where this departs from the issue text:**
 - **No encryption.** tgdata hands the store the session. A store may encrypt it on its own.
@@ -47,7 +49,7 @@ Without `session_store`, the same session name reaches Telethon as today. Existi
 - `save(name, data: str)`;
 - optionally `delete(name)`, called when Telethon logs the account out.
 
-The methods are plain functions, not coroutines. Telethon reads a session's login and data centre from synchronous code, and treats async session methods as experimental. A store over an async database wraps its own call.
+The methods are plain functions, not coroutines. Telethon reads a session's login and data centre from synchronous code, and treats async session methods as experimental. A store over an async database wraps its own call. The methods run on the event loop, so they should return quickly: a local database, or an in-memory cache that writes behind.
 
 Every client of the account uses the store under its name:
 - the persistent client and a use-and-close client use the configured session name — `session_file`, then `username`, then the default, as today;
@@ -56,11 +58,12 @@ Every client of the account uses the store under its name:
 No `.session` file is created.
 
 ### 3. What a restart needs is stored, and nothing more
-What is saved is one versioned string carrying:
+What is saved is one opaque, versioned string — store it as text. It carries:
 - the auth key and the data centre;
 - the update states;
-- the group cache — groups and channels with their access hashes — and the account's own rows;
-- the sent-file cache.
+- the group cache — groups and channels with their access hashes — and the account's own rows.
+
+The sent-file cache is not stored: Telethon 1.45.0's client never uses it.
 
 It is not Telethon's `StringSession`, which keeps only the auth key and the data centre. A session saved by one client and loaded by a new one reads a discovered room straight from its cache, with no lookup.
 

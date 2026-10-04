@@ -5,7 +5,16 @@ effort: max
 
 # Plan — load and save sessions through a pluggable session store (issue #5)
 
-**Revision 1.**
+**Revision 2.**
+
+**Critic folded:** 2026-10-05.
+- **What the critic reviewed.** `critic.md` (`cf7a745`) reviewed revision 1, the 6-step plan at `391ddde`. Its findings were applied in rewriting it into these 5 steps (`2f09596`), and this revision tags them.
+- **The four Medium mitigations,** all robust (Risks 1–4), changed Steps 1, 3 and 4. No step was added.
+- **Two Lows were taken,** because each costs a line:
+  - Risk 5 — the README says a store runs on the event loop;
+  - Risk 6 — the stored string is opaque.
+- **One Low is consciously left:** Risk 7 — the two connect-time saves are covered by reading Telethon's code, not by an offline test.
+- **The sent-file cache is not stored.** Telethon 1.45.0's client never calls `cache_file` or `get_file`.
 
 ## What is the task
 
@@ -60,7 +69,7 @@ None identified. Pushing, the PR and merging follow the process: the merge waits
 - **P7, the copy.** `clone()` returns a plain `MemorySession`, and its saves never reach the store.
 - **P8, an empty store.** It gives a brand-new session, with `auth_key` `None`.
 - **The other shapes.**
-  - The sent-file cache maps `(md5, size, kind)` to `(id, access_hash)`.
+  - The sent-file cache maps `(md5, size, kind)` to `(id, access_hash)`, but Telethon 1.45.0's client never calls `cache_file` or `get_file`, so it is not stored.
   - Update states are Telethon `State` objects.
   - `connect()` reads the account's own id from the id-0 row and then its user row.
   - Log-out disconnects (and so saves) before `delete()`.
@@ -69,7 +78,7 @@ None identified. Pushing, the PR and merging follow the process: the merge waits
 
 | Step | Description | Expected Output |
 |------|-------------|-----------------|
-| 1 | `tgdata/session_store.py`: `StoredSession` — load, a bounded cache, a deterministic dump, check-then-save, loud but credential-free failures, `delete`, `clone` | A session class Telethon accepts, which keeps a whole restartable session in any store |
+| 1 | `tgdata/session_store.py`: `StoredSession` — load, a bounded cache, a deterministic opaque dump, check-then-save, loud but credential-free failures, `delete`, `clone` | A session class Telethon accepts, which keeps everything a restart needs in any store |
 | 2 | Wiring: `TgData(session_store=)` → `ConnectionEngine(session_store=)` → `_new_client()` | Every client of the account uses the store; the default is unchanged |
 | 3 | Docs: a README section, the docstrings, the smoke-test README | Users can pass a store and know what it receives |
 | 4 | Offline test `test_17_session_store.py` | Every desc criterion checked on Telethon 1.45.0 |
@@ -77,7 +86,7 @@ None identified. Pushing, the PR and merging follow the process: the merge waits
 
 ---
 
-## Step 1 — The store-backed session
+## Step 1 — The store-backed session `[folded: Risks 1–4, robust; Risk 6, Low]`
 
 ### Proposed changes
 
@@ -98,7 +107,7 @@ class StoredSession(MemorySession):
         super().__init__()
         self._store, self._name = store, name
         self._synced = None            # the string last loaded from or written to the store
-        self._synced_key = None        # the login key in it (bytes) — Risk 3
+        self._synced_key = None        # the login key in it (bytes) — [folded: Risk 3]
         self._warned = False
         data = store.load(name)        # a store error propagates as itself, before anything connects
         if data is not None:
@@ -110,31 +119,33 @@ class StoredSession(MemorySession):
   - **Nothing stored.** `None` means a brand-new session, with `auth_key` `None`, so today's first-login rules apply unchanged.
   - **A store error** propagates as itself.
   - **An unreadable string** — bad JSON or base64, a missing field, an unknown format — raises `ValueError(f"stored session {name!r} cannot be read ({type(e).__name__})") from None`. The data is never quoted, and the parse error is never chained. A failed load can never look like a new session (`c72eab4`'s guarantee).
-- **The bounded cache** `[Risk 1]`. It overrides `_entity_to_row(e)`: a `types.User` is declined unless `e.is_self`. Kept are:
+- **The bounded cache** `[folded: Risk 1, robust]`. It overrides `_entity_to_row(e)`: a `types.User` is declined unless `e.is_self`. Kept are:
   - groups and channels;
   - the account's own user row;
   - the id-0 row Telethon writes to remember the account's id. It arrives as an `InputPeerUser`, not a `User`, so it is kept.
 
   Message senders never enter memory, so memory, the stored string and the dump time are all bounded by the groups the account knows. `is_self` is used rather than tracking the id from the id-0 row: on a first login the account's own row arrives before that id-0 row exists, and `is_self` keeps it anyway.
-- **A deterministic dump** `[Risk 4]`. `dump()` returns compact JSON with sorted keys:
+- **A deterministic, opaque dump** `[folded: Risk 4, robust; Risk 6, Low]`. `dump()` builds compact JSON with sorted keys:
 
   ```
   {"format": 1, "dc_id", "server_address", "port", "auth_key": base64 or null, "takeout_id",
    "entities":      [[marked_id, access_hash, username, phone, name], …],
-   "update_states": [[entity_id, pts, qts, date_ts, seq, unread_count], …],
-   "files":         [[md5_hex, size, kind, id, access_hash], …]}
+   "update_states": [[entity_id, pts, qts, date_ts, seq, unread_count], …]}
   ```
 
-  - Every row list is sorted with `key=json.dumps`. Rows mix text and `None` — a room cached once with its username and once without — and plain `sorted()` raises on those.
-  - The temporary auth key is not stored, as Telethon's own file does not store it by default.
-- **Check, then save** `[Risk 3]`. Telethon calls `save()` at its save points.
+  - **Sorting.** Every row list is sorted with `key=json.dumps`. Rows mix text and `None` — a room cached once with its username and once without — and plain `sorted()` raises on those.
+  - **The stored string is opaque.** It is `"1:"` followed by the URL-safe base64 of that JSON, the way Telethon's own `StringSession` is opaque. A store that parses JSON could otherwise turn the 64-bit access hashes into floats and change them.
+  - **What is not stored.**
+    - The temporary auth key, as Telethon's own file does not store it by default.
+    - The sent-file cache, which Telethon 1.45.0 never uses.
+- **Check, then save** `[folded: Risk 3, robust]`. Telethon calls `save()` at its save points.
   1. Build the dump. If it equals `self._synced`, return: nothing changed, so nothing is written.
   2. Read the stored string, and the login key in it.
   3. If that key is not `self._synced_key` — someone else logged in, or deleted the session — do not write. Log a WARNING once: `session 'acct' was logged in or removed elsewhere — not overwritten`.
   4. Otherwise `store.save(name, data)`, and record `self._synced` and `self._synced_key`.
 
   This costs one extra load per real write, and none when nothing changed. Two clients on the same login keep writing, and the later save still wins for the cache.
-- **Credential-free failures** `[Risk 2]`. Any exception while saving — the dump, the check load or the save — is caught and logged on `tgdata.session_store` at ERROR, every time. The record carries the session name and the exception's *type* only: no text, no traceback. For example: `Could not save session 'acct' to the session store (OperationalError) — retried at the next save point`. `save()` never raises into Telethon's loops.
+- **Credential-free failures** `[folded: Risk 2, robust]`. Any exception while saving — the dump, the check load or the save — is caught and logged on `tgdata.session_store` at ERROR, every time. The record carries the session name and the exception's *type* only: no text, no traceback. For example: `Could not save session 'acct' to the session store (OperationalError) — retried at the next save point`. `save()` never raises into Telethon's loops.
 - **`close()`** calls `save()`. Telethon flushes its last state into the session and then closes it.
 - **`delete()`** calls `store.delete(name)` when the store has one, and logs a failure the same credential-free way. Telethon's `log_out()` disconnects, which saves, and then deletes.
 - **`clone(to_instance=None)`** returns `to_instance or MemorySession()`: a fresh in-memory session for a side connection, which never touches the store. This is the maintainer-confirmed finding.
@@ -197,14 +208,16 @@ False. It changes the function every client goes through, although without a sto
 
 ---
 
-## Step 3 — Docs
+## Step 3 — Docs `[folded: Risks 1–3, robust; Risks 5 and 6, Low]`
 
 ### Proposed changes
 
 - **`README.md`**, under "Authentication", gets a section, "Keeping sessions out of files". It covers:
   - the three store methods;
   - a short example store;
-  - what is stored — the login, the data centre, update states, groups and channels with their access hashes, the account's own rows, and the sent-file cache; never message senders;
+  - what is stored — the login, the data centre, update states, groups and channels with their access hashes, and the account's own rows; never message senders;
+  - that the string is opaque: store it as text;
+  - that a store's methods run on the event loop, so they should return quickly — a local database, or an in-memory cache that writes behind;
   - when a session is saved;
   - failures — a load error raises, and a save error is logged with its type only;
   - the two-clients rule;
@@ -230,7 +243,7 @@ README "Authentication" and "Logging in", smoke-test README
 
 ---
 
-## Step 4 — Offline test `tgdata/smoke_tests/test_17_session_store.py`
+## Step 4 — Offline test `tgdata/smoke_tests/test_17_session_store.py` `[folded: Risks 1–4, robust; Risk 6, Low]`
 
 ### Proposed changes
 
@@ -241,10 +254,10 @@ In the style of test_14 to test_16: numbered TESTs, `Passed: N/M`, an exit code,
 
 1. **The default is unchanged.** Without a store, `_new_client()` builds Telethon's `SQLiteSession` on `<name>.session`, as today.
 2. **A store serves every client.** `TgData(…, session_store=store)` makes the engine's clients `StoredSession`s under the configured name, and pool connections under `<name>_<i>`. No `.session` file is created.
-3. **The round trip, through Telethon's real client.** The auth key reaches the sender; the data centre, the update states and the sent-file cache come back; a discovered room is read from the restored cache by username and by id.
-4. **The bounded cache** `[Risk 1]`. A response with 500 message senders, one channel and the account's own user stores the channel, the account's row and the id-0 row, and no sender. After a restart, the id-0 row and the own row give back the account's id the way `connect()` reads them.
+3. **The round trip, through Telethon's real client.** The auth key reaches the sender; the data centre and the update states come back; a discovered room is read from the restored cache by username and by id. The stored string is opaque: it starts with `1:` and is not JSON, and a 64-bit access hash survives it exactly.
+4. **The bounded cache** `[folded: Risk 1]`. A response with 500 message senders, one channel and the account's own user stores the channel, the account's row and the id-0 row, and no sender. After a restart, the id-0 row and the own row give back the account's id the way `connect()` reads them.
 5. **The save points.** `client.disconnect()` on a never-connected client saves through `close()`; an unchanged state is not written again.
-6. **Failures** `[Risk 2]`:
+6. **Failures** `[folded: Risk 2]`:
    - a store whose `load` raises makes building the client raise that error;
    - an unreadable string raises a `ValueError` that names the session only;
    - a failing `save` is logged at ERROR every time, with the error's type, and `save()` returns normally;
@@ -254,11 +267,11 @@ In the style of test_14 to test_16: numbered TESTs, `Passed: N/M`, an exit code,
    - an empty store at a terminal runs the interactive login, and after `close()` the store holds the login;
    - a stored logged-out session raises `AuthRequiredError` (logged out), and no code is requested.
 8. **Log-out**, through Telethon's real `log_out()` on a scripted connection, calls `store.delete(name)`. A store without `delete` raises nothing.
-9. **Two clients** `[Risk 3]`:
+9. **Two clients** `[folded: Risk 3]`:
    - on the same login, the later save wins for the cache;
    - a client that started before a login — both loaded empty, one logged in and saved — does not overwrite it: it skips and warns once, and the stored key stays the login's;
    - a stale client after a login made elsewhere skips the same way.
-10. **Mixed rows** `[Risk 4]`. A room cached public, then private, saves and restores both rows, and two dumps of the same state are identical.
+10. **Mixed rows** `[folded: Risk 4]`. A room cached public, then private, saves and restores both rows, and two dumps of the same state are identical.
 11. **`clone()`.** It returns a plain `MemorySession`, not a `StoredSession`. Saving or closing it never reaches the store, and `to_instance` is honoured.
 12. **The health identity** names the session by the configured name when a store is used.
 
