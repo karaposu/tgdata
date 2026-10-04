@@ -2,6 +2,8 @@
 
 > Session warmed at `110996c` (2026-10-03) — already warm, carried from #4 in this session, so `/arch-small-summary` and `/arch-intro` were not run. This session read `connection_engine.py`, `tgdata.py`, `message_engine.py`, `discovery_engine.py` and `health.py` in full, and Telethon 1.45.0's request, login and updates code. For this issue it also read Telethon's sessions package and every session save, close and delete call site. `devdocs/archaeology/` is unchanged.
 
+> Implementation resumed at `0162acd` (2026-10-05). This Codex session was already warm from `/arch-small-summary`: all 41 Python source files, including the unfinished `session_store.py`, were read, along with the process hook and publishing workflow. For continuation it read the issue, the full issue-title list, CONTRIBUTING, this work folder, and Telethon 1.45.0's in-memory session, disconnect, auth-key-save and log-out implementations. No repeat architecture pass was needed under §4.1. The project card is not yet written, as the issue records. The refreshed small summary is kept in the documentation commit.
+
 **Sources:**
 - issue #5's body;
 - `triage.md` — feature-heavy, traverse not needed;
