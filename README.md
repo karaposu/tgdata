@@ -87,6 +87,69 @@ prompting.
   Retrying cannot log it back in — and, unlike before, it no longer sends the
   owner a fresh login code on every retry.
 
+### Keeping sessions out of files
+
+Pass a store once to keep each account's session in your application's storage:
+
+```python
+from tgdata import TgData
+
+class SessionStore:
+    def __init__(self):
+        self.sessions = {}
+
+    def load(self, name):
+        return self.sessions.get(name)  # None means no session saved yet
+
+    def save(self, name, data):
+        self.sessions[name] = data
+
+    def delete(self, name):            # optional; used on Telegram log-out
+        self.sessions.pop(name, None)
+
+store = SessionStore()                 # demonstration: lives only in memory
+tg = TgData("config.ini", session_store=store)
+# Use tg as usual, then await tg.close() to flush the final session state.
+```
+
+For persistence across restarts, supply your own store backed by a database or
+other storage. The methods are synchronous, not `async def`, and run on the
+event loop: keep them quick, for example with a local database or an in-memory
+cache that writes behind. tgdata ships no storage backend.
+
+- **Names:** `session_file` is the store key, used as configured; no `.session`
+  suffix is added. The existing fallback to `username`, then `telegram_session`,
+  still applies. Persistent and short-lived clients share that name; pool
+  connections use `<name>_1`, `<name>_2`, and so on.
+- **Contents:** one opaque, versioned string containing the login key, data
+  centre, update states, groups and channels with their access hashes, and the
+  account's own identity rows. Message senders are excluded from this session
+  cache. The temporary key and sent-file cache are not persisted.
+- **Keep the string as text.** It is not Telethon's `StringSession` format or a
+  JSON document for the store to interpret. Its encoding is not encryption;
+  access control and any encryption belong to your store.
+- **Save points:** whenever Telethon saves (connect, data-centre changes, new
+  login keys, and periodically while connected), plus disconnect/`close()`.
+  Unchanged state causes no write. Always close the client when finished.
+- **Failures:** a store load error or unreadable saved string raises before a
+  connection opens. A failed save is logged at ERROR and retried at the next
+  save point; failed deletes are logged too. Save/delete logs contain the
+  session name and error type, never the error text or traceback, which could
+  contain the login key.
+- **Two clients:** with the same login, the later save wins for the cache.
+  Before writing, a client re-reads the stored key. If it changed or was removed,
+  the client skips the write and warns once instead of replacing that login.
+  This check and save are separate operations, not an atomic guarantee across
+  processes. Telethon's session copies for side connections stay in memory and
+  never write to the store.
+- **Login rules stay the same:** `None` from `load` means a new session; an
+  existing session that Telegram logged out still raises `AuthRequiredError`.
+  If `delete` is provided, Telegram log-out removes the stored record.
+
+Without `session_store`, existing `.session` files work exactly as before.
+There is no automatic migration from files to a store. This option is designed
+and tested against Telethon 1.45.0.
+
 ### Connecting through a proxy (optional)
 
 With no `proxy` key, tgdata connects directly, exactly as before. Add one, and

@@ -29,6 +29,7 @@ from telethon.sessions import StringSession
 from . import health
 from .health import telegram_error_name as _telegram_error_name
 from .models import ConnectionConfig, RateLimitInfo
+from .session_store import StoredSession
 
 logger = logging.getLogger(__name__)
 
@@ -325,7 +326,8 @@ class ConnectionEngine:
                  max_retries: int = 3,
                  retry_delay: float = 1.0,
                  exponential_backoff: bool = True,
-                 interactive_login: Optional[bool] = None):
+                 interactive_login: Optional[bool] = None,
+                 session_store=None):
         """
         Initialize connection engine.
 
@@ -342,6 +344,10 @@ class ConnectionEngine:
                 session back in — run it by hand. False: never. Otherwise a
                 session that is not logged in raises AuthRequiredError, and no
                 code is ever requested.
+            session_store: Optional object with synchronous load(name) -> str
+                or None, save(name, data), and optional delete(name) methods.
+                Keeps sessions in that store instead of .session files. These
+                methods run on the event loop and should return quickly.
         """
         self.config_path = config_path
         self.pool_size = pool_size
@@ -349,6 +355,7 @@ class ConnectionEngine:
         self.retry_delay = retry_delay
         self.exponential_backoff = exponential_backoff
         self.interactive_login = interactive_login
+        self.session_store = session_store
         
         self._config: Optional[ConnectionConfig] = None
         self._primary_client: Optional[TelegramClient] = None
@@ -527,6 +534,10 @@ class ConnectionEngine:
         Every client also carries the account's pinned device identity, if the
         config sets one; unpinned fields keep Telethon's machine defaults.
 
+        With session_store set, the configured name (or the pool's suffixed
+        name) loads a StoredSession. A load failure raises before a client is
+        built. Without a store, Telethon receives the same file name as before.
+
         And every client honours a per-request flood_sleep_threshold —
         client(request, flood_sleep_threshold=0) raises a flood wait instead of
         sleeping through it — which Telethon itself ignores (see
@@ -552,8 +563,10 @@ class ConnectionEngine:
             self._route_logged = True
         # TelegramClient is looked up here, at call time, so a test that stands
         # in for it (test_13) still controls what is built.
+        name = session_file or config.session_file
+        session = StoredSession(self.session_store, name) if self.session_store is not None else name
         return _client_class(TelegramClient)(
-            session_file or config.session_file,
+            session,
             config.api_id,
             config.api_hash,
             proxy=dict(config.proxy) if config.proxy else None,
