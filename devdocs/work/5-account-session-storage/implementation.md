@@ -9,8 +9,9 @@ Continued on 2026-10-05 from `0162acd`, plan revision 2. The interrupted work
 had left `tgdata/session_store.py` untracked; neither Step 2 wiring edit had
 been applied. The five-step implementation plan is complete and verified.
 Code, tests and user documentation are committed in `a0e0779`; this record and
-the warming documents are kept in a separate documentation commit. The merge
-gate and PR review remain subsequent steps.
+the warming documents are kept in a separate documentation commit. This is
+the initial checkpoint; the later PR review and regenerated implementation
+are recorded below.
 
 PR preparation: the maintainer specified a small SQLite-table example rather
 than the initial dictionary example. `7a2f549` makes that documentation change.
@@ -85,7 +86,7 @@ The three runtime modules and new test byte-compile. `git diff --check` passes.
 The stricter decoder's tests were rerun after that correction; the existing
 default-file regressions had already passed with the constructor wiring.
 
-## Remaining review boundaries
+## Initial review boundaries
 
 - Critic Low 7 remains accepted: the two connect-time save points are not
   exercised through Telethon's real `connect()` in this suite. Real disconnect
@@ -118,3 +119,8 @@ Low-7 evidence described above. No live Telegram operation was performed.
 
 Final integration still needs the maintainer's go-ahead and §9 model-rule
 disposition. The branch and its work documents remain the archive.
+
+The repeated merge check and round-two PR critique now pass their respective
+checks; see `merge-check.md` and `pr-critic.md`. The first rejected critique is
+preserved in `pr-critic-round1.md`. No High or Medium remains in the final code
+review. The feature is still unmerged pending the two maintainer decisions above.

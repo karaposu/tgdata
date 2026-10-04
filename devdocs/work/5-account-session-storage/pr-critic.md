@@ -3,173 +3,142 @@ model: unknown
 effort: unknown
 ---
 
-**Verdict: IMPLEMENT AFTER FOLDING THESE IN**
+**Verdict: IMPLEMENT AS WRITTEN**
 
-Falsifier: a real Telegram login restored from this store is refused while the
-same key/data centre from a file session is accepted.
-Affordable now: no — requires a live authenticated account; the approved
-verification scope excludes live Telegram operations.
+Falsifier: a live Telegram connection refuses the restored login while the
+same key/data-centre pair from a file session is accepted.
+Affordable now: no — requires a live logged-in account; the approved scope
+uses synthetic credentials and excludes live Telegram operations.
 
-**PR verdict: REJECTED — one Medium finding.** Reviewed in this warmed session
-against `origin/dev` at `110996c` and PR #13 through `24ddeb8` (runtime code
-`a0e0779`, SQLite example `7a2f549`). No subagent was used. Under §7.4 the next
-step is a revised plan and critique, not a sequence of patches to this diff.
+**PR verdict: PASS — no High or Medium finding remains.** Round 2 reviewed
+in this warmed session against `origin/dev` at `110996c`, PR #13 through
+`0908ff5`, runtime implementation `46aef9c`, and folded plan revision 4
+(`ab91f87`). No subagent was used. This is a code-review verdict, not merge
+permission or a certification of §9 model compliance.
+
+The first rejected review remains in `pr-critic-round1.md` and commit
+`a6deab7`. Its Medium finding led to a regenerated plan, critique and fold,
+not an unplanned patch. This round examines the final adapter, shared factory,
+login rules, cache consumers, tests and documentation as a whole.
 
 ## High-level summary
 
-The storage and factory integration fit the existing architecture. The new
-probe exercises real Telethon `connect()` with a scripted transport: both
-save points run, and restored self identity and update positions are consumed
-correctly. This improves the evidence behind the earlier accepted Low 7.
+The final change uses Telethon's session abstraction at the existing client
+factory. File sessions remain the default; a supplied store keeps the complete
+restartable state defined by the task. Serialization rejects corrupt login
+keys, keeps large integers exact, excludes other message senders, and orders
+mixed cache rows deterministically. Clones stay in memory.
 
-The credential lifecycle is incomplete at logout. Closing an old client keeps
-a newer stored login, but logging that client out then deletes that newer
-record. The same-session save tests cannot detect this because the existing
-logout test uses only one client. This is a new lifecycle defect, not the
-already documented cross-process load/save race.
+The lifecycle defect from round 1 is resolved. Save and delete call the same
+ownership check inside their error handlers. Logout of a client holding an
+older key preserves the newer stored login. Failed reads/corrupt current data
+prevent mutation, without exposing the stored credential in logs. Normal
+logout still deletes its own record. The real-logout regression failed on the
+prior runtime and passes on this one.
 
 ## Premise inventory
 
-1. **A restored key/data centre can resume a real Telegram login.** First
-   dependency: the entire feature. Failure wastes the feature. Live testing is
-   not scheduled, by the approved scope; a live side-by-side restoration would
-   be the cheapest decisive test, but needs account access and authorization.
-   Constructor and scripted-transport probes cover the client implementation,
-   not Telegram's acceptance of the key.
-2. **All mutations preserve a newer stored login.** First dependency: the
-   session adapter. Failure loses the replacement credential. The original
-   tests cover saves but not stale logout. The inexpensive real-client logout
-   probe below now refutes this premise for deletion. The structure survives;
-   the lifecycle rule must cover both save and delete before implementation
-   can be accepted.
-3. **Telethon restores own identity/update state and calls session saves.**
-   First dependency: serialization. Existing tests cover constructor,
-   disconnect and auth-key callback. This review's P1/P2 execute the real
-   `connect()` method with a scripted sender, parked background loops and
-   synthetic state. They cover local Telethon behavior, not the network or
-   actual server replies. Both passed before this verdict.
-4. **File defaults, cache bounds and opaque values remain intact.** First
-   dependencies: factory and serializer. The existing 65 offline checks plus
-   the SQLite reopen probe cover these deterministic behaviors. No new
-   unsupported premise was found there.
+1. **A restored credential is accepted by live Telegram.** First dependency:
+   the original feature; failure wastes it. No live test is scheduled under
+   the approved scope. A live file/store comparison is the decisive test but
+   requires account access and authorization. Scripted transports are
+   non-covering for server acceptance; this remains an explicit limitation.
+2. **The adapter satisfies Telethon's actual client/session lifecycle.** First
+   dependency: adapter and factory. The real constructor, disconnect,
+   auth-key callback and logout are exercised in test_17. The review probe also
+   runs real `connect()`, observing both save points and restoration of own
+   identity/update positions. Transport replies and background loops are
+   supplied; local Telethon control flow is observed, not supplied.
+3. **Every persistent mutation preserves a replacement login.** First
+   dependency: revision-4 ownership rule. The failing pre-change regression,
+   final real-logout cases and P3/P4 below cover stale save/delete, including
+   first login and removal. Failed ownership reads are covered too. The
+   exact README SQLite class was exercised across two database connections,
+   stale logout and reopen. Cross-process atomicity is explicitly not claimed.
+4. **The default path and existing account behavior remain compatible.** First
+   dependency: public constructor/factory wiring. The store parameter is
+   appended, omitted stores still pass the same string, and all five existing
+   regression suites pass in their offline modes. No dependency or exported
+   interface changed beyond the optional parameter.
 
-## Restart check and inherited lessons
+No newly affordable experiment remains scheduled after its dependent work.
+The decisive stale-logout failure was observed before revision 3 was written.
 
-This feature adds a missing capability; it is not a restart after an incident.
-Its inherited first-login protection remains relevant: strict decoding and
-load-error propagation prevent damaged credentials from becoming an empty
-session. The corrupt-key case found during implementation is covered.
+## Restart check
 
-- Save at close: exercised through real Telethon disconnect, including P3.
-- Keep the group cache and own identity: covered by restoration tests and P2.
-- Failed load must raise: covered by test_17's failure and login groups.
-- Never replace a newer login: save is covered; deletion fails P4 below.
-- Optional delete: ordinary logout is covered, but ownership of deletion was
-  not represented in revision 2.
-- Default files and in-memory clones: covered by the existing factory and
-  clone tests.
-- Synchronous storage and non-atomic cross-process operations: documented
-  boundaries retained; no new store interface is proposed here.
+Observed failure: an old client's logout removed a newer stored login.
+Established mechanism: Telethon disconnected and called guarded save, then
+called the previously unguarded session delete. P4 demonstrated it.
+Design element: `_may_mutate()` gates both operations, rejects changed or
+removed keys, shares the once-only warning, and leaves synchronization markers
+unchanged on rejection. Both handlers contain load/parse/mutation errors.
 
-## Probe evidence
+The repair addresses the actual failing layer. The serializer, login-prompt
+rules and other account features were not rebuilt to conceal the symptom.
 
-Command: `.venv/bin/python devdocs/work/5-account-session-storage/probe_pr_lifecycle.py`
+## Inherited lessons and findings disposition
+
+- Original Medium 1, sender growth: response `User` rows are rejected except
+  the account's own; the bounded-cache test covers 500 senders and own identity.
+- Original Medium 2, credential logging: failure records contain only the name
+  and exception type, with no error text or traceback. Corrupt decoding also
+  suppresses its underlying exception chain.
+- Original Medium 3, stale saves: key ownership is checked before each changed
+  write; it now covers deletion too. Same-key cache writes retain their
+  specified last-writer behavior.
+- Original Medium 4, mixed sorting: JSON ordering handles text/None pairs;
+  deterministic restoration is exercised.
+- Original Lows 5/6: synchronous event-loop methods and opaque strings are
+  documented. Atomic backend operations remain a possible future interface,
+  not part of this feature.
+- Original Low 7: real connect-time saves are now exercised by the archival
+  probe. Routine smoke-suite coverage still uses scripted login decisions;
+  neither is presented as a live Telegram login.
+- Round-1 PR Medium: resolved in `46aef9c`, with a demonstrated failing-before,
+  passing-after regression and real SQLite composition check.
+
+## Final verification and probes
+
+The six suites on the final runtime code executed 65 offline test groups,
+all passing. Three live checks were deliberately skipped by giving test_12/13
+nonexistent temporary config paths. Localhost-only proxy checks passed with
+socket permission. Changed files byte-compile and whitespace checks pass.
+
+The strengthened archival probe now asserts the corrected behavior:
 
 ```text
 P1 real connect: data-centre save, then auth-key save — passed
 P2 real connect: self identity and stored update positions restored — passed
 P3 stale real disconnect: newer stored login preserved — passed
-P4 stale real log_out: newer stored login removed: True
-P4 store.delete calls: 1
-P4 newer stored login preserved: False
+P4 stale real log_out: newer stored login removed: False
+P4 store.delete calls: 0
+P4 newer stored login preserved: True
 ```
 
-The fixture blocks socket connections. P4 supplies a successful server reply
-to logging out the old key, then runs Telethon's actual log-out/disconnect/
-session-delete chain. It does not claim to test live server behavior. The
-initial P2 probe used a nonexistent `self_hash` attribute; after reading
-`EntityCache`, it was corrected to `get(self_id).hash` and all probes ran.
+The SQLite example was extracted from README and executed using synthetic
+keys with socket connections blocked. Two separate SQLite connections shared
+the table; one replaced the stored login, the old Telethon client logged out,
+and reopening the database restored the replacement key exactly. Deleting
+that currently owned record then succeeded:
 
-## Risk 1 — An older client's logout deletes a replacement login
+```text
+README SQLite example + real stale logout: replacement survives database reopen; owned deletion works — passed
+```
 
-An application can hold an old connection while another connection logs the
-same account in and replaces the saved login. If the application later logs
-the old connection out, the newer saved login disappears too. The newer
-connection may keep running, so the damage can be noticed only on restart,
-when the account needs to be logged in again.
+## Remaining boundaries and Phase 3
 
-`StoredSession.save()` compares the store's current auth key with
-`_synced_key`, but `StoredSession.delete()` calls `store.delete(self._name)`
-unconditionally. Telethon 1.45.0's `log_out()` first disconnects (calling
-`close()` and the guarded save), then calls session `delete()`. With old key A
-in the client and replacement key B in storage, the save correctly skips;
-delete then removes B. P4 reproduces this on the real client lifecycle.
+No new actionable High/Medium/Low finding was identified. Phase 3 has no new
+mitigation proposals to select. Existing boundaries remain: synchronous stores
+must be quick; check and mutation are not atomic across processes; live
+Telegram restoration is unverified. These are documented scope/verification
+limits, not newly discovered defects hidden by the passing verdict.
 
-**Severity:** Medium
+## Model rule and merge permission
 
-**Category:** credential lifecycle / delayed loss of persisted login
-
-**Impact:** a valid replacement session is removed by a client that never
-loaded it; the existing warning says changes are not saved while the record
-is nevertheless deleted.
-
-**NoobEng:** login ownership must apply to every persistent mutation. Guarding
-only the whole-record write leaves logout as a second, unguarded mutation of
-the same account record.
-
-**Affected areas:** `StoredSession.save`, `StoredSession.delete`, description
-criterion 7, plan Step 1 and the logout/two-client tests.
-
-### Mitigation — Quick
-
-Omit deletion from the store contract or never call it. This avoids removing
-the newer login, but ordinary logout leaves a revoked stored credential and
-breaks the intended optional-delete behavior.
-
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* —
-
-### Mitigation — Robust
-
-Re-plan around one ownership check used by both changed saves and deletion.
-Read and compare the stored key with `_synced_key`; when different, skip the
-mutation and warn once. Failures of the check or delete keep the existing
-credential-free logging. Test ordinary deletion, stale deletion after a new
-login, and deletion after external removal through real Telethon logout.
-
-**Why this is robust:** both persistent mutation paths enforce the same rule,
-without changing the application store interface or default file sessions.
-
-- [x] selected   - [x] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* Phase 3: the two actual instances are save and delete in the same
-adapter. One comparison serves both without per-operation policy branches.
-The robust change has the best reach for its scope and keeps the agreed store
-interface. It must enter a revised plan before implementation.
-*For future:* —
-
-### Mitigation — Long-term
-
-Add atomic conditional save and delete operations to the store interface,
-using the expected key or a version token at the backend.
-
-**Why this is long term effective:** the backend can enforce ownership even
-when separate processes race between the local check and the mutation.
-
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* Conditional backend operations would address true cross-process
-races, but expand the agreed synchronous load/save/delete interface. The local
-ownership guard remains useful, so this is future work rather than a prerequisite.
-
-## Model rule
-
-The §9 exception recorded in `merge-check.md` remains unresolved. The exact
-model variant and effort are unavailable here; this review does not claim
-compliance or substitute test results for the maintainer's decision.
+The model exception in `merge-check.md` remains unresolved: §9 names Fable 5.1
+max or GPT 6 Astra xhigh for feature work; inherited artifacts name Opus, and
+this session does not expose its exact model variant/effort. The maintainer
+must accept the exception or request the prescribed-model review. They must
+also give the explicit merge go-ahead. Exclude work-folder/archaeology changes
+when integrating into dev, keep the feature branch, run the merged-code suites,
+push dev, and close #5 manually only after that authorized integration.

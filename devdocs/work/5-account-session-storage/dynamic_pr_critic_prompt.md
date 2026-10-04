@@ -1,9 +1,15 @@
 # PR critic prompt — issue #5, PR #13
 
 Use ultrathink. Review the implemented diff against `origin/dev` together with
-plan revision 2, the description, triage, original critic, and merge check.
+plan revision 4, the description, triage, original/re-plan critics, and merge check.
 The review runs in this warmed session, not a subagent. Preserve the original
 `critic.md` and `dynamic_critic_prompt.md`; write this review to `pr-critic.md`.
+
+Round 2: preserve the rejected first PR review as `pr-critic-round1.md`.
+Judge the whole final runtime diff, not only the previous finding's fix.
+Confirm that the production ownership helper protects both mutation paths,
+including failures, without disabling ordinary logout. A second High/Medium
+rejection returns to the description and traverse under §7.4.
 
 Read the session adapter, every client construction/login/close path, the
 health identity, cache consumers, the new tests and relevant Telethon 1.45.0
