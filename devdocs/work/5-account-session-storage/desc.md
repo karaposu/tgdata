@@ -11,7 +11,7 @@
   - keep it simple — store the sessions;
   - today's files stay the default.
 
-> Amended at step 2 (2026-10-05), by the maintainer's decisions: criterion 9 targets Telethon 1.45.0 only, and criterion 7 adds that Telethon's own copies of a session never write to the store.
+> Amended at step 2 (2026-10-05), by the maintainer's decisions: criterion 9 targets Telethon 1.45.0 only, and criterion 7 adds that Telethon's own copies of a session never write to the store. Amended again at step 2 (2026-10-05) for four risks the maintainer flagged before the plan: criterion 3 (only groups, channels and the account itself are kept), criterion 5 (no credential in logs) and criterion 7 (a login is never overwritten by a client that did not see it).
 
 **Where this departs from the issue text:**
 - **No encryption.** tgdata hands the store the session. A store may encrypt it on its own.
@@ -55,14 +55,16 @@ Every client of the account uses the store under its name:
 
 No `.session` file is created.
 
-### 3. The whole session is stored
-What is saved is one versioned string carrying what Telethon's own `.session` file keeps:
+### 3. What a restart needs is stored, and nothing more
+What is saved is one versioned string carrying:
 - the auth key and the data centre;
 - the update states;
-- the group cache — entities and their access hashes;
+- the group cache — groups and channels with their access hashes — and the account's own rows;
 - the sent-file cache.
 
 It is not Telethon's `StringSession`, which keeps only the auth key and the data centre. A session saved by one client and loaded by a new one reads a discovered room straight from its cache, with no lookup.
+
+Message senders are not kept. tgdata reads them from the messages they arrive with, never from the session's cache. Keeping every author a scraping account meets would grow the session without bound, so they never enter the stored session at all. The stored string is therefore bounded by the groups the account knows.
 
 ### 4. It is saved whenever Telethon saves, and at close
 That means:
@@ -75,6 +77,7 @@ That means:
 ### 5. Failures are loud
 - **A failed load raises before anything connects.** That covers a store error, and a saved string that cannot be read. It is never mistaken for a session that was never logged in: that is what decides whether a login code may be requested (`c72eab4`).
 - **A failed save is logged at ERROR every time.** It never breaks Telethon's own loops, and the next save point tries again.
+- **No credential in logs.** A failed save or delete is logged with the session name and the error's type only — never the error's text, never a traceback. Store and database errors often quote the values they tried to write, and the session holds the account's login key.
 
 ### 6. Logins behave as today
 - **Nothing saved yet.** When a store has nothing under the name, the session is brand-new, and today's first-login rules apply unchanged.
@@ -82,7 +85,9 @@ That means:
 - **A logout still raises.** A saved session that Telegram has logged out raises `AuthRequiredError` as before.
 
 ### 7. Two clients of one session
-The persistent client and a use-and-close client save independently, and the later save wins. Both carry the same login, so the login is never lost. At worst, a few cache entries are learned again.
+The persistent client and a use-and-close client save independently. While both hold the same login, the later save wins for the cache, and at worst a few cache entries are learned again.
+
+A client never overwrites a login it did not load or make. Before each write it reads what the store holds. If the stored login key is not the one it last loaded or wrote, it skips the write and warns once: the account was logged in elsewhere. Examples are a client that started before a login, or a second process.
 
 Telethon sometimes copies a session for a side connection, such as media from its CDN. That copy lives in memory only and never writes to the store, so it can never replace the account's stored login.
 
