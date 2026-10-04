@@ -214,7 +214,7 @@ False. It changes the function every client goes through, although without a sto
 
 - **`README.md`**, under "Authentication", gets a section, "Keeping sessions out of files". It covers:
   - the three store methods;
-  - a short example store;
+  - a short example store backed by a small SQLite table (clarified by the maintainer during PR preparation);
   - what is stored — the login, the data centre, update states, groups and channels with their access hashes, and the account's own rows; never message senders;
   - that the string is opaque: store it as text;
   - that a store's methods run on the event loop, so they should return quickly — a local database, or an in-memory cache that writes behind;

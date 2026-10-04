@@ -12,6 +12,12 @@ Code, tests and user documentation are committed in `a0e0779`; this record and
 the warming documents are kept in a separate documentation commit. The merge
 gate and PR review remain subsequent steps.
 
+PR preparation: the maintainer specified a small SQLite-table example rather
+than the initial dictionary example. `7a2f549` makes that documentation change.
+The exact README class was executed with a temporary database and synthetic
+session: save, reopen, exact key restoration, quoted account name and delete
+all passed. Step 5 on GitHub #5 is now checked with the published commits.
+
 ## Changes
 
 - Retained and completed `StoredSession`: opaque versioned persistence of the
