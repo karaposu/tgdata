@@ -92,7 +92,12 @@ That means:
 ### 7. Two clients of one session
 The persistent client and a use-and-close client save independently. While both hold the same login, the later save wins for the cache, and at worst a few cache entries are learned again.
 
-A client never overwrites a login it did not load or make. Before each write it reads what the store holds. If the stored login key is not the one it last loaded or wrote, it skips the write and warns once: the account was logged in elsewhere. Examples are a client that started before a login, or a second process.
+A client never overwrites or removes a login it did not load or save. Before a changed save or a delete it reads what the store holds. If the stored login key is not the one it last loaded or wrote, it skips the mutation and warns once: the account was logged in or removed elsewhere. Examples are a client that started before a login, or a second process. This applies to logout too: an older client's successful logout must not delete a newer stored login. The read and mutation are separate operations, not an atomic cross-process guarantee.
+
+This lifecycle clarification follows PR #13's first critique (`a6deab7`): the
+real logout probe preserved a replacement login during disconnect, then
+deleted it through the unguarded delete path. Plan revision 3 is regenerated
+around one ownership check for both mutations.
 
 Telethon sometimes copies a session for a side connection, such as media from its CDN. That copy lives in memory only and never writes to the store, so it can never replace the account's stored login.
 
