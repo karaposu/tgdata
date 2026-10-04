@@ -141,6 +141,8 @@ async def main():
         print('P4 stale real log_out: newer stored login removed:', store.load('account') is None)
         print('P4 store.delete calls:', len(store.deletes))
         print('P4 newer stored login preserved:', store.load('account') == newer)
+        assert store.load('account') == newer
+        assert not store.deletes
 
 
 if __name__ == '__main__':

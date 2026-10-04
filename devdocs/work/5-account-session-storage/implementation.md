@@ -95,3 +95,26 @@ default-file regressions had already passed with the constructor wiring.
   implementation and documentation commits.
 - Merge-gate and PR-critic checkboxes are not complete. No merge or deployment
   is part of this implementation checkpoint.
+
+
+## Regenerated implementation after the PR critique
+
+PR #13's first review (`a6deab7`) found one Medium: an old client's logout
+preserved a newer key during its save, then deleted it. Revision 3 was
+regenerated (`cc665f4`), critiqued (`c663b4c`), and folded into revision 4
+(`ab91f87`). Runtime/test/user-documentation changes are in `46aef9c`.
+
+The adapter now uses `_may_mutate()` for both changed saves and optional
+deletion. A stale or unreadable current record cannot be removed. The expanded
+real-logout regression failed before this change and passes afterward.
+
+The six suites were rerun on the final runtime code: 65 offline test groups
+passed, 3 live checks skipped. The real-connect/restore/disconnect/logout
+probe also passes; the old P4 failure is now asserted to preserve the newer
+login. The exact SQLite example passed with two database connections, stale
+real logout, reopen, exact-key restoration and ordinary owned deletion.
+This probe exercises the actual connect-time saves, improving the initial
+Low-7 evidence described above. No live Telegram operation was performed.
+
+Final integration still needs the maintainer's go-ahead and §9 model-rule
+disposition. The branch and its work documents remain the archive.

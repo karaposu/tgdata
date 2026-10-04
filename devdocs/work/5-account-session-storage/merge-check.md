@@ -3,126 +3,129 @@ model: unknown
 effort: unknown
 ---
 
-# Merge check — issue #5
+# Merge check — issue #5, round 2
 
-Reviewed in the implementation session on 2026-10-05, against `origin/dev`
-at `110996c` and the feature through `7a2f549`. Inputs: triage, description,
-plan revision 2, the original critic, implementation record and actual diff.
+**Fidelity verdict: PASS for revision 4 and runtime commit `46aef9c`.**
+Reviewed in-session on 2026-10-05 against `origin/dev` at `110996c`, triage,
+description, regenerated plan, both plan critiques and the first PR critique.
+The independent second PR critique follows this checkpoint. Merge still needs
+the maintainer's explicit go-ahead and disposition of the §9 exception below.
 
-**Implementation-to-plan check: complete. Ready to open the PR, subject to the
-separate PR critic. This is not merge authorization.** The maintainer requested
-an explicit go-ahead before merging. The model-rule exception below also needs
-their disposition before merge.
+The first merge check is retained at `24ddeb8`. The first PR review rejected
+`a0e0779` for stale logout deleting a replacement login (`a6deab7`). The task
+was re-planned (`cc665f4`), critiqued (`c663b4c`), folded as revision 4
+(`ab91f87`), and implemented (`46aef9c`). It did not bypass §7.4 with an
+unplanned patch.
 
-## 0. Session warmth and weight
+## 0. Warmth and weight
 
-The original warming commit `110996c` and continuation commit `0162acd` are
-ancestors of this feature. The continuation read all 41 existing Python source
-files, including the unfinished session class, before implementing. The task
-documents and relevant Telethon 1.45.0 lifecycle code were also read. This is
-recorded in `desc.md`; the small summary was refreshed in `75a518a`.
+The warming ancestors `110996c` and `0162acd` remain on the branch. The
+continuation read all 41 then-existing Python files and relevant Telethon
+1.45.0 lifecycle implementations. The review subsequently read real connect,
+logout, disconnect and entity-cache code and ran probes. `desc.md` records
+this, and `75a518a` contains the refreshed small summary.
 
-Triage classifies this feature-heavy; GitHub #5 has the `heavy` and
-`enhancement` labels. The feature crosses the account's login, the session
-cache, client construction and application storage, and a failed save can be
-noticed only after a restart. The weight remains appropriate.
+Triage says feature-heavy and GitHub #5 has the matching `heavy` and
+`enhancement` labels. The rejected lifecycle defect confirms that weight:
+credential loss can be delayed until a restart.
 
 ## 0b. Scope against triage
 
-Runtime changes are confined to the two surfaced constructors/factory and the
-new session class described in the plan. Tests and user documentation are the
-planned additions. The new test exercises the existing client paths rather
-than introducing a second factory. No dependencies or package exports change.
+Runtime changes remain in the planned session adapter and two surfaced
+constructor/factory files. The second implementation changes only the adapter,
+its tests and user documentation. No dependency, backend, migration, encryption
+layer, separate factory or new public operation was introduced.
 
-Work-folder artifacts and the archaeology summary are branch records. They
-must be excluded when integrating into `dev`, in accordance with §7.6. The
-unrelated local `devdocs/guides/group_discovery.md` edit is not committed and is
-absent from the PR diff.
+The SQLite README class is an example supplied at the maintainer's request,
+not a shipped backend. Work-folder artifacts/probes and the archaeology
+refresh are branch-only records to exclude from integration under §7.6.
+The unrelated working-tree guide edit remains uncommitted and outside the PR.
 
-## 1. Implementation compared with the plan
+## 1. Final implementation compared with revision 4
 
-1. `StoredSession` keeps login/data-centre state, update states, groups and
-   channels, and own identity rows. It excludes response users other than the
-   account itself, stores an opaque string, sorts mixed rows safely, checks
-   the stored login before changed saves, logs failures without payloads,
-   implements optional deletion, and clones into memory.
-2. `session_store=None` is appended to both constructors and passed through
-   the shared factory. With no store, the same original name reaches Telethon.
-   Existing login decisions, pool naming, device probe and health identity stay
-   on their existing paths.
-3. README and constructor documentation cover the contract. `7a2f549` supplies
-   the maintainer's SQLite-table example; the smoke-test README has test_17.
-4. Twelve offline test groups cover the specified scenarios. The login stand-in
-   follows test_15's technique but is local to test_17, avoiding shared mutable
-   module state and that test's import-time temporary-directory creation.
-5. Compilation and the six requested suites pass in their offline modes.
-   Code/tests/user docs are in `a0e0779`, the later requested README refinement
-   is `7a2f549`, and work-folder records are separate in `75a518a` and this
-   documentation checkpoint.
+- Step 1: description criterion 7 now covers overwriting and deleting another
+  login. The real-logout regression failed on the previous implementation
+  (`Passed: 11/12`, stale replacement changed) before the runtime edit.
+- Step 2: `_may_mutate()` compares the current stored key with `_synced_key`.
+  Both changed save and optional delete call it inside their own error
+  handlers. Rejections warn once and do not change synchronization markers.
+  Ordinary logout still deletes; failed checks retain the record. Unchanged
+  saves still return before loading the store.
+- Step 3: module/README wording describes conditional deletion, the SQLite
+  example is retained, and smoke-test coverage includes stale logout and
+  unreadable current records. The original rejected review is archived.
+- Step 4: the requested six suites were rerun after the refactor. All 65
+  executed offline test groups passed; 3 live checks were skipped. The
+  lifecycle probe and exact SQLite example passed on the final code.
 
-One implementation refinement is documented: permissive base64 decoding could
-turn a corrupt nonempty key into an empty key. The final decoder validates
-both base64 layers and the 256-byte key length, and suppresses parse-error
-chaining. This directly enforces revision 2's failed-load requirement; it
-does not change the stored format or interface.
+Initial implementation refinements remain justified: strict base64 and
+256-byte-key validation enforce failed-load protection; test_17 uses its own
+small test_15-style stand-in rather than importing test_15's mutable fixture.
+The SQLite refinement required a separate documentation commit after the
+initial implementation; code/user docs and process notes remain separated.
+No further structural deviation from revision 4 was found.
 
-## 2. Does the plan still fit the implementation?
+## 2. Does the plan still fit what was built?
 
-The existing Telethon session abstraction and the single client factory remain
-the right integration points. The default-file regression suites support the
-claim that callers without a store retain their behavior. The SQLite example
-also exercises the documented store contract across database reopen.
+One session adapter at the shared factory remains sufficient. The refactor
+makes ownership a shared rule for both persistent mutations, matching the
+actual Telethon logout order. It does not alter file sessions or login-prompt
+policy. The real-connect probe also confirms local restoration of own identity
+and update positions and both connect-time save points.
 
-The check-before-save guard is deliberately not atomic across processes. The
-README makes this boundary explicit, matching the unselected compare-and-set
-proposal in the original critic. A live Telegram restoration is still
-unverified. These are not represented as guarantees established by fake replies.
-The forthcoming PR critique separately judges lifecycle soundness and the
-adequacy of these boundaries.
+The guard is intentionally a check followed by a mutation, not atomic backend
+compare-and-set. Live Telegram acceptance remains unverified. The tests and
+probes distinguish those boundaries from local Telethon behavior; the README
+does not claim cross-process atomicity.
 
-## 3. Original critic findings
+## 3. Were the critic findings answered?
 
-- Medium 1, sender-cache growth: `_entity_to_row` excludes other `User` rows;
-  the test feeds 500 senders and verifies only the group and own rows survive.
-- Medium 2, credential logging: save/delete errors log the session name and
-  exception type only. The failure test injects payload-bearing store errors
-  and checks all captured records, including traceback fields.
-- Medium 3, stale login overwrite: changed saves compare the current stored
-  key to the last synchronized key. Tests cover a first-login race, replaced
-  key, removed record, and same-key last-writer behavior. Cross-process atomic
-  compare-and-set was consciously left outside the interface.
-- Medium 4, mixed-row sorting: rows sort by JSON text. A public/private pair
-  survives restoration, with deterministic dumps.
-- Low 5: synchronous event-loop cost is documented.
-- Low 6: an opaque base64 envelope prevents storage layers interpreting large
-  access hashes as JSON numbers; the exact signed 64-bit value is tested.
-- Low 7 remains accepted: the two saves inside real Telethon `connect()` were
-  read, not exercised by the new offline suite. Disconnect and auth-key saves
-  do run through Telethon's real code.
+Original plan critic (`cf7a745`, preserved in history):
+- Medium 1: other message senders are excluded; 500-sender test retains only
+  the group and own identity rows.
+- Medium 2: save/delete failures log name and type, with no error payload or
+  traceback. Both original failure cases and new ownership-read failures are
+  checked.
+- Medium 3: stale saves preserve the changed/removed stored login. Revision 4
+  extends that rule to deletion after the fresh PR finding.
+- Medium 4: mixed public/private cache rows sort deterministically and restore.
+- Lows 5 and 6: synchronous event-loop cost and opaque string handling are
+  documented; exact large access hashes survive.
+- Low 7: the new archival probe now exercises both actual connect-time saves.
+  This improves the evidence; the probe is not part of the routine smoke suite.
+
+First PR critic (`a6deab7`): its sole Medium is addressed by the shared guard.
+P4 now reports that no store delete is issued and the replacement login is
+preserved. Ordinary deletion, first-login races, removal, failed loads and
+corrupt current records are covered. The revision-3 plan critique found no
+additional risks to fold.
 
 ## 4. Issue status and verification
 
-The original issue request is preserved. Steps T and 0–4 remain checked against
-their existing committed artifacts. Step 5 is checked against the published
-implementation, SQLite example and verification record. Steps 6 and 7 remain
-unchecked until their artifacts are committed and the PR actions actually
-happen. No merge or closure is recorded in advance.
+The original request remains intact. GitHub #5's plan/critic/fold/implementation
+boxes now reference `cc665f4`, `c663b4c`, `ab91f87` and `46aef9c`. Final merge
+check and PR critique boxes remain pending until those artifacts are committed
+and posted; the first rejected review is explicitly recorded. They will be
+completed only with their actual review references. No merge or closure is
+recorded in advance.
 
-Verification: 65 executed offline checks passed; 3 live checks were deliberately
-skipped. Test_12's five offline/loopback checks passed after localhost access
-was enabled. The existing test_12/test_13 banners count skipped checks as
-successes; the implementation record separates them. Changed Python files
-compile and whitespace checks pass. The exact README SQLite class passes a
-temporary-database save/reopen/restore/delete probe.
+Telethon 1.45.0 / Python 3.11.10: test_17 12/12; test_16 21/21; test_15 11/11;
+test_14 11/11; test_13 five passed and one live skip; test_12 five passed and
+two live skips. Missing temporary config paths disable live checks. Proxy
+checks used localhost only. Changed files compile; whitespace checks pass.
 
-## §9 model rule — maintainer attention required
+The final lifecycle probe reports: both real connect saves pass; own identity
+and update positions restore; stale disconnect preserves the replacement;
+stale logout issues zero store deletes and preserves the replacement. The
+exact README SQLite class also passed real stale logout across two database
+connections, reopen, exact key restoration, and owned deletion.
+
+## §9 model rule — maintainer disposition required
 
 CONTRIBUTING assigns feature work to **Fable 5.1 at max** or **GPT 6 Astra at
-xhigh**. The inherited plan/critic frontmatter instead records
-`claude-opus-5-5[1m]` at `max`. This session identifies itself as Codex/GPT-6,
-but its exact model variant and effort are not exposed; they are recorded as
-`unknown`, not inferred to be Astra/xhigh. The rule's satisfaction cannot be
-certified. The maintainer must decide whether to accept these artifacts or
-require review in the prescribed model before approving merge. This flag is
-separate from the code-risk verdict and must not be presented as resolved by
-passing tests.
+xhigh**. The inherited plan/critic record `claude-opus-5-5[1m]` at `max`.
+This session is identified as Codex/GPT-6, but its exact model variant and
+effort are not exposed and are recorded as unknown. Compliance cannot be
+certified. The maintainer must either accept this exception or require review
+with the prescribed model before approving merge. Passing code tests and
+critique do not resolve this separate process requirement.
