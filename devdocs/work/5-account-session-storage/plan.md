@@ -5,133 +5,151 @@ effort: max
 
 # Plan — load and save sessions through a pluggable session store (issue #5)
 
+**Revision 1.**
+
 ## What is the task
 
-Let an application keep each account's Telegram session in its own storage. Today a session can live only in a `.session` file.
+Let an application keep each account's Telegram session wherever it keeps its data, instead of in a `.session` file. It passes one object, the store, with `load(name)` and `save(name, data)`, plus an optional `delete(name)`. tgdata then builds every client of the account on a session that loads from that store and saves back to it. The code that uses the account does not change, and without a store nothing changes at all.
 
-The application passes one object, a **session store**, to `TgData`. The store has two plain methods, `load(name)` and `save(name, data)`, plus an optional `delete(name)`. tgdata then keeps every client's session there: the whole session — login, data centre, update states and the group cache — as one string. It loads the session when a client is built, and saves it whenever Telethon saves and at close. Failures are loud.
-
-Without a store, nothing changes. This follows the maintainer's decisions: just store the sessions — no encryption, no migration, plain synchronous methods (`desc.md`).
+The maintainer asked for it simple: store the sessions; no encryption, no migration, sync methods. Before the plan was written, the maintainer also flagged four risks, which the plan designs in:
+1. an unbounded cache of message senders;
+2. the credential leaking into logs;
+3. a stale client overwriting a login;
+4. a sort that breaks on rows mixing text and `None`.
 
 ## Huge Hard Blockers
 
 ### Planning Blockers
 
-None identified. Every question Gate 1 raised was settled by reading Telethon 1.45.0 and by running `probe_store_session.py` in this folder. Its 17 checks pass through Telethon's real client:
+None open. Two questions were closed before any step was written:
 
-1. **Telethon takes a session object as-is.** `TelegramBaseClient.__init__` builds a `SQLiteSession` from a name or path, uses a `Session` instance unchanged, and builds a `MemorySession` from `None`.
-2. **The shape of the in-memory state** (`MemorySession`):
-   - `_dc_id`, `_server_address` and `_port`;
-   - `_auth_key`, an `AuthKey` holding 256 bytes in `.key`;
-   - `_takeout_id`;
-   - `_entities`, a set of `(marked_id, access_hash, username, phone, name)` rows;
-   - `_update_states`, a dict from entity id to `types.updates.State`;
-   - `_files`.
-3. **A restored session drives the real client.** The connection is built with the restored auth key. `connect()` reads the self-id row (id 0) and each update state's `pts`, `qts`, `date` and `seq`, and all of these round-trip.
-4. **The save points, and close.** Telethon saves on connect, on a data-centre switch, on a new auth key, and once a minute from the updates loop. On disconnect it flushes into the session and calls `close()`. The probe shows a disconnect saving through `close()`, even for a client that never connected.
-5. **The sent-file cache is not used.** Telethon 1.45.0 never calls `cache_file()` or `get_file()` outside the sessions package, so it is not stored (`desc.md`, amended in `fc2ca1b`).
-6. **Log-out** disconnects, which closes and saves the session, then calls `delete()` and drops the session.
-7. **The copy for a side connection** — taken as given, at the maintainer's direction (2026-10-03). Telethon copies a session for a side connection, such as CDN media, with `clone()`. The base `clone()` returns `to_instance or self.__class__()`: a fresh instance with no arguments. A store-backed session cannot be built that way. If its copy were store-backed, it would write the side connection's login over the account's. So the stored session's copy is a plain `MemorySession`.
+- **Question:** Does the oldest Telethon tgdata supports, 1.33, keep the same session state and save at the same points?
+  - **Why the steps can't survive it:** a different state or different save points would change Step 1's whole format and save logic.
+  - **Status:** CLOSED — dropped by the maintainer on 2026-10-05: design and verify on Telethon 1.45.0 only. Desc criterion 9 now says so.
+  - **Source:** inherited from `desc.md` (its `[ASSUMPTION]`).
+  - **Who can close it:** the maintainer — closed.
+- **Question:** Does Telethon copy a session for a side connection, and how?
+  - **Why the steps can't survive it:** if a copy were store-backed, a side connection would save its own login over the account's.
+  - **Status:** CLOSED — taken as given by the maintainer on 2026-10-05. For side connections such as media from its CDN, Telethon builds a copy with `clone()`, which constructs the session class with no arguments. The stored session's `clone()` therefore returns a fresh in-memory session that never touches the store. That is what the file session's own copy is: `SQLiteSession()` with no name lives in memory.
+  - **Source:** found in Telethon's code by an earlier run; confirmed by the maintainer.
+  - **Who can close it:** the maintainer — closed.
 
 ### Execution Blockers
 
-None identified. Everything runs offline.
+None identified. Pushing, the PR and merging follow the process: the merge waits for the maintainer.
 
 ## How this implementation moves toward desired state
 
-Today every client tgdata builds passes through one function, `ConnectionEngine._new_client()`, which hands Telethon the session *name*.
+**Today.** `ConnectionEngine._new_client()` always hands Telethon the configured session *name*, and Telethon turns a name into its SQLite `.session` file. That one function builds every client tgdata opens: the persistent client, each pool connection and the use-and-close client.
 
-After this plan, that function hands Telethon a **store-backed session** whenever a store is configured, and the same name as today when one is not.
+**The bridge** is one new session class, `StoredSession`, in `tgdata/session_store.py`. It is Telethon's own in-memory session, which already does all the session work, plus four things:
+1. **It loads its state from the store when built.**
+2. **It saves that state back** whenever Telethon saves, and at close.
+3. **It keeps only what a restart needs.**
+4. **It never overwrites a login it did not load or make.**
 
-The store-backed session is a new class, `StoredSession`, in a new module, `tgdata/session_store.py`. It is Telethon's own in-memory session — which already implements every session method — with four additions:
-- it loads its whole state from the store when built;
-- it saves that state to the store whenever Telethon saves, and at close;
-- it deletes it on log-out;
-- its copy for a side connection never touches the store.
+`_new_client()` passes a `StoredSession` instead of the name when a store is configured; otherwise it passes the name exactly as today.
 
-Because the change sits in the one function every client passes through, the persistent client, each pool connection and every use-and-close client all get it with no other change. The login rules from `c72eab4` keep working unchanged, because they read `session.auth_key`, and an empty store answers `None` exactly as a brand-new file does.
+**Evidence on 1.45.0** comes from this step's probe, `probe_store_session.py` in the session scratchpad, run through Telethon's real client:
+- **P1, the row shape.** A cache row is `(marked_id, access_hash, username, phone, name)`, e.g. `(-1000001234567, 987654321, 'someroom', None, 'Room')`.
+- **P2, the login.** The client's sender took the stored auth key, and the data centre came back.
+- **P3, the cache.** A discovered room is read from the restored cache, by username and by id, with no lookup.
+- **P4, update states.** They come back intact.
+- **P5, disconnect.** It saves, through `close()`, even on a client that never connected.
+- **P6, a failed save.** It raises nothing.
+- **P7, the copy.** `clone()` returns a plain `MemorySession`, and its saves never reach the store.
+- **P8, an empty store.** It gives a brand-new session, with `auth_key` `None`.
+- **The other shapes.**
+  - The sent-file cache maps `(md5, size, kind)` to `(id, access_hash)`.
+  - Update states are Telethon `State` objects.
+  - `connect()` reads the account's own id from the id-0 row and then its user row.
+  - Log-out disconnects (and so saves) before `delete()`.
 
 ## High-Level Summary
 
 | Step | Description | Expected Output |
 |------|-------------|-----------------|
-| 1 | `tgdata/session_store.py` — `StoredSession`: load when built, save at Telethon's save points and at close, delete on log-out, a plain copy for side connections; loud failures | The store-backed session, unused yet |
-| 2 | `ConnectionEngine(session_store=)` — check the store's two methods; `_new_client()` hands Telethon a `StoredSession` when a store is set, the same name otherwise | Every client of the account uses the store; the default unchanged |
-| 3 | `TgData(session_store=)` passed through, with its docstring | The public option |
-| 4 | Offline test `test_17_session_store.py` | Every success criterion checked offline |
-| 5 | Docs: a README section, the smoke-test README, docstrings | Users can find and use it |
-| 6 | Verify every offline suite, then commit | test_17 / 16 / 15 / 14 / 13 / 12 pass; commits on the branch |
+| 1 | `tgdata/session_store.py`: `StoredSession` — load, a bounded cache, a deterministic dump, check-then-save, loud but credential-free failures, `delete`, `clone` | A session class Telethon accepts, which keeps a whole restartable session in any store |
+| 2 | Wiring: `TgData(session_store=)` → `ConnectionEngine(session_store=)` → `_new_client()` | Every client of the account uses the store; the default is unchanged |
+| 3 | Docs: a README section, the docstrings, the smoke-test README | Users can pass a store and know what it receives |
+| 4 | Offline test `test_17_session_store.py` | Every desc criterion checked on Telethon 1.45.0 |
+| 5 | Verify the offline suites, then commit | test_17, 16, 15, 14, 13 and 12 pass; commits on the branch |
 
 ---
 
-## Step 1 — `StoredSession`, the store-backed session
+## Step 1 — The store-backed session
 
 ### Proposed changes
 
-A new module, `tgdata/session_store.py`. It imports only the standard library and Telethon.
+New module `tgdata/session_store.py`. It imports only the standard library and Telethon.
 
-Its docstring documents the store interface:
+**The store, documented in the module docstring and the README.** Any object with:
+- `load(name) -> str | None` — the saved session, or `None` when there is none yet;
+- `save(name, data: str)`;
+- optionally `delete(name)`, called when Telethon logs the account out.
 
-```
-load(name) -> str | None     the saved session, or None when there is none yet
-save(name, data: str)        keep this string under this name
-delete(name)                 optional: called when Telethon logs the account out
-```
+The methods are plain functions; tgdata never awaits them.
 
-The methods are plain, not coroutines (`desc.md` criterion 2).
+**`StoredSession(MemorySession)`:**
 
 ```python
 class StoredSession(MemorySession):
-    """A Telethon session that keeps its state in memory, like MemorySession,
-    and keeps a copy in the application's store."""
-
     def __init__(self, store, name: str):
         super().__init__()
-        self._store, self._name, self._saved = store, name, None
-        data = store.load(name)              # a store error propagates as itself
+        self._store, self._name = store, name
+        self._synced = None            # the string last loaded from or written to the store
+        self._synced_key = None        # the login key in it (bytes) — Risk 3
+        self._warned = False
+        data = store.load(name)        # a store error propagates as itself, before anything connects
         if data is not None:
-            self._restore(data)              # an unreadable string raises ValueError
-            self._saved = data
+            self._restore(data)        # unreadable → ValueError naming only the session, `from None`
+            self._synced, self._synced_key = data, self._key_bytes()
 ```
 
-**The stored string** is compact JSON, `{"version": 1, …}`, carrying:
-- `dc_id`, `server_address` and `port`;
-- `auth_key`, base64 of `AuthKey.key`, or `null`;
-- `takeout_id`;
-- `entities`, as rows `[marked_id, access_hash, username, phone, name]`;
-- `update_states`, as rows `[entity_id, pts, qts, date_timestamp, seq, unread_count]`.
+- **Loading.**
+  - **Nothing stored.** `None` means a brand-new session, with `auth_key` `None`, so today's first-login rules apply unchanged.
+  - **A store error** propagates as itself.
+  - **An unreadable string** — bad JSON or base64, a missing field, an unknown format — raises `ValueError(f"stored session {name!r} cannot be read ({type(e).__name__})") from None`. The data is never quoted, and the parse error is never chained. A failed load can never look like a new session (`c72eab4`'s guarantee).
+- **The bounded cache** `[Risk 1]`. It overrides `_entity_to_row(e)`: a `types.User` is declined unless `e.is_self`. Kept are:
+  - groups and channels;
+  - the account's own user row;
+  - the id-0 row Telethon writes to remember the account's id. It arrives as an `InputPeerUser`, not a `User`, so it is kept.
 
-Rows are sorted, so the same state always gives the same string, even across processes where Python's hash order differs. Without that, an unchanged session would be re-written once after every restart.
+  Message senders never enter memory, so memory, the stored string and the dump time are all bounded by the groups the account knows. `is_self` is used rather than tracking the id from the id-0 row: on a first login the account's own row arrives before that id-0 row exists, and `is_self` keeps it anyway.
+- **A deterministic dump** `[Risk 4]`. `dump()` returns compact JSON with sorted keys:
 
-**`_restore`** is the inverse:
-- the auth key is rebuilt with `AuthKey(bytes)`;
-- update states are rebuilt with `types.updates.State(...)`, dates in UTC;
-- entity rows become tuples again;
-- a missing field, a wrong type, bad base64, or an unknown `version` raises `ValueError(f"stored session {name!r} cannot be read: …")` from the original error.
+  ```
+  {"format": 1, "dc_id", "server_address", "port", "auth_key": base64 or null, "takeout_id",
+   "entities":      [[marked_id, access_hash, username, phone, name], …],
+   "update_states": [[entity_id, pts, qts, date_ts, seq, unread_count], …],
+   "files":         [[md5_hex, size, kind, id, access_hash], …]}
+  ```
 
-**`save()`** is called by Telethon at every save point.
-- It builds the string, and writes only when it differs from the last one written or loaded. The minutely save then costs a store write only when something changed. The probe measured 5,000 cached groups at 345 KB, built in about 2.6 ms.
-- Any exception, from building or from the store, is logged on `tgdata.session_store` at ERROR **every time**, with its traceback and the session name, and is never raised. Telethon calls `save()` from its updates loop and from `connect()`, and a raise there would end the loop or the connection. The next save point tries again, because the last-written string did not change.
+  - Every row list is sorted with `key=json.dumps`. Rows mix text and `None` — a room cached once with its username and once without — and plain `sorted()` raises on those.
+  - The temporary auth key is not stored, as Telethon's own file does not store it by default.
+- **Check, then save** `[Risk 3]`. Telethon calls `save()` at its save points.
+  1. Build the dump. If it equals `self._synced`, return: nothing changed, so nothing is written.
+  2. Read the stored string, and the login key in it.
+  3. If that key is not `self._synced_key` — someone else logged in, or deleted the session — do not write. Log a WARNING once: `session 'acct' was logged in or removed elsewhere — not overwritten`.
+  4. Otherwise `store.save(name, data)`, and record `self._synced` and `self._synced_key`.
 
-**`close()`** calls `save()`. Telethon flushes its last state into the session and then calls `close()`; `MemorySession.close()` does nothing.
-
-**`delete()`** calls `store.delete(name)` when the store has a callable `delete`. A failure there is logged at ERROR, not raised: Telegram has already logged the session out. It also forgets the last-written string.
-
-**`clone(to_instance=None)`** returns `to_instance or MemorySession()`. A side connection gets a plain in-memory session that never writes to the store.
-
-**The group cache** keeps `MemorySession`'s own rules. A room that changes its username adds a second row with the same id, where `SQLiteSession` would replace the row. Both rows carry the same id and access hash, so lookups stay correct. This is rare, and the cost is a little growth.
+  This costs one extra load per real write, and none when nothing changed. Two clients on the same login keep writing, and the later save still wins for the cache.
+- **Credential-free failures** `[Risk 2]`. Any exception while saving — the dump, the check load or the save — is caught and logged on `tgdata.session_store` at ERROR, every time. The record carries the session name and the exception's *type* only: no text, no traceback. For example: `Could not save session 'acct' to the session store (OperationalError) — retried at the next save point`. `save()` never raises into Telethon's loops.
+- **`close()`** calls `save()`. Telethon flushes its last state into the session and then closes it.
+- **`delete()`** calls `store.delete(name)` when the store has one, and logs a failure the same credential-free way. Telethon's `log_out()` disconnects, which saves, and then deletes.
+- **`clone(to_instance=None)`** returns `to_instance or MemorySession()`: a fresh in-memory session for a side connection, which never touches the store. This is the maintainer-confirmed finding.
 
 ### Output
 
-`tgdata/session_store.py` with `StoredSession`. Nothing uses it yet.
+`tgdata/session_store.py` with `StoredSession`. It is not wired in yet.
 
 ### Safe in nature
 
-True — a new module, not wired in yet.
+True. A new module that nothing imports yet.
 
 ### Peripheral concepts
 
-Telethon `MemorySession` and `Session.clone`, `AuthKey`, `types.updates.State`, the save points (`connect`, `_switch_dc`, `_auth_key_callback`, the updates loop, `_disconnect_coro` → `close`), `log_out` → `delete`, `connect()`'s self-id row and update-state restore, JSON determinism
+Telethon `MemorySession` and `_entity_to_row`, `AuthKey`, `types.updates.State`, `_SentFileType`; the save, close, delete and clone call sites; `c72eab4`'s first-login guarantee; JSON determinism; logging on `tgdata.session_store`
 
 ### Hardness Lvl
 
@@ -139,48 +157,39 @@ Telethon `MemorySession` and `Session.clone`, `AuthKey`, `types.updates.State`, 
 
 ---
 
-## Step 2 — The connection engine hands Telethon the store-backed session
+## Step 2 — Wiring
 
 ### Proposed changes
 
-**`ConnectionEngine.__init__(..., session_store=None)`.**
-- When a store is given, check that `load` and `save` are callable. If not, raise `TypeError("session_store needs load(name) and save(name, data) methods")` at construction, long before anything connects.
-- Keep the store as `self.session_store`.
+- **`ConnectionEngine.__init__(…, session_store=None)`** stores it.
+- **`_new_client(session_file=None)`:**
 
-**`_new_client(session_file=None)`:**
+  ```python
+  name = session_file or config.session_file
+  session = StoredSession(self.session_store, name) if self.session_store is not None else name
+  return _client_class(TelegramClient)(session, config.api_id, config.api_hash, proxy=…, **identity)
+  ```
 
-```python
-name = session_file or config.session_file
-session = StoredSession(self.session_store, name) if self.session_store is not None else name
-return _client_class(TelegramClient)(session, config.api_id, config.api_hash, proxy=..., **identity)
-```
-
-**Without a store,** `name` is exactly the string that reaches Telethon today, so the default is byte-identical (criterion 1).
-
-**With a store,** every client path gets its session from it, with no other change:
-- `_init_primary_client` → `_new_client(config.session_file)`;
-- `_init_pool` → `_new_client(f"{name}_{i}")`;
-- `ephemeral_client` → `_new_client()`.
-
-The load runs inside `_new_client()`, before any `connect()`. A failed load therefore raises before anything connects, and:
-- `_primary_client` is never assigned;
-- the pool's existing teardown, `_discard_clients`, runs as it already does for a failed pool client.
-
-**`device_identity()`** keeps its own `StringSession` probe, unchanged.
-
-The docstrings of `ConnectionEngine.__init__` and `_new_client()` gain one paragraph each.
+  Without a store, the same name reaches Telethon as today. With one, the persistent client and the use-and-close client load under the configured name, and pool connections under `<name>_<i>`, as `_init_pool` already names them.
+- **`TgData.__init__(…, session_store=None)`** passes it to `ConnectionEngine`. The docstrings of both constructors, and `_new_client`'s, say what a store is.
+- **Unchanged:**
+  - first-login detection (`client.session.auth_key is None`);
+  - the login checks;
+  - `device_identity()`'s in-memory probe;
+  - the health identity, which names the session by the configured name;
+  - `tgdata/__init__.py` — `StoredSession` stays importable from `tgdata.session_store`, and a store needs no import.
 
 ### Output
 
-Every client of the account loads from and saves to the store, under its name, when a store is configured. No `.session` file is created. The default is unchanged.
+`TgData(…, session_store=store)` works end to end; the default path is byte-identical.
 
 ### Safe in nature
 
-False. It changes the one function every client passes through, although the default path passes the same value as today.
+False. It changes the function every client goes through, although without a store it passes exactly what it passes today.
 
 ### Peripheral concepts
 
-`_new_client` and its callers (persistent, pool, use-and-close), `_client_class` and its mixins, `first_login = client.session.auth_key is None`, `_discard_clients`, session-name precedence in `_load_config`
+`ConnectionEngine._new_client`, `_init_pool` naming, `ephemeral_client`, `_init_primary_client`, `TgData.__init__`, test_13's `ce.TelegramClient` patch point
 
 ### Hardness Lvl
 
@@ -188,106 +197,20 @@ False. It changes the one function every client passes through, although the def
 
 ---
 
-## Step 3 — `TgData(session_store=)`
+## Step 3 — Docs
 
 ### Proposed changes
 
-`TgData.__init__` gains `session_store=None`, passed to `ConnectionEngine`. The docstring states:
-- the interface;
-- what is stored;
-- when it is saved;
-- that failures are loud;
-- that the default is unchanged.
-
-Nothing is exported from `tgdata/__init__.py`. The store is any object with the two methods, and `StoredSession` is internal.
-
-`_health_identity()` needs no change: it already names the session by the configured name (criterion 8).
-
-### Output
-
-The public option.
-
-### Safe in nature
-
-True. A keyword argument with a default of `None`.
-
-### Peripheral concepts
-
-`TgData.__init__`, the `ConnectionEngine` constructor, `_health_identity`
-
-### Hardness Lvl
-
-1
-
----
-
-## Step 4 — Offline test `tgdata/smoke_tests/test_17_session_store.py`
-
-### Proposed changes
-
-The style of test_14 to test_16: numbered TESTs, `Passed: N/M`, an exit code, and no network or login.
-
-Two techniques:
-- **Telethon's real client from tgdata's factory, with a scripted connection.** This is test_16's `Scripted` sender. It covers save points, log-out and disconnect.
-- **test_15's no-network `StandIn` client patched in for `TelegramClient`.** This covers the persistent, pool and use-and-close paths through `get_client()` and `ephemeral_client()`, with the status check scripted.
-
-The store is a dict with `load`, `save` and `delete`, and it counts its calls.
-
-The tests:
-1. **Round trip.** Everything is restored: the data centre, the auth key, the group cache by id and by username, the self-id row, and the update states with their dates.
-2. **Every client path uses the store, under its name.** The persistent client uses `<name>`, a pool of two uses `<name>` and `<name>_1`, and the use-and-close client uses `<name>`. No `.session` file appears in the temporary folder.
-3. **The default is unchanged.** Without a store, the client's session is Telethon's `SQLiteSession` on `<name>.session`, the same string as today.
-4. **Saved at disconnect.**
-   - A new cache entry, then `await client.disconnect()` on the real client: one save, containing it.
-   - Disconnecting again unchanged writes nothing.
-   - Telethon's own `_auth_key_callback` saves a new auth key.
-5. **Failures are loud:**
-   - a store whose `load` raises makes `get_client()` raise that error, with no connect and no code requested;
-   - an unreadable string raises `ValueError` naming the session;
-   - a store whose `save` raises is logged at ERROR on each attempt, never raises, and the next save after the store recovers writes.
-6. **Logins:**
-   - an empty store with no terminal gives `AuthRequiredError` with `first_login=True`, and no code;
-   - a stored, logged-in session connects with its stored auth key;
-   - a stored session that Telegram logged out gives `AuthRequiredError` with `.reason` `AUTH_KEY_UNREGISTERED`.
-7. **Log-out.** The real `client.log_out()`, with `LogOutRequest` answered `True`, calls `store.delete(name)`, and the entry is gone. With a store that has no `delete`, it completes without an error.
-8. **The copy.** `clone()` is a plain `MemorySession`, and its `save()` and `close()` never write to the store.
-9. **Two clients of one session.** Both save, the later save wins, and the stored auth key is the one both carried.
-10. **Health identity.** `TgData(..., session_store=…)` names the session by the configured name.
-11. **The interface check.** `TgData(..., session_store=object())` raises `TypeError` naming `load` and `save`.
-
-### Output
-
-`test_17_session_store.py`, all passing on Telethon 1.45.0.
-
-### Safe in nature
-
-True — a test file.
-
-### Peripheral concepts
-
-smoke-test conventions, test_15's `StandIn` and scripted status replies, test_16's `Scripted` sender, Telethon `log_out`, `_auth_key_callback`, `logging` capture
-
-### Hardness Lvl
-
-3
-
----
-
-## Step 5 — Docs
-
-### Proposed changes
-
-**`README.md`** gains a section after "Logging in": "Keeping sessions somewhere else (optional)". It covers:
-- the interface, and that the methods are plain;
-- a short dict-backed example;
-- what is stored, and that it is the whole session;
-- when it is saved;
-- that failures are loud;
-- that two clients of one session overwrite each other harmlessly;
-- that encryption, if wanted, is the store's business;
-- that without a store nothing changes and `.session` files keep working.
-
-**`tgdata/smoke_tests/README.md`** gains a test_17 entry. Step 2's and Step 3's docstrings are part of those steps.
+- **`README.md`**, under "Authentication", gets a section, "Keeping sessions out of files". It covers:
+  - the three store methods;
+  - a short example store;
+  - what is stored — the login, the data centre, update states, groups and channels with their access hashes, the account's own rows, and the sent-file cache; never message senders;
+  - when a session is saved;
+  - failures — a load error raises, and a save error is logged with its type only;
+  - the two-clients rule;
+  - that encrypting the string is the store's business;
+  - that without a store, `.session` files work exactly as before.
+- **`tgdata/smoke_tests/README.md`** gets an entry for test_17.
 
 ### Output
 
@@ -299,7 +222,7 @@ True.
 
 ### Peripheral concepts
 
-the README "Authentication" section, the smoke-test README
+README "Authentication" and "Logging in", smoke-test README
 
 ### Hardness Lvl
 
@@ -307,21 +230,70 @@ the README "Authentication" section, the smoke-test README
 
 ---
 
-## Step 6 — Verify and commit
+## Step 4 — Offline test `tgdata/smoke_tests/test_17_session_store.py`
+
+### Proposed changes
+
+In the style of test_14 to test_16: numbered TESTs, `Passed: N/M`, an exit code, no network and no login. The setup:
+- a dictionary store that counts its calls, and can be made to fail with an error that quotes its arguments;
+- clients from tgdata's own factory, so Telethon's real client code runs;
+- for the login checks, test_15's stand-in client, which never opens a socket and refuses to request a code.
+
+1. **The default is unchanged.** Without a store, `_new_client()` builds Telethon's `SQLiteSession` on `<name>.session`, as today.
+2. **A store serves every client.** `TgData(…, session_store=store)` makes the engine's clients `StoredSession`s under the configured name, and pool connections under `<name>_<i>`. No `.session` file is created.
+3. **The round trip, through Telethon's real client.** The auth key reaches the sender; the data centre, the update states and the sent-file cache come back; a discovered room is read from the restored cache by username and by id.
+4. **The bounded cache** `[Risk 1]`. A response with 500 message senders, one channel and the account's own user stores the channel, the account's row and the id-0 row, and no sender. After a restart, the id-0 row and the own row give back the account's id the way `connect()` reads them.
+5. **The save points.** `client.disconnect()` on a never-connected client saves through `close()`; an unchanged state is not written again.
+6. **Failures** `[Risk 2]`:
+   - a store whose `load` raises makes building the client raise that error;
+   - an unreadable string raises a `ValueError` that names the session only;
+   - a failing `save` is logged at ERROR every time, with the error's type, and `save()` returns normally;
+   - with a store error that quotes its arguments, no fragment of the auth key's base64 appears in any captured log record.
+7. **Logins, with the stand-in client:**
+   - an empty store with no terminal raises `AuthRequiredError(first_login=True)`, and no code is requested;
+   - an empty store at a terminal runs the interactive login, and after `close()` the store holds the login;
+   - a stored logged-out session raises `AuthRequiredError` (logged out), and no code is requested.
+8. **Log-out**, through Telethon's real `log_out()` on a scripted connection, calls `store.delete(name)`. A store without `delete` raises nothing.
+9. **Two clients** `[Risk 3]`:
+   - on the same login, the later save wins for the cache;
+   - a client that started before a login — both loaded empty, one logged in and saved — does not overwrite it: it skips and warns once, and the stored key stays the login's;
+   - a stale client after a login made elsewhere skips the same way.
+10. **Mixed rows** `[Risk 4]`. A room cached public, then private, saves and restores both rows, and two dumps of the same state are identical.
+11. **`clone()`.** It returns a plain `MemorySession`, not a `StoredSession`. Saving or closing it never reaches the store, and `to_instance` is honoured.
+12. **The health identity** names the session by the configured name when a store is used.
+
+### Output
+
+`test_17_session_store.py`, all passing on Telethon 1.45.0.
+
+### Safe in nature
+
+True — a test file.
+
+### Peripheral concepts
+
+the scripted-sender technique (test_14, test_16), test_15's stand-in client and terminal patch, `logging` capture, Telethon's `log_out()`
+
+### Hardness Lvl
+
+3
+
+---
+
+## Step 5 — Verify and commit
 
 ### Proposed changes
 
 1. **Byte-compile** the touched modules.
-2. **Run the offline suites:** test_17, test_16, test_15, test_14, test_13 and test_12, on Telethon 1.45.0. No live tests: the configured account is logged out.
-3. **Commit on `feat/5-account-session-storage`** with explicit paths, keeping the unrelated working-tree guide edit out:
+2. **Run the offline suites:** test_17 (new), test_16, test_15, test_14, test_13 and test_12. No live tests: the configured account is logged out.
+3. **Commit on `feat/5-account-session-storage`** with explicit paths:
    - code, tests and docs in one commit;
-   - the work folder's documents in their own commits (§7.6).
-
-   Push the branch.
+   - this work folder's documents in their own commit (§7.6);
+   - the unrelated working-tree guide edit stays out.
 
 ### Output
 
-A green offline run and the commits on the branch, pushed.
+A green offline run and the commits on the branch.
 
 ### Safe in nature
 
@@ -329,7 +301,7 @@ True.
 
 ### Peripheral concepts
 
-the CONTRIBUTING process guard (commits allowed on `feat/*`), the unrelated working-tree guide edit
+the CONTRIBUTING process guard (commits allowed on `feat/*`), the unrelated guide edit
 
 ### Hardness Lvl
 
