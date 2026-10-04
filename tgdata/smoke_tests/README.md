@@ -119,7 +119,8 @@ entirely offline with synthetic credentials and Telethon 1.45.0:
 - load failures raise, save/delete failures are logged without credentials,
   and first-login rules still hold
 - real Telethon log-out calls the optional delete method; stale clients cannot
-  overwrite a login already changed in the store; mixed cache rows serialize
+  overwrite or delete a login already changed in the store, including when the
+  current record cannot be read; mixed cache rows serialize
   deterministically; session copies stay in memory; health events keep their names
 
 Socket connections are blocked by the test. Telegram replies and login prompts

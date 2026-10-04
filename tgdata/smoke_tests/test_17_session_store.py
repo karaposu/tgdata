@@ -410,6 +410,46 @@ async def test_log_out():
     assert store.deletes == [name] and name not in store
     assert client.session is None
 
+    # Logout is a save followed by a delete. Both must preserve a login
+    # replaced since the old client loaded; checking saves alone is not enough.
+    for change in ('replaced', 'first-login', 'removed'):
+        store = Store()
+        client, name = client_for(store)
+        client.session.auth_key = AuthKey(KEY)
+        if change != 'first-login':
+            client.session.save()
+        if change == 'removed':
+            del store[name]
+        else:
+            seed(store, name, OTHER_KEY)
+        expected = store.get(name)
+        client._sender = Scripted([types.auth.LoggedOut()])
+        with captured() as records:
+            assert await client.log_out() is True
+        assert store.get(name) == expected, f'{change}: stale logout changed the stored login'
+        assert store.deletes == [], f'{change}: stale logout called delete'
+        assert len(records) == 1 and records[0].levelno == logging.WARNING
+
+    # When ownership cannot be checked, neither logout phase may mutate the
+    # record. Store errors may quote it, so inspect the actual log records.
+    for failure in ('load', 'corrupt'):
+        store = Store()
+        client, name = client_for(store)
+        client.session.auth_key = AuthKey(KEY)
+        client.session.save()
+        secret = store[name]
+        if failure == 'load':
+            store.load_error = RuntimeError(secret)
+        else:
+            store[name] = '1:!'
+        expected = store[name]
+        client._sender = Scripted([types.auth.LoggedOut()])
+        with captured() as records:
+            assert await client.log_out() is True
+        assert store[name] == expected and store.deletes == []
+        assert len(records) == 2 and all(r.levelno == logging.ERROR for r in records)
+        assert all(secret not in r.getMessage() and r.exc_info is None for r in records)
+
     class NoDelete:
         def __init__(self):
             self.data = {}

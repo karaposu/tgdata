@@ -21,7 +21,7 @@ session work — plus:
     auth key, once a minute while connected) and at close;
   - it keeps only what a restart needs: groups and channels with their
     access hashes, and the account's own rows — never message senders;
-  - it never overwrites a login it did not load or make;
+  - it never overwrites or deletes a login it did not load or save;
   - a failed save is logged without the error's text, which may quote the
     session: the account's login key.
 """
@@ -156,6 +156,19 @@ class StoredSession(MemorySession):
 
     # -- Telethon's save points -----------------------------------------------
 
+    def _may_mutate(self) -> bool:
+        """Both save and log-out must preserve a login replaced elsewhere.
+        Keep failures in the calling operation's credential-free handler."""
+        stored = self._store.load(self._name)
+        stored_key = self._parse(stored)['auth_key'] if stored is not None else None
+        if stored_key == self._synced_key:
+            return True
+        if not self._warned:
+            self._warned = True
+            logger.warning(f"Session {self._name!r} was logged in or removed elsewhere — "
+                           f"not overwritten or deleted, and this client's changes are not saved")
+        return False
+
     def save(self) -> None:
         """Called by Telethon whenever it saves, and by close(). Writes only
         when something changed, and never over a login this session did not
@@ -164,13 +177,7 @@ class StoredSession(MemorySession):
             data = self.dump()
             if data == self._synced:
                 return
-            stored = self._store.load(self._name)
-            stored_key = self._parse(stored)['auth_key'] if stored is not None else None
-            if stored_key != self._synced_key:
-                if not self._warned:
-                    self._warned = True
-                    logger.warning(f"Session {self._name!r} was logged in or removed elsewhere — "
-                                   f"not overwritten, and this client's changes are not saved")
+            if not self._may_mutate():
                 return
             self._store.save(self._name, data)
             self._synced, self._synced_key = data, self._key_bytes()
@@ -184,10 +191,11 @@ class StoredSession(MemorySession):
 
     def delete(self) -> None:
         # Telethon's log_out(): it disconnects (which saves), then deletes.
-        delete = getattr(self._store, 'delete', None)
-        if delete is None:
-            return
+        # The deletion needs the same ownership check as the preceding save.
         try:
+            delete = getattr(self._store, 'delete', None)
+            if delete is None or not self._may_mutate():
+                return
             delete(self._name)
             self._synced, self._synced_key = None, None
         except Exception as e:  # noqa: BLE001

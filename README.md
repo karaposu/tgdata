@@ -152,14 +152,16 @@ cache that writes behind. tgdata ships no storage backend.
   session name and error type, never the error text or traceback, which could
   contain the login key.
 - **Two clients:** with the same login, the later save wins for the cache.
-  Before writing, a client re-reads the stored key. If it changed or was removed,
-  the client skips the write and warns once instead of replacing that login.
+  Before a changed save or deletion, a client re-reads the stored key. If it
+  changed or was removed, the client skips the mutation and warns once. Logging
+  out an older client therefore preserves a newer login saved by another client.
   This check and save are separate operations, not an atomic guarantee across
   processes. Telethon's session copies for side connections stay in memory and
   never write to the store.
 - **Login rules stay the same:** `None` from `load` means a new session; an
   existing session that Telegram logged out still raises `AuthRequiredError`.
-  If `delete` is provided, Telegram log-out removes the stored record.
+  If `delete` is provided, Telegram log-out removes the stored record only when
+  it still holds the login that client last loaded or saved.
 
 Without `session_store`, existing `.session` files work exactly as before.
 There is no automatic migration from files to a store. This option is designed
