@@ -5,11 +5,18 @@ effort: unknown
 
 # Plan — session storage across the whole login lifecycle (issue #5)
 
-**Revision 3 — regenerated after PR #13 was rejected.** Input: description,
+**Revision 4 — folded after the revision-3 critique.** Input: description,
 triage, revision 2 (available at `24ddeb8`), and `pr-critic.md` at `a6deab7`.
 This replaces the prior implementation sequence. The original four Medium
 mitigations remain required; the PR finding extends the ownership rule to all
 persistent mutations rather than adding an independent deletion workaround.
+
+**Fold:** the regenerated plan critique returned IMPLEMENT AS WRITTEN, with no
+new findings. The shared ownership check selected for PR Risk 1 is retained
+in Steps 1–2. Existing serialization, cache, logging and clone mitigations
+remain required. The live-verification boundary, non-atomic store operations
+and maintainer/model-rule preconditions remain explicit. Revision 3 is kept
+at `cc665f4`; the rejected first PR review is kept at `a6deab7`.
 
 ## What is the task
 
