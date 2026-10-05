@@ -11,9 +11,9 @@ import sqlite3
 import tempfile
 from unittest.mock import patch
 
-from telethon import TelegramClient
+from telethon import TelegramClient, errors
 from telethon.sessions import MemorySession
-from telethon.tl import types
+from telethon.tl import types, functions
 
 
 class Exhausted(Exception):
@@ -92,6 +92,50 @@ def claim(path):
         db.close()
 
 
+async def identity_and_dispatch():
+    client = TelegramClient(MemorySession(), 12345, '0123456789abcdef0123456789abcdef')
+    client._mb_entity_cache.set_self_user(111, False, 111)
+
+    class SelfSender:
+        def send(self, request, ordered=False):
+            result = asyncio.get_running_loop().create_future()
+            result.set_result([types.User(id=222, is_self=True, access_hash=222, first_name='Synthetic')])
+            return result
+
+    client._sender = SelfSender()
+    me = await client.get_me()
+    assert client._self_id == 111 and me.id == 222
+    print('Identity: cached self ID=111; authenticated get_me response=222; cache alone is not authority')
+
+    class GuardedSender:
+        charged = 0
+        sends = 0
+
+        def send(self, request, ordered=False):
+            async def admit_then_send():
+                if self.charged + request.limit > 7:
+                    raise Exhausted
+                self.charged += request.limit
+                self.sends += 1
+                result = asyncio.get_running_loop().create_future()
+                result.set_exception(errors.RpcCallFailError(request=request))
+                return await result
+            return admit_then_send()
+
+    guard = GuardedSender()
+    request = functions.messages.GetHistoryRequest(
+        peer=types.InputPeerChannel(7, 7), offset_id=0, offset_date=None,
+        add_offset=0, limit=5, max_id=0, min_id=0, hash=0)
+    try:
+        await client._call(guard, request)
+    except Exhausted:
+        pass
+    else:
+        raise AssertionError('a second send exceeded the allowance')
+    assert guard.charged == 5 and guard.sends == 1
+    print('Dispatch: real Telethon retry was denied before its second send; first failed attempt remains charged')
+
+
 def concurrency():
     with tempfile.TemporaryDirectory(prefix='tgdata_budget_probe_') as tmp:
         path = str(Path(tmp) / 'budget.sqlite3')
@@ -114,4 +158,5 @@ if __name__ == '__main__':
     with patch.object(socket.socket, 'connect', side_effect=AssertionError('network forbidden')), \
             patch.object(socket.socket, 'connect_ex', side_effect=AssertionError('network forbidden')):
         asyncio.run(paging())
+        asyncio.run(identity_and_dispatch())
     concurrency()
