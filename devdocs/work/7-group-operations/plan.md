@@ -3,7 +3,10 @@ model: unknown
 effort: unknown
 ---
 
-# #7 — implementation plan, revision 1
+# #7 — implementation plan, revision 2
+
+**Critic folded:** 2026-10-05 — 3 mitigations (4 steps changed, 0 added).
+Selected: Risk1 robust, Risk2 robust, Risk3 robust. No re-critique after folding.
 
 ### What is the task
 
@@ -49,6 +52,8 @@ against real SDK dispatch and SQLite before documenting and committing delivery.
 
 ## Step 1 — Define references and observations
 
+[folded: Risk2, robust]
+
 ### Proposed changes
 
 Create `tgdata/group_operations.py`, initially values/parsing. Runtime Python3.7
@@ -68,6 +73,8 @@ after wiring. Keep existing `GroupInfo` untouched.
   nonzero signed integer IDs (including numeric strings) for lookup/access;
   positive IDs need existing unambiguous group cache resolution. Join accepts
   handles/invites only. Never interpolate original input in local errors.
+  Catch native URL parsing/validation errors at this boundary and translate to
+  sanitized GroupReferenceError from None; do not retain incidental RPC context.
   Label is handle, int ID or `invite:` plus first16 hex SHA256(hash); no raw hash.
 - Frozen `GroupMetadata`: id and peer_id optional int, title optional str,
   username optional str (without @), kind `group|megagroup|channel|unknown`,
@@ -149,6 +156,8 @@ SQLite locking, clock rollback, policy replacement, local error provenance.
 
 ## Step 3 — Guard actual join sends
 
+[folded: Risk3, robust]
+
 ### Proposed changes
 
 Create `tgdata/join_client.py` with JoinClientMixin and a sender adapter. Supported
@@ -165,6 +174,9 @@ auth verdict then local error if still no identity. Validate ID. Synchronously
 claim, then underlying sender.send with no intervening await. Each retry pays;
 no catch/refund on transport error, cancellation, already-member or pending reply.
 Forward sender attributes and ordered unchanged. Resolving a request costs no join.
+Fresh join identity helper calls nonthrowing health.note_account after validating
+the ID. Add the same note in BudgetClientMixin._read_budget_account; it updates
+only an opted-in current owned health call, leaving old caller semantics intact.
 
 Add `join_budget=None` at end of both `TgData.__init__` and
 `ConnectionEngine.__init__`. Keep/store/pass it and assign on every `_new_client`.
@@ -192,6 +204,8 @@ SDK _call retries/cached waits/resolution, invoke wrappers, fresh self cache, re
 
 ## Step 4 — Resolve, check and join through one ephemeral client
 
+[folded: Risk1, robust] [folded: Risk2, robust] [folded: Risk3, robust]
+
 ### Proposed changes
 
 Finish `GroupEngine(connection_engine)` in group_operations.py and expose
@@ -207,8 +221,12 @@ Resolver:
 - Handle: ResolveUsernameRequest, require peer chat/channel and matching chats
   entity; reject User/empty/deactivated/migrated basic-chat entities with local
   reference error rather than silently selecting another group. No phone lookup.
-- Numeric: get_entity through known session cache; require group/chat kind;
-  ambiguous/missing ID errors remain explicit, never walk all dialogs implicitly.
+- Numeric: first client.session.get_input_entity establishes the known cached
+  input peer; translate missing/ambiguous ValueError/TypeError to GroupReferenceError
+  and native cache storage errors to sanitized GroupOperationError. Then get_entity
+  for that peer; require group/chat kind. Translate local conversion ValueError/
+  TypeError without suppressing real RPC/network errors. Never walk all dialogs
+  implicitly or rely on a fallback request with a guessed access hash.
 - Invite: CheckChatInviteRequest; Already projects chat/memberTrue, Peek projects
   chat/memberFalse/expiry, plain ChatInvite projects missing-ID metadata/memberFalse,
   request_needed and subscription_pricing. Never import while resolving.
@@ -219,7 +237,7 @@ Resolver:
 Access: resolve then build input peer when possible, issue raw GetHistoryRequest
 limit1 with existing client (read budget applies). Return readable only for a
 normal expected messages result. No peer yields unprobed with safe reason
-`NO_PEER`. Catch only actual errors classified NO_ACCESS/group from resolver or
+`NO_PEER`. Catch only outer Telegram RPC errors classified NO_ACCESS/group from resolver or
 history; health.report the original then return denied with optional metadata.
 All other errors propagate; preview already-member status does not skip read proof.
 For missing access_hash, return unprobed rather than falsely denied/readable.
@@ -233,7 +251,11 @@ new operation RPCs (authorization context itself retains existing default).
 Return joined for ChatInviteJoinResultOk; process available reply.updates entities
 locally and choose matching chat metadata if available (for invite use first
 valid chat only when unambiguous). Preserve preflight metadata when absent.
-No follow-up network request after acknowledgment. Catch UserAlreadyParticipant
+[folded: Risk1, robust] Capture the acknowledged result before auxiliary work.
+Wrap optional nested caching and metadata projection in a narrow Exception handler;
+on failure log only the error type and return joined with preflight metadata.
+Do not emit Telegram health for local enrichment failure. Cancellation is not
+swallowed. No follow-up network request after acknowledgment. Catch UserAlreadyParticipant
 as already_joined and InviteRequestSent as requested; these admitted attempts
 remain charged. Map raw RPC message STARS_PAYMENT_REQUIRED to payment_required
 (the installed SDK has no generated error class). WebView becomes
@@ -247,6 +269,17 @@ set that call's recover_group True. Health still reports original failures and
 waits/auth evidence. Safe parser label only, never raw invite. No logging raw
 result or request. Ephemeral cleanup behavior stays owned by existing context.
 
+[folded: Risk3, robust] HealthMonitor.call also accepts account_id with a private
+unset sentinel default. _Call holds it. New ephemeral calls opt in with None
+(unknown, never stale primary) before opening a client. After auth, fresh self
+lookup validates an ID and health.note_account assigns it on that owned current
+call. All three operations do this before group resolution; get_join_budget does
+likewise. The join/read fresh-ID helpers repeat the note before each admitted
+send. _event uses attributed call override when set, otherwise old _who behavior;
+snapshots and old methods retain defaults. No global client/identity mutation.
+Local numeric/parser/input-peer errors are translated at their own boundary so
+incidental RPC context cannot trigger denial or health.
+
 ### Output
 
 Usable public group methods and portable status, with truthful evidence and limits.
@@ -257,13 +290,16 @@ False — facade and shared health context change; defaults preserve existing me
 
 ### Peripheral concepts
 
-GroupInfo, stored group cache, read budget, auth errors, health.report, cleanup/cancellation.
+GroupInfo, stored group cache, read budget, auth errors, health.report/note_account,
+task-local identity, cleanup/cancellation, post-ack local failure containment.
 
 ### Hardness Lvl
 
 5
 
 ## Step 5 — Exercise real offline behavior
+
+[folded: Risk1, robust] [folded: Risk2, robust] [folded: Risk3, robust]
 
 ### Proposed changes
 
@@ -300,7 +336,12 @@ ledger contention. Tests must cover these independent behavioral groups:
     cancellation; no terminal prompt or persistent/current_group mutation.
 17. Health metadata/join do not recover group denial; read success does, waits and
     account recovery retained; local errors inside RPC handlers do not fake events.
-18. JSON-ready value dictionaries/immutability; private tokens absent from result,
+18. Post-ack actual SQLiteSession cache-write failure retains joined/preflight
+    result and charge; auxiliary failure is not Telegram health.
+19. Native numeric/parser/conversion errors inside prior RPC handlers stay local.
+20. Ephemeral health attribution uses fresh identity despite stale primary;
+    concurrent calls and callback reentry stay isolated; pre-auth failure is unknown.
+21. JSON-ready value dictionaries/immutability; private tokens absent from result,
     log and health fields; no saved message-sender rows caused by helper projection.
 
 ### Output
