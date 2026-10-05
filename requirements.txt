@@ -1,2 +1,2 @@
 pandas
-Telethon
+Telethon>=1.45.0,<2.0

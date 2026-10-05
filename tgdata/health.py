@@ -221,6 +221,7 @@ def _mark(exc: BaseException, finding: Finding) -> None:
 # ── the call context ────────────────────────────────────────────────────────
 
 _CURRENT: contextvars.ContextVar = contextvars.ContextVar('tgdata_health_call', default=None)
+_UNSET_ACCOUNT = object()
 # Set while the health callback runs: events from tgdata calls the callback
 # makes are recorded and logged, never delivered back to it (no re-entry).
 _DELIVERING: contextvars.ContextVar = contextvars.ContextVar('tgdata_health_delivering', default=False)
@@ -241,12 +242,14 @@ class _Call:
     inherit it through the context variable, so a report is attributed to the
     call only from the call's own task while the call is active (owner task)."""
     __slots__ = ('monitor', 'method', 'group', 'task', 'parent', 'active', 'failed', 'waited', 'reported',
-                 'answered')
+                 'answered', 'recover_group', 'account_id')
 
     def __init__(self, monitor: 'HealthMonitor', method: str, group):
         self.monitor = monitor
         self.method = method
         self.group = group
+        self.recover_group = True
+        self.account_id = _UNSET_ACCOUNT
         self.task = _current_task()
         self.parent: Optional[_Call] = _CURRENT.get()     # a public call made inside another one
         self.active = True
@@ -306,12 +309,15 @@ class HealthMonitor:
     # -- the boundary every public TgData call runs inside --------------------
 
     @contextlib.asynccontextmanager
-    async def call(self, method: str, group=None, recover: bool = True):
+    async def call(self, method: str, group=None, recover: bool = True,
+                   recover_group: bool = True, account_id=_UNSET_ACCOUNT):
         try:
             ensure_sleep_capture()
         except Exception:  # noqa: BLE001
             self._health_failed()
         c = _Call(self, method, group)
+        c.recover_group = recover_group
+        c.account_id = account_id
         token = _CURRENT.set(c)
         try:
             yield c
@@ -390,6 +396,8 @@ class HealthMonitor:
     def _event(self, verdict, scope, group, call, request, wait_seconds, error, source, when) -> Dict[str, Any]:
         self._events += 1
         session, user_id = self._who()
+        if call is not None and call.account_id is not _UNSET_ACCOUNT:
+            user_id = call.account_id
         return {
             'kind': 'health',
             'time': when,
@@ -434,7 +442,7 @@ class HealthMonitor:
             self._account, self._account_since, self._account_error, self._restricted_by = OK, None, None, None
             self._account_tick = 0
             events.append(self._event(OK, 'account', None, c, None, None, None, 'recovery', _iso()))
-        if c.group is not None:
+        if c.recover_group and c.group is not None:
             key = str(c.group)
             if (key in self._no_access and ('group', key) not in c.reported
                     and c.answered > self._no_access_tick.get(key, 0)):
@@ -549,6 +557,17 @@ async def _delivering(awaitable) -> None:
     task, so the events of tgdata calls it makes are not delivered back."""
     _DELIVERING.set(True)
     await awaitable
+
+
+def note_account(account_id: int) -> None:
+    """Fresh identity for an opted-in operation, isolated to its owning task."""
+    try:
+        call = _CURRENT.get()
+        if (call is not None and call.owns_current_task()
+                and call.account_id is not _UNSET_ACCOUNT):
+            call.account_id = account_id
+    except Exception:  # noqa: BLE001 — observation never breaks the request
+        pass
 
 
 def note_answer() -> None:

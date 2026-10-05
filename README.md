@@ -359,8 +359,132 @@ until the policy changes; it does not automatically rise to `daily_limit`.
   direct use of private transport internals are outside this guard.
 
 The budget suite exercises real Telethon request/iterator code with scripted
-replies on 1.45.0 and 1.33.1. It does not test live Telegram response bounds or
+replies on 1.45.0. It does not test live Telegram response bounds or
 whether any chosen limit prevents account restrictions.
+
+## Group lookup, access and joining
+
+These operations each open, authenticate and disconnect one short-lived client.
+They use the configured proxy, device identity and session store, never prompt
+for login, and do not change `current_group` or use the persistent client/pool.
+Log the account in first as described under Authentication. Tested with
+**Telethon 1.45.0**; the package now requires at least that version.
+
+```python
+from tgdata import TgData, JoinBudget, JoinBudgetExceeded
+
+budget = JoinBudget("/absolute/path/join-budgets.sqlite3")
+tg = TgData("config.ini", join_budget=budget)
+
+# In your async function: enroll the actual account once, then keep the policy.
+async with tg.connection_engine.ephemeral_client() as client:
+    me = await client.get_me()
+budget.configure(me.id, daily_limit=3)  # Illustrative policy, not a safe rate.
+
+details = await tg.lookup_group("@group_handle")
+access = await tg.check_group_access("@group_handle")
+print(details.to_dict(), access.to_dict())
+
+# When your caller explicitly chooses to join:
+try:
+    result = await tg.join_group("@group_handle")
+    print(result.status, result.to_dict())
+except JoinBudgetExceeded as error:
+    print(error.status.to_dict(), error.retry_after)
+
+print((await tg.get_join_budget()).to_dict())
+```
+
+`lookup_group` and `check_group_access` also work without a join budget. Accepted
+references are bare or `@` handles, `https://t.me/handle` (also `telegram.me`),
+and invite links `https://t.me/+HASH` or `https://t.me/joinchat/HASH`. Optional
+`http://`, `www.`, or a bare Telegram host are accepted. Handles use 4–32 ASCII
+letters, digits or underscores and begin with a letter. Invite hashes retain
+their case. Links with extra paths, query strings, fragments, userinfo or ports,
+phone numbers and non-Telegram URLs are rejected before opening a client.
+
+Lookup/access can also take a nonzero integer ID or its decimal string when the
+session already knows that group. A marked channel ID such as `-1000000000007`
+identifies its peer kind; a positive ID is accepted only when unambiguous among
+cached users/chats/channels. Unknown IDs do not trigger a dialog scan. Joining
+accepts handles or invite links. References resolving to users are rejected.
+
+| Operation | Result | What it establishes |
+|---|---|---|
+| `lookup_group(target)` | `GroupLookup` | Available metadata, observed `member`, whether approval/payment is indicated, and any temporary preview expiry |
+| `check_group_access(target)` | `GroupAccess` | `readable` after a successful history request, `denied` after a Telegram group-access error, or `unprobed` when no usable peer is available |
+| `join_group(target)` | `GroupJoin` | `joined`, `already_joined`, `requested`, `interaction_required`, or `payment_required` |
+
+The immutable results have `to_dict()` methods containing only JSON-ready data.
+`group` contains `id`, marked `peer_id`, `title`, `username` (without `@`), `kind`
+(`group`, `megagroup`, `channel` or `unknown`) and `participants_count`. Missing
+details are `None`: an unjoined invite preview has no invented group ID. An access
+denial during resolution can have `group=None`. Existing discovery `GroupInfo`
+objects retain their previous format.
+
+Lookup never reads history or joins. Membership can be unknown; it does not prove
+read access. Access makes one history request with limit1 when possible, including
+for nonmembers of public groups. An empty successful reply is still readable.
+`GroupAccess.readable` is `True`, `False` or `None`; `reason` is a safe denial name
+or `NO_PEER`. Authentication, transport, read-quota and local validation/storage
+failures raise their actual error instead of becoming a denied result. An optional
+`ReadBudget` meters this history request independently of the join allowance.
+
+Joining requires a configured `JoinBudget` and account policy, even if preflight
+finds existing membership. That observation returns `already_joined` without a
+mutation or charge. `requested` means approval was requested; `interaction_required`
+includes `bot_id` and `query_id`, without inventing a webview URL. Paid previews
+return `payment_required` without sending a join. tgdata does not pay, open a
+webview or wait for approval. Only `joined` and `already_joined` have `member=True`;
+other join outcomes have `member=None`. None of these replaces a separate read check.
+
+After a join acknowledgment, available returned details are cached locally. Missing
+details or failed optional cache writes do not turn that acknowledgment into failed
+joining; a cache failure logs its error type only. No extra lookup is required after
+the acknowledgment. An unrecognized reply raises `GroupResponseError` and retains
+the attempt charge.
+
+The join allowance has these rules:
+
+- **Unit:** one actual admitted join request. Every SDK retry costs another
+  attempt. Error replies (including already-participant or approval-requested),
+  transport loss, cancellation and crashes retain the charge. No uncertainty
+  refund is made. Preflight metadata and already-observed membership cost zero.
+- **Storage:** all processes/clients sharing an allowance must use the same
+  SQLite file on the same host. Policies are keyed by fresh authenticated account
+  ID, never a session name or cached identity. The parent directory must exist;
+  `:memory:` is rejected. Only IDs, policy limits and admission times are stored.
+  ReadBudget can share the file; its tables and units remain separate.
+- **Policy:** `configure(account_id, daily_limit)` requires explicit nonnegative
+  integer limits, preserves existing usage, and provides no default rate. Zero
+  stops new attempts. Lowering a limit does not erase prior attempts. The example
+  limit is not a claim about avoiding Telegram restrictions.
+- **Time:** each attempt expires 24 hours after admission, with no midnight reset.
+  Backward clock movement cannot restore spent capacity; forward jumps advance
+  expiry, so keep the host clock accurate. SQLite claims are atomic and no lock
+  is held while awaiting Telegram. Synchronous operations are normally short;
+  contention can block the event loop for up to the five-second busy timeout.
+- **Status:** local `budget.status(account_id)` or ephemeral
+  `await tg.get_join_budget()` returns `JoinBudgetStatus`. Without a budget the
+  latter returns `None` without connecting. Status reports `limit`, `used`,
+  `remaining`, observation/next-availability times and `retry_after` for one attempt.
+  Availability assumes no new claims/policy changes; a zero cap has no timed retry.
+- **Failures and boundary:** missing policy, exhausted allowance and storage
+  failure stop before mutation (`JoinBudgetConfigError`, `JoinBudgetExceeded`,
+  `JoinBudgetStorageError`). Configured factory clients also guard raw join calls;
+  join-bearing batches and unknown wrappers raise `UnsupportedJoinRequest`.
+  Separately constructed clients, other ledger files, direct private transport
+  use and delayed approvals are outside this local admission guarantee.
+
+Health events use the ephemeral call's fresh identity and a token-free invite
+label. Metadata and join results cannot clear a prior group read-access denial;
+a successful access read can. Local failures do not inherit unrelated Telegram
+errors from the caller. New operation requests raise flood waits immediately;
+the existing connection-authorization check keeps its usual wait behavior.
+
+`test_20_group_operations` verifies SDK dispatch, results, lifecycle, health and
+real SQLite concurrency offline with sockets blocked. It does not establish live
+Telegram acceptance or a safe joining rate.
 
 ## Quick Start
 
@@ -899,6 +1023,7 @@ error, so both now confirm with Telegram whether the session is logged in.
 ## Requirements
 
 - Python 3.7+
+- Telethon 1.45.0 or newer within 1.x (verification target: 1.45.0)
 - Telegram API credentials (not bot tokens)
 - Group/channel membership
 
