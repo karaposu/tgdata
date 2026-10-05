@@ -57,7 +57,9 @@ depending on DataFrame internals or Telethon's changing generated object schema.
 6. **Recoverable interruptions.** Budget, Telegram, network, serialization and
    file failures remain errors. Once the source is resolved, ordinary exceptions
    carry the completely prepared prefix as `partial_result`, with a safe cursor.
-   Cancellation cleans temporary files and never advances an external cursor.
+   Cancellation attempts temporary-file cleanup and never advances an external
+   cursor. Filesystem refusal can leave a private temporary file; secondary
+   close/removal failures must not replace an active failure or cancellation.
    No Telegram health verdict is invented for a local format/media error.
 7. **Existing account controls.** All message reads and implicit re-fetches use
    the shared client factory and #9 budget guard. A batch does not introduce a
@@ -97,6 +99,15 @@ budgets, #5 sessions and #4 health reporting are already integrated; #7 group
 operations and #8 login are related but do not block this contract.
 
 ## Known Blockers
+
+The first PR gate (`670564e`, retained in `history/round-1/pr-critic.md`) found
+two Medium defects in the implementation: native filesystem exceptions inherit
+unrelated RPC context, and failed cleanup replaces a primary exception. The
+user requested the CONTRIBUTING §7.4 re-plan cycle. Both mechanisms are known
+and locally reproducible, not OPEN planning blockers. Re-plan the file ownership
+and error boundary together, including writes made by the SDK through the
+supplied stream, close failures and cleanup-only failures. The wire schema,
+cursor/receiver ownership and complete-public-file requirements are unchanged.
 
 None open for local planning/implementation. Real pre-build probes confirmed
 SDK raw-message preservation and writing to supplied file objects, plus the
