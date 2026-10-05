@@ -11,6 +11,8 @@ from .tgdata import TgData
 from .message_engine import GroupAccessError
 from .connection_engine import AuthRequiredError, ProxyConfigError
 from .discovery_engine import DiscoveryInterrupted
+from .message_batch import MessageBatch, BatchFormatError
+from .batch_files import BatchStorageError
 from .read_budget import (
     ReadBudget, ReadBudgetStatus, ReadBudgetError, ReadBudgetExceeded,
     ReadBudgetConfigError, ReadBudgetStorageError, UnsupportedBudgetRequest,
@@ -51,6 +53,9 @@ __all__ = [
     "AuthRequiredError",
     "ProxyConfigError",
     "DiscoveryInterrupted",
+    "MessageBatch",
+    "BatchFormatError",
+    "BatchStorageError",
     "ReadBudget",
     "ReadBudgetStatus",
     "ReadBudgetError",

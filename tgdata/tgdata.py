@@ -17,6 +17,8 @@ from . import health
 from .connection_engine import ConnectionEngine, AuthRequiredError, ProxyConfigError
 from .message_engine import MessageEngine
 from .discovery_engine import DiscoveryEngine
+from .batch_engine import BatchEngine
+from .message_batch import MessageBatch
 from .models import GroupInfo
 from .read_budget import ReadBudgetError, ReadBudgetExceeded
 from .utils import (
@@ -158,6 +160,7 @@ class TgData:
         self.discovery_engine = DiscoveryEngine(
             connection_engine=self.connection_engine
         )
+        self.batch_engine = BatchEngine(self.connection_engine)
 
         # State
         self.current_group: Optional[GroupInfo] = None
@@ -238,6 +241,28 @@ class TgData:
         logger.info(f"Set current group to {group_id}")
         
     # ==================== Message Operations ====================
+
+    @_reported('group_id')
+    async def get_message_batch(self, group_id: Union[int, str], *,
+                                after_id: int = 0, limit: int = 200,
+                                download_media_to=None) -> MessageBatch:
+        """Read a bounded oldest-first raw snapshot after an exclusive ID.
+
+        Returns a versioned MessageBatch with canonical JSON, a batch_id and
+        next_after_id. Pass download_media_to for hash-named photo/document
+        files; otherwise only references are returned. The existing client,
+        proxy/session configuration and optional read budget apply.
+
+        Once a chat is resolved, an ordinary failure carries a MessageBatch
+        of completed records in error.partial_result and is re-raised unchanged.
+        Persist/replay that value and advance your durable cursor only after
+        the receiver acknowledges it. This method does not change current_group.
+
+        group_id must name a group/channel explicitly; after_id is 0..2**31-1,
+        limit is 1..10000. See docs/message_batch_v1.md for the exact wire contract.
+        """
+        return await self.batch_engine.fetch_batch(
+            group_id, after_id=after_id, limit=limit, download_media_to=download_media_to)
     
     @_reported('group_id')
     async def get_messages(self,

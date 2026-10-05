@@ -29,6 +29,7 @@ A production-grade Python library for extracting and processing Telegram group a
 - 🪪 **Fixed Device Identity**: Optionally pin the device model, system and app version an account presents, so it looks the same from every machine and after Telethon upgrades
 - 🩺 **Account Health Events**: Every wait, logout, ban, restriction or lost group is reported as a plain-data event — through one callback, a log line and a per-account summary — and "ok" when it ends
 - **Per-account read budgets**: An optional shared SQLite ledger limits message pulls over a rolling 24 hours, with persistent warm-up steps and recoverable partial results
+- **Versioned message batches**: Read bounded raw snapshots with canonical JSON, replayable batch IDs, safe continuation cursors and optional content-addressed media
 
 ## Installation
 
@@ -589,6 +590,46 @@ async def incremental_fetch():
 
 asyncio.run(incremental_fetch())
 ```
+
+### Stable message batches for storage and delivery
+
+Use `get_message_batch` for a versioned raw snapshot that can be saved and
+replayed. It keeps senderless and service messages, reads oldest first after an
+exclusive cursor, and uses the same client and optional read budget. Designed
+and tested with Telethon **1.45.0**.
+
+```python
+from tgdata import TgData, MessageBatch
+
+async def prepare_batch():
+    tg = TgData("config.ini")
+    try:
+        batch = await tg.get_message_batch(
+            "@channelname", after_id=100, limit=200,
+            download_media_to="out/media",  # omit for references only
+        )
+        manifest = batch.save("out/batches")
+        replay = MessageBatch.from_json(manifest.read_bytes())
+        assert replay.batch_id == batch.batch_id
+        return manifest, batch.next_after_id
+    finally:
+        await tg.close()
+```
+
+Send the saved batch using `batch_id` for receiver deduplication, and advance
+your stored cursor only after acknowledgment. If acknowledgment is lost, replay
+that file: a fresh Telegram fetch can produce a different observation. Requested
+photo/document files are named by their content hash; saving the manifest does
+not copy its media. Blob paths are relative to `out/media` in this example.
+
+Ordinary failures after group resolution carry the completed prefix as a
+`MessageBatch` in `error.partial_result` and still raise. `next_after_id` never
+passes an unfinished record/file. Local file errors keep their type without
+inventing a Telegram health verdict. A secondary cleanup failure is logged by
+operation/type and preserves the original error or cancellation; storage that
+refuses cleanup may leave a private temporary file. The exact schema, limits,
+interruption rules
+and delivery protocol are in [Message batch v1](docs/message_batch_v1.md).
 
 ### Detecting & Downloading Media (photos / videos)
 
