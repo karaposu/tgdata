@@ -36,7 +36,7 @@ setup(
         # 1.33 is the first release carrying channels.GetChannelRecommendationsRequest
         # (group discovery, scoped/10) — verified against the 1.33.1 sdist.
         'Telethon>=1.33,<2.0',
-        # Required, not optional: everything returns DataFrames. Nullable Int64
+        # Required by the existing message/discovery DataFrame APIs. Nullable Int64
         # (used for GroupedId album ids > 2^53) needs pandas >= 1.0.
         'pandas>=1.0',
     ],

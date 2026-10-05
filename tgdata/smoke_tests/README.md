@@ -146,13 +146,33 @@ The suite blocks socket connections. Scripted senders replace Telegram replies,
 not the budget adapter or SDK request/iterator flow. Verified on Telethon 1.45.0
 and 1.33.1; it does not establish live Telegram behavior or safe numeric quotas.
 
+### 14. **test_19_message_batches.py**
+Tests stable versioned batches (`python -m tgdata.smoke_tests.test_19_message_batches`),
+entirely offline on **Telethon 1.45.0**, with synthetic credentials and real
+temporary files:
+- fixed golden JSON/hash, exact large IDs, UTC dates, nulls, senderless/service
+  records and no sender enrichment
+- immutable values, strict schema/hash validation, complete manifest save/reload
+  and a receiver stand-in demonstrating replay after a lost acknowledgment
+- bounded oldest-first reads, explicit groups, cursor limits, empty/end results,
+  real read-budget exhaustion/resume and original exceptions with raw partials
+- real SDK photo/document downloads, digest filenames, equal-content reuse,
+  changed bytes, corrupt/symlink destinations, missing/truncated files,
+  concurrent publication and cancellation cleanup
+- implicit media-reference refreshes remain subject to the budget; local errors
+  do not invent account-health verdicts; legacy DataFrame/media contracts remain
+
+Socket connections are blocked. Scripted transport supplies Telegram replies;
+the actual SDK iterator, downloader, budget guard and batch implementation run.
+This does not establish live server behavior or a deployed receiver's guarantees.
+
 ### Custom Test Scripts:
 - **my_test.py** - Custom test script for specific scenarios
 
 ## Important Notes
 
 1. **Authentication Required**: Live tests require valid Telegram credentials in `config.ini`.
-   The offline login, flood-threshold, health-event, session-store and read-budget suites use
+   The offline login, flood-threshold, health-event, session-store, read-budget and message-batch suites use
    synthetic credentials. Proxy and device-identity suites also contain live checks.
 
 2. **Non-Destructive**: Tests only read data, they don't send messages or modify groups
