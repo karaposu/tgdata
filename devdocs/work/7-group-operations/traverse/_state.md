@@ -10,7 +10,7 @@ A → Su → S → D → I → C → R (always)
 - [x] Articulate-Simple
 - [x] Surfacing
 - [x] Sensemaking
-- [ ] Decomposition
+- [x] Decomposition
 - [ ] Innovation
 - [ ] Critique
 - [ ] Routelister
@@ -22,7 +22,7 @@ A → Su → S → D → I → C → R (always)
 ACTIVE
 
 ## Next Discipline
-Decomposition
+Innovation
 
 ## History
 - 2026-10-05_19-23: Articulate-Simple complete, HIGH-PROCEED; one coupled item,
@@ -39,3 +39,7 @@ Decomposition
   eight perspectives and eight ambiguity/counter pairs. Checker attempted and
   unavailable; manual phase/anchor/counter/boundary/telemetry checks 8/8.
   PROCEED to Decomposition; implementation layout/window remain open.
+- 2026-10-05_19-51: Decomposition complete, DV1; seven coherent questions,
+  explicit data/timing/resource interfaces and acyclic dependency order.
+  Checker attempted and unavailable; manual structure and full self-evaluation
+  checks 7/7, including runtime determination ownership. Next: Innovation.
