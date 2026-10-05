@@ -107,6 +107,19 @@ async def sdk(root):
     finally:
         temp.unlink()
 
+    photo = types.Photo(id=90, access_hash=90, file_reference=b'synthetic', date=date,
+                        sizes=[types.PhotoSize('w', 100, 100, len(PAYLOAD))], dc_id=2)
+    with tempfile.NamedTemporaryFile(dir=root, prefix='.photo-', delete=False) as output:
+        temp = Path(output.name)
+        returned = await client.download_media(photo, file=output)
+        assert returned is output and not output.closed
+        output.flush()
+    try:
+        assert temp.read_bytes() == PAYLOAD
+        print('SDK photo download: the supplied file object also receives the complete photo payload')
+    finally:
+        temp.unlink()
+
 
 async def main():
     print('Batch seam probes — Telethon', telethon.__version__)
