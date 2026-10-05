@@ -221,11 +221,12 @@ Resolver:
 - Handle: ResolveUsernameRequest, require peer chat/channel and matching chats
   entity; reject User/empty/deactivated/migrated basic-chat entities with local
   reference error rather than silently selecting another group. No phone lookup.
-- Numeric: first client.session.get_input_entity establishes the known cached
-  input peer; translate missing/ambiguous ValueError/TypeError to GroupReferenceError
+- Numeric: first require an exact marked row from
+  client.session.get_entity_rows_by_id, then use session.get_input_entity for
+  that peer (PeerChat conversion alone does not prove a cached row); translate missing/ambiguous ValueError/TypeError to GroupReferenceError
   and native cache storage errors to sanitized GroupOperationError. Then get_entity
   for that peer; require group/chat kind. Translate local conversion ValueError/
-  TypeError without suppressing real RPC/network errors. Never walk all dialogs
+  TypeError/KeyError without suppressing real RPC/network errors. Never walk all dialogs
   implicitly or rely on a fallback request with a guessed access hash.
 - Invite: CheckChatInviteRequest; Already projects chat/memberTrue, Peek projects
   chat/memberFalse/expiry, plain ChatInvite projects missing-ID metadata/memberFalse,
@@ -278,7 +279,11 @@ likewise. The join/read fresh-ID helpers repeat the note before each admitted
 send. _event uses attributed call override when set, otherwise old _who behavior;
 snapshots and old methods retain defaults. No global client/identity mutation.
 Local numeric/parser/input-peer errors are translated at their own boundary so
-incidental RPC context cannot trigger denial or health.
+incidental RPC context cannot trigger denial or health. At the new facade boundary,
+non-RPC exceptions retain object/traceback and explicit cause but suppress implicit
+context from an unrelated caller handler. Set the exclusively owned ephemeral
+client flood threshold to zero after auth so nested SDK calls also honor this
+operation policy. Optional post-ack warning handlers cannot erase the result.
 
 ### Output
 
@@ -370,7 +375,9 @@ JoinBudget configuration (caller-chosen example limit, not safety advice), statu
 and quota exceptions. Explain 24-hour attempt unit, retries/failure retained,
 already-observed no-op, shared-file coordination, sync quick local storage,
 explicit external interaction requirements and offline verification bounds.
-Add test20 invocation and coverage in smoke_tests/README.md. No live test execution.
+Add test20 invocation and coverage in smoke_tests/README.md. Align setup.py and
+requirements.txt with the actual new type dependency: Telethon>=1.45.0,<2.0.
+No old-SDK compatibility work or live test execution.
 
 ### Output
 
@@ -418,3 +425,12 @@ Git staging isolation, CONTRIBUTING status, archive-only work notes.
 ### Hardness Lvl
 
 2
+
+## Implementation record
+
+Steps1–7 completed on 2026-10-05; see implementation.md and verification.md.
+The exact-row cache check corrects a local SDK helper assumption without changing
+the planned known-peer contract. Native KeyError translation, facade incidental
+context isolation, owned-client flood threshold, warning-failure containment and
+the dependency minimum make the already-selected contracts explicit. No new
+architecture or extra feature was substituted; all corrections are recorded.
