@@ -5,6 +5,14 @@ effort: unknown
 
 # #7 — group lookup, access checks and joining
 
+> Session warm at `45bab7172621f576fa5e4b3265f87ec20da04fd5` (2026-10-05)
+> by retained full-source work on #5/#9/#6 and refreshed group, connection,
+> session, budget, health and installed-SDK paths for #7. The contemporaneous
+> record is `triage.md` in `15edbe0`; this required top-of-description line was
+> restored during the merge check. No new warming-skill run is claimed, and
+> `devdocs/archaeology/` was left unchanged under CONTRIBUTING §4.1's retained
+> session / warming-by-reading provision.
+
 ## Problem Statement
 
 Callers can discover groups and read messages, but have to assemble their own
@@ -31,8 +39,9 @@ limits requests across short-lived clients and process restarts.
 2. Lookup accepts supported handles and Telegram invite links, returns available
    name/handle/type, and preserves unknown IDs/membership and temporary expiry.
    Known numeric group peers are also useful for lookup/access. No lookup joins.
-3. Access checking performs at most one bounded history request for an available
-   peer. It returns readable, denied (actual group-access error), or unprobed
+3. Access checking issues one logical history request with limit1 for an available
+   peer. Telethon may retry it; each actual send obeys the existing read budget.
+   It returns readable, denied (actual group-access error), or unprobed
    (no peer); auth, network and local policy failures retain their own meaning.
    The history read obeys the existing read budget.
 4. Join by handle/invite observes existing membership before a mutation, then

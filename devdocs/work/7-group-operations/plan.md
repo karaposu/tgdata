@@ -47,7 +47,7 @@ against real SDK dispatch and SQLite before documenting and committing delivery.
 | 3 | Actual-send admission and factory wiring | `join_client.py`, optional `join_budget` on every factory client |
 | 4 | Group engine and health-aware facade | lookup/check/join/status methods, one ephemeral client each |
 | 5 | Offline behavioral coverage | `test_20_group_operations.py` on real SDK/SQLite |
-| 6 | Public documentation | README contracts/examples and smoke-test index |
+| 6 | Public documentation and SDK minimum | README contracts/examples, smoke-test index and dependency declarations |
 | 7 | Verify and commit | supported offline suites, code/docs and work-note commits |
 
 ## Step 1 — Define references and observations
@@ -213,7 +213,8 @@ Finish `GroupEngine(connection_engine)` in group_operations.py and expose
 Each facade parses/validates before health context, then opens exactly one existing
 `ephemeral_client()`; no session(), no pool/current_group change, no start/login.
 Private helpers take the opened client; one public operation never calls another.
-Add `get_join_budget()` returning None with no policy and otherwise status from
+Add `get_join_budget()` returning None when no JoinBudget object is supplied,
+and otherwise requiring an account policy and returning status from
 one ephemeral client and fresh account ID, analogous to get_read_budget semantics
 but use-and-close. Export values/ledger/errors from package __init__.
 
@@ -235,8 +236,9 @@ Resolver:
   entity membership remains None. Derive group type using megagroup/broadcast.
   Banned/forbidden peer can still carry metadata but must not manufacture a read.
 
-Access: resolve then build input peer when possible, issue raw GetHistoryRequest
-limit1 with existing client (read budget applies). Return readable only for a
+Access: resolve then build input peer when possible, issue one logical raw
+GetHistoryRequest with limit1 through the existing client. SDK retries remain
+possible; the read budget applies to every actual send. Return readable only for a
 normal expected messages result. No peer yields unprobed with safe reason
 `NO_PEER`. Catch only outer Telegram RPC errors classified NO_ACCESS/group from resolver or
 history; health.report the original then return denied with optional metadata.
@@ -320,7 +322,8 @@ ledger contention. Tests must cover these independent behavioral groups:
    invalid input causes zero clients/network and sanitized exceptions.
 3. Handle/group/basic-chat/forbidden projections; reject user/missing peer results.
 4. Invite Preview/Already/Peek and expiry; lookup sends no join/history requests.
-5. Public readable nonmember and empty history; one limit1 read, budget settlement.
+5. Public readable nonmember and empty history; one logical limit1 read, per-send
+   admission on SDK retry, and budget settlement.
 6. Group denial during resolve/read returns denied and reports health once;
    auth/wait/network/local quota failures remain errors.
 7. Peerless preview returns unprobed; unknown or absent access hash never fakes read.
@@ -365,7 +368,7 @@ Real SDK scripted sender, multiprocessing SQLite, cancellation, health capture.
 
 4
 
-## Step 6 — Document the caller contract
+## Step 6 — Document the caller contract and SDK minimum
 
 ### Proposed changes
 
@@ -385,11 +388,13 @@ A caller can configure and interpret the feature without reading SDK source.
 
 ### Safe in nature
 
-True — documentation only.
+False — documentation plus a dependency minimum increase; existing installations
+below Telethon1.45.0 must upgrade. This implements the user's selected SDK scope.
 
 ### Peripheral concepts
 
-Authentication, existing read-budget usage, health events, smoke test commands.
+Authentication, existing read-budget usage, health events, smoke test commands,
+package dependency resolution and the selected SDK's result constructors.
 
 ### Hardness Lvl
 

@@ -67,3 +67,14 @@ or a restriction-preventing quota. The ledger coordinates processes sharing one
 SQLite file; no multi-host backend was tested or promised. Other clients/files and
 private transport bypasses are outside this library allowance. SDK upgrades need
 these composition tests again. PR/merge verification is a separate later stage.
+
+## Merge-check supplement
+
+The merge check re-read the committed runtime diff without changing it. Three
+targeted probe groups in merge-check-probes.py pass: SDK history retries and
+per-send read admission; account/authorization-wait recovery with group recovery
+disabled; primary-versus-cleanup failure and real read-only SQLite refusal.
+These supplement, rather than replace or inflate, the151-group regression receipt.
+The whole-branch whitespace check exposed one trailing blank line in a committed
+source-input artifact; it was corrected. See merge-check.md for the exact reviewed
+revisions, wording/record repairs and remaining process qualifications.

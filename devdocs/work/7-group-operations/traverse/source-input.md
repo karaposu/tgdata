@@ -20,4 +20,3 @@ These are Telegram questions, so they belong beside the reading.
 - **Nothing can join a group**, which private groups need before reading. Group discovery deliberately never joins.
 
 **When it works.** Adding `@some_group` fills in its real name and type, checks that the assigned account can read it, and says "ready". For a private group it says "account 5 needs to join first", and joining is one call.
-
