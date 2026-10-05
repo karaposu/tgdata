@@ -5,6 +5,11 @@ effort: max
 
 # #7 — implementation plan, revision 2
 
+**PR review status:** REJECTED in round1; see pr-critic.md (2 Medium, 1 Low).
+This remains the blueprint of the reviewed implementation. CONTRIBUTING §7.4
+requires revision3 re-planning before fixes; do not resume implementation from
+this revision’s old folded marker.
+
 **Critic folded:** 2026-10-05 — 3 mitigations (4 steps changed, 0 added).
 Selected: Risk1 robust, Risk2 robust, Risk3 robust. No re-critique after folding.
 

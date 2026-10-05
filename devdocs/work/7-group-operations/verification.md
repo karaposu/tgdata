@@ -78,3 +78,13 @@ These supplement, rather than replace or inflate, the151-group regression receip
 The whole-branch whitespace check exposed one trailing blank line in a committed
 source-input artifact; it was corrected. See merge-check.md for the exact reviewed
 revisions, wording/record repairs and remaining process qualifications.
+
+## Fresh PR review result
+
+The additional PR probes reproduce2 Medium soundness failures not covered by the
+151-group run: temporary RPC retry exhaustion is misclassified/lost, and a public
+health snapshot can use a stale account ID for a fresh event’s observation. A
+forced-overlap identity probe passes and exposes1 Low coverage gap in the original
+immediate-response concurrency test. See pr-critic.md and pr-critic-probes.py.
+The prior green receipt is unchanged historical evidence; PR16 is rejected/draft
+and must follow CONTRIBUTING §7.4 re-planning before renewed acceptance.
