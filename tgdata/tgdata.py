@@ -18,6 +18,7 @@ from .connection_engine import ConnectionEngine, AuthRequiredError, ProxyConfigE
 from .message_engine import MessageEngine
 from .discovery_engine import DiscoveryEngine
 from .models import GroupInfo
+from .read_budget import ReadBudgetError, ReadBudgetExceeded
 from .utils import (
     format_message_for_display,
     export_to_json,
@@ -70,9 +71,9 @@ def _reported(group_param: Optional[str] = None, recover: bool = True,
 
 def _polling_cannot_recover(error: BaseException) -> bool:
     """Whether polling again at the next interval cannot help: the session is
-    not logged in, the proxy setting is unusable, or Telegram's verdict is that
-    the account is logged out, banned or restricted, or cannot read the group."""
-    if isinstance(error, (AuthRequiredError, ProxyConfigError)):
+    not logged in, proxy/budget policy blocks reading, or Telegram's verdict is
+    that the account is logged out, banned or restricted, or cannot read the group."""
+    if isinstance(error, (AuthRequiredError, ProxyConfigError, ReadBudgetError)):
         return True
     finding = health.classify(error, include_reported=True)
     return finding is not None and finding.verdict in health.TERMINAL
@@ -98,7 +99,8 @@ class TgData:
                  interactive_login: Optional[bool] = None,
                  health_callback: Optional[Callable] = None,
                  account_label: Optional[str] = None,
-                 session_store=None):
+                 session_store=None,
+                 read_budget=None):
         """
         Initialize Telegram group handler.
 
@@ -128,6 +130,9 @@ class TgData:
                 Stores the login, group cache and update states without a
                 .session file. Methods run on the event loop and should return
                 quickly. None keeps the existing file sessions.
+            read_budget: Optional ReadBudget sharing a rolling 24-hour message
+                allowance by authenticated account ID. None keeps reads unlimited
+                by account quota. See the README's read-budget contract.
         """
         # Set up logging
         if log_file:
@@ -142,7 +147,8 @@ class TgData:
             config_path=config_path,
             pool_size=connection_pool_size,
             interactive_login=interactive_login,
-            session_store=session_store
+            session_store=session_store,
+            read_budget=read_budget
         )
         
         self.message_engine = MessageEngine(
@@ -760,6 +766,19 @@ class TgData:
         """
         return self.connection_engine.device_identity()
 
+    @_reported()
+    async def get_read_budget(self):
+        """Current authenticated account's ReadBudgetStatus, or None if disabled.
+
+        No connection is opened when disabled. Enabled budgets verify the
+        account using Telegram's self response before reading the ledger.
+        """
+        budget = self.connection_engine.read_budget
+        if budget is None:
+            return None
+        client = await self.connection_engine.get_client()
+        return budget.status(await client._read_budget_account())
+
     @_reported('group_id')
     async def download_media_by_id(self,
                              group_id: Union[int, str],
@@ -913,11 +932,15 @@ class TgData:
         while max_iterations is None or iterations < max_iterations:
             # Get new messages since last check
             logger.info(f"Poll iteration {iterations + 1}: Checking for messages after ID {current_after_id}")
+            budget_stop = None
             try:
                 new_messages = await self.get_messages(
                     group_id=group_id,
                     after_id=current_after_id
                 )
+            except ReadBudgetExceeded as e:
+                budget_stop = e
+                new_messages = e.partial_result if isinstance(e.partial_result, pd.DataFrame) else pd.DataFrame()
             except Exception as e:
                 if _polling_cannot_recover(e):
                     logger.error(f"Polling {group_id} stopped: {e}")
@@ -960,6 +983,9 @@ class TgData:
                     current_after_id = max_id
             else:
                 logger.debug(f"Poll iteration {iterations + 1}: No new messages")
+
+            if budget_stop is not None:
+                raise budget_stop
             
             iterations += 1
             

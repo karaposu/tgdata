@@ -44,6 +44,7 @@ from .connection_engine import ConnectionEngine
 from .health import WAIT_ERRORS as _WAIT_ERRORS
 from .message_engine import MessageEngine, GroupAccessError
 from .models import GroupInfo
+from .read_budget import ReadBudgetError
 
 logger = logging.getLogger(__name__)
 
@@ -108,6 +109,7 @@ class _State:
     entities: dict = field(default_factory=dict)    # key -> entity, so link mining uses objects
     resolved: int = 0                               # resolutions spent so far
     resolve_stopped: bool = False                   # first wait or the cap: no more resolving
+    budget_error: Optional[ReadBudgetError] = None
 
 
 class DiscoveryEngine:
@@ -428,12 +430,17 @@ class DiscoveryEngine:
         hyperlink entities and URL buttons — in order of first appearance,
         minus reserved paths, bots (a username ending in 'bot' is never a
         room and would waste a resolution) and the room's own name."""
+        texts = []
         while True:
             try:
                 st.beat("links")
-                texts = []
+                if getattr(self.connection_engine, 'read_budget', None) is None:
+                    texts = []
                 async for m in client.iter_messages(entity, limit=posts):
                     texts.extend(self._link_sources_of(m))
+                break
+            except ReadBudgetError as e:
+                st.budget_error = e
                 break
             except _WAIT_ERRORS as e:
                 if e.seconds > st.max_flood_wait:
@@ -509,6 +516,8 @@ class DiscoveryEngine:
                 await self._notify(st, row)
                 new += 1
             logger.info(f"links: {by} -> {len(names)} linked rooms, {new} new")
+            if st.budget_error is not None:
+                raise st.budget_error
             await self._pause(st)
 
     # ---------------------------------------------------------- public API --
@@ -522,8 +531,12 @@ class DiscoveryEngine:
         """Telegram's global search for groups and channels matching `query`
         by NAME or @username (never by post content). See TgData.search_groups."""
         st = self._new_state(heartbeat, pace, max_flood_wait, max_offline, DEFAULT_MAX_RESOLVE, found_callback)
-        async with self.connection_engine.session() as client:
-            await self._search(client, st, query, limit)
+        try:
+            async with self.connection_engine.session() as client:
+                await self._search(client, st, query, limit)
+        except ReadBudgetError as e:
+            e.partial_result = self._frame(st.rows)
+            raise
         logger.info(f"search_groups: {len(st.rows)} rooms")
         return self._frame(st.rows)
 
@@ -537,8 +550,12 @@ class DiscoveryEngine:
         """Telegram's 'similar channels' recommendations, `rounds` rounds out
         from the seeds. See TgData.similar_groups."""
         st = self._new_state(heartbeat, pace, max_flood_wait, max_offline, max_resolve, found_callback)
-        async with self.connection_engine.session() as client:
-            await self._similar(client, st, self._as_list(seeds), rounds)
+        try:
+            async with self.connection_engine.session() as client:
+                await self._similar(client, st, self._as_list(seeds), rounds)
+        except ReadBudgetError as e:
+            e.partial_result = self._frame(st.rows)
+            raise
         logger.info(f"similar_groups: {len(st.rows)} rooms")
         return self._frame(st.rows)
 
@@ -567,7 +584,11 @@ class DiscoveryEngine:
                 st.seen.add(key)                    # a source is never returned as a find
                 st.entities.setdefault(key, entity)
                 sources.append(entity)
-            await self._links(client, st, sources, posts, resolve)
+            try:
+                await self._links(client, st, sources, posts, resolve)
+            except ReadBudgetError as e:
+                e.partial_result = self._frame(st.rows)
+                raise
         logger.info(f"linked_groups: {len(st.rows)} rooms")
         return self._frame(st.rows)
 
@@ -599,7 +620,11 @@ class DiscoveryEngine:
                         f"Mining links from the first {link_sources} of {len(sources)} rooms found; "
                         f"pass link_sources=... to mine more")
                     sources = sources[:link_sources]
-                await self._links(client, st, sources, link_posts, resolve_links)
+                try:
+                    await self._links(client, st, sources, link_posts, resolve_links)
+                except ReadBudgetError as e:
+                    e.partial_result = self._frame(st.rows)
+                    raise
         logger.info(f"discover_groups: {len(st.rows)} rooms "
                     f"({st.resolved} username resolutions spent of {st.max_resolve})")
         return self._frame(st.rows)
