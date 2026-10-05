@@ -9,7 +9,7 @@ A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
 - [x] Surfacing
-- [ ] Sensemaking
+- [x] Sensemaking
 - [ ] Decomposition
 - [ ] Innovation
 - [ ] Critique
@@ -22,7 +22,7 @@ A → Su → S → D → I → C → R (always)
 ACTIVE
 
 ## Next Discipline
-Sensemaking
+Decomposition
 
 ## Structural checks
 The repository has no `tools/structural_check.sh`; invoking it returned exit 127.
@@ -33,3 +33,4 @@ bundle/self-check elements present; HIGH-PROCEED, no LAYER 1 fires. Derivation:
 ## History
 - 2026-10-05_13-50: Created task-local inquiry under CONTRIBUTING §5. Articulation complete: one coupled item, four variants, HIGH-PROCEED. Manual structure 9/9; derivation preservation 5/5. Next: Surfacing.
 - 2026-10-05_13-53: Surfacing complete: 27 items (15 core, 10 sub, 2 side), local core coverage confirmed; live/receiver behavior unobserved. Manual structural check 7/7; PROCEED. Next: Sensemaking.
+- 2026-10-05_13-58: Sensemaking complete: SV1–SV6, six ambiguity groups resolved/narrowed; snapshot preparation and delivery acknowledgment separated. Two bounded implementation choices remain. Manual structural check 8/8; PROCEED. Next: Decomposition.
