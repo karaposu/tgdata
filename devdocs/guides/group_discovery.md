@@ -1,4 +1,4 @@
-# Group discovery — how to use it properly
+claude # Group discovery — how to use it properly
 
 *The usage guide for `search_groups`, `similar_groups`, `linked_groups` and
 `discover_groups` (tgdata 0.0.8, 2026-09-30). The README has the quick start;
