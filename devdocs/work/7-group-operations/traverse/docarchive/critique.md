@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: max
 ---
 
 # Critique — truthful group operations with admitted attempts

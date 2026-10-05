@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: max
 ---
 
 # #7 — verification, 2026-10-05

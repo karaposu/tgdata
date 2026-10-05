@@ -1,7 +1,7 @@
 ---
 status: active
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: max
 ---
 
 # Finding: group lookup, read access and limited joining

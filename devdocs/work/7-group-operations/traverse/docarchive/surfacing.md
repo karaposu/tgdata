@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: max
 ---
 
 # Surfacing — group-operation meaning and boundaries

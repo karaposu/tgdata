@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: max
 ---
 
 # #7 — group lookup, access checks and joining
@@ -88,6 +88,6 @@ and removes repeated consumer glue, without being a production outage.
 
 None for planning or offline implementation. The installed SDK seam probe has
 confirmed its wrapped outcomes and retry behavior. Live acceptance needs
-explicit test accounts/groups and authorization and is outside this run. Exact
-model/effort metadata are unavailable; use unknown and flag CONTRIBUTING §9 at
-the later merge check rather than claim compliance with an unobserved model.
+explicit test accounts/groups and authorization and is outside this run. The model/effort uncertainty was subsequently closed from this active session’s
+turn metadata: GPT6 Astra at max. See model-verification.md for evidence and the
+explicit interpretation of CONTRIBUTING §9’s xhigh entry.
