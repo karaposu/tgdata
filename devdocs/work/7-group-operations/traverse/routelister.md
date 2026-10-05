@@ -42,7 +42,7 @@ Move: Specify accepted handles, marked IDs and invite URLs with safe diagnostic 
 Lands: Ambiguous/unsupported inputs fail before network work.
 WHY: The feature can address the intended group without misrouting an account action.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: decomposition.md Q1 (because Input parsing defines target meaning, not just syntax.)
+Guidance Mode: compact. Pointer: docarchive/decomposition.md Q1 (because Input parsing defines target meaning, not just syntax.)
 Depth-link: none; no separate depth run.
 
 ## R02 — Portable group results
@@ -53,7 +53,7 @@ Move: Build immutable metadata and explicit observation outcomes.
 Lands: Missing IDs and incomplete operations remain representable.
 WHY: Callers can use the feature without guessing whether a group is ready.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: innovation.md Q1-F (because Separate metadata from proof because previews cannot supply every field.)
+Guidance Mode: compact. Pointer: docarchive/innovation.md Q1-F (because Separate metadata from proof because previews cannot supply every field.)
 Meaning-gaps: no unresolved meaning facet perceived; exact implementation names and layout remain design work.
 Depth-link: none; no separate depth run.
 
@@ -65,7 +65,7 @@ Move: Project entity, invite preview, Already and Peek observations.
 Lands: Lookup reports observed membership and expiry without joining.
 WHY: The requested lookup fills useful group details without unintended membership changes.
 Priority: MED; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: sensemaking.md W1 (because Keep unknown membership explicit when an entity is insufficient.)
+Guidance Mode: compact. Pointer: docarchive/sensemaking.md W1 (because Keep unknown membership explicit when an entity is insufficient.)
 Meaning-gaps: no unresolved meaning facet perceived; exact implementation names and layout remain design work.
 Depth-link: none; no separate depth run.
 
@@ -77,7 +77,7 @@ Move: Use one bounded history probe when a peer is available.
 Lands: Readable, denied and unprobed have distinct evidence.
 WHY: The account readiness answer means the account actually could read.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: innovation.md Q4-F (because Keep quota/auth/transport failures out of group-denial results.)
+Guidance Mode: compact. Pointer: docarchive/innovation.md Q4-F (because Keep quota/auth/transport failures out of group-denial results.)
 Meaning-gaps: no unresolved meaning facet perceived; exact implementation names and layout remain design work.
 Depth-link: none; no separate depth run.
 
@@ -89,7 +89,7 @@ Move: Represent acknowledgment, existing membership, approval and interaction di
 Lands: A completed call need not imply completed membership.
 WHY: The joining feature gives callers a truthful next-state observation.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: critique.md Q5-F (because Project nested updates locally because post-ack network enrichment can fail.)
+Guidance Mode: compact. Pointer: docarchive/critique.md Q5-F (because Project nested updates locally because post-ack network enrichment can fail.)
 Meaning-gaps: no unresolved meaning facet perceived; exact implementation names and layout remain design work.
 Depth-link: none; no separate depth run.
 
@@ -101,7 +101,7 @@ Move: Implement explicit per-account rolling-window attempt claims.
 Lands: Restarts and concurrent clients share the configured allowance.
 WHY: The requested account limit bounds possible joining effects despite lost replies.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: innovation.md Q2-F (because Charge uncertainty because a missing reply does not establish no effect.)
+Guidance Mode: compact. Pointer: docarchive/innovation.md Q2-F (because Charge uncertainty because a missing reply does not establish no effect.)
 Meaning-gaps: no unresolved meaning facet perceived; exact implementation names and layout remain design work.
 Depth-link: none; no separate depth run.
 
@@ -125,7 +125,7 @@ Move: Exercise one factory-created client per operation through auth and cleanup
 Lands: Cancellation and failure preserve use-and-close ownership.
 WHY: The requested short-lived behavior preserves existing account/session controls.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: decomposition.md Q6 (because Test the public path because engine-only calls omit lifecycle composition.)
+Guidance Mode: compact. Pointer: docarchive/decomposition.md Q6 (because Test the public path because engine-only calls omit lifecycle composition.)
 Depth-link: none; no separate depth run.
 
 ## R09 — Health evidence scope
@@ -148,7 +148,7 @@ Move: Probe results, logs and health fields for leaked invite material.
 Lands: Entry-bearing text stays out of diagnostics.
 WHY: A usable lookup/join API does not expose private entry links as status labels.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: sensemaking.md Diagnostics (because Use synthetic tokens in tests so the evidence itself carries no secret.)
+Guidance Mode: compact. Pointer: docarchive/sensemaking.md Diagnostics (because Use synthetic tokens in tests so the evidence itself carries no secret.)
 Depth-link: none; no separate depth run.
 
 ## R11 — Nested entity retention
@@ -170,7 +170,7 @@ Move: Exercise real SDK dispatch and SQLite claims under controlled responses an
 Lands: Deterministic regressions cover meaningful failure paths.
 WHY: The feature can be delivered with bounded, reproducible evidence.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: innovation.md Q7-F (because Test real composition rather than supplying the desired behavior in a stand-in.)
+Guidance Mode: compact. Pointer: docarchive/innovation.md Q7-F (because Test real composition rather than supplying the desired behavior in a stand-in.)
 Meaning-gaps: no unresolved meaning facet perceived; exact implementation names and layout remain design work.
 Depth-link: none; no separate depth run.
 
@@ -182,7 +182,7 @@ Move: Document outcomes, allowance units, configuration and coordination boundar
 Lands: Callers can distinguish local limits from Telegram policy and incomplete joins.
 WHY: The implementation becomes usable without repeated caller glue or hidden assumptions.
 Priority: MED; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: decomposition.md Q7 (because Use examples without live credentials and never advertise a safe numeric rate.)
+Guidance Mode: compact. Pointer: docarchive/decomposition.md Q7 (because Use examples without live credentials and never advertise a safe numeric rate.)
 Meaning-gaps: no unresolved meaning facet perceived; exact implementation names and layout remain design work.
 Depth-link: none; no separate depth run.
 
@@ -194,7 +194,7 @@ Move: Explore an atomic provider contract for multiple hosts.
 Lands: The shared-file coordination boundary becomes a testable distributed alternative.
 WHY: Indirect benefit: a later deployment can retain account admission across hosts.
 Priority: LOW; Confidence: MED; Essentiality: peripheral.
-Guidance Mode: compact. Pointer: innovation.md M8 (because A concrete multi-host consumer would supply required consistency semantics.)
+Guidance Mode: compact. Pointer: docarchive/innovation.md M8 (because A concrete multi-host consumer would supply required consistency semantics.)
 Depth-link: none; no separate depth run.
 
 ## R15 — Live server acceptance
@@ -205,7 +205,7 @@ Move: Validate the documented outcomes with explicitly designated test accounts/
 Lands: Offline assumptions have live acceptance evidence.
 WHY: The delivered feature gains deployment confidence beyond synthetic replies.
 Priority: MED; Confidence: MED; Essentiality: supporting.
-Guidance Mode: compact. Pointer: innovation.md Q7-G (because Live mutation fixtures require explicit authorization and are absent in this run.)
+Guidance Mode: compact. Pointer: docarchive/innovation.md Q7-G (because Live mutation fixtures require explicit authorization and are absent in this run.)
 Depth-link: none; no separate depth run.
 
 ## R16 — Alternative join control protocols
@@ -216,7 +216,7 @@ Move: Compare no-retry dispatch and exception-only incomplete outcomes against c
 Lands: Alternative API tradeoffs are explicit.
 WHY: Indirect benefit: future consumers may need a different control-flow contract.
 Priority: LOW; Confidence: MED; Essentiality: peripheral.
-Guidance Mode: compact. Pointer: innovation.md Q3-C/Q5-C (because Both are technically viable; consumer requirements decide fit.)
+Guidance Mode: compact. Pointer: docarchive/innovation.md Q3-C/Q5-C (because Both are technically viable; consumer requirements decide fit.)
 Depth-link: none; no separate depth run.
 
 ## Excluded

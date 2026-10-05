@@ -16,7 +16,7 @@ replaced by a selected interpretation here.
 
 ## Articulation Reference
 
-- File: `articulate_simple.md`
+- File: `docarchive/articulate_simple.md`
 - Itemize count: 1
 - Per-item identifiers: G1
 - Verdict: HIGH-PROCEED
