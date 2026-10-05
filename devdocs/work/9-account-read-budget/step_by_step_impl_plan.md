@@ -5,7 +5,12 @@ effort: unknown
 
 # Plan — per-account read budgets (issue #9)
 
-**Revision 1.** Input: `desc.md` (`eeb86a7`), triage and pre-plan probes.
+**Revision 2.** Input: `desc.md` (`eeb86a7`), triage and pre-plan probes.
+
+**Critic folded:** 2026-10-05 — 1 mitigation (4 steps changed, 0 added).
+Risk 1 selected robust: use authenticated self responses for quota identity,
+not Telethon's cached ID. Steps 2–5 are marked below. Safe-in-nature and
+hardness classifications were rechecked and remain unchanged.
 
 ### What is the task
 
@@ -135,19 +140,23 @@ clock rollback, conservative failed-attempt accounting, status serialization
 
 3
 
-## Step 2 — Request and iterator adapter
+## Step 2 — Request and iterator adapter [folded: Risk 1, robust]
 
 ### Proposed changes
 
 Add `tgdata/budget_client.py` with a client mixin and a per-call sender proxy.
 The mixin overrides `_call`, preserving Telethon's signature and forwarding
-unchanged when no budget is configured. Resolve the authenticated account ID
-from `_self_id`, asking get_me only if necessary; metadata calls do not recurse
-into budget claims. Unknown identity or missing policy stops reads locally.
+unchanged when no budget is configured. Use get_me(input_peer=False)'s returned
+ID before every budgeted send, page-size query and public status query; never
+trust or clear `_self_id`, and do not add a long-lived identity cache. Metadata
+calls do not recurse into budget claims. If get_me returns None, ask GetState
+so Telegram's real logout/ban exception still propagates; if identity remains
+unknown, stop locally. A missing policy also stops reads.
 
-Pass a proxy for the sender argument into Telethon's real `_call`. It acquires
-the reservation synchronously immediately before each send, including retries,
-then wraps the returned awaitable to settle successful replies. It never
+Pass a proxy for the sender argument into Telethon's real `_call`. Its send
+returns a coroutine: obtain fresh self identity, reserve synchronously, then
+enqueue on the real sender without another await between reservation and send.
+Do this again on retries, then settle successful replies. It never
 changes the client's actual sender or changes connection/reconnection behavior.
 Each retry is separately charged; waiting on a cached flood wait charges nothing
 until an attempt actually sends. Exceptions/cancellation keep the charge.
@@ -192,14 +201,14 @@ _AnswerEvidence, wrappers, authentication identity, shared factory
 
 4
 
-## Step 3 — Public wiring and interrupted results
+## Step 3 — Public wiring and interrupted results [folded: Risk 1, robust]
 
 ### Proposed changes
 
 Append `read_budget=None` to TgData and pass it through; export the budget
 component/status/error types from tgdata/__init__. Add async
-`get_read_budget()` returning the active account's status, or None without a
-budget. It must not connect when no budget is configured.
+`get_read_budget()` returning the authenticated self response's account status,
+or None without a budget. It must not connect when no budget is configured.
 
 In message_engine, propagate ReadBudgetError through sender/media conversion
 catch-all handlers. On exhaustion in fetch/search, attach the processed
@@ -239,7 +248,7 @@ partial rows, polling deduplication, health classification, public exports
 
 3
 
-## Step 4 — Behavioral regression suite
+## Step 4 — Behavioral regression suite [folded: Risk 1, robust]
 
 ### Proposed changes
 
@@ -258,6 +267,8 @@ the budget adapter. Include:
 - all bounded request families, wrapper/batch/unsupported guards, oversized
   replies and fail-closed storage;
 - persistent/pool/ephemeral factory wiring, actual account ID sharing;
+- cached self ID differing from authenticated get_me, identity changing
+  between attempts, and get_me returning None with the real GetState error;
 - partial fetch/search/media/discovery results, polling delivery/stop, and
   absence of invented Telegram health verdicts;
 - no-budget behavior remains unchanged.
@@ -285,7 +296,7 @@ regression isolation, optional compatibility environment
 
 3
 
-## Step 5 — User documentation
+## Step 5 — User documentation [folded: Risk 1, robust]
 
 ### Proposed changes
 
@@ -295,7 +306,9 @@ and exception/partial-result handling. Explain rolling admission-time
 accounting, conservative failed reservations, metadata/passive-update
 exclusions, unsupported raw message calls, synchronous short transactions,
 clock assumptions, and unchanged defaults. Do not describe examples as safe
-Telegram limits. Add the new smoke-suite entry.
+Telegram limits. Explain the added self-identity metadata lookups: each send
+is verified, and page sizing/status can perform another lookup. Add the new
+smoke-suite entry.
 
 ### Output
 
