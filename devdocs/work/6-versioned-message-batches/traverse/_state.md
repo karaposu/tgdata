@@ -11,7 +11,7 @@ A → Su → S → D → I → C → R (always)
 - [x] Surfacing
 - [x] Sensemaking
 - [x] Decomposition
-- [ ] Innovation
+- [x] Innovation
 - [ ] Critique
 - [ ] Routelister
 
@@ -22,7 +22,7 @@ A → Su → S → D → I → C → R (always)
 ACTIVE
 
 ## Next Discipline
-Innovation
+Critique
 
 ## Structural checks
 The repository has no `tools/structural_check.sh`; invoking it returned exit 127.
@@ -35,3 +35,4 @@ bundle/self-check elements present; HIGH-PROCEED, no LAYER 1 fires. Derivation:
 - 2026-10-05_13-53: Surfacing complete: 27 items (15 core, 10 sub, 2 side), local core coverage confirmed; live/receiver behavior unobserved. Manual structural check 7/7; PROCEED. Next: Sensemaking.
 - 2026-10-05_13-58: Sensemaking complete: SV1–SV6, six ambiguity groups resolved/narrowed; snapshot preparation and delivery acknowledgment separated. Two bounded implementation choices remain. Manual structural check 8/8; PROCEED. Next: Decomposition.
 - 2026-10-05_14-01: Decomposition complete: four pieces, eight interfaces, no runtime cycle; determination mechanisms owned. Full quality 7/7, manual structure 7/7. Next: Innovation.
+- 2026-10-05_14-08: Innovation complete: all seven mechanisms, 12 variations, four actionable components plus two future survivors; local publication primitive probed with 24 writers. Manual structure/coverage 9/9. Next: Critique.
