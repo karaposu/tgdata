@@ -152,8 +152,8 @@ absolute storage root. References alone are not offline download credentials.
 
 Media streams to a private temporary file. After successful SDK completion,
 tgdata flushes/fsyncs, hashes in bounded chunks and checks any known source
-size, then publishes under the digest using a non-replacing hard link. Equal
-bytes share one file even across different messages; changed bytes get a new
+size, closes the file, then publishes under the digest using a non-replacing
+hard link. Equal bytes share one file even across different messages; changed bytes get a new
 name. An existing digest path must be a regular nonsymlink file with matching
 size and hash. Corrupt entries raise rather than being silently replaced.
 Fresh fetches still download bytes to establish identity; only saved-batch
@@ -208,6 +208,16 @@ Before source resolution, no batch is fabricated. `BatchFormatError` and
 Telegram errors and `ReadBudgetExceeded` retain their classes and existing
 health meaning.
 
+Owned local filesystem operations retain their original exception object/type
+and suppress unrelated exception context, including when the SDK invokes the
+supplied file's write/flush methods. A real SDK/transport failure keeps its own
+cause and health meaning. If close or temporary-file removal also fails during
+an active failure or cancellation, the original outcome takes precedence.
+Secondary cleanup failures produce a WARNING containing only the operation
+and exception type, never the error text, path or traceback; diagnostic delivery
+cannot replace the chosen outcome. If cleanup is the only failure, its first
+error is raised and later cleanup is still attempted.
+
 ```python
 from tgdata import MessageBatch, ReadBudgetExceeded
 
@@ -221,8 +231,11 @@ except ReadBudgetExceeded as error:
     raise
 ```
 
-Cancellation propagates and removes temporary files; a completed immutable
-blob may remain. There is no durable cursor owned or advanced by this API,
+Cancellation propagates and attempts to close/remove temporary files. Cleanup
+is best-effort when the filesystem refuses it, so a private `.tgdata-...` file
+may remain; a completed immutable blob may remain too. No partially written
+object is published under a final digest name. There is no durable cursor owned
+or advanced by this API,
 and cancellation does not promise a returned partial batch.
 
 For delivery, the caller should:

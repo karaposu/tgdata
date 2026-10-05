@@ -161,6 +161,12 @@ temporary files:
   concurrent publication and cancellation cleanup
 - implicit media-reference refreshes remain subject to the budget; local errors
   do not invent account-health verdicts; legacy DataFrame/media contracts remain
+- native local I/O errors under incidental RPC context, including SDK stream
+  writes/flushes, preserve their identity without false health events; actual
+  transport causes still report correctly
+- permission-denied cleanup, close/read double failures, cancellation,
+  cleanup-only failures and raising logging handlers preserve the chosen error;
+  secondary warning content is limited to operation/type
 
 Socket connections are blocked. Scripted transport supplies Telegram replies;
 the actual SDK iterator, downloader, budget guard and batch implementation run.

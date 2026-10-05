@@ -624,7 +624,11 @@ not copy its media. Blob paths are relative to `out/media` in this example.
 
 Ordinary failures after group resolution carry the completed prefix as a
 `MessageBatch` in `error.partial_result` and still raise. `next_after_id` never
-passes an unfinished record/file. The exact schema, limits, interruption rules
+passes an unfinished record/file. Local file errors keep their type without
+inventing a Telegram health verdict. A secondary cleanup failure is logged by
+operation/type and preserves the original error or cancellation; storage that
+refuses cleanup may leave a private temporary file. The exact schema, limits,
+interruption rules
 and delivery protocol are in [Message batch v1](docs/message_batch_v1.md).
 
 ### Detecting & Downloading Media (photos / videos)

@@ -6,7 +6,9 @@ and batch preparation are real. No account config or Telegram socket is used.
 """
 
 import asyncio
+import builtins
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager, ExitStack
 from dataclasses import FrozenInstanceError
 from datetime import datetime, timedelta, timezone
 import hashlib
@@ -30,6 +32,7 @@ from telethon.tl import functions, types
 from tgdata import TgData, MessageBatch, BatchFormatError, BatchStorageError, ReadBudgetExceeded
 from tgdata import health
 from tgdata.batch_files import download_blob
+import tgdata.batch_files as batch_files
 from tgdata.message_engine import GroupAccessError
 from tgdata.smoke_tests import test_18_read_budget as f
 
@@ -578,6 +581,308 @@ async def test_legacy_dataframe_and_media_contracts():
     assert Path(result[101]).name == '7_101.png' and Path(result[101]).read_bytes() == PAYLOAD
 
 
+class FileFault:
+    """Real file with a supplied I/O failure; SDK and publisher stay real."""
+
+    def __init__(self, raw, faults):
+        self.raw, self.faults = raw, faults
+
+    def __getattr__(self, name):
+        value = getattr(self.raw, name)
+        if name not in self.faults:
+            return value
+
+        def fail(*args, **kwargs):
+            if name == 'close':
+                self.raw.close()
+            raise self.faults[name]
+        return fail
+
+
+@contextmanager
+def temporary_faults(faults):
+    original = batch_files.tempfile.NamedTemporaryFile
+    opened = []
+
+    def create(*args, **kwargs):
+        raw = original(*args, **kwargs)
+        opened.append(raw)
+        return FileFault(raw, faults)
+
+    with patch.object(batch_files.tempfile, 'NamedTemporaryFile', side_effect=create):
+        try:
+            yield opened
+        finally:
+            for raw in opened:
+                raw.close()
+
+
+@contextmanager
+def verification_faults(faults):
+    opened = []
+
+    def open_file(*args, **kwargs):
+        raw = builtins.open(*args, **kwargs)
+        opened.append(raw)
+        return FileFault(raw, faults)
+
+    with patch.object(batch_files, 'open', side_effect=open_file, create=True):
+        try:
+            yield opened
+        finally:
+            for raw in opened:
+                raw.close()
+
+
+@contextmanager
+def cleanup_logs(explode=None):
+    class Capture(logging.Handler):
+        def emit(self, record):
+            records.append(record)
+            if explode is not None:
+                raise explode
+
+    records = []
+    handler = Capture()
+    logger = logging.getLogger('tgdata.batch_files')
+    previous = logger.level, logger.propagate
+    logger.setLevel(logging.WARNING)
+    logger.propagate = False
+    logger.addHandler(handler)
+    try:
+        yield records
+    finally:
+        logger.removeHandler(handler)
+        logger.setLevel(previous[0])
+        logger.propagate = previous[1]
+
+
+async def test_native_path_error_under_handled_rpc():
+    events = []
+    tg, _, sender = instance(events=events)
+    root = directory()
+    ordinary_file = root / 'not-a-directory'
+    ordinary_file.write_bytes(b'keep me')
+    try:
+        raise errors.ChannelPrivateError(request=None)
+    except errors.ChannelPrivateError:
+        caught = await f.expect(FileExistsError, tg.get_message_batch(7, download_media_to=ordinary_file))
+    assert caught.__suppress_context__ and caught.__cause__ is None
+    assert health.classify(caught) is None and not events and not sender.calls
+    assert getattr(caught, 'partial_result', None) is None and ordinary_file.read_bytes() == b'keep me'
+
+
+async def test_local_io_provenance_matrix():
+    cases = ('resolve', 'mkdir', 'create', 'write', 'flush', 'fsync', 'link',
+             'lstat', 'verify_open', 'fstat', 'verify_read', 'close')
+    for operation in cases:
+        events = []
+        tg, _, sender = instance(events=events)
+        root = directory()
+        existing = operation in ('lstat', 'verify_open', 'fstat', 'verify_read')
+        digest = hashlib.sha256(PAYLOAD).hexdigest()
+        if existing:
+            (root / digest).write_bytes(PAYLOAD)
+        sender.files[ASSET_ID] = PAYLOAD
+        script_messages(sender, [f.message(101), document(102)])
+        fault = OSError('secret local fault: ' + operation)
+        with ExitStack() as stack:
+            if operation in ('resolve', 'mkdir', 'lstat'):
+                stack.enter_context(patch.object(Path, operation, side_effect=fault))
+            elif operation == 'create':
+                stack.enter_context(patch.object(batch_files.tempfile, 'NamedTemporaryFile', side_effect=fault))
+            elif operation in ('write', 'flush', 'close'):
+                stack.enter_context(temporary_faults({operation: fault}))
+            elif operation == 'verify_open':
+                stack.enter_context(patch.object(batch_files, 'open', side_effect=fault, create=True))
+            elif operation == 'verify_read':
+                stack.enter_context(verification_faults({'read': fault}))
+            else:
+                stack.enter_context(patch.object(batch_files.os, operation, side_effect=fault))
+            try:
+                raise errors.ChannelPrivateError(request=None)
+            except errors.ChannelPrivateError:
+                caught = await f.expect(OSError, tg.get_message_batch(
+                    7, after_id=100, limit=2, download_media_to=root))
+        assert caught is fault, operation
+        assert caught.__suppress_context__ and caught.__cause__ is None, operation
+        assert health.classify(caught) is None and not events, operation
+        if operation in ('resolve', 'mkdir'):
+            assert not sender.calls and getattr(caught, 'partial_result', None) is None
+        else:
+            assert caught.partial_result.next_after_id == 101 and len(caught.partial_result.messages) == 1
+        assert not any(path.name.startswith('.tgdata-') for path in root.iterdir()), operation
+        if existing:
+            assert (root / digest).read_bytes() == PAYLOAD
+        else:
+            assert not list(root.iterdir()), operation
+
+
+async def test_sdk_transport_cause_is_preserved():
+    events = []
+    tg, _, sender = instance(events=events)
+    reason = errors.ChannelPrivateError(request=None)
+    original = ConnectionError('current SDK transport wrapper')
+    original.__cause__ = reason
+    sender.file_script = [original]
+    script_messages(sender, [f.message(101), document(102)])
+    root = directory()
+    caught = await f.expect(ConnectionError, tg.get_message_batch(
+        7, after_id=100, limit=2, download_media_to=root))
+    assert caught is original and caught.__cause__ is reason
+    assert caught.partial_result.next_after_id == 101 and not list(root.iterdir())
+    assert len(events) == 1 and events[0]['verdict'] == 'no access'
+    assert events[0]['error'] == 'CHANNEL_PRIVATE' and events[0]['call'] == 'get_message_batch'
+
+
+async def test_primary_rpc_survives_real_cleanup_denial():
+    events = []
+    tg, _, sender = instance(events=events)
+    root = directory()
+    original = errors.ChannelPrivateError(request=None)
+    script_messages(sender, [f.message(101), document(102)])
+
+    def refuse_file(request):
+        root.chmod(0o500)
+        return original
+
+    sender.file_script = [refuse_file]
+    try:
+        with cleanup_logs() as records:
+            caught = await f.expect(errors.ChannelPrivateError, tg.get_message_batch(
+                7, after_id=100, limit=2, download_media_to=root))
+        assert caught is original and caught.partial_result.next_after_id == 101
+        assert len(events) == 1 and events[0]['verdict'] == 'no access'
+        assert len(records) == 1 and records[0].getMessage() == 'Batch artifact cleanup failed during unlink (PermissionError)'
+        assert all(path.name.startswith('.tgdata-media-') for path in root.iterdir())
+        assert len(list(root.iterdir())) == 1
+    finally:
+        # Test teardown restores access; production cannot promise removal
+        # when the filesystem refuses it.
+        root.chmod(0o700)
+
+
+async def test_secondary_failures_and_logging_cannot_mask_primary():
+    for logger_error in (None, RuntimeError('secret handler error'), asyncio.CancelledError('secret handler cancellation')):
+        events = []
+        tg, _, sender = instance(events=events)
+        root = directory()
+        original = errors.ChannelPrivateError(request=None)
+        close_error = PermissionError('secret close details')
+        unlink_error = PermissionError('secret unlink details')
+        sender.file_script = [original]
+        script_messages(sender, [f.message(101), document(102)])
+        with temporary_faults({'close': close_error}) as opened, \
+                patch.object(batch_files.os, 'unlink', side_effect=unlink_error) as unlink, \
+                cleanup_logs(logger_error) as records:
+            caught = await f.expect(errors.ChannelPrivateError, tg.get_message_batch(
+                7, after_id=100, limit=2, download_media_to=root))
+        assert caught is original and caught.partial_result.next_after_id == 101
+        assert unlink.call_count == 1 and all(raw.closed for raw in opened)
+        assert len(events) == 1 and events[0]['verdict'] == 'no access'
+        assert [r.getMessage() for r in records] == [
+            'Batch artifact cleanup failed during close (PermissionError)',
+            'Batch artifact cleanup failed during unlink (PermissionError)',
+        ]
+        assert all(r.exc_info is None and 'secret' not in r.getMessage() and str(root) not in r.getMessage() for r in records)
+
+
+async def test_cancellation_survives_cleanup_denial():
+    events = []
+    tg, client, sender = instance(events=events)
+    root = directory()
+    script_messages(sender, [f.message(101), document(102)])
+    original_download = client.download_media
+    observed = []
+
+    async def observe_cancellation(*args, **kwargs):
+        try:
+            return await original_download(*args, **kwargs)
+        except BaseException as error:
+            observed.append(error)
+            raise
+
+    def pending_file(request):
+        root.chmod(0o500)
+        return f.PENDING
+
+    client.download_media = observe_cancellation
+    sender.file_script = [pending_file]
+    try:
+        with cleanup_logs() as records:
+            task = asyncio.create_task(tg.get_message_batch(7, after_id=100, limit=2, download_media_to=root))
+            while not sender.pending:
+                if task.done():
+                    await task
+                    raise AssertionError('SDK download did not block')
+                await asyncio.sleep(0)
+            task.cancel('secret cancellation details')
+            caught = await f.expect(asyncio.CancelledError, task)
+        assert len(observed) == 1 and caught is observed[0]
+        assert not events and len(list(root.iterdir())) == 1
+        assert [r.getMessage() for r in records] == ['Batch artifact cleanup failed during unlink (PermissionError)']
+    finally:
+        root.chmod(0o700)
+
+
+async def test_cleanup_only_media_and_manifest_errors():
+    for mode in ('media', 'manifest'):
+        root = directory()
+        fault = PermissionError('secret cleanup-only details')
+        events = []
+        tg, _, sender = instance(events=events)
+        sender.files[ASSET_ID] = PAYLOAD
+        script_messages(sender, [document()])
+        with patch.object(batch_files.os, 'unlink', side_effect=fault), cleanup_logs() as records:
+            try:
+                raise errors.ChannelPrivateError(request=None)
+            except errors.ChannelPrivateError:
+                if mode == 'media':
+                    caught = await f.expect(PermissionError, tg.get_message_batch(
+                        7, after_id=100, limit=1, download_media_to=root))
+                else:
+                    caught = f.rejected(PermissionError, lambda: MessageBatch.from_json(GOLDEN).save(root))
+        assert caught is fault and health.classify(caught) is None and not events and not records
+        if mode == 'media':
+            assert caught.partial_result.next_after_id == 100 and not caught.partial_result.messages
+            assert (root / hashlib.sha256(PAYLOAD).hexdigest()).read_bytes() == PAYLOAD
+        else:
+            assert (root / (GOLDEN_ID + '.json')).read_bytes() == GOLDEN.encode('utf-8')
+        assert len(list(root.iterdir())) == 2  # complete public object and the undeletable private temp
+
+
+async def test_verification_error_and_cleanup_precedence():
+    for first_failure in ('read', 'close'):
+        events = []
+        tg, _, sender = instance(events=events)
+        root = directory()
+        digest = hashlib.sha256(PAYLOAD).hexdigest()
+        (root / digest).write_bytes(PAYLOAD)
+        sender.files[ASSET_ID] = PAYLOAD
+        script_messages(sender, [f.message(101), document(102)])
+        read_error = OSError('secret verification read error')
+        close_error = PermissionError('secret verification close error')
+        faults = {'close': close_error}
+        if first_failure == 'read':
+            faults['read'] = read_error
+        with ExitStack() as stack:
+            opened = stack.enter_context(verification_faults(faults))
+            records = stack.enter_context(cleanup_logs())
+            if first_failure == 'close':
+                stack.enter_context(patch.object(batch_files.os, 'unlink', side_effect=PermissionError('secret unlink error')))
+            try:
+                raise errors.ChannelPrivateError(request=None)
+            except errors.ChannelPrivateError:
+                caught = await f.expect(OSError, tg.get_message_batch(
+                    7, after_id=100, limit=2, download_media_to=root))
+        assert caught is (read_error if first_failure == 'read' else close_error)
+        assert caught.partial_result.next_after_id == 101 and not events and health.classify(caught) is None
+        assert opened and all(raw.closed for raw in opened)
+        operation = 'close' if first_failure == 'read' else 'unlink'
+        assert [r.getMessage() for r in records] == ['Batch artifact cleanup failed during {} (PermissionError)'.format(operation)]
+        assert (root / digest).read_bytes() == PAYLOAD
+
+
 async def main():
     tests = [test_golden_wire_and_no_enrichment, test_immutable_value_and_save_reload,
              test_senderless_and_service_records, test_dates_nulls_and_large_signed_ids,
@@ -591,7 +896,12 @@ async def main():
              test_manifest_integrity, test_concurrent_complete_publication,
              test_cancelled_download_cleanup, test_media_refresh_obeys_budget,
              test_local_errors_do_not_inherit_health_verdicts, test_saved_replay_and_ack_order,
-             test_legacy_dataframe_and_media_contracts]
+             test_legacy_dataframe_and_media_contracts,
+             test_native_path_error_under_handled_rpc, test_local_io_provenance_matrix,
+             test_sdk_transport_cause_is_preserved, test_primary_rpc_survives_real_cleanup_denial,
+             test_secondary_failures_and_logging_cannot_mask_primary,
+             test_cancellation_survives_cleanup_denial, test_cleanup_only_media_and_manifest_errors,
+             test_verification_error_and_cleanup_precedence]
     print('Message Batch Tests — Telethon {}; synthetic credentials; no Telegram sockets'.format(telethon.__version__))
     logging.getLogger('tgdata').addHandler(logging.NullHandler())
     results = []
