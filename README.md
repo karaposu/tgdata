@@ -423,8 +423,10 @@ denial during resolution can have `group=None`. Existing discovery `GroupInfo`
 objects retain their previous format.
 
 Lookup never reads history or joins. Membership can be unknown; it does not prove
-read access. Access makes one history request with limit1 when possible, including
-for nonmembers of public groups. An empty successful reply is still readable.
+read access. Access issues one logical history request with limit1 when possible,
+including for nonmembers of public groups. Telethon may retry that request;
+each actual send is bounded and metered by an optional ReadBudget. An empty
+successful reply is still readable.
 `GroupAccess.readable` is `True`, `False` or `None`; `reason` is a safe denial name
 or `NO_PEER`. Authentication, transport, read-quota and local validation/storage
 failures raise their actual error instead of becoming a denied result. An optional
