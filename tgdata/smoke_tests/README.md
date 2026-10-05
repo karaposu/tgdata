@@ -126,13 +126,33 @@ entirely offline with synthetic credentials and Telethon 1.45.0:
 Socket connections are blocked by the test. Telegram replies and login prompts
 are supplied by stand-ins; this does not verify a live login.
 
+### 13. **test_18_read_budget.py**
+Tests per-account read budgets (`python -m tgdata.smoke_tests.test_18_read_budget`),
+entirely offline with synthetic credentials, temporary SQLite files and a
+controlled clock:
+- persistent policy, warm-up, rolling expiry, clock rollback, refunds and
+  conservative failed/cancelled claims
+- independent managers and four processes cannot spend the same allowance
+- fresh authenticated identity, request-resolution delays, hidden retries,
+  forward/reverse pages and resumed ID chunks through real Telethon code
+- bounded request families, invoke wrappers, metadata batches, unsupported
+  requests, oversized replies and storage failures
+- partial fetch/search/media/discovery output, polling delivery and terminal
+  stopping, local errors without invented account-health verdicts
+- primary, pooled and short-lived clients share the guard; omitted budgets
+  preserve existing behavior
+
+The suite blocks socket connections. Scripted senders replace Telegram replies,
+not the budget adapter or SDK request/iterator flow. Verified on Telethon 1.45.0
+and 1.33.1; it does not establish live Telegram behavior or safe numeric quotas.
+
 ### Custom Test Scripts:
 - **my_test.py** - Custom test script for specific scenarios
 
 ## Important Notes
 
 1. **Authentication Required**: Live tests require valid Telegram credentials in `config.ini`.
-   The offline login, flood-threshold, health-event and session-store suites use
+   The offline login, flood-threshold, health-event, session-store and read-budget suites use
    synthetic credentials. Proxy and device-identity suites also contain live checks.
 
 2. **Non-Destructive**: Tests only read data, they don't send messages or modify groups

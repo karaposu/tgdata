@@ -11,6 +11,10 @@ from .tgdata import TgData
 from .message_engine import GroupAccessError
 from .connection_engine import AuthRequiredError, ProxyConfigError
 from .discovery_engine import DiscoveryInterrupted
+from .read_budget import (
+    ReadBudget, ReadBudgetStatus, ReadBudgetError, ReadBudgetExceeded,
+    ReadBudgetConfigError, ReadBudgetStorageError, UnsupportedBudgetRequest,
+)
 
 # Models
 from .models import (
@@ -47,6 +51,13 @@ __all__ = [
     "AuthRequiredError",
     "ProxyConfigError",
     "DiscoveryInterrupted",
+    "ReadBudget",
+    "ReadBudgetStatus",
+    "ReadBudgetError",
+    "ReadBudgetExceeded",
+    "ReadBudgetConfigError",
+    "ReadBudgetStorageError",
+    "UnsupportedBudgetRequest",
 
     # Models
     "MessageData",

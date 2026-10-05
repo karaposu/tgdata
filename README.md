@@ -28,6 +28,7 @@ A production-grade Python library for extracting and processing Telegram group a
 - 🛡️ **Proxy Support**: An optional per-account SOCKS5/SOCKS4/HTTP proxy for every connection, with `require_proxy` and no silent fallback to a direct line
 - 🪪 **Fixed Device Identity**: Optionally pin the device model, system and app version an account presents, so it looks the same from every machine and after Telethon upgrades
 - 🩺 **Account Health Events**: Every wait, logout, ban, restriction or lost group is reported as a plain-data event — through one callback, a log line and a per-account summary — and "ok" when it ends
+- **Per-account read budgets**: An optional shared SQLite ledger limits message pulls over a rolling 24 hours, with persistent warm-up steps and recoverable partial results
 
 ## Installation
 
@@ -249,6 +250,116 @@ print(TgData("config.ini").device_identity()['config_lines'])
 - Whether Telegram cares about a changing identity has not been measured;
   pinning is a precaution for accounts that move between machines.
 
+
+## Per-account read budgets
+
+Pass a `ReadBudget` to limit explicit message pulls across jobs for the same
+Telegram account. Every persistent, pooled and short-lived client built by
+that `TgData` uses it. Without `read_budget`, existing behavior is unchanged.
+
+```python
+import asyncio
+from tgdata import TgData, ReadBudget, ReadBudgetExceeded
+
+async def main():
+    budget = ReadBudget("/absolute/path/read-budgets.sqlite3")
+    tg = TgData("config.ini", read_budget=budget)
+    try:
+        # Policy setup: get the authenticated account ID using metadata only.
+        client = await tg.connection_engine.get_client()
+        me = await client.get_me()
+        budget.configure(
+            account_id=me.id,
+            daily_limit=2000,
+            warmup=[(0, 100), (2, 300), (7, 2000)],
+        )
+
+        try:
+            messages = await tg.get_messages("@channelname", limit=2000)
+        except ReadBudgetExceeded as error:
+            messages = error.partial_result
+            print(error.status.to_dict())
+            print("Retry after seconds:", error.retry_after)
+
+        if messages is not None:
+            print(messages)
+        print((await tg.get_read_budget()).to_dict())
+    finally:
+        await tg.close()
+
+asyncio.run(main())
+```
+
+The numbers above illustrate configuration; they are **not Telegram-safe rate
+recommendations**. Warm-up days are completed 24-hour periods since enrollment,
+not calendar days. The example starts at 100, rises to 300 after two days, and
+to 2,000 after seven. Without `warmup`, the full `daily_limit` applies immediately.
+A zero cap pauses reads. A curve starts at day zero, has unique nonnegative
+integer days and nondecreasing caps, and never exceeds `daily_limit`.
+
+`configure()` deliberately replaces the limit and curve, while retaining usage
+and the original start time. Omit it in later jobs to keep the stored policy.
+Pass `started_at` explicitly to set a known enrollment time: a timezone-aware
+datetime or UTC timestamp, no later than now. The last curve cap continues
+until the policy changes; it does not automatically rise to `daily_limit`.
+
+- **Shared identity and storage:** use the same SQLite file on the same host
+  for every reader that should share an allowance. Keys are authenticated
+  Telegram account IDs, not session names or pool suffixes. Different accounts
+  have separate policies. A missing policy stops message reads. The parent
+  directory must exist; `:memory:` is not supported. The ledger stores account
+  IDs, policies and counters, never login keys or message content.
+- **What spends the allowance:** history, message search, replies, explicit
+  message-ID lookups, discovery post reading, and message re-fetches during
+  media operations. Repeated reads, service/empty message slots and messages
+  later filtered out still count. A count operation that fetches a message
+  counts too. User/group/dialog metadata and incidental dialog previews,
+  passive updates and update recovery, and downloading file bytes are excluded.
+- **When it counts:** before each actual send, tgdata reserves the request's
+  maximum number of messages. Successful replies settle to the returned slot
+  count and release unused capacity. Failed, cancelled or crashed attempts
+  retain their full claim; each retry needs another reservation. Cached flood
+  waits do not spend capacity before a send. An oversized reply is charged at
+  its actual count and raises a local error.
+- **Rolling expiry:** each claim expires 24 hours after its send admission,
+  regardless of when the reply arrives. There is no midnight reset. A persisted
+  clock high-water mark prevents backward clock changes from restoring spent
+  capacity. Keep the host clock accurate; forward jumps advance expiry and
+  warm-up. No SQLite transaction stays open while awaiting Telegram. Operations
+  are synchronous and normally short, but contention can block the event loop
+  for up to the five-second SQLite busy timeout before raising.
+- **Status and stopping:** `budget.status(account_id)` is local;
+  `await tg.get_read_budget()` verifies the active account and returns its
+  status, or `None` without connecting when disabled. `used` includes outstanding
+  `reserved` capacity; `remaining` is the available allowance. `to_dict()` adds
+  ISO timestamps and `retry_after` for one message. An exhaustion exception
+  also has `requested`, `account_id`, `next_available_at` and `retry_after` for
+  that request. Retry times are estimates assuming no new claims or policy
+  changes; `None` means a smaller request or policy change is needed.
+- **Partial results:** fetch/search/discovery errors carry the processed
+  DataFrame in `partial_result`; media-by-ID errors carry completed entries
+  in a dictionary. Batch callbacks may already have seen some of those rows.
+  Polling delivers and deduplicates its partial frame, then raises exhaustion
+  instead of automatically retrying. Other `ReadBudgetError` subclasses also
+  stop polling. These are local policy/storage errors, not Telegram health
+  verdicts; actual Telegram errors keep their existing health reporting.
+- **Request boundaries:** history/search pages shrink to the available
+  allowance while preserving their cursors. ID chunks and raw request bounds
+  are not silently truncated, so a chunk larger than the remaining allowance
+  is refused. Use smaller ID lists when needed. Unbounded or unsupported raw
+  message-returning calls and message-bearing batches raise
+  `UnsupportedBudgetRequest`; metadata-only batches still work. Supported
+  invoke wrappers retain the inner message bound.
+- **Identity verification:** each message send uses a fresh Telegram self
+  lookup, including retries; page sizing and status can add another lookup.
+  Cached session identities are not billing authority. Storage/configuration
+  errors fail closed before further message sends; failed settlement retains
+  the prior full claim. Clients created separately, other ledger files and
+  direct use of private transport internals are outside this guard.
+
+The budget suite exercises real Telethon request/iterator code with scripted
+replies on 1.45.0 and 1.33.1. It does not test live Telegram response bounds or
+whether any chosen limit prevents account restrictions.
 
 ## Quick Start
 
