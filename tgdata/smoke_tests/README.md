@@ -108,12 +108,32 @@ Tests account health events (`python -m tgdata.smoke_tests.test_16_health_events
 
 Engine methods are replaced by stand-ins, and Telethon's real request code runs on a scripted connection.
 
+### 12. **test_17_session_store.py**
+Tests pluggable session storage (`python -m tgdata.smoke_tests.test_17_session_store`),
+entirely offline with synthetic credentials and Telethon 1.45.0:
+- file sessions remain the default; a supplied store serves persistent, pooled,
+  and short-lived clients without creating `.session` files
+- login keys, data centres, update states, and cached groups survive a restart;
+  message senders are excluded and large access hashes remain exact
+- disconnect and auth-key changes save; unchanged state is not written again
+- load failures raise, save/delete failures are logged without credentials,
+  and first-login rules still hold
+- real Telethon log-out calls the optional delete method; stale clients cannot
+  overwrite or delete a login already changed in the store, including when the
+  current record cannot be read; mixed cache rows serialize
+  deterministically; session copies stay in memory; health events keep their names
+
+Socket connections are blocked by the test. Telegram replies and login prompts
+are supplied by stand-ins; this does not verify a live login.
+
 ### Custom Test Scripts:
 - **my_test.py** - Custom test script for specific scenarios
 
 ## Important Notes
 
-1. **Authentication Required**: All tests require valid Telegram credentials in `config.ini`
+1. **Authentication Required**: Live tests require valid Telegram credentials in `config.ini`.
+   The offline login, flood-threshold, health-event and session-store suites use
+   synthetic credentials. Proxy and device-identity suites also contain live checks.
 
 2. **Non-Destructive**: Tests only read data, they don't send messages or modify groups
 

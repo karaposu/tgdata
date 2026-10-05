@@ -97,7 +97,8 @@ class TgData:
                  log_file: Optional[str] = None,
                  interactive_login: Optional[bool] = None,
                  health_callback: Optional[Callable] = None,
-                 account_label: Optional[str] = None):
+                 account_label: Optional[str] = None,
+                 session_store=None):
         """
         Initialize Telegram group handler.
 
@@ -122,6 +123,11 @@ class TgData:
                 health_check()["health"] summarises the same events.
             account_label: A name for this account in those events (default:
                 None; the session name and the account id are always included)
+            session_store: Optional object with synchronous load(name) -> str
+                or None, save(name, data), and optional delete(name) methods.
+                Stores the login, group cache and update states without a
+                .session file. Methods run on the event loop and should return
+                quickly. None keeps the existing file sessions.
         """
         # Set up logging
         if log_file:
@@ -135,7 +141,8 @@ class TgData:
         self.connection_engine = ConnectionEngine(
             config_path=config_path,
             pool_size=connection_pool_size,
-            interactive_login=interactive_login
+            interactive_login=interactive_login,
+            session_store=session_store
         )
         
         self.message_engine = MessageEngine(

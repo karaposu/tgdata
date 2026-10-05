@@ -87,6 +87,86 @@ prompting.
   Retrying cannot log it back in — and, unlike before, it no longer sends the
   owner a fresh login code on every retry.
 
+### Keeping sessions out of files
+
+Pass a store once to keep each account's session in your application's storage:
+
+```python
+import sqlite3
+from tgdata import TgData
+
+class SessionStore:
+    def __init__(self, path):
+        self.db = sqlite3.connect(path)
+        with self.db:
+            self.db.execute(
+                "CREATE TABLE IF NOT EXISTS sessions "
+                "(name TEXT PRIMARY KEY, data TEXT NOT NULL)"
+            )
+
+    def load(self, name):
+        row = self.db.execute(
+            "SELECT data FROM sessions WHERE name = ?", (name,)
+        ).fetchone()
+        return row[0] if row else None
+
+    def save(self, name, data):
+        with self.db:
+            self.db.execute(
+                "INSERT OR REPLACE INTO sessions (name, data) VALUES (?, ?)",
+                (name, data),
+            )
+
+    def delete(self, name):            # optional; used on Telegram log-out
+        with self.db:
+            self.db.execute("DELETE FROM sessions WHERE name = ?", (name,))
+
+store = SessionStore("accounts.sqlite3")
+tg = TgData("config.ini", session_store=store)
+# Use tg as usual. When finished, await tg.close(), then store.db.close().
+```
+
+This example keeps sessions in a small SQLite table across restarts. Supply
+your own store to use another database or storage service. The methods are
+synchronous, not `async def`, and run on the
+event loop: keep them quick, for example with a local database or an in-memory
+cache that writes behind. tgdata ships no storage backend.
+
+- **Names:** `session_file` is the store key, used as configured; no `.session`
+  suffix is added. The existing fallback to `username`, then `telegram_session`,
+  still applies. Persistent and short-lived clients share that name; pool
+  connections use `<name>_1`, `<name>_2`, and so on.
+- **Contents:** one opaque, versioned string containing the login key, data
+  centre, update states, groups and channels with their access hashes, and the
+  account's own identity rows. Message senders are excluded from this session
+  cache. The temporary key and sent-file cache are not persisted.
+- **Keep the string as text.** It is not Telethon's `StringSession` format or a
+  JSON document for the store to interpret. Its encoding is not encryption;
+  access control and any encryption belong to your store.
+- **Save points:** whenever Telethon saves (connect, data-centre changes, new
+  login keys, and periodically while connected), plus disconnect/`close()`.
+  Unchanged state causes no write. Always close the client when finished.
+- **Failures:** a store load error or unreadable saved string raises before a
+  connection opens. A failed save is logged at ERROR and retried at the next
+  save point; failed deletes are logged too. Save/delete logs contain the
+  session name and error type, never the error text or traceback, which could
+  contain the login key.
+- **Two clients:** with the same login, the later save wins for the cache.
+  Before a changed save or deletion, a client re-reads the stored key. If it
+  changed or was removed, the client skips the mutation and warns once. Logging
+  out an older client therefore preserves a newer login saved by another client.
+  This check and save are separate operations, not an atomic guarantee across
+  processes. Telethon's session copies for side connections stay in memory and
+  never write to the store.
+- **Login rules stay the same:** `None` from `load` means a new session; an
+  existing session that Telegram logged out still raises `AuthRequiredError`.
+  If `delete` is provided, Telegram log-out removes the stored record only when
+  it still holds the login that client last loaded or saved.
+
+Without `session_store`, existing `.session` files work exactly as before.
+There is no automatic migration from files to a store. This option is designed
+and tested against Telethon 1.45.0.
+
 ### Connecting through a proxy (optional)
 
 With no `proxy` key, tgdata connects directly, exactly as before. Add one, and
