@@ -13,10 +13,13 @@ effort: max
 - [Merge check posted on PR16](https://github.com/karaposu/tgdata/pull/16#issuecomment-6001372676).
 - Fresh critic-d reviewed product head7e3408a and plan revision2. Result:
   **REJECTED,2 Medium and1 Low**, with executable reproductions in pr-critic-probes.py.
-  Review comment publication follows this artifact’s commit.
+  [Review posted on PR16](https://github.com/karaposu/tgdata/pull/16#issuecomment-6001567085).
 
 The model/effort and missing description/merge-check publication follow-ups are
 complete. No runtime fixes or merge occurred during publication/review. The PR
 stays draft. The new blockers are its reproduced soundness findings, which require
 revision3 re-planning, a new plan critic/fold, implementation and repeated merge/PR
 checks under CONTRIBUTING §7.4. The earlier plan critic remains preserved.
+
+The first review is committed in87d15b4. Issue checklist steps2–7 are reset for
+the required revision3 cycle while retaining the completed first-round evidence.

@@ -205,3 +205,11 @@ on the PR), obtain the fresh PR critique, and obtain
 the user's merge go-ahead. Keep duncan excluded and retain work documents on the
 feature archive branch. If runtime code or target dev changes, revisit the
 corresponding fidelity and verification evidence before treating this check as current.
+
+## Subsequent PR gate
+
+PR16 is now published; the description and this merge check have been posted.
+The [fresh PR critique](https://github.com/karaposu/tgdata/pull/16#issuecomment-6001567085) rejected the reviewed implementation
+with2 Medium findings and1 Low. This earlier fidelity pass does not clear that
+soundness gate. Revision3 re-planning and renewed merge/PR checks are required.
+See publication.md for the comment links and pr-critic.md for the evidence.
