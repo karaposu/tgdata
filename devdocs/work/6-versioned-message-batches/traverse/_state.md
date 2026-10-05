@@ -8,7 +8,7 @@ A → Su → S → D → I → C → R (always)
 
 ## Progress
 - [x] Articulate-Simple
-- [ ] Surfacing
+- [x] Surfacing
 - [ ] Sensemaking
 - [ ] Decomposition
 - [ ] Innovation
@@ -22,7 +22,7 @@ A → Su → S → D → I → C → R (always)
 ACTIVE
 
 ## Next Discipline
-Surfacing
+Sensemaking
 
 ## Structural checks
 The repository has no `tools/structural_check.sh`; invoking it returned exit 127.
@@ -32,3 +32,4 @@ bundle/self-check elements present; HIGH-PROCEED, no LAYER 1 fires. Derivation:
 
 ## History
 - 2026-10-05_13-50: Created task-local inquiry under CONTRIBUTING §5. Articulation complete: one coupled item, four variants, HIGH-PROCEED. Manual structure 9/9; derivation preservation 5/5. Next: Surfacing.
+- 2026-10-05_13-53: Surfacing complete: 27 items (15 core, 10 sub, 2 side), local core coverage confirmed; live/receiver behavior unobserved. Manual structural check 7/7; PROCEED. Next: Sensemaking.
