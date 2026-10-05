@@ -81,7 +81,7 @@ Guidance Mode: compact.
 - Specify missing-sender/service records (bc they expose lossy presentation assumptions).
 Meaning-gaps:
 - Exact optional field depth — [mid] — the implementation must have a concrete schema.
-Touches: `sensemaking.md#A1` (this concept’s recorded evidence), `decomposition.md#P1` (this concept’s recorded evidence), `critique.md#P1-F` (this concept’s recorded evidence).
+Touches: `docarchive/sensemaking.md#A1` (this concept’s recorded evidence), `docarchive/decomposition.md#P1` (this concept’s recorded evidence), `docarchive/critique.md#P1-F` (this concept’s recorded evidence).
 Depth-link: none; no separate depth run exists.
 
 ## R02 — Stable snapshot identity
@@ -98,7 +98,7 @@ Guidance Mode: compact.
 - Exclude local roots and export time from identity (bc neither describes the snapshot).
 Meaning-gaps:
 - Canonical byte grammar — [mid] — digest reproducibility needs an explicit encoding.
-Touches: `sensemaking.md#A2` (this concept’s recorded evidence), `innovation.md#P1-F` (this concept’s recorded evidence).
+Touches: `docarchive/sensemaking.md#A2` (this concept’s recorded evidence), `docarchive/innovation.md#P1-F` (this concept’s recorded evidence).
 Depth-link: none; no separate depth run exists.
 
 ## R03 — Completed-prefix continuation
@@ -113,7 +113,7 @@ WHY: The goal gains resumability without silently skipping requested data.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
 Guidance Mode: compact.
 - Probe failure on the second message (bc a nonempty prefix reveals cursor errors).
-Touches: `sensemaking.md#A3` (this concept’s recorded evidence), `decomposition.md#P3` (this concept’s recorded evidence), `critique.md#P3-F` (this concept’s recorded evidence).
+Touches: `docarchive/sensemaking.md#A3` (this concept’s recorded evidence), `docarchive/decomposition.md#P3` (this concept’s recorded evidence), `docarchive/critique.md#P3-F` (this concept’s recorded evidence).
 Depth-link: none; no separate depth run exists.
 
 ## R04 — Verified content-addressed media
@@ -128,7 +128,7 @@ WHY: The goal gains portable media identities that make repeated uploads recogni
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
 Guidance Mode: compact.
 - Use a private temporary file and verify existing digest paths (bc names alone do not prove contents).
-Touches: `innovation.md#P2-F` (this concept’s recorded evidence), `critique.md#P2-F` (this concept’s recorded evidence), `../probe_batch_seams.py` (this concept’s recorded evidence).
+Touches: `docarchive/innovation.md#P2-F` (this concept’s recorded evidence), `docarchive/critique.md#P2-F` (this concept’s recorded evidence), `../probe_batch_seams.py` (this concept’s recorded evidence).
 Depth-link: none; no separate depth run exists.
 
 ## R05 — Media eligibility and download mode
@@ -143,7 +143,7 @@ WHY: The goal gains honest media references and predictable network/storage work
 Priority: HIGH; Confidence: MED; Essentiality: core.
 Guidance Mode: compact.
 - Specify supported SDK attachment kinds (bc a truthy attachment is not necessarily downloadable).
-Touches: `sensemaking.md#A3` (this concept’s recorded evidence), `decomposition.md#P3` (this concept’s recorded evidence), `innovation.md#P3-F` (this concept’s recorded evidence).
+Touches: `docarchive/sensemaking.md#A3` (this concept’s recorded evidence), `docarchive/decomposition.md#P3` (this concept’s recorded evidence), `docarchive/innovation.md#P3-F` (this concept’s recorded evidence).
 Depth-link: none; no separate depth run exists.
 
 ## R06 — Shared quota and health behavior
@@ -158,7 +158,7 @@ WHY: The goal gains a batch path that respects account safeguards.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
 Guidance Mode: compact.
 - Include a quota stop during implicit media re-fetch (bc that read is easy to overlook).
-Touches: `decomposition.md#P3` (this concept’s recorded evidence), `critique.md#D4` (this concept’s recorded evidence).
+Touches: `docarchive/decomposition.md#P3` (this concept’s recorded evidence), `docarchive/critique.md#D4` (this concept’s recorded evidence).
 Depth-link: none; no separate depth run exists.
 
 ## R07 — Existing API compatibility
@@ -173,7 +173,7 @@ WHY: The goal gains adoptability without requiring unrelated migrations.
 Priority: MED; Confidence: HIGH; Essentiality: core.
 Guidance Mode: compact.
 - Run the supported offline regressions (bc the shared façade still connects both APIs).
-Touches: `sensemaking.md#Phase-4` (this concept’s recorded evidence), `critique.md#P3-C` (this concept’s recorded evidence).
+Touches: `docarchive/sensemaking.md#Phase-4` (this concept’s recorded evidence), `docarchive/critique.md#P3-C` (this concept’s recorded evidence).
 Depth-link: none; no separate depth run exists.
 
 ## R08 — Replay and acknowledgment obligations
@@ -188,7 +188,7 @@ WHY: The goal gains a usable recovery procedure instead of an unsupported exactl
 Priority: MED; Confidence: HIGH; Essentiality: core.
 Guidance Mode: compact.
 - Use the repeated-upload example literally (bc refetch is a different server observation).
-Touches: `sensemaking.md#A5` (this concept’s recorded evidence), `critique.md#P4-F` (this concept’s recorded evidence).
+Touches: `docarchive/sensemaking.md#A5` (this concept’s recorded evidence), `docarchive/critique.md#P4-F` (this concept’s recorded evidence).
 Depth-link: none; no separate depth run exists.
 
 ## R09 — Telethon 1.45.0 contract evidence
@@ -203,7 +203,7 @@ WHY: The goal gains confidence at the actual chosen dependency boundary.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
 Guidance Mode: compact.
 - Retain synthetic transport and forbidden sockets (bc local control flow is the intended verification scope).
-Touches: `_branch.md#User-Steering` (this concept’s recorded evidence), `critique.md#External-evidence` (this concept’s recorded evidence), `../probe_batch_seams.py` (this concept’s recorded evidence).
+Touches: `_branch.md#User-Steering` (this concept’s recorded evidence), `docarchive/critique.md#External-evidence` (this concept’s recorded evidence), `../probe_batch_seams.py` (this concept’s recorded evidence).
 Depth-link: none; no separate depth run exists.
 
 ## R10 — Version acceptance and evolution rules
@@ -218,7 +218,7 @@ WHY: The goal gains independent evolution with explicit compatibility boundaries
 Priority: MED; Confidence: MED; Essentiality: core.
 Guidance Mode: compact.
 - Specify unknown-version handling (bc version labels are useful only when behavior follows them).
-Touches: `decomposition.md#P1` (this concept’s recorded evidence), `innovation.md#P1-F` (this concept’s recorded evidence).
+Touches: `docarchive/decomposition.md#P1` (this concept’s recorded evidence), `docarchive/innovation.md#P1-F` (this concept’s recorded evidence).
 Depth-link: none; no separate depth run exists.
 
 ## R11 — Bounded read and file-processing work
@@ -235,7 +235,7 @@ Guidance Mode: compact.
 - Specify limit validation and chunked hashing (bc a finite record count alone does not bound file memory).
 Meaning-gaps:
 - Exact limit and I/O scheduling policy — [mid] — resource behavior must be concrete before implementation.
-Touches: `sensemaking.md#Resource-feasibility` (this concept’s recorded evidence), `decomposition.md#P3` (this concept’s recorded evidence).
+Touches: `docarchive/sensemaking.md#Resource-feasibility` (this concept’s recorded evidence), `docarchive/decomposition.md#P3` (this concept’s recorded evidence).
 Depth-link: none; no separate depth run exists.
 
 ## R12 — Generalized scanner for multiple formats
@@ -250,7 +250,7 @@ WHY: Indirect: the goal may gain lower future maintenance, but the current contr
 Priority: LOW; Confidence: MED; Essentiality: peripheral.
 Guidance Mode: compact.
 - Compare actual consumers before generalizing (bc speculative sinks enlarge compatibility risk).
-Touches: `innovation.md#P3-G` (this concept’s recorded evidence), `critique.md#P3-G` (this concept’s recorded evidence).
+Touches: `docarchive/innovation.md#P3-G` (this concept’s recorded evidence), `docarchive/critique.md#P3-G` (this concept’s recorded evidence).
 Depth-link: none; no separate depth run exists.
 
 ## R13 — Acknowledgment-aware worker streaming
@@ -265,7 +265,7 @@ WHY: Indirect: later worker orchestration may use the batch contract more safely
 Priority: LOW; Confidence: LOW; Essentiality: peripheral.
 Guidance Mode: compact.
 - Ground ownership in #10 (bc the reader library does not contain a receiving service).
-Touches: `innovation.md#P4-C` (this concept’s recorded evidence), `critique.md#P4-C` (this concept’s recorded evidence).
+Touches: `docarchive/innovation.md#P4-C` (this concept’s recorded evidence), `docarchive/critique.md#P4-C` (this concept’s recorded evidence).
 Depth-link: none; no separate depth run exists.
 
 ## Excluded

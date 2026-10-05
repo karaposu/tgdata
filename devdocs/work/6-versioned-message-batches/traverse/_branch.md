@@ -25,7 +25,7 @@ The format is the contract between the side that reads and the side that process
 
 ## Articulation Reference
 
-- File: `articulate_simple.md`
+- File: `docarchive/articulate_simple.md`
 - Itemize count: 1; item identifier: I1
 - Verdict: HIGH-PROCEED; flagged conditions: none
 - Output location follows CONTRIBUTING §5's task-local `traverse/` convention.

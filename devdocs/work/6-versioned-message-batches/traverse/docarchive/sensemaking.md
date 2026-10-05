@@ -7,9 +7,9 @@ effort: unknown
 
 ## User Input
 
-`_branch.md`: derive a stable interpretation of I1's four raw-batch/replay
+`../_branch.md`: derive a stable interpretation of I1's four raw-batch/replay
 readings from `surfacing.md`, before choosing implementation parts. The full
-original request is retained in `source-input.md`.
+original request is retained in `../source-input.md`.
 
 ## SV1 — Baseline understanding
 

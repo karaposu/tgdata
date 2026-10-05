@@ -7,7 +7,7 @@ effort: unknown
 
 ## User Input
 
-Evaluate `innovation.md` P1–P4 against `sensemaking.md` and `_branch.md`.
+Evaluate `innovation.md` P1–P4 against `sensemaking.md` and `../_branch.md`.
 The user's latest steering targets Telethon **1.45.0**; no further 1.33.1 work
 is required. This is the architecture selection, not the later critic-d pass
 over the implementation plan.
@@ -183,7 +183,7 @@ implementation to pass those tests. This verdict does not substitute for either.
 
 ## External evidence
 
-`../probe_batch_seams.py` runs real installed SDK iteration/download behavior
+`../../probe_batch_seams.py` runs real installed SDK iteration/download behavior
 and real local files with synthetic replies and sockets forbidden. On 1.45.0:
 
 ```text

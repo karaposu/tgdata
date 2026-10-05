@@ -7,7 +7,7 @@ effort: unknown
 
 ## User Input
 
-`_branch.md` and saved `sensemaking.md` SV6: partition the producer snapshot
+`../_branch.md` and saved `sensemaking.md` SV6: partition the producer snapshot
 contract without separating the cursor from completed preparation. DV1.
 
 ## 1. Coupling Map

@@ -7,9 +7,9 @@ effort: unknown
 
 ## User Input
 
-Purpose and variants: `_branch.md` (derived from the full issue request in
-`source-input.md`). Territory: tgdata, relevant installed Telethon source,
-existing public docs and #6/#10. Prior artifact: `../triage.md`; prior workspace:
+Purpose and variants: `../_branch.md` (derived from the full issue request in
+`../source-input.md`). Territory: tgdata, relevant installed Telethon source,
+existing public docs and #6/#10. Prior artifact: `../../triage.md`; prior workspace:
 same warmed session, explicitly retained. Refined purpose: surface evidence
 for the four raw-batch/replay readings without selecting among them.
 

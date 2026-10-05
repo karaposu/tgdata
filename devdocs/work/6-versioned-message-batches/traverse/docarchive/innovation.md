@@ -7,7 +7,7 @@ effort: unknown
 
 ## User Input and seed
 
-`_branch.md`, `sensemaking.md` SV6 and `decomposition.md` P1–P4. Seed: the
+`../_branch.md`, `sensemaking.md` SV6 and `decomposition.md` P1–P4. Seed: the
 missing library contract between observed messages and safely replayable output.
 Direction comes from the user's concrete messages/cursor/content-hash request
 and #10's future dependency; novelty is measured within this repository.
