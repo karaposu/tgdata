@@ -113,3 +113,12 @@ pass. Preserve the unrelated guide edit. No widening is needed.
 I1 appears in Question and Considered Articulations. MQ1/MQ3 readings are copied
 into Question; Deconstruct, MQ2, MQ4 and WHY are copied into Goal; all four
 variants are preserved. Five preservation checks pass; no reading selected here.
+
+## User Steering
+
+After the pre-build probes, the user specified:
+“we will be using 1.45.0 , no need for 1.33.1”.
+Target subsequent implementation and verification at Telethon 1.45.0. The earlier
+1.33.1 observation is historical evidence, not a requirement to continue that
+compatibility work. The producer-contract question and four original readings
+remain unchanged.
