@@ -29,7 +29,7 @@ class Sender:
         messages = [types.Message(
             id=i, peer_id=types.PeerChannel(7), date=datetime.datetime.now(datetime.timezone.utc),
             message=str(i), from_id=types.PeerUser(8))
-            for i in reversed(range(101, 101 + request.limit))]
+            for i in reversed(range(request.offset_id, request.offset_id + request.limit))]
         future = asyncio.get_running_loop().create_future()
         future.set_result(types.messages.ChannelMessages(
             pts=1, count=2000, messages=messages, topics=[], chats=[],
@@ -49,6 +49,7 @@ async def paging():
         if remaining == 0:
             raise Exhausted
         original = iterator.left
+        original_offset = iterator.request.add_offset
         iterator.left = min(original, remaining)
         try:
             done = await load()
@@ -56,6 +57,7 @@ async def paging():
             return done
         finally:
             iterator.left = original
+            iterator.request.add_offset = original_offset
 
     iterator._load_next_chunk = bounded_page
     seen = []
@@ -68,6 +70,11 @@ async def paging():
     assert seen == list(range(101, 138)), seen
     print('Paging: real iterator sent limit=37, add_offset=-37, offset_id=101; yielded 37 ordered messages')
     print('Paging: original 2,000-message limit retained; next page stopped before send')
+    remaining = 100
+    resumed = [(await iterator.__anext__()).id for _ in range(100)]
+    assert sender.calls[-1] == (100, -100, 138), sender.calls
+    assert resumed == list(range(138, 238)), resumed
+    print('Paging: after renewed allowance, the same iterator sent 100/-100 from 138 without a gap')
 
 
 def claim(path):
