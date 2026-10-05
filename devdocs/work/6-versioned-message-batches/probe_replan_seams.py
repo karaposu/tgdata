@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 import telethon
 from telethon import errors
+from telethon.tl import types
 from tgdata import health
 from tgdata.smoke_tests import test_19_message_batches as t
 
@@ -47,7 +48,8 @@ async def main():
             patch.object(socket.socket, 'connect_ex', side_effect=AssertionError('network forbidden')):
         t.f.TMP = Path(tmp)
         try:
-            for name, message in [('document', t.document()), ('photo', t.photo())]:
+            for name, message in [('document', t.document()), ('photo', t.photo()),
+                                  ('cached photo', t.photo(sizes=[types.PhotoCachedSize('w', 10, 10, t.PAYLOAD)]))]:
                 _, client, sender = t.instance()
                 sender.files[t.ASSET_ID] = t.PAYLOAD
                 with tempfile.TemporaryFile(mode='w+b') as raw:
@@ -104,7 +106,7 @@ async def main():
             for client in t.f.CLIENTS:
                 await client.disconnect()
             t.f.CLIENTS.clear()
-    print('All 7 seam observations passed; no production publisher change or live-server claim')
+    print('All 8 seam observations passed; no production publisher change or live-server claim')
 
 
 if __name__ == '__main__':
