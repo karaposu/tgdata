@@ -5,6 +5,7 @@ from telethon.client.messages import _IDsIter, _MessagesIter
 from telethon.tl import functions, types
 from telethon.tl.tlobject import TLRequest
 
+from . import health
 from .read_budget import (
     ReadBudgetError, ReadBudgetExceeded, UnsupportedBudgetRequest, _integer,
 )
@@ -99,7 +100,9 @@ class BudgetClientMixin:
             # preserves Telegram's real logout/ban reason for health reporting.
             await self(functions.updates.GetStateRequest())
             raise ReadBudgetError('Telegram did not provide an authenticated account identity')
-        return _integer(me.id, 'authenticated account_id', 1)
+        account_id = _integer(me.id, 'authenticated account_id', 1)
+        health.note_account(account_id)
+        return account_id
 
     async def _call(self, sender, request, ordered=False, flood_sleep_threshold=None):
         budget = getattr(self, '_tgdata_read_budget', None)

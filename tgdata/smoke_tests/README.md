@@ -172,13 +172,31 @@ Socket connections are blocked. Scripted transport supplies Telegram replies;
 the actual SDK iterator, downloader, budget guard and batch implementation run.
 This does not establish live server behavior or a deployed receiver's guarantees.
 
+### 15. **test_20_group_operations.py**
+
+Run `python -m tgdata.smoke_tests.test_20_group_operations` on **Telethon 1.45.0**.
+The suite blocks sockets and uses synthetic credentials, temporary session stores
+and real SQLite files. It exercises the real SDK through the public facade:
+
+- strict target parsing, numeric cache ambiguity and portable immutable results
+- metadata, invite Preview/Already/Peek, bounded read proof and actual denials
+- handle/invite joining, no-op membership, approval, webview and payment outcomes
+- missing policies, persistence, rolling expiry, clock rollback, concurrent
+  processes, retries, cancellation and independent read/join allowances
+- actual-send identity, wrapped/batched requests and inherited client controls
+- ephemeral cleanup, private diagnostics, health recovery and concurrent identity
+- real post-ack SQLiteSession failure, native errors inside unrelated RPC handlers,
+  and stored group entities without retaining other users
+
+No live group is joined. Scripted replies do not prove live server acceptance.
+
 ### Custom Test Scripts:
 - **my_test.py** - Custom test script for specific scenarios
 
 ## Important Notes
 
 1. **Authentication Required**: Live tests require valid Telegram credentials in `config.ini`.
-   The offline login, flood-threshold, health-event, session-store, read-budget and message-batch suites use
+   The offline login, flood-threshold, health-event, session-store, read-budget, message-batch and group-operation suites use
    synthetic credentials. Proxy and device-identity suites also contain live checks.
 
 2. **Non-Destructive**: Tests only read data, they don't send messages or modify groups

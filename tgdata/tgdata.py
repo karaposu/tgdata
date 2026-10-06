@@ -12,6 +12,7 @@ import os
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any, Union, Callable
 import pandas as pd
+from telethon.errors import RPCError
 
 from . import health
 from .connection_engine import ConnectionEngine, AuthRequiredError, ProxyConfigError
@@ -21,6 +22,8 @@ from .batch_engine import BatchEngine
 from .message_batch import MessageBatch
 from .models import GroupInfo
 from .read_budget import ReadBudgetError, ReadBudgetExceeded
+from .group_operations import GroupEngine, _parse_target
+from .join_budget import JoinBudgetConfigError
 from .utils import (
     format_message_for_display,
     export_to_json,
@@ -102,7 +105,8 @@ class TgData:
                  health_callback: Optional[Callable] = None,
                  account_label: Optional[str] = None,
                  session_store=None,
-                 read_budget=None):
+                 read_budget=None,
+                 join_budget=None):
         """
         Initialize Telegram group handler.
 
@@ -135,6 +139,8 @@ class TgData:
             read_budget: Optional ReadBudget sharing a rolling 24-hour message
                 allowance by authenticated account ID. None keeps reads unlimited
                 by account quota. See the README's read-budget contract.
+            join_budget: Optional JoinBudget for admitted join attempts. The new
+                join_group method requires an explicit policy for this account.
         """
         # Set up logging
         if log_file:
@@ -150,7 +156,8 @@ class TgData:
             pool_size=connection_pool_size,
             interactive_login=interactive_login,
             session_store=session_store,
-            read_budget=read_budget
+            read_budget=read_budget,
+            join_budget=join_budget
         )
         
         self.message_engine = MessageEngine(
@@ -161,6 +168,7 @@ class TgData:
             connection_engine=self.connection_engine
         )
         self.batch_engine = BatchEngine(self.connection_engine)
+        self.group_engine = GroupEngine(self.connection_engine)
 
         # State
         self.current_group: Optional[GroupInfo] = None
@@ -189,6 +197,67 @@ class TgData:
         return session, user_id
 
     # ==================== Group Management ====================
+
+    async def _group_operation(self, method, target):
+        ref = _parse_target(target, joining=method == 'join_group')
+        if method == 'join_group' and self.connection_engine.join_budget is None:
+            raise JoinBudgetConfigError('join_group requires a configured JoinBudget')
+        async with self._health.call(method, group=ref.label, recover_group=False, account_id=None) as call:
+            try:
+                async with self.connection_engine.ephemeral_client() as client:
+                    client.flood_sleep_threshold = 0  # Owned only by this short-lived operation.
+                    await client._join_budget_account()  # Fresh identity for this operation's health.
+                    result = await getattr(self.group_engine, method)(client, ref)
+                    if method == 'check_group_access' and result.readable is True:
+                        call.recover_group = True
+                    return result
+            except Exception as exc:
+                if not isinstance(exc, RPCError):
+                    # Preserve the original exception and any explicit cause,
+                    # but never attribute the caller's incidental RPC handler
+                    # to a local/transport failure in this new operation.
+                    exc.__suppress_context__ = True
+                raise
+
+    async def lookup_group(self, target):
+        """Return available group details/membership via a use-and-close client.
+
+        Accepts a handle, Telegram invite link, or a group ID known to the
+        session. Invite previews may have no ID; lookup never joins or reads.
+        """
+        return await self._group_operation('lookup_group', target)
+
+    async def check_group_access(self, target):
+        """Probe history with limit=1: readable, denied, or unprobed (no peer).
+
+        This read obeys ReadBudget when configured. Authentication, quota and
+        transport failures raise rather than becoming group-denial results.
+        """
+        return await self._group_operation('check_group_access', target)
+
+    async def join_group(self, target):
+        """Join by handle/invite under an explicit JoinBudget account policy.
+
+        Returns joined/already_joined/requested/interaction_required/payment_required.
+        Each actual send, including retries and uncertain failures, costs one
+        attempt. Observed existing membership needs no send or charge.
+        """
+        return await self._group_operation('join_group', target)
+
+    async def get_join_budget(self):
+        """Return this account's allowance, or None if no JoinBudget was supplied."""
+        budget = self.connection_engine.join_budget
+        if budget is None:
+            return None
+        async with self._health.call('get_join_budget', recover_group=False, account_id=None):
+            try:
+                async with self.connection_engine.ephemeral_client() as client:
+                    client.flood_sleep_threshold = 0
+                    return budget.status(await client._join_budget_account())
+            except Exception as exc:
+                if not isinstance(exc, RPCError):
+                    exc.__suppress_context__ = True
+                raise
     
     @_reported()
     async def list_groups(self) -> pd.DataFrame:

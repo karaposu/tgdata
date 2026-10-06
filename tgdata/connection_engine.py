@@ -31,6 +31,7 @@ from .health import telegram_error_name as _telegram_error_name
 from .models import ConnectionConfig, RateLimitInfo
 from .session_store import StoredSession
 from .budget_client import BudgetClientMixin
+from .join_client import JoinClientMixin
 
 logger = logging.getLogger(__name__)
 
@@ -124,9 +125,10 @@ class _AnswerEvidence:
 def _client_class(base):
     """The client class _new_client() builds: `base` (Telethon's
     TelegramClient, or whatever stands in for it in a test) with
-    answer evidence, optional read budgets and per-call flood thresholds
+    answer evidence, optional read/join budgets and per-call flood thresholds
     in front of it. Cached per base."""
-    return type(f"Tgdata{base.__name__}", (_AnswerEvidence, BudgetClientMixin, _PerCallFloodThreshold, base), {})
+    return type(f"Tgdata{base.__name__}",
+                (_AnswerEvidence, JoinClientMixin, BudgetClientMixin, _PerCallFloodThreshold, base), {})
 
 
 class ProxyConfigError(ValueError):
@@ -329,7 +331,8 @@ class ConnectionEngine:
                  exponential_backoff: bool = True,
                  interactive_login: Optional[bool] = None,
                  session_store=None,
-                 read_budget=None):
+                 read_budget=None,
+                 join_budget=None):
         """
         Initialize connection engine.
 
@@ -351,6 +354,7 @@ class ConnectionEngine:
                 Keeps sessions in that store instead of .session files. These
                 methods run on the event loop and should return quickly.
             read_budget: Optional ReadBudget ledger shared by every client.
+            join_budget: Optional JoinBudget ledger shared by every client.
                 Policies are keyed by authenticated Telegram account ID.
         """
         self.config_path = config_path
@@ -361,6 +365,7 @@ class ConnectionEngine:
         self.interactive_login = interactive_login
         self.session_store = session_store
         self.read_budget = read_budget
+        self.join_budget = join_budget
         
         self._config: Optional[ConnectionConfig] = None
         self._primary_client: Optional[TelegramClient] = None
@@ -578,6 +583,7 @@ class ConnectionEngine:
             **identity
         )
         client._tgdata_read_budget = self.read_budget
+        client._tgdata_join_budget = self.join_budget
         return client
         
     async def get_client(self) -> TelegramClient:
