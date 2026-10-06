@@ -1,20 +1,24 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-1-register
+status: stage-2-local-evidence
 ---
 # Backfill assumptions and evidence register
 
 This register belongs to [the contract](contract.md). A selected policy is not an
 empirically proved property, and an existing component receipt is not evidence that
-the new lifecycle works. No live gate and no new-runtime case has passed in Stage 1.
-[Case IDs](acceptance-matrix.md) are expected-outcome specifications, initially UNRUN.
+the new lifecycle works. Stage 1 supplied the specifications. Stage 2 now has scoped
+local evidence at `1425fd7`, recorded in [verification](stage-2-state/verification.md).
+No live gate has run. [Case IDs](acceptance-matrix.md) retain the unverified portions
+of every composite case.
 
 ## Status vocabulary
 
 - `SELECTED`: a normative scope/policy decision, not an observed implementation.
 - `OBSERVED-COMPONENT`: a specific existing component was exercised at a named revision;
   it says nothing about an untested composition or deployment.
+- `OBSERVED-LOCAL`: actual Stage 2 code was exercised offline within the stated scope;
+  it is not live-source, future-operation or deployment evidence.
 - `SOURCE-CONFIRMED`: source/format fact checked against the named code.
 - `UNVERIFIED`: behavioral premise awaiting the specified evidence.
 - `UNSET`: a required external input has not been supplied/verified.
@@ -60,10 +64,12 @@ immediately after Stage 2, with basic characterization sooner if resources exist
 
 **Premise:** a selected backend's exact conditional replacement commits the whole
 record durably, and lost/failed replies can be reconciled by loading it.
-**Kind/status:** OBSERVED-COMPONENT for existing SQLite, UNVERIFIED for new lifecycle
-records and any other deployment backend.
-**Evidence now:** actual #18 `SQLiteSyncStore` source and the four focused existing-
-component tests in [critic.md](stage-1-contract/critic.md); no new lifecycle codec tested.
+**Kind/status:** OBSERVED-LOCAL for Stage 2 creation records in real SQLite; UNVERIFIED
+for later transitions, power-loss behavior and any other deployment backend.
+**Evidence now:** test_24 at `1425fd7` exercises exact CAS, actual process exits before/
+after commit, successful commit followed by cleanup error, reopen and unchanged retry.
+It also refuses missing/schema-less existing-only stores. The earlier #18 component
+receipts remain in [critic.md](stage-1-contract/critic.md).
 **Falsifier:** mismatched expected text writes, partial state appears after restart,
 or a acknowledged durable transition disappears under the stated storage guarantees.
 **Cheapest earlier check:** real SQLite process exits before/after actual commit and
@@ -77,10 +83,12 @@ INV-01, INV-09. **Waste if false:** revise storage boundary before delivery/cont
 
 **Premise:** immutable input recognition and saved boundaries preserve one run;
 absence/pruning cannot turn an unknown retry into new intent.
-**Kind/status:** OBSERVED-COMPONENT for existing #18 date freezing; UNVERIFIED for the
-new start API. New/retry mode is a selected contract mechanism, not shipped behavior.
-**Evidence now:** actual `test_relative_enrollment_freezes_once` and initialization-
-conflict check passed at e9b5154; these do not supply lifecycle generation/command scope.
+**Kind/status:** OBSERVED-LOCAL for internal Stage 2 start/retry/status; saved query use
+against real Telegram remains UNVERIFIED at Gate A.
+**Evidence now:** test_24 at `1425fd7` preserves dates and identity across reopen, lost
+reply and a forbidden retry clock; changed requests conflict and unknown retries refuse.
+Successor/pruned recognition uses explicitly seeded terminal snapshots. It does not
+prove the later completion/control transitions that will produce those snapshots.
 **Falsifier:** retry observes a new clock, accepts changed settings, silently resets
 missing known state or creates from an unrecognized recovery request.
 **Cheapest earlier check:** Stage 2 start/reopen with actual storage and forbidden clock
@@ -167,8 +175,9 @@ before then, actual accounting observed at Gate A/B and full lifecycle wait at G
 
 **Premise:** creation mode, expected predecessor, prepare cursor/control context and
 accepted command/receipt scope prevent old calls from acquiring new effects.
-**Kind/status:** selected design; UNVERIFIED for new runtime. The two critic counterexamples
-are reasoning evidence for requiring the mechanism, not tests of its implementation.
+**Kind/status:** OBSERVED-LOCAL for creation identity, predecessor and bounded recognition
+at `1425fd7`; prepare/ack/control/recovery ordering remains UNVERIFIED. The two Stage 1
+critic counterexamples motivated the mechanism; test_24 supplies only creation evidence.
 **Falsifier:** delayed prepare reads after an already-accepted cursor/control change;
 old resume overrides pause; unknown start creates; wrong-run receipt advances progress.
 **Cheapest earlier check:** current/future-state operation-order cases with actual
@@ -214,7 +223,8 @@ records completeness and drift. **Coverage:** C40–C42; INV-01, INV-04, INV-11.
 
 **Premise:** new runtime APIs keep daily/window state and batch v1 unchanged, and local
 status/control/replay/ack do not become Telegram health observations.
-**Kind/status:** SOURCE-CONFIRMED for current boundaries; UNVERIFIED for future integration.
+**Kind/status:** OBSERVED-LOCAL for Stage 2 namespace refusal, local error isolation and
+the supported offline regressions at `1425fd7`; public/live integration remains UNVERIFIED.
 **Falsifier:** legacy inputs/state change behavior, wrong-kind state is accepted, local
 error emits a Telegram verdict, or offline operation clears a source health failure.
 **Cheapest earlier check:** supported dev offline regression suite now; repeat affected
@@ -233,7 +243,7 @@ Stage 7; local checks as changed, integration Gate D.
 | Existing closed interval, independent complete ID/date oracle and source/view metadata | UNSET | Maintainer + implementer | Gate A |
 | Existing media fixture and independent hashes for advertised download mode | UNSET | Maintainer + implementer | A/B |
 | Source request allowance, external harness spacing and test budget path | UNSET | Maintainer + implementer | Gate A |
-| Actual state backend/integration base containing #18 foundations | UNSET for runtime work | Maintainer + implementer | Stage 2/Gate A |
+| Actual state backend/integration base containing #18 foundations | DONE locally: real SQLite, feature-only merge `5d0789e`; selected live store path remains UNSET | Maintainer + implementer | Stage 2/Gate A |
 | Durable test receiver and declared commit/ack point | UNSET | Implementer/integrator | Gate B |
 | Operational receiver, worker ownership and clock assumptions | UNSET | Integrator | Gate D/adoption |
 

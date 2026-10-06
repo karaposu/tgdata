@@ -1,14 +1,16 @@
 ---
 model: gpt-6-astra
 effort: max
-status: specification-only
+status: gate-a-blocked
 ---
 # Read-only live validation specification
 
 This specifies Gates A–D for the [contract](contract.md) and
-[case matrix](acceptance-matrix.md). **All gates are UNRUN.** Stage 1 writes this
-procedure; it does not create the executable harness, access an account, select a
-group, seed messages or claim runtime verification.
+[case matrix](acceptance-matrix.md). **All gates are UNRUN; Gate A is BLOCKED on actual
+inputs.** Stage 1 wrote the procedure. Stage 2 now supplies [live_probe.py](live_probe.py)
+and [usage](stage-2-state/probe-usage.md), exercised only with offline/synthetic transport.
+No real account/config has been accessed and no source traffic has occurred. The
+[Gate A report](validation/gate-a.md) records the missing inputs and scoped local evidence.
 
 The user chose **an existing group, using read-only tests**. Every live source action
 must be a bounded read of that selected group's already-visible history. No messages,
@@ -22,7 +24,7 @@ Record these in the gate report before running. `UNSET` is not a default or appr
 
 | Input | Required meaning | Current value |
 |---|---|---|
-| Code revision / package import path | Exact tested code, including #18 foundations for Gate A | UNSET for runtime gate |
+| Code revision / package import path | Exact tested code, including #18 foundations for Gate A | Stage 2 product `1425fd7`; record actual checkout and tool commit on live execution |
 | SDK | Actual installed Telethon version | Required: 1.45.0 |
 | Account/session/config label | Caller-selected already-authenticated test context; never publish secrets | UNSET |
 | Canonical group ID | Specific existing group accessible to that account | UNSET |
@@ -78,8 +80,8 @@ preservation of it; it does not independently prove the source selection was com
 
 ## 3. Harness boundaries and observations
 
-Stage 2 builds an opt-in `live_probe.py` or equivalent test driver in this issue's work
-folder. It must require explicit live mode and the selected account/group/fixture;
+Stage 2 supplies the opt-in `live_probe.py` in this issue's work folder. It requires
+explicit live mode and the selected account/group/fixture;
 importing it or running default offline checks must not connect. It must use the actual
 library/Telethon paths, not a fake provider presenting the desired Telegram behavior.
 

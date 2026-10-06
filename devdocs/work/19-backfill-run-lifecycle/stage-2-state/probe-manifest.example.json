@@ -1,0 +1,47 @@
+{
+  "schema": "tgdata.backfill-probe",
+  "version": 1,
+  "run": {
+    "collection_id": "gate-a-history",
+    "chat_id": "-1001234567890",
+    "generation": "1",
+    "run_id": "replace-with-the-retained-creation-id"
+  },
+  "start_request": {
+    "collection_id": "gate-a-history",
+    "chat_id": "-1001234567890",
+    "run_id": "replace-with-the-retained-creation-id",
+    "destination_id": "gate-a-diagnostic",
+    "pause_seconds": 240.0,
+    "expected_predecessor": null,
+    "origin": "fresh",
+    "after_id": "0",
+    "media_mode": "references",
+    "batch_size": 200,
+    "window_input": {
+      "kind": "explicit",
+      "start_date": "2026-09-01T00:00:00.000000Z",
+      "end_date": "2026-10-01T00:00:00.000000Z"
+    }
+  },
+  "window": {
+    "start_date": "2026-09-01T00:00:00.000000Z",
+    "end_date": "2026-10-01T00:00:00.000000Z"
+  },
+  "expected_account_id": "REPLACE_WITH_SELECTED_ACCOUNT_ID",
+  "oracle": {
+    "method": "independent_export",
+    "reference": "UNSET: name the independent complete existing-history source",
+    "captured_at": "2026-10-07T00:00:00.000000Z",
+    "complete": false,
+    "messages": []
+  },
+  "limits": {
+    "max_rpc_requests": 100,
+    "max_history_requests": 10,
+    "max_requested_slots": 1000,
+    "max_media_bytes": 0,
+    "timeout_seconds": 300,
+    "spacing_seconds": 5
+  }
+}

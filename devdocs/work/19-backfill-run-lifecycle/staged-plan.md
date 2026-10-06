@@ -1,6 +1,6 @@
 ---
 status: draft
-revision: 3
+revision: 4
 model: gpt-6-astra
 effort: max
 ---
@@ -52,9 +52,23 @@ Independent complete enumeration is required for a bounded source-selection orac
 missing critical cases or source drift remain blocked/inconclusive. No source writes,
 group joins or membership changes are part of this test scope.
 
-Stage 1 is a document implementation on #19's dev-based branch. #18's runtime has
-not been merged/imported here. Its integrated/authorized base is required before
-Stage 2 coding. Preserve the mandatory A/B/C/D gate order below.
+At the Stage 1 checkpoint this dev-based branch did not contain #18's runtime.
+The Stage 2 handoff below records its later feature-only integration. Preserve the
+mandatory A/B/C/D gate order below.
+
+## Stage 2 implementation handoff — revision 4
+
+The user selected Stage 2 via task-impl. Its [folded plan](stage-2-state/step_by_step_impl_plan.md),
+[implementation](stage-2-state/implementation.md) and [verification](stage-2-state/verification.md)
+record the build. #18 prerequisites through `e9b5154` were merged only into this feature
+branch by `5d0789e`; product code/tests/public docs are committed in `1425fd7`.
+
+Steps 2.1–2.4 and the opt-in instrument are built and verified offline. Start/status
+are internal direct-module operations; later transitions remain unimplemented. Two
+selected Stage 2 critique remedies add existing-only SQLite reopening and upward
+microsecond rounding of minimum durations, without changing the chosen policy.
+Gate A is BLOCKED/unrun for actual fixture/account/oracle/allowance inputs. Stage 3
+and all subsequent stages remain pending. Local passes do not pass a live gate.
 
 ## What is the task
 
@@ -107,7 +121,8 @@ The following conditions attach to their named gates:
   A local durable receiver can exercise the library contract before this.
 - **What must happen:** implementation is requested and the repository's preparation,
   plan critique and fold checkpoints are completed. **Who:** maintainer and implementing
-  session. **Blocks:** production-code execution of Stages 2–8. **Status:** OPEN.
+  session. **Blocks:** production-code execution of each selected stage. **Status:** DONE
+  for Stage 2; OPEN for later stages, subject first to the mandatory live gates.
 - **What must happen:** merge check, fresh PR critique and explicit merge go-ahead.
   **Who:** implementing/reviewing session and maintainer. **Blocks:** merging after
   Stage 8. **Status:** OPEN. Nothing in this plan performs those actions now.
@@ -349,8 +364,9 @@ Canonical chat identity, collection scope, caller-owned acceptance, contribution
 
 ### Proposed changes
 
-Implementation entry requires a base containing the accepted #18 daily/window
-prerequisites; this Stage 1 branch from dev does not contain them.
+Implementation entry required the #18 daily/window prerequisites. They are available
+on this feature branch through merge `5d0789e`; their separate dev review/merge remains
+outside this stage. The changes below are built at `1425fd7` with scoped local evidence.
 
 **2.1 — Add the strict lifecycle record and codec.** Store immutable intent and frozen
 dates, declared origin, run/generation identity, acknowledged progress, pending
@@ -901,8 +917,8 @@ normal-return-means-done behavior.
 
 ## Plan completion and next handoff
 
-This overall document remains a staged runtime plan, refined by the Stage 1 contract
-work. The imported revision 2 was published in issue #19; this branch records the
-explicit Stage 1 refinements and read-only user choice. Actual Stage 1 completion and
-test results belong to stage-1-contract/implementation.md and verification.md once
-written. Stages 2–8 and Gates A–D remain pending. No live result is implied here.
+This overall document remains a staged runtime plan. Stage 1 established the contract;
+Stage 2 built and locally verified the persistence foundation and live instrument.
+Their separate implementation/verification reports preserve each checkpoint's evidence.
+Next is [Gate A](validation/gate-a.md), currently BLOCKED/unrun. Stages 3–8 and Gates
+B–D remain pending. No live result or protected-branch merge is implied here.

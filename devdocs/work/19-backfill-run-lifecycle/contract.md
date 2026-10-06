@@ -1,20 +1,23 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-1-specification
+status: contract-with-stage-2-foundation
 contract_version: 1
 ---
 # Planned backfill run contract
 
-This specifies future behavior for [issue #19](https://github.com/karaposu/tgdata/issues/19).
-The lifecycle API is **not implemented**. Stage 1 produces this contract; later stages
-implement it and must pass the prescribed gates. Method/type sketches below are not
-imports or runnable examples for the current package.
+This specifies the full behavior for [issue #19](https://github.com/karaposu/tgdata/issues/19).
+Stage 2 implements the internal start/retry/status foundation and strict saved state
+at `1425fd7`; see [available usage](../../../docs/backfill_state.md). The remaining
+operations and public TgData facade are not implemented. Method/type sketches below
+describe the contract, not current imports. Gate A remains BLOCKED/unrun; Stage 3
+cannot start until its live evidence passes.
 
 The [source record](stage-1-contract/source-input.md), [assumptions](assumptions.md),
 [acceptance matrix](acceptance-matrix.md) and [live-validation specification](live-validation.md)
 state the evidence and limits. dev baseline is `45bab71`; daily/fixed-window
-prerequisites are separately on #18 at `e9b5154`. Telethon 1.45.0 is the only target.
+prerequisites from #18 at `e9b5154` are now integrated on this feature branch by
+`5d0789e`, with no dev merge approval implied. Telethon 1.45.0 is the only target.
 
 ## 1. Ownership and scope
 

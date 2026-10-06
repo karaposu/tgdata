@@ -1,15 +1,35 @@
 ---
 model: gpt-6-astra
 effort: max
-status: specification-only
+status: stage-2-partial-local-evidence
 ---
 # Backfill acceptance and failure matrix
 
-This is the test specification for [contract.md](contract.md), not executed lifecycle tests. All 44 cases are **UNRUN** for the new lifecycle. Existing component probes have separate receipts in the Stage 1 critic/verification and do not change these statuses.
+This is the test specification for [contract.md](contract.md). Stage 2 now has scoped
+local evidence at `1425fd7`, listed below and in [verification](stage-2-state/verification.md).
+A case still marked UNRUN has not completed its full listed composition; that does
+not discard its partial local observations. No live case or gate has passed.
 
 C01–C22 preserve the final inquiry's 22 histories in their original order. C23–C44 add operation, storage, live-oracle and selected-critique boundaries. Gate A foundation tests can use the existing reader with the Stage 2 record; they do not claim that Stage 3 preparation already exists. Cases spanning multiple stages are repeated at their first full composition.
 
 LIVE means actual Telegram via Telethon 1.45.0; INJECTED means an identified local interruption/order/fault around real source/store/receiver paths; LOCAL means no server behavior is inferred. No Telegram source writes are allowed.
+
+## Stage 2 evidence scope — 2026-10-07
+
+| Cases | Actual observation | Still unverified |
+|---|---|---|
+| C01 | Real SQLite commit/cleanup failure and process exits before/after commit; exact retry and forbidden-clock date preservation | Saved query against live source at A |
+| C02, C04, C37 | Changed-input conflict, pruned/unknown retry refusal and affirmative first-use creation | No live claim; C04 history is seeded valid terminal state |
+| C03 | Successor/predecessor generation and bounded retention from valid seeded terminal snapshots | Actual completion/control transitions; live composition |
+| C05 | Missing file/row, schema-less/corrupt state and backend errors refuse; existing-only open cannot bootstrap | Recovery operation and later public integration |
+| C12 | Imported origin, including maximum supported ID, creates no acceptance or exhaustion | Live tail/end/completion semantics |
+| C33, C34 | Internal start/status remain local; sanitization, namespace isolation and existing offline regressions pass | Later operations, public facade and live attribution/integration |
+| C40–C42 | Probe preflight refuses unqualified input; real SDK page/send guards and comparison exercised with synthetic transport | Independent existing-history oracle and every actual source observation |
+| C43, C44 | Strict nested codec/input/counter checks and unchanged-state refusal through internal start/status | Later transition operations and valid saved query's live use |
+
+No prepare, acknowledgment, completion, pacing admission, control or recovery operation
+is covered by a seeded snapshot. All other cases remain unrun. [Gate A](validation/gate-a.md)
+is BLOCKED on actual inputs. The probe's individual MATCH cannot automatically pass it.
 
 ## C01 — Start reply lost
 
@@ -27,7 +47,7 @@ LIVE means actual Telegram via Telethon 1.45.0; INJECTED means an identified loc
 **Forbidden outcome:** Reinterpreting the earlier command.
 **Operations:** OP-START. **Requirements:** INV-01 INV-05.
 **Evidence / earliest check:** LOCAL; Stage 2 / Gate A.
-**Status:** UNRUN.
+**Status:** LOCAL PASS at `1425fd7` for internal OP-START; no gate PASS implied.
 
 ## C03 — Deliberate identical new job
 
@@ -45,7 +65,7 @@ LIVE means actual Telegram via Telethon 1.45.0; INJECTED means an identified loc
 **Forbidden outcome:** Treating nonrecognition as evidence of first use.
 **Operations:** OP-START OP-STATUS. **Requirements:** INV-01 INV-05 INV-10.
 **Evidence / earliest check:** LOCAL; Stage 2 / Gate A.
-**Status:** UNRUN.
+**Status:** LOCAL PASS at `1425fd7` from seeded terminal history; producing that history via later operations remains unrun.
 
 ## C05 — Known state unavailable
 
@@ -342,7 +362,7 @@ LIVE means actual Telegram via Telethon 1.45.0; INJECTED means an identified loc
 **Forbidden outcome:** Inferring new intent from absence or hiding total-history loss.
 **Operations:** OP-START OP-STATUS. **Requirements:** INV-01 INV-05 INV-09.
 **Evidence / earliest check:** LOCAL real backend; Stage 2 / Gate A.
-**Status:** UNRUN.
+**Status:** LOCAL PASS at `1425fd7` for internal start/status and real SQLite; no gate PASS implied.
 
 ## C38 — Intentional retry after settled failure
 
