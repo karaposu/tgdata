@@ -93,8 +93,9 @@ Later execution conditions, preserved rather than treated as planning uncertaint
   sources separately and does not import code or merge it.
 - Live account/session, accessible group, independent expected-message fixture, read
   limits and receiver acceptance must be established before their corresponding gates.
-  The requested fixture preference may arrive asynchronously. Unanswered details are
+  The user selected an existing group and read-only tests. Unanswered details are
   `UNSET` in the specification, not fabricated approvals or a reason to stop Stage 1.
+  Source writes, membership changes and creating fixtures in Telegram are excluded.
 - Gates A/B/C/D must actually pass before their dependent stages. No synthetic-only
   result or unavailable live environment waives that requirement.
 

@@ -46,7 +46,11 @@ never bootstraps silently; caller-owned archive/scheduler/receiver acceptance.
 The user subsequently required live validation between stage pairs. Expected results
 must precede tests; failures/inconclusive evidence stop dependent work. This is part
 of the contract, not an optional future check. Actual account/group/fixture selection
-is still a later execution input; a text preference was requested asynchronously.
+is still a later execution input. The user's asynchronous answer selected:
+**"An existing group, using read-only tests."** No messages/media setup, group joining,
+membership changes or other source writes are part of the live-test scope. Establish
+the expected fixture from existing visible history independently of the reader under
+test. Missing cases stay unverified; do not manufacture a source fixture.
 
 ## Baselines and preservation
 
