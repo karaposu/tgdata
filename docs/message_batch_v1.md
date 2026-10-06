@@ -1,10 +1,15 @@
 # Message batch wire format, version 1
 
 `await tg.get_message_batch(group_id, *, after_id=0, limit=200,
-download_media_to=None)` returns an immutable `tgdata.MessageBatch`. It reads
+download_media_to=None, start_date=None, end_date=None)` returns an immutable `tgdata.MessageBatch`. It reads
 visible group/channel messages oldest first, strictly after `after_id`. This
 additive API produces a portable snapshot for storage and delivery. Existing
 DataFrame, CSV, JSON export and media-by-ID methods keep their contracts.
+
+Optional timezone-aware `start_date` and `end_date` constrain message dates to
+`start_date <= date < end_date`, intersecting the ID cursor. Supply both or neither.
+See [Fixed historical windows](fixed_windows.md) for accepted inputs and efficient
+initial positioning. The query dates are not fields in the batch v1 wire format.
 
 The implementation and offline suite target **Telethon 1.45.0**. The wire
 version is independent of the tgdata package version.
@@ -73,7 +78,8 @@ integer precision.
 - `limit`: exactly the requested number of records completed. It does not
   assert that another message exists; no extra history request is made to find
   out. A batch with this reason cannot be empty.
-- `end`: the SDK iterator ended before the requested count. This describes
+- `end`: the SDK iterator ended or the explicit date window's end was reached
+  before the requested count. This describes
   the account's current visible history, not completeness of Telegram's archive.
   The maximum representable input cursor also returns an empty `end` batch
   without making a history request.

@@ -13,6 +13,10 @@ from .connection_engine import AuthRequiredError, ProxyConfigError
 from .discovery_engine import DiscoveryInterrupted
 from .message_batch import MessageBatch, BatchFormatError
 from .batch_files import BatchStorageError
+from .sync_store import (
+    SQLiteSyncStore, SyncStatus, SyncError, SyncConfigurationError,
+    SyncNotInitializedError, SyncConflictError, SyncStorageError,
+)
 from .read_budget import (
     ReadBudget, ReadBudgetStatus, ReadBudgetError, ReadBudgetExceeded,
     ReadBudgetConfigError, ReadBudgetStorageError, UnsupportedBudgetRequest,
@@ -56,6 +60,13 @@ __all__ = [
     "MessageBatch",
     "BatchFormatError",
     "BatchStorageError",
+    "SQLiteSyncStore",
+    "SyncStatus",
+    "SyncError",
+    "SyncConfigurationError",
+    "SyncNotInitializedError",
+    "SyncConflictError",
+    "SyncStorageError",
     "ReadBudget",
     "ReadBudgetStatus",
     "ReadBudgetError",

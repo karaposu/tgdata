@@ -172,6 +172,36 @@ Socket connections are blocked. Scripted transport supplies Telegram replies;
 the actual SDK iterator, downloader, budget guard and batch implementation run.
 This does not establish live server behavior or a deployed receiver's guarantees.
 
+### 15. **test_22_daily_continuation.py**
+
+Tests durable daily continuation (`python -m tgdata.smoke_tests.test_22_daily_continuation`),
+offline on Telethon **1.45.0**, with real SQLite, process exits and synthetic transport:
+- explicit enrollment, immutable status, initial-position protection and exact group binding
+- pending batches survive restart, replay without a client, and advance only on acknowledgment
+- repeated/stale acknowledgments, storage conflicts, invalid/corrupt/missing state and schema
+- real read-budget prefixes, original read errors, failed prefix persistence and cancellation
+- enforced request overlap, source/mode mismatch and local operations without false health recovery
+- actual downloaded media replay from another root and missing/corrupt/symlink refusal
+- actual process termination before/after acknowledgment commit, lost receiver replies,
+  SQLite cleanup precedence and an offline destination example
+
+The example receiver demonstrates transactional duplicate handling; it does not verify
+the deployed ScrapeOps destination. No Telegram sockets or real account configs are used.
+
+### 16. **test_23_fixed_windows.py**
+
+Tests fixed historical windows (`python -m tgdata.smoke_tests.test_23_fixed_windows`),
+offline on Telethon **1.45.0** with the actual SDK, budget adapter and SQLite:
+- UTC normalization, inclusive start/exclusive end, date seek and message-ID resume
+- shared timestamps across pages/batches, full excluded pages, fractional boundaries
+- media filtering, empty/end/limit results, real budget prefixes and read failures
+- relative dates frozen across restart, repeat/conflicting initialization, uncertain commits
+- exact pending replay and process exits during acknowledgment, independent daily/history stores
+- unchanged v1 daily records and rejection of corrupt windows or out-of-window pending data
+
+Synthetic transport supplies server replies; sockets are blocked and no real config
+or Telegram account is used. No live server-selection or deployed receiver claim.
+
 ### Custom Test Scripts:
 - **my_test.py** - Custom test script for specific scenarios
 
