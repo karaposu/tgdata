@@ -1,6 +1,6 @@
 ---
 status: draft
-revision: 2
+revision: 3
 model: gpt-6-astra
 effort: max
 ---
@@ -27,9 +27,34 @@ revision, not the formal critic/fold revision or a claim that any gate has passe
 
 **Published issue:** [#19 — Add durable backfill runs with staged live Telegram validation](https://github.com/karaposu/tgdata/issues/19).
 The issue carries this staged plan and its four gates as a focused follow-up within
-#18. This local source remains uncommitted; no formal implementation checkpoint is
-completed by publication. When formal work begins, task-specific artifacts belong
-in #19's work folder, with this #18 draft retained as their source.
+#18. The original revision 2 source in #18 remains an uncommitted draft; this #19
+working copy is checkpointed with its Stage 1 records. Publication alone completes
+no formal implementation checkpoint. Task-specific artifacts now belong in this
+#19 work folder, with the original #18 draft retained as their source.
+
+## Stage 1 contract handoff — revision 3
+
+The user selected Stage 1 only via task-impl, then selected an existing group with
+read-only tests. The [contract](contract.md), [assumptions](assumptions.md),
+[acceptance matrix](acceptance-matrix.md) and [live specification](live-validation.md)
+are the Stage 1 deliverables. Their local pipeline is recorded in
+[stage-1-contract/](stage-1-contract/step_by_step_impl_plan.md).
+No later implementation or gate is marked complete by this handoff.
+
+Two selected critic mitigations refine the future operation contract:
+- Explicit new submission versus retry for starting a run. Unknown retry cannot
+  create, and fresh/successor intent requires affirmative predecessor context.
+- Preparation carries expected accepted position and control revision. A stale call
+  cannot silently become permission for another read after ack or pause/resume.
+
+Read-only existing history replaces the earlier dedicated/seedable-fixture preference.
+Independent complete enumeration is required for a bounded source-selection oracle;
+missing critical cases or source drift remain blocked/inconclusive. No source writes,
+group joins or membership changes are part of this test scope.
+
+Stage 1 is a document implementation on #19's dev-based branch. #18's runtime has
+not been merged/imported here. Its integrated/authorized base is required before
+Stage 2 coding. Preserve the mandatory A/B/C/D gate order below.
 
 ## What is the task
 
@@ -160,9 +185,9 @@ Use three complementary forms of evidence at each gate:
   reliably reproduced from the live service, including clock faults and malformed
   state. Synthetic transport remains useful but is identified as synthetic.
 
-Use a dedicated or explicitly selected readable test group. Agree its fixture and
-read limits before the first gate; setting up messages/media or changing membership
-is a separate action if needed. Do not generate high request volume to provoke server
+Use the user-selected existing group with read-only tests. Establish its independent
+existing-history oracle and read limits before the first gate. Do not set up messages/
+media in Telegram, join groups or change membership to manufacture a fixture. Do not generate high request volume to provoke server
 restrictions: a small locally configured read allowance exercises budget exhaustion.
 Before built-in run pacing exists, the harness enforces spacing externally. Extensive
 testing means coverage of distinct assumptions and failure boundaries, not large pulls.
@@ -289,7 +314,7 @@ code. If review exposes a missing fundamental premise, revise the plan before co
 
 Prepare the assumption record and opt-in live-probe specification here. Identify the
 test account/group and expected fixture independently of the implementation. During
-Stage 2, build the small executable harness needed for Gate A; do not wait for the
+Stage 2, build the small executable harness specified in live-validation.md for Gate A; do not wait for the
 Stage 7 public backfill facade. Plan assertions for frozen dates, canonical identity,
 timestamp boundaries, ID pagination, source exhaustion, media and visible-history
 limits, alongside the local atomicity tests. Connect every critical assumption to
@@ -324,6 +349,9 @@ Canonical chat identity, collection scope, caller-owned acceptance, contribution
 
 ### Proposed changes
 
+Implementation entry requires a base containing the accepted #18 daily/window
+prerequisites; this Stage 1 branch from dev does not contain them.
+
 **2.1 — Add the strict lifecycle record and codec.** Store immutable intent and frozen
 dates, declared origin, run/generation identity, acknowledged progress, pending
 observation, exhaustion evidence, active attempt, pacing evidence, control revision,
@@ -338,7 +366,10 @@ and controls must commit with their corresponding state transitions. Never hold 
 SQLite transaction across a network await. A store returning failure or throwing after
 commit leaves an uncertain outcome to reconcile; it does not prove rollback.
 
-**2.3 — Implement creation, reopening and status without Telegram.** Matching retried
+**2.3 — Implement creation, reopening and status without Telegram.** Distinguish
+explicit new submission from retry; unknown retry never creates, and fresh/successor
+creation requires affirmative predecessor context [folded: Stage 1 critic Risk 1,
+robust]. Matching retried
 creation returns its existing intent and original dates. Reusing its identity with
 changed settings conflicts. A new identical job needs new intent and the expected
 predecessor context. Reopening a known run requires it to exist; absence, corruption
@@ -415,7 +446,9 @@ is recovered without unexplained omissions, and retry/restart preserves intent.
 
 ### Proposed changes
 
-**3.1 — Admit and record one source attempt.** Before invoking Telegram, durably
+**3.1 — Admit and record one source attempt.** Require the run plus expected accepted
+position and control revision; stale contexts refuse before source work [folded:
+Stage 1 critic Risk 2, robust]. Before invoking Telegram, durably
 record the attempt identity, run, cursor and policy used. Refuse overlapping
 preparation and unresolved attempts. A failed/uncertain admission write must not
 send a source request. Call `get_message_batch` directly with the frozen query;
@@ -635,7 +668,9 @@ visible. No lock spans the network wait and prevents control commands from recor
 
 **6.4 — Add explicit abandonment and successor creation.** Permit retirement of owed
 work only as an explicit operation that ends its delivery guarantee; record an
-incomplete/abandoned outcome and never advance the accepted cursor as if delivered.
+incomplete/abandoned delivery outcome and never advance the accepted cursor as if
+delivered. Preserve an already accepted terminal cancellation while marking its
+remaining delivery abandoned; do not rewrite it as a different terminal outcome.
 A successor waits for old activity to stop and owed work to settle or be explicitly
 abandoned. Bounded historical receipts can later become unknown and harmlessly refuse;
 active pending identity cannot expire. Blob garbage collection and automatic timeout
@@ -677,7 +712,9 @@ fits the attempt boundary; controls and delayed results preserve accepted intent
 2. Exhaust a small test allowance through ordinary bounded reads using the actual
    budget adapter. Verify no disallowed message request is sent, a completed prefix
    remains deliverable, and source eligibility is rechecked after an explicit increase
-   to the dedicated test allowance while preserving its charges. Test rolling-expiry
+   to the dedicated test allowance while preserving its charges and keeping any
+   existing authoritative account ledger in force. A test cap may only restrict
+   further, never bypass a shared account's budget. Test rolling-expiry
    boundaries deterministically; label a policy increase separately from natural expiry.
    Do not provoke Telegram flood limits or bans to manufacture a test result.
 3. Kill the test worker after possible source activity but before durable settlement.
@@ -864,12 +901,8 @@ normal-return-means-done behavior.
 
 ## Plan completion and next handoff
 
-This document remains an **uncommitted draft**. At the user's request, the complete
-staged plan was published as issue #19 and its body was read back to verify all eight
-stages, 28 implementation steps and four validation gates. No product code, tests or
-previously completed inquiry changed, and no Telegram connection was made.
-
-The next implementation handoff starts at Stage 1's contract, test-fixture preparation
-and formal preparation/critique checkpoints, using this plan and issue #19 as input.
-All four validation gates remain unrun. Source history and required behavior live in
-the linked finding; implementation choices first proposed here remain open to critique.
+This overall document remains a staged runtime plan, refined by the Stage 1 contract
+work. The imported revision 2 was published in issue #19; this branch records the
+explicit Stage 1 refinements and read-only user choice. Actual Stage 1 completion and
+test results belong to stage-1-contract/implementation.md and verification.md once
+written. Stages 2–8 and Gates A–D remain pending. No live result is implied here.
