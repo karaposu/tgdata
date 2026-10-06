@@ -10,7 +10,7 @@ A → Su → S → D → I → C → R (always)
 - [x] Articulate-Simple
 - [x] Surfacing
 - [x] Sensemaking
-- [ ] Decomposition
+- [x] Decomposition
 - [ ] Innovation
 - [ ] Critique
 - [ ] Routelister
@@ -22,9 +22,10 @@ A → Su → S → D → I → C → R (always)
 ACTIVE
 
 ## Next Discipline
-Decomposition
+Innovation
 
 ## History
 - 2026-10-06_12-59: Created after Articulate-Simple. One item DC, four considered articulations, HIGH-PROCEED, no flags. tools/structural_check.sh is unavailable; manual check passes all 7 required bundle groups and the 5 articulation-preservation checks. Next: Surfacing.
 - 2026-10-06_13-01: Surfacing complete: all four variants covered by 20 existing items; 9 core, 8 sub, 2 side, 1 umbrella. PROCEED. Checker unavailable; manual trace/summary/telemetry and variant-coverage checks pass (6/6). Next: Sensemaking.
 - 2026-10-06_13-05: Sensemaking complete: SV1–SV6, 5 anchor types, 8 perspectives and 7 ambiguity resolutions; no meaning blocker. Three existing-component probes passed on Telethon 1.45.0. Checker unavailable; manual phase/anchor/counter/variant/telemetry checks pass (6/6). Next: Decomposition.
+- 2026-10-06_13-08: Decomposition complete: 4 questions, 9 explicit interfaces, dependency order; all 7 self-evaluation dimensions pass. Checker unavailable; manual coupling/boundary/question/interface/order/evaluation checks pass (6/6). Next: Innovation.
