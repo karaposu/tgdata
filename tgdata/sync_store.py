@@ -262,9 +262,12 @@ class SQLiteSyncStore:
     their own I/O while implementing the same load/compare_and_swap contract.
     Parent directories must exist. Use a separate store for each destination's
     logical collection; share the state and pending artifacts for a sequential move.
+    create=False opens known state without creating a missing file or schema.
     """
 
-    def __init__(self, path):
+    def __init__(self, path, *, create=True):
+        if type(create) is not bool:
+            raise SyncConfigurationError('create must be a boolean')
         try:
             if (path is None or isinstance(path, bool) or str(path) in ('', ':memory:')
                     or str(path).lower().startswith('file:')):
@@ -272,7 +275,9 @@ class SQLiteSyncStore:
             self.path = str(Path(path).expanduser().resolve())
         except (TypeError, ValueError, OSError, RuntimeError):
             raise SyncConfigurationError('SQLiteSyncStore requires a persistent filesystem path') from None
-        with self._transaction(initialize=True, write=True):
+        # Recovery must not recreate a lost database between an exists check and
+        # opening it. The default retains the original provisioning behavior.
+        with self._transaction(initialize=create, write=create):
             pass
 
     @staticmethod

@@ -237,3 +237,16 @@ Each test will show:
 - Test-specific output (message counts, group names, etc.)
 
 Tests are designed to be informative, showing real data from your Telegram account while validating the library's functionality.
+
+### Test 24: backfill state (Stage 2, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_24_backfill_state
+```
+
+Exercises immutable creation/reference/status values, strict lifecycle snapshots,
+SQLite start/reopen/CAS and actual before/after-commit process exits. Unknown retries,
+stale predecessors, malformed state, uncertain results, local-error privacy and legacy
+state isolation are covered. Existing-only store reopening and conservative sub-microsecond
+pacing representation are included. No Telegram/config/login is used. Snapshot fixtures
+for later lifecycle facts do not test their unimplemented transitions; no live gate passes.
