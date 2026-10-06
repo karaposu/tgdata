@@ -3,444 +3,539 @@ model: gpt-6-astra
 effort: max
 ---
 
-# #7 — implementation plan, revision 2
+# #7 — implementation plan, revision 3
 
-**PR review status:** REJECTED in round1; see pr-critic.md (2 Medium, 1 Low).
-This remains the blueprint of the reviewed implementation. CONTRIBUTING §7.4
-requires revision3 re-planning before fixes; do not resume implementation from
-this revision’s old folded marker.
+**Status:** re-planned after PR16 round1 rejection; awaiting a new critic-d pass
+and fold to revision4. This document has no carried-forward critic-fold marker.
+No runtime correction is implemented by writing it.
 
-**Critic folded:** 2026-10-05 — 3 mitigations (4 steps changed, 0 added).
-Selected: Risk1 robust, Risk2 robust, Risk3 robust. No re-critique after folding.
+Inputs: desc.md; pr-critic.md at87d15b4 (Medium1, Medium2, Low3); the original
+traverse finding; current code at35aead1; replan-context.md; replan-r3-probes.py.
+The rejected blueprint and first plan critic are preserved in archive/round-1/.
+The warm context/probe checkpoint is4daf873,2026-10-06. Model: Astra/max, verified
+again from current turn metadata. PR16 remains the single draft PR for this work.
 
 ### What is the task
 
-Add ephemeral group lookup, actual read-access checking and explicitly admitted
-joining to TgData. Callers receive portable observations instead of interpreting
-SDK entities. A separate durable account allowance bounds actual join attempts,
-while existing connection/session/proxy/read-budget controls remain authoritative.
+Deliver the three ephemeral group operations with truthful results, original
+remote failure categories, durable account join admission and coherent account
+health. The first implementation got the request/result and allowance boundaries
+largely right, but inferred local failure from an SDK exception type and attached
+fresh identity only to event presentation. Revision3 makes request failure origin
+and observation ownership explicit across the complete paths, including summaries,
+recovery, nested requests and concurrent calls. It also makes overlap a condition
+of the regression test rather than an assumption about gather.
 
 ### Huge Hard Blockers
 
 #### Planning Blockers
 
-None identified. The real 1.45.0 probe at `probe_group_seams.py` resolves the
-wrapped-reply, retry seam, fresh identity and health-recovery premises. There is
-no inherited OPEN blocker in desc.md. Caller-set limits and a rolling 24-hour
-shared-file ledger are the documented working design, not an inferred safe rate.
+None identified. The two Medium mechanisms are reproduced, not unexplained.
+The selected-version constructor policy is tested in the actual SDK/factory MRO,
+and the account-ownership cases have concrete behavior specified below. No human-only
+product decision or unavailable premise prevents this plan. New ledger/scope code
+will need implementation tests; it is not represented as already implemented.
 
 #### Execution Blockers
 
-None for these implementation steps. Live acceptance requires designated accounts,
-groups and authorization and is excluded. PR/merge remains a later requested
-stage. Model/effort unavailable is a recorded §9 process limitation, not a runtime
-premise silently treated as verified.
+None for the planned offline implementation. A new plan critic and selected fold
+must precede runtime edits under CONTRIBUTING; this is the next pipeline gate.
+Live acceptance still requires designated accounts/groups and authorization and is
+outside these steps. Merging remains separately user-authorized after both reviews.
+The previously unavailable model/effort metadata has been verified, not waived.
 
 ### How this implementation moves toward desired state
 
-Define values and parsing first, then durable admission and its client-factory
-seam. Build resolution/read/join behavior on that foundation. Wire it to the
-facade and health with explicit evidence control. Test the public composition
-against real SDK dispatch and SQLite before documenting and committing delivery.
+Keep the working group-result, reference, session and allowance contracts. Replace
+one ambiguous resolution boundary with explicit RPC/result handling, and choose
+final-RPC-error propagation at client construction. Replace the health ledger's
+implicit single identity with an owner key carried from request evidence into
+storage and recovery. Derive event and summary identity from the same owner.
+Expose selection explicitly when this instance has evidence for several accounts.
+Verify the complete public paths, then update the same PR and repeat both gates.
+
+### Evidence settled before planning
+
+- pr-critic-probes.py reproduces six ServerError responses becoming
+  GroupReferenceError for a known numeric group and ValueError for joining.
+- replan-r3-probes.py changes only the real SDK constructor input
+  raise_last_call_error=True. Authorization, self identity, numeric resolution,
+  handle resolution, history and joining all propagate the identical final
+  ServerError object after six actual SDK attempts. Six failed history/join
+  attempts retain six respective charges. No desired exception was fabricated
+  by replacing the SDK loop or the facade.
+- The public health-check success path already sends GetUsers(InputUserSelf)
+  through get_me. The fresh reply contains222 while cached/snapshot ID remains111.
+  The fix can consume existing evidence without adding a successful-path RPC.
+- Genuine overlap with two pending requests and reversed completions preserves
+  event identity today. The original immediate-future fixture runs sequentially.
+
+### Scope and retained contracts
+
+Retain lookup_group, check_group_access, join_group and get_join_budget; their
+portable values and statuses; strict handles/invites/known numeric peers; token-free
+labels; one owned ephemeral client; no prompts/current_group mutation; explicit
+paid/webview/pending outcomes; no mandatory post-ack network work; local enrichment
+and warning containment. GroupInfo, message-batch schema and discovery non-joining
+behavior remain unchanged.
+
+Keep both durable budget schemas and existing units/atomicity. Every join send
+still has fresh account verification and a committed claim, with no uncertainty
+refund. Health identity bindings are diagnostic evidence only: they never replace
+the fresh lookup required for budget admission. No cross-instance health registry,
+new backend, login workflow, worker or live group test is introduced.
+
+Additional traverse is not needed for these corrections within the already-traversed
+client/health/admission design: the reproduced errors refine an existing request
+policy and ownership relation. A cross-instance registry or different product
+workflow would exceed this decision and require reassessing §5.
 
 ### High-Level Summary
 
 | Step | Description | Expected Output |
 |---|---|---|
-| 1 | Group references, errors and portable values | `group_operations.py` contract and strict parser |
-| 2 | Durable join attempt allowance | `join_budget.py`, explicit policies and atomic claims |
-| 3 | Actual-send admission and factory wiring | `join_client.py`, optional `join_budget` on every factory client |
-| 4 | Group engine and health-aware facade | lookup/check/join/status methods, one ephemeral client each |
-| 5 | Offline behavioral coverage | `test_20_group_operations.py` on real SDK/SQLite |
-| 6 | Public documentation and SDK minimum | README contracts/examples, smoke-test index and dependency declarations |
-| 7 | Verify and commit | supported offline suites, code/docs and work-note commits |
+| 1 | Preserve remote failure origin through owned requests | Explicit SDK error policy and typed numeric resolution |
+| 2 | Give stored health state an immutable owner | Per-instance owner-keyed ledgers and owner-local recovery |
+| 3 | Carry verified identity through actual request scopes | Client binding, request evidence and exception provenance |
+| 4 | Select public health summaries without cached relabeling | Compatible single-account view plus explicit multi-account views |
+| 5 | Make error and concurrency regressions exercise real failures | Expanded test20 and focused health-ownership suite |
+| 6 | Document the complete result/error/health contract | Updated README and test inventory |
+| 7 | Verify, commit and prepare renewed gates | Supported offline checks and traceable commits on PR16 |
 
-## Step 1 — Define references and observations
+## Design commitments for the implementation
 
-[folded: Risk2, robust]
+### A — Failure origin is established at its source [PR Medium1]
+
+An absent local cache row is a reference error. An expected RPC reply that does
+not contain the requested entity is checked explicitly. An RPC exception remains
+an RPC exception, including after retries. A generic ValueError escaping a network
+helper is not sufficient evidence of bad input. Local diagnostic failures keep
+the existing implicit-context isolation; real explicit RPC causes remain intact.
+
+### B — One health owner means one state/recovery namespace [PR Medium2]
+
+HealthMonitor stays local to one TgData. Introduce a frozen internal Owner key:
+`verified(account_id)`, `legacy(captured_id_or_none)`, or `unverified`.
+Verified IDs are positive integers from a real self lookup. Legacy IDs are only
+captured display hints for existing unverified call paths; their kind prevents
+them from becoming the verified account with the same number. Explicit unknown
+identity on a new group call is unverified and never falls back to the primary cache.
+
+Move account verdict/ticks, restricted-method marker, waits/expiry/generations,
+group denials/ticks, event/wait counters and last-unclassified value into one
+Ledger per Owner. Capture the account envelope with its owner; snapshot rendering
+must not replace that user ID by a later _who lookup. Label/session decoration
+can fill previously unavailable configured metadata, never reassign the person.
+No migration of an old ledger to a newly discovered account is permitted.
+
+A call may observe several owners. Its answer ticks, handled waits and reported
+scopes are keyed by Owner, not a single global answered/account_id pair. Recovery
+requires the matching owner's later evidence and existing method/group rules.
+One owner's success cannot clear another's condition. Ancestor suppression uses
+(owner, scope) and only active ancestors belonging to the same monitor. Foreign
+or expired inherited task contexts cannot mutate the originating call's evidence.
+
+For waits, retain the generation of the actual handled/slept wait. Completion
+can clear that generation only, not a later wait another call recorded for the
+same request type. Expiry still filters waiting snapshots without inventing an
+account-recovery event. Unverified account/group conditions are not assigned to
+or recovered by a newly verified different namespace. They stay visibly unverified.
+Legacy-only behavior remains within its own ledger; it never clears verified state.
+An initially unverified self-lookup wait can end when that exact request frame
+succeeds under the same credential/DC binding: clear its recorded wait generation
+and emit its recovery under the original unverified owner. This narrow request
+completion is not evidence for clearing an unverified account/group condition.
+A changed credential or different verified owner cannot clear the earlier wait.
+
+### C — A request's identity is distinct from the last identity seen [PR Medium2]
+
+Introduce a task-owned request-evidence scope around the existing _AnswerEvidence
+client wrapper. A frame belongs to the current active public call, records its
+client identity evidence and has its own owner. Initialize it from that client’s
+valid verified binding;
+otherwise use the call’s captured legacy hint only for a legacy-mode call, or
+unverified ownership for an explicitly unknown/new-group call. Never seed a new
+client’s frame from the last verified owner used by another client.
+Nested frames restore their parent; frames from a different client do not
+overwrite the parent's owner. Concurrent
+calls never use one mutable facade-wide current account.
+
+A client may retain a verified diagnostic binding `(dc_id, auth_key.key_id,
+account_id)` derived from its actual self reply. Compare the current session/DC/key
+before using it; absent/changed key or DC means no verified binding. Never use
+_self_id as authority. This binding is in-memory per client, not a new session-store
+field or a cross-client registry. A genuine self reply can update this binding
+even outside a public health call; that creates no event or ledger observation.
+Never expose key IDs or client objects in events,
+exceptions, snapshots or logs. Budget verification remains fresh on every attempt.
+
+Recognize the exact GetUsers(InputUserSelf) request and a single valid User reply
+at the shared wrapper, including supported invocation wrappers. Bind the fresh
+account before recording that reply's answer. An invalid/ambiguous self reply must
+not credit the previous account with recovery evidence. Do not derive identity
+from ordinary user lookups, arbitrary metadata or cached get_me(input_peer=True).
+Compound requests without an unambiguous identity observation remain conservative.
+
+Fresh join/read identity helpers also pass the client when noting an account,
+so an enclosing history/join request gets the owner verified immediately before
+admission. A response/failure is attributed to its request frame, not whatever
+another task most recently stored on that client. If credential/DC state changed
+without matching verification within the frame, ownership becomes unverified.
+
+When an RPC error escapes, retain private owner provenance tied to this monitor
+and public-call token. Preserve a matching inner RPC origin through wrapper errors;
+an unrelated old error tag cannot bind a later call. The tag contains only immutable
+owner/call identifiers, not a client/session/credential object. Attribute writes
+are best effort; use a bounded current-call fallback or unverified ownership if
+provenance cannot be retained. Never guess another verified owner on failure.
+Close/clear request-frame client references and reset ContextVar tokens in finally.
+All new observation hooks are nonthrowing and leave the operation's return/error intact.
+
+### D — Summary selection is explicit and deterministic [PR Medium2]
+
+Add keyword-only `account_id=None` to TgData.health_check and selection arguments
+to HealthMonitor.snapshot. This argument selects stored observations; it is not
+identity proof and never causes a connection to a different account. Validate an
+explicit positive integer before network work, with local context-free ValueError.
+
+TgData.health_check opens its health call with explicitly unknown ownership
+before inspecting clients, so a primary-cache hint cannot label an unverified
+pool/client failure. A valid per-client verified binding may still supply identity.
+ConnectionEngine.health_check already calls _confirm_logged_in/get_me for live
+clients. Return the verified ID from that existing successful self read and expose
+it as primary_account_id and per-pool account_id metadata. _confirm_logged_in
+retains the returned self object long enough to validate/note its ID with that
+client; an identity note alone is not a synthetic answer tick. Preserve connection
+healthy/error semantics and the existing auth-reason fallback when get_me returns
+None; inability to establish an ID remains None, never cached _self_id. The shared
+request scope attributes each client's evidence independently in that loop.
+
+Health snapshots add `identity_source`, `accounts`, `unverified` and `totals`:
+
+- accounts maps stringified verified account IDs to nonrecursive snapshots with
+  the existing account/verdict/wait/group/counter fields for exactly that owner.
+- unverified is an ordered list of nonrecursive legacy/unverified snapshots with
+  captured ownership hints and explicit source labels; none is silently promoted.
+- totals contains instance-wide event/wait counts. A selected flat view's existing
+  counters belong only to its owner, not a mixture of different accounts.
+
+The existing flat fields are a compatibility view selected in this order:
+
+1. Explicit account_id selects its verified ledger. If unseen, return that ID with
+   identity_source=unobserved and no verdict/observation claims; do not create a
+   verified ledger merely because the caller requested it.
+2. Otherwise prefer the primary account freshly verified during this health_check.
+3. Otherwise select the sole verified account only if no active unverified condition
+   makes automatic selection ambiguous. Active here means a terminal account
+   verdict, a group denial or a nonexpired wait; historical counters and a last
+   unclassified error alone do not create an active condition.
+4. With no verified owners, a sole legacy/unverified ledger retains its flat view.
+   With no observations, retain the empty legacy view and mark its source honestly.
+5. Multiple verified owners, conflicting unverified conditions, or multiple possible
+   fallback owners yield identity_source=ambiguous and no selected user ID/verdict.
+   Flat observation fields/counters are None in this new case; the complete details
+   remain under accounts/unverified/totals. Do not return fabricated empty healthy
+   state or pick the last writer. The caller can select a verified account explicitly.
+
+The account envelope's existing label/session/user_id keys remain. Events add an
+identity_source marker but retain the existing verdict vocabulary and fields.
+Known single-account snapshots keep their existing flat values. Ambiguous/unobserved
+views are new explicit cases, documented rather than hidden behind a stale ID.
+
+## Step 1 — Define the owned request error boundary
+
+[answers: PR Medium1]
 
 ### Proposed changes
 
-Create `tgdata/group_operations.py`, initially values/parsing. Runtime Python3.7
-compatible dataclasses/typing; no new dependency. Export through `tgdata/__init__.py`
-after wiring. Keep existing `GroupInfo` untouched.
+In connection_engine.py, add optional keyword-only raise_last_call_error=False
+through _new_client and ephemeral_client. When True, pass the documented SDK
+constructor argument before connect/auth; when False, omit it to retain existing
+factory/stub/default behavior. Do not mutate a shared standing client's retry policy.
+TgData._group_operation and get_join_budget request True. Retain their zero flood
+threshold after authorization and all current admission/retry behavior.
 
-- Local `GroupOperationError` base with `__suppress_context__=True` and subclasses
-  `GroupReferenceError` and `GroupResponseError`. No user input or vendor payload
-  in their message. Ordinary RPC/auth/transport errors retain identity/traceback.
-- Internal frozen `_Target(kind, value, label)`; invite value excluded from repr.
-  Handles: bare or @ handle and optional http(s) Telegram short link; validate
-  4–32 ASCII letter/number/underscore characters, starting with a letter. Hosts
-  exactly t.me or telegram.me (optional www). Invite forms `/+HASH` and
-  `/joinchat/HASH`, hash ASCII letters/numbers/underscore/hyphen, 1–256 chars.
-  Preserve hash case; lower handles. Reject URL userinfo/ports/query/fragment,
-  unrelated/deep paths, phone strings, empty/bool/other object values. Allow
-  nonzero signed integer IDs (including numeric strings) for lookup/access;
-  positive IDs need existing unambiguous group cache resolution. Join accepts
-  handles/invites only. Never interpolate original input in local errors.
-  Catch native URL parsing/validation errors at this boundary and translate to
-  sanitized GroupReferenceError from None; do not retain incidental RPC context.
-  Label is handle, int ID or `invite:` plus first16 hex SHA256(hash); no raw hash.
-- Frozen `GroupMetadata`: id and peer_id optional int, title optional str,
-  username optional str (without @), kind `group|megagroup|channel|unknown`,
-  participants_count optional int. peer_id uses Telethon's marked peer convention.
-- Frozen `GroupLookup`: target safe label, group GroupMetadata, member optional
-  bool, request_needed optional bool, requires_payment bool, preview_expires_at
-  optional datetime. `to_dict()` emits only JSON-ready values/UTC ISO timestamps.
-- Frozen `GroupAccess`: target, group optional GroupMetadata, member optional
-  bool, status `readable|denied|unprobed`, reason optional safe error name;
-  `readable` convenience property returns True/False/None respectively.
-- Frozen `GroupJoin`: target, group optional GroupMetadata, status
-  `joined|already_joined|requested|interaction_required|payment_required`,
-  bot_id/query_id optional ints. `member` property True only for joined/already,
-  otherwise None (request pending does not prove nonmembership forever).
-  to_dict for all results; no raw TL objects, access hashes, invite links or users.
+In group_operations.py, replace get_entity inside numeric _resolve with a helper
+that accepts the already-validated InputPeerChat/InputPeerChannel and calls the
+corresponding GetChats/GetChannels request directly. Await outside any blanket
+ValueError/TypeError conversion. Verify Chats/ChatsSlice and exact marked peer match:
+empty expected entity list is a clear unresolved-reference result; nonempty mismatched
+or ambiguous/malformed replies raise GroupResponseError. Only local cache/input
+conversions and explicit unavailable/deactivated/migrated-target decisions become
+GroupReferenceError. All RPC/transport errors retain their object and category.
+Keep handle/invite validation, proof and post-ack outcome mapping intact.
 
 ### Output
 
-Documented importable value shapes and deterministic parser; legacy model unchanged.
+Every new group/status operation preserves the final retry RPC; numeric resolution
+cannot reinterpret an arbitrary SDK failure as bad input.
 
 ### Safe in nature
 
-True — isolated new contract, no existing call behavior changed.
+False — changes new operation error contracts and a shared factory signature; defaults stay compatible.
 
 ### Peripheral concepts
 
-GroupInfo, marked peer IDs, datetime serialization, private invite diagnostics.
+SDK constructor/retry loop, auth-reason handling, reference cache, request admission, explicit causes.
+
+### Hardness Lvl
+
+4
+
+## Step 2 — Refactor health storage and recovery around ownership
+
+[answers: PR Medium2]
+
+### Proposed changes
+
+In health.py, implement Owner/Ledger and the owner-keyed call evidence described
+in B. Keep classification/register/normalise_group vocabulary and callback/logging
+behavior. Route _record, _event, _sleep, _recover and counters through the chosen
+owner, with immutable captured account identity. Keep independent group-recovery
+control. Do not relabel old state or use unverified evidence to recover verified
+state. Add wait-generation matching and owner-scoped parent reporting.
+
+Keep state growth proportional to distinct account/hint owners and conditions,
+not one persistent ledger per request. Transient request/call evidence is released
+at scope end. Observation failures must not mask a business error or successful
+join; new hooks contain their own diagnostics failures as well.
+
+### Output
+
+Events, conditions and recoveries share one explicit ownership model inside each
+TgData, with no cross-account clearing or mutable snapshot relabeling.
+
+### Safe in nature
+
+False — shared health state is used by old and new features; legacy tests and new ownership cases are required.
+
+### Peripheral concepts
+
+ContextVar ownership, temporal recovery ticks, wait generations, nested callbacks, unverified legacy evidence.
+
+### Hardness Lvl
+
+5
+
+## Step 3 — Bind request evidence to real self identity
+
+[answers: PR Medium2]
+
+### Proposed changes
+
+Extend _AnswerEvidence in connection_engine.py to enter/leave the request frame
+from C, recognize genuine self replies before generic answer credit, maintain the
+per-client diagnostic binding and tag escaping RPC origins. Use a bounded supported
+wrapper inspection; never infer fresh identity from a batch with ambiguous results.
+
+Update join_client.py and budget_client.py fresh identity notes to include the
+client. They still make their existing fresh self query and validate its result;
+no diagnostic cache is consulted for quota authority. Preserve no-await claim-to-send.
+
+Connect frame ownership to handled errors and the silent-sleep filter. Unowned
+background tasks produce unverified observations without mutating a parent call's
+answer/reported sets. Errors handled after the SDK frame exits retain their captured
+origin; explicit wrapper causes work without following unrelated implicit context.
+
+### Output
+
+The owner that generated a reply/failure remains its owner through nested requests,
+retries, callback reentry and delayed handling. Stale primary caches are irrelevant
+to verified account attribution.
+
+### Safe in nature
+
+False — changes the shared observation wrapper; observer failure and credential-lifetime tests are required.
+
+### Peripheral concepts
+
+GetUsers(InputUserSelf), auth-key/DC lifetime, nested SDK calls, per-task frames, exception provenance, budget helpers.
+
+### Hardness Lvl
+
+5
+
+## Step 4 — Expose coherent health summaries
+
+[answers: PR Medium2]
+
+### Proposed changes
+
+Implement D in health.py, ConnectionEngine.health_check/_confirm_logged_in and
+TgData.health_check. Consume the existing self read's verified ID, record primary/
+pool evidence independently and choose the flat snapshot by explicit/fresh primary/
+sole owner rules. Do not add an extra success-path get_me request.
+
+Add deterministic accounts/unverified/totals views and ambiguous/unobserved cases.
+Selection does not mutate state, fabricate authority or suppress the existing
+connection errors. Keep the old single-owner envelope and other public group
+results unchanged. Keep health observation non-enforcing: identity uncertainty
+changes diagnostic attribution/selection, not permission to read or join.
+
+### Output
+
+check_group_access followed by public health_check reports the same account's
+condition; multiple/unknown owners are inspectable without false attribution.
+
+### Safe in nature
+
+False — public diagnostic data gains fields and explicit ambiguity cases; callers and docs need an exact contract.
+
+### Peripheral concepts
+
+Connection/pool health, self identity, flat snapshot compatibility, account selection, JSON-ready output.
+
+### Hardness Lvl
+
+4
+
+## Step 5 — Put the rejected cases and true overlap in regression suites
+
+[answers: PR Medium1, Medium2, Low3]
+
+### Proposed changes
+
+Expand test_20_group_operations.py and add test_21_health_ownership.py. Keep real
+SDK dispatch, factory mixins, real sessions/SQLite and socket blocking. Supply
+transport replies/faults only; do not replace error selection, ownership or snapshots
+with stand-ins returning the expected behavior. Use explicit pending futures/barriers
+and assert both tasks are live before reversed completion.
+
+Required outcome matrix:
+1. Exhaust temporary errors through authorization, identity, numeric/handle/invite
+   resolution, history, join and budget status. Preserve the final RPC object/type;
+   no GroupReferenceError for remote failure. Verify charge counts and cleanup.
+2. Real missing cache/empty entity/nonempty mismatch/malformed reply cases remain
+   distinct. A native error from a network-side hook is not automatically bad input.
+3. Strict SDK policy reaches the ephemeral client before authorization. Legacy
+   defaults, factory proxy/device/session options and budget independence remain.
+4. Reproduce cached111/fresh222 through check_group_access and public health_check;
+   event and selected snapshot agree and the existing self request is used once.
+5. No-primary/sole-account, explicit selector, unseen selector, invalid selector,
+   multiple accounts and active unverified conditions follow D exactly.
+6. Two different accounts access the same group/request type with real overlap.
+   Success forB cannot clearA's account restriction, group denial or wait. Also
+   test reversed order, same-account recovery and a newer wait generation.
+7. One call changes observed identity between preflight and admission. Its replies,
+   charges and errors stay with their actual verified owners; old-owner state is
+   not relabeled or cleared by new-owner answers.
+8. Primary/pool checks for different verified accounts remain isolated. Self lookup
+   credits the new owner before recovery. Cached input_peer=True and ordinary
+   user lookups provide no new identity evidence.
+9. Nested identity lookup during a guarded request, handled RPC after frame exit,
+   wrapper causes, callback reentry and unowned/expired inherited tasks preserve
+   ownership. Error tags from another monitor/call cannot redirect this call.
+10. Credential/DC changes invalidate the diagnostic binding; no authentication
+    material or client object appears in public metadata or exception tags.
+11. Legacy-only event/snapshot behavior remains in the legacy namespace; old
+    unverified facts never become a verified account's conditions. Unknown events
+    stay marked unverified and are not hidden or assigned a guessed identity.
+12. Snapshot views are JSON-ready, deterministic and independent copies. Counts
+    belong to their owner; totals are instance-wide. Selector reads do not create
+    authority or conditions. State is not allocated persistently per request.
+13. Hook/attribute/logging failures do not replace the original operation outcome;
+    post-ack cache/warning containment, privacy, session persistence and cancellation
+    remain covered by the existing meaningful tests.
+
+Adapt test16's internal-state setup only where the deliberate owner/summary model
+requires it; preserve its classification, delivery, temporal-recovery and public
+single-owner assertions. Do not weaken a failed expectation to conceal a defect.
+The first PR's standalone probes remain historical reproductions; equivalent
+correct-behavior cases become product tests rather than only archive evidence.
+
+### Output
+
+Regression protection includes both reproduced Mediums and enforced concurrency,
+with a concrete compatibility matrix for the new health ownership contract.
+
+### Safe in nature
+
+True — offline synthetic tests only; no account login or live group mutation.
+
+### Peripheral concepts
+
+Real SDK retry semantics, scheduling barriers, exception identity, per-owner ledger histories, public health API.
+
+### Hardness Lvl
+
+5
+
+## Step 6 — Document the resulting public contract
+
+### Proposed changes
+
+Update README group/error and account-health sections with original final RPC
+propagation, the explicit health_check(account_id=...) selector, identity_source,
+accounts/unverified/totals, flat-view selection order and ambiguity examples.
+Explain that legacy hints are unverified and that a diagnostic identity cache
+never replaces budget admission's fresh identity query. Document retained unknown
+observations without claiming they belong to the selected account.
+
+Update smoke_tests/README.md for test21 and the stronger test20 cases. Keep the
+Telethon1.45 target and existing dependency bounds. No schema change to batches,
+sessions or either budget is required. Note added primary/pool identity fields.
+
+### Output
+
+Callers can tell a remote retry failure from invalid input and select the health
+observations belonging to their account without relying on cached labels.
+
+### Safe in nature
+
+True — documentation only; this step does not change dependencies.
+
+### Peripheral concepts
+
+Public health consumers, result portability, legacy compatibility, offline/live evidence limits.
+
+### Hardness Lvl
+
+2
+
+## Step 7 — Verify and commit the coherent revision
+
+### Proposed changes
+
+Compile, run targeted test20/test21/test16, then the supported offline suites12–21
+on .venv Python/Telethon1.45.0. Use the confirmed nonexistent config for12/13 to
+skip the three live checks. Check Python3.7 grammar for changed runtime files and
+public import/API compatibility. Check diffs and staging, excluding duncan and
+unrelated guide edits. Report any small corrections transparently; a structural
+failure returns to the plan instead of receiving a hidden patch.
+
+Commit runtime/tests/public docs together and work records separately; keep warming/
+work-folder artifacts on the archive branch. Update PR16 and issue7 with exact
+results and the revised contract. Repeat merge-check and a fresh diff-plus-plan
+PR critique on the final revision. A second rejected PR gate invokes §7.4's stop
+and return to description/traverse, rather than another local re-plan loop.
+Merge remains pending the user's go-ahead; this plan authorizes no live joins.
+
+### Output
+
+An implemented, verified revision with current blueprints and review evidence,
+ready for the renewed two-gate merge process on the existing PR.
+
+### Safe in nature
+
+False — validation publishes code/records; final merge is separately gated.
+
+### Peripheral concepts
+
+Commit isolation, PR review rounds, archive-only documents, target SDK, supported offline suite.
 
 ### Hardness Lvl
 
 3
 
-## Step 2 — Persist the join allowance
-
-### Proposed changes
-
-Create `tgdata/join_budget.py`. Public `JoinBudget(path, *, clock=time.time)`,
-`configure(account_id, daily_limit)` and `status(account_id)`. Require persistent
-file, positive integer account_id and nonnegative integer daily_limit, bools
-rejected, SQLite signed63-bit range. No warmup, refund, credentials or targets.
-All policy updates preserve claims. No policy is an explicit configuration error.
-
-Use separate `tgdata_join_meta` (version1), `tgdata_join_accounts` (account ID,
-limit,last_clock), `tgdata_join_attempts` (integer primary key, account, admitted_at)
-and indexed account/time. Can coexist with ReadBudget in the same file without
-schema/unit interference. Short-lived connections, BEGIN IMMEDIATE, 5s busy timeout,
-no transaction crosses an await. Last observed clock per account never decreases;
-prune attempts at `admitted_at <= now-86400`. Validate finite UTC clock values.
-
-Private `_claim(account_id)` atomically reads current policy/usage and inserts
-exactly one charge only if remaining>0. Refusal commits clock/pruning before
-raising. Return no refund token. Cancellation/error after claim leaves it charged.
-Status contains account_id, limit, used, remaining, observed_at, next_available_at,
-retry_after, and window_seconds in to_dict. For reduced policy below usage,
-next_available_at is the expiry needed to get below the cap, not simply oldest.
-Zero limit has no timed availability. Claim counts use SQL COUNT, not message sums.
-
-Errors `JoinBudgetError`, `JoinBudgetConfigError`, `JoinBudgetStorageError`,
-`JoinBudgetExceeded` (status/account_id/retry_after), `UnsupportedJoinRequest`.
-Local bases suppress unrelated implicit RPC context. Sanitize native path/SQLite
-failures to local errors naming error type only. Cleanup cannot replace a primary
-failure; no DB close/rollback error may become a Telegram verdict.
-
-### Output
-
-A restart-safe, concurrent local join allowance with portable status and failure types.
-
-### Safe in nature
-
-True — separate tables and code; no changes to existing read-budget schema.
-
-### Peripheral concepts
-
-SQLite locking, clock rollback, policy replacement, local error provenance.
-
-### Hardness Lvl
-
-4
-
-## Step 3 — Guard actual join sends
-
-[folded: Risk3, robust]
-
-### Proposed changes
-
-Create `tgdata/join_client.py` with JoinClientMixin and a sender adapter. Supported
-mutations are exactly channels.JoinChannelRequest and messages.ImportChatInviteRequest.
-Recognize the existing budget client's known invocation-wrapper set explicitly;
-recursively unwrap at most8 levels. Unknown wrappers containing join-bearing query,
-unknown request families returning ChatInviteJoinResult and any batch containing
-a join fail before send. Non-join requests pass unchanged. No read-policy refactor.
-
-When `_tgdata_join_budget` is set, wrap sender in `_call`, before actual SDK retry
-loop execution. The adapter's `send` returns a coroutine. For each call, fresh
-`get_me(input_peer=False)` yields account ID; if None, GetState surfaces actual
-auth verdict then local error if still no identity. Validate ID. Synchronously
-claim, then underlying sender.send with no intervening await. Each retry pays;
-no catch/refund on transport error, cancellation, already-member or pending reply.
-Forward sender attributes and ordered unchanged. Resolving a request costs no join.
-Fresh join identity helper calls nonthrowing health.note_account after validating
-the ID. Add the same note in BudgetClientMixin._read_budget_account; it updates
-only an opted-in current owned health call, leaving old caller semantics intact.
-
-Add `join_budget=None` at end of both `TgData.__init__` and
-`ConnectionEngine.__init__`. Keep/store/pass it and assign on every `_new_client`.
-MRO: answer evidence, JoinClientMixin, BudgetClientMixin, per-call flood threshold,
-base client. With no join budget, existing raw-client behavior remains unchanged;
-new public join_group still requires policy. This is a library admission boundary,
-not a security sandbox around arbitrary external Telegram clients.
-
-### Output
-
-Every configured factory client, including ephemeral/pool clients, guards SDK join
-retries under fresh account authority, independently of message-read admission.
-
-### Safe in nature
-
-False — changes shared client composition; old suites and guard interaction required.
-
-### Peripheral concepts
-
-SDK _call retries/cached waits/resolution, invoke wrappers, fresh self cache, read guard.
-
-### Hardness Lvl
-
-5
-
-## Step 4 — Resolve, check and join through one ephemeral client
-
-[folded: Risk1, robust] [folded: Risk2, robust] [folded: Risk3, robust]
-
-### Proposed changes
-
-Finish `GroupEngine(connection_engine)` in group_operations.py and expose
-`TgData.lookup_group(target)`, `check_group_access(target)`, `join_group(target)`.
-Each facade parses/validates before health context, then opens exactly one existing
-`ephemeral_client()`; no session(), no pool/current_group change, no start/login.
-Private helpers take the opened client; one public operation never calls another.
-Add `get_join_budget()` returning None when no JoinBudget object is supplied,
-and otherwise requiring an account policy and returning status from
-one ephemeral client and fresh account ID, analogous to get_read_budget semantics
-but use-and-close. Export values/ledger/errors from package __init__.
-
-Resolver:
-- Handle: ResolveUsernameRequest, require peer chat/channel and matching chats
-  entity; reject User/empty/deactivated/migrated basic-chat entities with local
-  reference error rather than silently selecting another group. No phone lookup.
-- Numeric: first require an exact marked row from
-  client.session.get_entity_rows_by_id, then use session.get_input_entity for
-  that peer (PeerChat conversion alone does not prove a cached row); translate missing/ambiguous ValueError/TypeError to GroupReferenceError
-  and native cache storage errors to sanitized GroupOperationError. Then get_entity
-  for that peer; require group/chat kind. Translate local conversion ValueError/
-  TypeError/KeyError without suppressing real RPC/network errors. Never walk all dialogs
-  implicitly or rely on a fallback request with a guessed access hash.
-- Invite: CheckChatInviteRequest; Already projects chat/memberTrue, Peek projects
-  chat/memberFalse/expiry, plain ChatInvite projects missing-ID metadata/memberFalse,
-  request_needed and subscription_pricing. Never import while resolving.
-- Full Chat/Channel membership is not left when complete/active; min or forbidden
-  entity membership remains None. Derive group type using megagroup/broadcast.
-  Banned/forbidden peer can still carry metadata but must not manufacture a read.
-
-Access: resolve then build input peer when possible, issue one logical raw
-GetHistoryRequest with limit1 through the existing client. SDK retries remain
-possible; the read budget applies to every actual send. Return readable only for a
-normal expected messages result. No peer yields unprobed with safe reason
-`NO_PEER`. Catch only outer Telegram RPC errors classified NO_ACCESS/group from resolver or
-history; health.report the original then return denied with optional metadata.
-All other errors propagate; preview already-member status does not skip read proof.
-For missing access_hash, return unprobed rather than falsely denied/readable.
-
-Join: require a JoinBudget before client creation; fresh ID plus budget.status
-requires policy even for existing membership. Resolve same client. Existing
-member returns already_joined without claim. Paid preview returns payment_required
-without send. Otherwise JoinChannelRequest for resolved Channel or
-ImportChatInviteRequest for invite. Explicit flood_sleep_threshold=0 for these
-new operation RPCs (authorization context itself retains existing default).
-Return joined for ChatInviteJoinResultOk; process available reply.updates entities
-locally and choose matching chat metadata if available (for invite use first
-valid chat only when unambiguous). Preserve preflight metadata when absent.
-[folded: Risk1, robust] Capture the acknowledged result before auxiliary work.
-Wrap optional nested caching and metadata projection in a narrow Exception handler;
-on failure log only the error type and return joined with preflight metadata.
-Do not emit Telegram health for local enrichment failure. Cancellation is not
-swallowed. No follow-up network request after acknowledgment. Catch UserAlreadyParticipant
-as already_joined and InviteRequestSent as requested; these admitted attempts
-remain charged. Map raw RPC message STARS_PAYMENT_REQUIRED to payment_required
-(the installed SDK has no generated error class). WebView becomes
-interaction_required with bot_id/query_id; no URL invention or user records.
-Unknown reply yields GroupResponseError, retained charge and no false success.
-
-Health: extend HealthMonitor.call with optional `recover_group=True`, captured on
-_Call. _recover's group branch alone honors it; default old behavior unchanged.
-New contexts use False; only after actual successful expected history response
-set that call's recover_group True. Health still reports original failures and
-waits/auth evidence. Safe parser label only, never raw invite. No logging raw
-result or request. Ephemeral cleanup behavior stays owned by existing context.
-
-[folded: Risk3, robust] HealthMonitor.call also accepts account_id with a private
-unset sentinel default. _Call holds it. New ephemeral calls opt in with None
-(unknown, never stale primary) before opening a client. After auth, fresh self
-lookup validates an ID and health.note_account assigns it on that owned current
-call. All three operations do this before group resolution; get_join_budget does
-likewise. The join/read fresh-ID helpers repeat the note before each admitted
-send. _event uses attributed call override when set, otherwise old _who behavior;
-snapshots and old methods retain defaults. No global client/identity mutation.
-Local numeric/parser/input-peer errors are translated at their own boundary so
-incidental RPC context cannot trigger denial or health. At the new facade boundary,
-non-RPC exceptions retain object/traceback and explicit cause but suppress implicit
-context from an unrelated caller handler. Set the exclusively owned ephemeral
-client flood threshold to zero after auth so nested SDK calls also honor this
-operation policy. Optional post-ack warning handlers cannot erase the result.
-
-### Output
-
-Usable public group methods and portable status, with truthful evidence and limits.
-
-### Safe in nature
-
-False — facade and shared health context change; defaults preserve existing methods.
-
-### Peripheral concepts
-
-GroupInfo, stored group cache, read budget, auth errors, health.report/note_account,
-task-local identity, cleanup/cancellation, post-ack local failure containment.
-
-### Hardness Lvl
-
-5
-
-## Step 5 — Exercise real offline behavior
-
-[folded: Risk1, robust] [folded: Risk2, robust] [folded: Risk3, robust]
-
-### Proposed changes
-
-Add `tgdata/smoke_tests/test_20_group_operations.py`, ordinary executable suite in
-the existing style. Block socket connects; temp config/session-store/SQLite only.
-Use real factory class + real SDK _call, scripted sender replies and stand-in
-connect/disconnect hooks; never replace the admission/projection behavior tested.
-Use real TL byte roundtrips where wrapper shape matters and spawned processes for
-ledger contention. Tests must cover these independent behavioral groups:
-
-1. Default factory compatibility and unchanged GroupInfo; no primary client used.
-2. Parser accepted handles/IDs/invite forms, case preservation and invalid inputs;
-   invalid input causes zero clients/network and sanitized exceptions.
-3. Handle/group/basic-chat/forbidden projections; reject user/missing peer results.
-4. Invite Preview/Already/Peek and expiry; lookup sends no join/history requests.
-5. Public readable nonmember and empty history; one logical limit1 read, per-send
-   admission on SDK retry, and budget settlement.
-6. Group denial during resolve/read returns denied and reports health once;
-   auth/wait/network/local quota failures remain errors.
-7. Peerless preview returns unprobed; unknown or absent access hash never fakes read.
-8. Handle/invite joins, preflight already member no send/charge, actual already
-   error still charged; approval request, wrapped Ok, WebView and payment outcomes.
-9. No post-ack enrichment; nested group cache processed; unknown reply stays charged.
-10. Missing policy/zero cap refuse before mutation; lowered cap preserves usage;
-    account isolation, expiry, clock rollback and correct next_available_at.
-11. Persistence/restart, same-file ReadBudget coexistence, corruption/read-only or
-    missing storage failure before send, sanitization and cleanup provenance.
-12. Concurrent processes compete for fixed number of attempts with no overspend.
-13. SDK retry consumes each send, exhaustion stops next send, cancellation/failed
-    reply stays charged, no transaction lock while awaiting remote response.
-14. Fresh self identity vs stale cache and changing fresh IDs; no charge on failed
-    identity or request resolution; wrappers and batches fail closed as specified.
-15. Factory controls inherited by every client and read/join budgets independent.
-16. Exact ephemeral create/connect/auth/disconnect on success, denied, error and
-    cancellation; no terminal prompt or persistent/current_group mutation.
-17. Health metadata/join do not recover group denial; read success does, waits and
-    account recovery retained; local errors inside RPC handlers do not fake events.
-18. Post-ack actual SQLiteSession cache-write failure retains joined/preflight
-    result and charge; auxiliary failure is not Telegram health.
-19. Native numeric/parser/conversion errors inside prior RPC handlers stay local.
-20. Ephemeral health attribution uses fresh identity despite stale primary;
-    concurrent calls and callback reentry stay isolated; pre-auth failure is unknown.
-21. JSON-ready value dictionaries/immutability; private tokens absent from result,
-    log and health fields; no saved message-sender rows caused by helper projection.
-
-### Output
-
-Reproducible offline evidence for public contract and dangerous composition seams.
-
-### Safe in nature
-
-True — test-only synthetic data, no Telegram mutation.
-
-### Peripheral concepts
-
-Real SDK scripted sender, multiprocessing SQLite, cancellation, health capture.
-
-### Hardness Lvl
-
-4
-
-## Step 6 — Document the caller contract and SDK minimum
-
-### Proposed changes
-
-Add README section with the three awaitable methods, result status examples,
-accepted references/ID-cache limits, optional fields, read-budget charge on access,
-JoinBudget configuration (caller-chosen example limit, not safety advice), status
-and quota exceptions. Explain 24-hour attempt unit, retries/failure retained,
-already-observed no-op, shared-file coordination, sync quick local storage,
-explicit external interaction requirements and offline verification bounds.
-Add test20 invocation and coverage in smoke_tests/README.md. Align setup.py and
-requirements.txt with the actual new type dependency: Telethon>=1.45.0,<2.0.
-No old-SDK compatibility work or live test execution.
-
-### Output
-
-A caller can configure and interpret the feature without reading SDK source.
-
-### Safe in nature
-
-False — documentation plus a dependency minimum increase; existing installations
-below Telethon1.45.0 must upgrade. This implements the user's selected SDK scope.
-
-### Peripheral concepts
-
-Authentication, existing read-budget usage, health events, smoke test commands,
-package dependency resolution and the selected SDK's result constructors.
-
-### Hardness Lvl
-
-2
-
-## Step 7 — Verify and commit
-
-### Proposed changes
-
-Compile package/tests; run new test20 and supported offline suites19,18,17,16,15,
-14,13,12 with .venv/bin/python on Telethon1.45.0. Run repository-wide offline
-checks if an aggregate exists; account-dependent tests00–11 remain explicitly
-skipped rather than attempting login/network. Inspect diff/check and no duncan.
-Only local nonarchitectural corrections during verification, enumerate each.
-
-Commit code/tests/public docs together; commit task-folder implementation and
-verification notes separately. Push branch and update issue #7 step5 honestly;
-keep steps6/7 unchecked. No merge/PR in this invocation. Record remaining live
-bounds and §9 model metadata limitation.
-
-### Output
-
-Tested committed implementation and honest issue/task records, ready for merge check.
-
-### Safe in nature
-
-False — publishes branch commits/issue progress; restricted to authorized feature.
-
-### Peripheral concepts
-
-Git staging isolation, CONTRIBUTING status, archive-only work notes.
-
-### Hardness Lvl
-
-2
-
-## Implementation record
-
-Steps1–7 completed on 2026-10-05; see implementation.md and verification.md.
-The exact-row cache check corrects a local SDK helper assumption without changing
-the planned known-peer contract. Native KeyError translation, facade incidental
-context isolation, owned-client flood threshold, warning-failure containment and
-the dependency minimum make the already-selected contracts explicit. No new
-architecture or extra feature was substituted; all corrections are recorded.
+## Why this replaces revision2
+
+Revision2 translated native exceptions after a network helper and added fresh
+identity at event formatting time. Both repairs stopped too late in their data
+flow. Revision3 chooses the request's failure policy before any request and keeps
+identity attached to stored facts and recovery evidence. The same owner then
+serves event delivery and summary selection. Its tests force the concurrency
+condition the contract claims to handle. These are one coherent boundary design,
+not independent patches applied after the rejected review.
+
+This revision is complete as a plan. Next: critic-d on this plan plus desc.md and
+the first PR review, then selected fold to revision4 before implementation.

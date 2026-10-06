@@ -13,11 +13,6 @@ effort: max
 > `devdocs/archaeology/` was left unchanged under CONTRIBUTING §4.1's retained
 > session / warming-by-reading provision.
 
-> Context refreshed at `35aead1` (2026-10-06), committed in `4daf873` —
-> arch-small-summary + arch-intro using retained source reads and current health/
-> lifecycle/factory/test re-reading. See replan-context.md. Revision3 is a re-plan
-> after the first PR rejection; runtime remains the reviewed implementation.
-
 ## Problem Statement
 
 Callers can discover groups and read messages, but have to assemble their own
@@ -67,10 +62,6 @@ limits requests across short-lived clients and process restarts.
    health behavior. Metadata/join outcomes do not clear history-access denial;
    successful access reads can. Health labels/results do not expose invite tokens.
    Local validation/storage errors cannot inherit unrelated Telegram health.
-   Fresh account identity owns stored health conditions and recoveries as well as
-   events; a later snapshot cannot relabel them from a stale primary cache. Separate
-   account observations remain separate, with explicit selection/ambiguity in the
-   health summary and visibly unverified legacy observations.
 9. Offline tests exercise real Telethon 1.45.0 dispatch/serialization and real
    SQLite transactions/concurrency, plus public lifecycle/failure paths. Existing
    supported offline regressions pass; any live skips are stated explicitly.
@@ -92,16 +83,6 @@ commits; merge requires the user's separate go-ahead.
 
 **Medium (P2).** It completes the group-operation prerequisite for worker #10
 and removes repeated consumer glue, without being a production outage.
-
-## Re-plan acceptance after PR round1
-
-Revision3 must preserve the final remote RPC error through SDK retry exhaustion,
-keep numeric input/cache errors distinct from network failure, and test both at
-the public API. Public health snapshots must agree with fresh event ownership,
-including stale cache, no-primary, account changes and overlapping calls. Regression
-scheduling must force both calls to be in flight before completing either one.
-The plan defines the optional health account selector and explicit multiple-owner
-views; no cross-instance registry or new backend is part of this correction.
 
 ## Known Blockers
 
