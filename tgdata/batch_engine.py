@@ -13,6 +13,7 @@ from .message_batch import (
     MIN_LONG, _identifier, _validate_record,
 )
 from .message_engine import GroupAccessError, MessageEngine
+from .history_window import _HistoryWindow, _utc
 
 
 def _integer(value, name, minimum, maximum):
@@ -146,10 +147,12 @@ class BatchEngine:
     def __init__(self, connection_engine):
         self.connection_engine = connection_engine
 
-    async def fetch_batch(self, group_id, *, after_id=0, limit=200, download_media_to=None):
+    async def fetch_batch(self, group_id, *, after_id=0, limit=200, download_media_to=None,
+                          start_date=None, end_date=None):
         group_id = _group_argument(group_id)
         after_id = _integer(after_id, 'after_id', 0, MAX_MESSAGE_ID)
         limit = _integer(limit, 'limit', 1, MAX_BATCH_MESSAGES)
+        window = _HistoryWindow.from_dates(start_date, end_date)
         media_directory = None
         if download_media_to is not None:
             if not isinstance(download_media_to, (str, os.PathLike)) or download_media_to == '':
@@ -158,7 +161,7 @@ class BatchEngine:
         mode = 'download' if media_directory is not None else 'references'
         chat_id = None
         records = []
-        last_id = after_id
+        scan_id = after_id
         try:
             async with self.connection_engine.session() as client:
                 try:
@@ -177,22 +180,43 @@ class BatchEngine:
                     # SDK's reverse iterator otherwise increments it past int32.
                     return MessageBatch._from_records(chat_id, after_id, records, mode, 'end')
 
-                async for message in client.iter_messages(entity, min_id=after_id, reverse=True, limit=limit):
-                    if tl_utils.get_peer_id(message.peer_id) != chat_id:
-                        raise BatchFormatError('message belongs to a different chat')
-                    record = _record(message, client)
-                    ident = _validate_record(record, 'references')
-                    if ident <= last_id:
-                        raise BatchFormatError('message IDs did not advance after the cursor')
-                    media = record['media']
-                    if media_directory is not None and media is not None and media['downloadable']:
-                        async def writer(output):
-                            return await client.download_media(message, file=output)
+                while len(records) < limit:
+                    remaining = limit - len(records)
+                    options = dict(min_id=scan_id, reverse=True, limit=remaining)
+                    if window is not None and scan_id == 0:
+                        options['offset_date'] = window.seek_date
+                    scanned = 0
+                    end_reached = False
+                    async for message in client.iter_messages(entity, **options):
+                        if tl_utils.get_peer_id(message.peer_id) != chat_id:
+                            raise BatchFormatError('message belongs to a different chat')
+                        ident = _integer(message.id, 'message.id', 1, MAX_MESSAGE_ID)
+                        if ident <= scan_id:
+                            raise BatchFormatError('message IDs did not advance after the cursor')
+                        scan_id = ident
+                        scanned += 1
+                        if window is not None:
+                            date = _utc(message.date, 'message.date', allow_naive=True)
+                            if date >= window.end_date:
+                                end_reached = True
+                                break
+                            if date < window.start_date:
+                                continue
+                        record = _record(message, client)
+                        _validate_record(record, 'references')
+                        media = record['media']
+                        if media_directory is not None and media is not None and media['downloadable']:
+                            async def writer(output):
+                                return await client.download_media(message, file=output)
 
-                        media['blob'] = await download_blob(media_directory, writer, expected_size=media['size'])
-                    _validate_record(record, mode)
-                    records.append(record)
-                    last_id = ident
+                            media['blob'] = await download_blob(media_directory, writer, expected_size=media['size'])
+                        _validate_record(record, mode)
+                        records.append(record)
+                    if end_reached or scanned < remaining or scan_id == MAX_MESSAGE_ID:
+                        break
+                    # A full page of excluded lower-bound messages is not the
+                    # end. Resume its scanned ID, without advancing delivered
+                    # progress past the last completely prepared record.
             reason = 'limit' if len(records) == limit else 'end'
             return MessageBatch._from_records(chat_id, after_id, records, mode, reason)
         except Exception as error:

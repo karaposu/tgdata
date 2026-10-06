@@ -248,14 +248,22 @@ class TgData:
         
     # ==================== Message Operations ====================
 
-    async def initialize_sync(self, chat_id, *, after_id, media_mode='references'):
+    async def initialize_sync(self, chat_id, *, after_id, media_mode='references',
+                              start_date=None, end_date=None, last_days=None):
         """Enroll a canonical negative chat ID at an explicit initial cursor.
 
         Zero starts at the oldest visible history. Matching repeated enrollment
         preserves current progress; a different initial cursor or mode raises.
         This only accesses the configured sync_store, never Telegram.
+        For a historical collection, supply timezone-aware start_date/end_date
+        or last_days (N*24 hours ending at first enrollment). Matching repeated
+        relative enrollment reuses the saved dates. Dates include start and
+        exclude end, intersecting after_id. A conflicting window raises; use
+        separate progress stores for daily and historical collections.
         """
-        return await self.sync_engine.initialize(chat_id, after_id=after_id, media_mode=media_mode)
+        return await self.sync_engine.initialize(
+            chat_id, after_id=after_id, media_mode=media_mode,
+            start_date=start_date, end_date=end_date, last_days=last_days)
 
     async def sync_group(self, chat_id, *, limit=200, download_media_to=None):
         """Prepare/replay one durable pending MessageBatch, or None if empty.
@@ -291,7 +299,8 @@ class TgData:
     @_reported('group_id')
     async def get_message_batch(self, group_id: Union[int, str], *,
                                 after_id: int = 0, limit: int = 200,
-                                download_media_to=None) -> MessageBatch:
+                                download_media_to=None,
+                                start_date=None, end_date=None) -> MessageBatch:
         """Read a bounded oldest-first raw snapshot after an exclusive ID.
 
         Returns a versioned MessageBatch with canonical JSON, a batch_id and
@@ -306,9 +315,14 @@ class TgData:
 
         group_id must name a group/channel explicitly; after_id is 0..2**31-1,
         limit is 1..10000. See docs/message_batch_v1.md for the exact wire contract.
+        Optional timezone-aware start_date/end_date constrain message dates to
+        [start_date, end_date). Supply both; the ID cursor still applies. Reads
+        outside the interval spend normal budget but do not download media.
         """
-        return await self.batch_engine.fetch_batch(
-            group_id, after_id=after_id, limit=limit, download_media_to=download_media_to)
+        options = dict(after_id=after_id, limit=limit, download_media_to=download_media_to)
+        if start_date is not None or end_date is not None:
+            options.update(start_date=start_date, end_date=end_date)
+        return await self.batch_engine.fetch_batch(group_id, **options)
     
     @_reported('group_id')
     async def get_messages(self,

@@ -188,6 +188,20 @@ offline on Telethon **1.45.0**, with real SQLite, process exits and synthetic tr
 The example receiver demonstrates transactional duplicate handling; it does not verify
 the deployed ScrapeOps destination. No Telegram sockets or real account configs are used.
 
+### 16. **test_23_fixed_windows.py**
+
+Tests fixed historical windows (`python -m tgdata.smoke_tests.test_23_fixed_windows`),
+offline on Telethon **1.45.0** with the actual SDK, budget adapter and SQLite:
+- UTC normalization, inclusive start/exclusive end, date seek and message-ID resume
+- shared timestamps across pages/batches, full excluded pages, fractional boundaries
+- media filtering, empty/end/limit results, real budget prefixes and read failures
+- relative dates frozen across restart, repeat/conflicting initialization, uncertain commits
+- exact pending replay and process exits during acknowledgment, independent daily/history stores
+- unchanged v1 daily records and rejection of corrupt windows or out-of-window pending data
+
+Synthetic transport supplies server replies; sockets are blocked and no real config
+or Telegram account is used. No live server-selection or deployed receiver claim.
+
 ### Custom Test Scripts:
 - **my_test.py** - Custom test script for specific scenarios
 

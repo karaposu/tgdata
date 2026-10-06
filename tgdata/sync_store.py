@@ -8,6 +8,7 @@ The text is opaque to the backend. Tgdata owns its validation and transitions.
 
 from contextlib import contextmanager
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 import json
 import logging
 import operator
@@ -17,6 +18,7 @@ import sqlite3
 from typing import Optional
 
 from .message_batch import MessageBatch, MAX_MESSAGE_ID, MIN_LONG
+from .history_window import _HistoryWindow, _encode_date, _decode_date
 
 
 logger = logging.getLogger(__name__)
@@ -121,9 +123,12 @@ class SyncStatus:
     pending_message_count: int
     pending_next_after_id: Optional[int]
     last_acked_batch_id: Optional[str]
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    last_days: Optional[int] = None
 
     def to_dict(self):
-        return {
+        value = {
             'chat_id': str(self.chat_id),
             'initial_after_id': str(self.initial_after_id),
             'after_id': str(self.after_id),
@@ -134,6 +139,10 @@ class SyncStatus:
                                       if self.pending_next_after_id is not None else None),
             'last_acked_batch_id': self.last_acked_batch_id,
         }
+        if self.start_date is not None:
+            value.update(start_date=_encode_date(self.start_date),
+                         end_date=_encode_date(self.end_date), last_days=self.last_days)
+        return value
 
 
 @dataclass(frozen=True)
@@ -144,6 +153,8 @@ class _State:
     media_mode: str
     pending: Optional[MessageBatch] = None
     last_acked_batch_id: Optional[str] = None
+    window: Optional[_HistoryWindow] = None
+    window_days: Optional[int] = None
 
     def status(self):
         pending = self.pending.to_dict() if self.pending is not None else None
@@ -153,6 +164,9 @@ class _State:
             len(pending['messages']) if pending else 0,
             int(pending['next_after_id']) if pending else None,
             self.last_acked_batch_id,
+            self.window.start_date if self.window is not None else None,
+            self.window.end_date if self.window is not None else None,
+            self.window_days,
         )
 
     def encode(self):
@@ -163,6 +177,9 @@ class _State:
             'pending': self.pending.to_dict() if self.pending is not None else None,
             'last_acked_batch_id': self.last_acked_batch_id,
         }
+        if self.window is not None:
+            value['version'] = 2
+            value['window'] = dict(self.window.to_dict(), last_days=self.window_days)
         return json.dumps(value, ensure_ascii=False, sort_keys=True,
                           separators=(',', ':'), allow_nan=False)
 
@@ -173,10 +190,24 @@ def _decode(data, chat_id):
             raise TypeError('state must be text')
         data.encode('utf-8')
         value = json.loads(data, object_pairs_hook=_unique_pairs, parse_constant=_nonfinite)
-        if type(value) is not dict or value.keys() != _STATE_KEYS:
-            raise ValueError('unsupported stored fields')
-        if type(value['version']) is not int or value['version'] != 1:
+        if type(value) is not dict:
+            raise ValueError('state must be an object')
+        version = value.get('version')
+        if type(version) is not int or version not in (1, 2):
             raise ValueError('unsupported state version')
+        expected_keys = _STATE_KEYS if version == 1 else _STATE_KEYS | {'window'}
+        if value.keys() != expected_keys:
+            raise ValueError('unsupported stored fields')
+        window = window_days = None
+        if version == 2:
+            saved = value['window']
+            if type(saved) is not dict or saved.keys() != {'start_date', 'end_date', 'last_days'}:
+                raise ValueError('invalid stored window fields')
+            window = _HistoryWindow(_decode_date(saved['start_date']), _decode_date(saved['end_date']))
+            if saved['last_days'] is not None:
+                window_days = _integer(saved['last_days'], 'last_days', 1, MAX_MESSAGE_ID)
+                if window.end_date - window.start_date != timedelta(days=window_days):
+                    raise ValueError('stored window differs from last_days')
         source = _stored_id(value['chat_id'], MIN_LONG, -1)
         initial = _stored_id(value['initial_after_id'], 0, MAX_MESSAGE_ID)
         after = _stored_id(value['after_id'], initial, MAX_MESSAGE_ID)
@@ -191,15 +222,15 @@ def _decode(data, chat_id):
         pending = None
         if value['pending'] is not None:
             pending = MessageBatch(value['pending'])
-            _validate_batch(pending, source, after, mode, nonempty=True)
+            _validate_batch(pending, source, after, mode, nonempty=True, window=window)
             if pending.batch_id == last_ack:
                 raise ValueError('pending batch was already acknowledged')
-        return _State(source, initial, after, mode, pending, last_ack)
+        return _State(source, initial, after, mode, pending, last_ack, window, window_days)
     except (TypeError, ValueError, OverflowError, RecursionError, SyncError) as error:
         raise SyncStorageError('Invalid saved sync state ({})'.format(type(error).__name__)) from None
 
 
-def _validate_batch(batch, chat_id, after_id, media_mode, nonempty=False):
+def _validate_batch(batch, chat_id, after_id, media_mode, nonempty=False, window=None):
     if not isinstance(batch, MessageBatch):
         raise SyncStorageError('Reader did not return a MessageBatch')
     value = batch.to_dict()
@@ -209,6 +240,10 @@ def _validate_batch(batch, chat_id, after_id, media_mode, nonempty=False):
     if not value['messages']:
         if nonempty or value['stop_reason'] != 'end':
             raise SyncStorageError('An empty batch cannot be pending work')
+    if window is not None:
+        for record in value['messages']:
+            if record['date'] is None or not window.contains(_decode_date(record['date'])):
+                raise SyncStorageError('Batch contains a message outside the saved window')
     return value
 
 

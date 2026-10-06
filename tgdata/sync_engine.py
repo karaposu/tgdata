@@ -2,15 +2,21 @@
 
 import asyncio
 from dataclasses import replace
+from datetime import datetime, timedelta, timezone
 import os
 
 from .batch_files import prepare_directory, _verify_existing
-from .message_batch import MessageBatch, MAX_BATCH_MESSAGES, MAX_MESSAGE_ID
+from .message_batch import MessageBatch, BatchFormatError, MAX_BATCH_MESSAGES, MAX_MESSAGE_ID
+from .history_window import _HistoryWindow
 from .sync_store import (
     SyncError, SyncConfigurationError, SyncNotInitializedError,
     SyncConflictError, SyncStorageError, _State, _chat_id, _integer,
     _mode, _batch_id, _decode, _validate_batch,
 )
+
+
+def _utc_now():
+    return datetime.now(timezone.utc)
 
 
 class SyncEngine:
@@ -50,16 +56,38 @@ class SyncEngine:
         if not written:
             raise SyncConflictError('Sync state changed; reload before retrying')
 
-    async def initialize(self, chat_id, *, after_id, media_mode='references'):
+    async def initialize(self, chat_id, *, after_id, media_mode='references',
+                         start_date=None, end_date=None, last_days=None):
         chat_id = _chat_id(chat_id)
         after_id = _integer(after_id, 'after_id', 0, MAX_MESSAGE_ID)
         media_mode = _mode(media_mode)
+        if last_days is not None:
+            last_days = _integer(last_days, 'last_days', 1, MAX_MESSAGE_ID)
+            if start_date is not None or end_date is not None:
+                raise SyncConfigurationError('Use explicit dates or last_days, not both')
+        try:
+            window = _HistoryWindow.from_dates(start_date, end_date)
+        except BatchFormatError as error:
+            raise SyncConfigurationError(str(error)) from None
         raw, existing = await self._load(chat_id, required=False)
         if existing is not None:
-            if existing.initial_after_id != after_id or existing.media_mode != media_mode:
-                raise SyncConflictError('Group already enrolled with a different initial position or media mode')
+            same_window = (existing.window is not None and existing.window_days == last_days
+                           if last_days is not None else
+                           existing.window == window and existing.window_days is None)
+            if (existing.initial_after_id != after_id or existing.media_mode != media_mode
+                    or not same_window):
+                raise SyncConflictError('Group already enrolled with a different initial position, media mode or window')
             return existing.status()
-        state = _State(chat_id, after_id, after_id, media_mode)
+        if last_days is not None:
+            # Load first: an existing relative enrollment must never observe a
+            # new clock or roll its original interval forward on restart.
+            try:
+                end = _utc_now()
+                window = _HistoryWindow(end - timedelta(days=last_days), end)
+            except (BatchFormatError, OverflowError) as error:
+                raise SyncConfigurationError('last_days cannot form a supported UTC window') from None
+        state = _State(chat_id, after_id, after_id, media_mode,
+                       window=window, window_days=last_days)
         await self._replace(chat_id, raw, state)
         return state.status()
 
@@ -88,7 +116,8 @@ class SyncEngine:
                 verified.add(key)
 
     async def _publish(self, raw, state, batch):
-        value = _validate_batch(batch, state.chat_id, state.after_id, state.media_mode)
+        value = _validate_batch(batch, state.chat_id, state.after_id, state.media_mode,
+                                window=state.window)
         if not value['messages']:
             return None
         await self._replace(state.chat_id, raw, replace(state, pending=batch))
@@ -109,10 +138,10 @@ class SyncEngine:
                     self._verify_media(state.pending, directory)
                 return state.pending
             try:
-                batch = await self._read_batch(
-                    chat_id, after_id=state.after_id, limit=limit,
-                    download_media_to=directory,
-                )
+                options = dict(after_id=state.after_id, limit=limit, download_media_to=directory)
+                if state.window is not None:
+                    options.update(start_date=state.window.start_date, end_date=state.window.end_date)
+                batch = await self._read_batch(chat_id, **options)
             except asyncio.CancelledError:
                 raise
             except Exception as read_error:

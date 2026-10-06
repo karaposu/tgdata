@@ -666,6 +666,32 @@ partial budget failures, custom storage and exact acknowledgment rules are cover
 in [Daily continuation](docs/daily_continuation.md). Run the local example without
 Telegram using `python examples/daily_continuation.py --demo`.
 
+### Fixed historical windows
+
+Give a historical collection its own progress store, then freeze its window at
+first enrollment:
+
+```python
+from tgdata import TgData, SQLiteSyncStore
+
+tg = TgData("config.ini", sync_store=SQLiteSyncStore("historical-progress.sqlite3"))
+try:
+    await tg.initialize_sync(chat_id, after_id=0, last_days=30)
+    batch = await tg.sync_group(chat_id, limit=200)
+    if batch is not None:
+        await destination.accept(batch)
+        await tg.acknowledge_sync(chat_id, batch.batch_id)
+finally:
+    await tg.close()
+```
+
+Repeated matching initialization reuses the saved dates. You can instead enroll
+with timezone-aware `start_date` and `end_date`; the start is included and end
+excluded. Daily and historical collections use separate stores, so their bookmarks
+stay independent. See [Fixed historical windows](docs/fixed_windows.md) for date
+limits, restart rules and direct batch reads. Scheduling and pacing remain with
+the caller.
+
 ### Detecting & Downloading Media (photos / videos)
 
 Every fetched message carries media-reference columns, so you can tell whether a

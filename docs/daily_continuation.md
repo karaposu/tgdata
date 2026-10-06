@@ -5,6 +5,10 @@ message position and at most one pending `MessageBatch` per group in a progress
 store. The caller schedules runs and saves/uploads the data. Each library call
 prepares or replays one bounded batch; there is no background loop.
 
+The same mechanism now supports an optional [fixed historical window](fixed_windows.md).
+That extension saves explicit dates or resolves `last_days` once; use a separate
+progress store for a historical collection alongside daily continuation.
+
 ```python
 from tgdata import TgData, SQLiteSyncStore
 
@@ -56,7 +60,8 @@ limit=1)` gives its canonical `chat_id`. That setup read spends the normal read
 allowance and does not enroll or advance progress; reuse an existing batch's ID
 when available.
 
-`initialize_sync(chat_id, *, after_id, media_mode="references")` requires an
+`initialize_sync(chat_id, *, after_id, media_mode="references",
+start_date=None, end_date=None, last_days=None)` requires an
 explicit integer position in `0..2147483647`. Zero deliberately begins at the
 oldest currently visible history. Import the last *accepted* ID from an existing
 archive to continue it. No implicit current-head or last-24-hours policy exists.
@@ -214,5 +219,6 @@ but do not implement leases, failover or coordinated reading across machines.
 
 The internal state format is versioned and opaque. It stores the canonical source,
 initial and accepted positions, media mode, pending batch and latest acknowledgment
-together. Batch v1 itself is unchanged. Backfill and its independent progress remain
-for #18's later delivery; old edits and deletions are excluded permanently.
+together. Batch v1 itself is unchanged. Optional fixed-window records use state v2;
+ordinary daily records retain v1. Planned backfill scheduling, pacing and completion
+remain for #18's later delivery; old edits and deletions are excluded permanently.
