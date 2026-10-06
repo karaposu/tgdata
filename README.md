@@ -30,6 +30,7 @@ A production-grade Python library for extracting and processing Telegram group a
 - 🩺 **Account Health Events**: Every wait, logout, ban, restriction or lost group is reported as a plain-data event — through one callback, a log line and a per-account summary — and "ok" when it ends
 - **Per-account read budgets**: An optional shared SQLite ledger limits message pulls over a rolling 24 hours, with persistent warm-up steps and recoverable partial results
 - **Versioned message batches**: Read bounded raw snapshots with canonical JSON, replayable batch IDs, safe continuation cursors and optional content-addressed media
+- **Durable daily continuation**: Keep per-group progress and pending batches in a pluggable store, replay after restart, and advance only after explicit acknowledgment
 
 ## Installation
 
@@ -630,6 +631,40 @@ operation/type and preserves the original error or cancellation; storage that
 refuses cleanup may leave a private temporary file. The exact schema, limits,
 interruption rules
 and delivery protocol are in [Message batch v1](docs/message_batch_v1.md).
+
+### Daily continuation across restarts
+
+Use a progress store when tgdata should remember unfinished delivery and the last
+accepted message for each group:
+
+```python
+from tgdata import TgData, SQLiteSyncStore
+
+tg = TgData("config.ini", interactive_login=False,
+            sync_store=SQLiteSyncStore("daily-progress.sqlite3"))
+chat_id = -1001234567890  # canonical MessageBatch.chat_id
+
+# Initial setup: your existing archive's last accepted ID, or explicit 0.
+await tg.initialize_sync(chat_id, after_id=48213)
+try:
+    batch = await tg.sync_group(chat_id, limit=200)
+    if batch is not None:
+        await destination.accept(batch)  # your durable, duplicate-safe destination
+        await tg.acknowledge_sync(chat_id, batch.batch_id)
+finally:
+    await tg.close()
+```
+
+The next run replays a pending batch without contacting Telegram, or reads after
+the acknowledged position. Preparing a batch never advances progress. Matching
+repeated initialization does not reset it. `destination.accept` is your application
+function; acknowledge only after its effects and duplicate markers are committed.
+
+This first delivery supports one reader per group. Scheduling remains with the
+caller; backfill is separate and edits/deletions are not reconciled. Optional media,
+partial budget failures, custom storage and exact acknowledgment rules are covered
+in [Daily continuation](docs/daily_continuation.md). Run the local example without
+Telegram using `python examples/daily_continuation.py --demo`.
 
 ### Detecting & Downloading Media (photos / videos)
 

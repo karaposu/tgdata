@@ -172,6 +172,22 @@ Socket connections are blocked. Scripted transport supplies Telegram replies;
 the actual SDK iterator, downloader, budget guard and batch implementation run.
 This does not establish live server behavior or a deployed receiver's guarantees.
 
+### 15. **test_22_daily_continuation.py**
+
+Tests durable daily continuation (`python -m tgdata.smoke_tests.test_22_daily_continuation`),
+offline on Telethon **1.45.0**, with real SQLite, process exits and synthetic transport:
+- explicit enrollment, immutable status, initial-position protection and exact group binding
+- pending batches survive restart, replay without a client, and advance only on acknowledgment
+- repeated/stale acknowledgments, storage conflicts, invalid/corrupt/missing state and schema
+- real read-budget prefixes, original read errors, failed prefix persistence and cancellation
+- enforced request overlap, source/mode mismatch and local operations without false health recovery
+- actual downloaded media replay from another root and missing/corrupt/symlink refusal
+- actual process termination before/after acknowledgment commit, lost receiver replies,
+  SQLite cleanup precedence and an offline destination example
+
+The example receiver demonstrates transactional duplicate handling; it does not verify
+the deployed ScrapeOps destination. No Telegram sockets or real account configs are used.
+
 ### Custom Test Scripts:
 - **my_test.py** - Custom test script for specific scenarios
 
