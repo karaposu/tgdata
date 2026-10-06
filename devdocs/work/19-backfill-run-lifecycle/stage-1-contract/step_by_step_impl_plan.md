@@ -1,9 +1,11 @@
 ---
 model: gpt-6-astra
 effort: max
-revision: 1
+revision: 2
 ---
 # Stage 1 contract delivery — implementation plan
+
+**Critic folded:** 2026-10-06 — 2 mitigations (2 steps changed, 0 added).
 
 Input: [desc.md](desc.md), [source record](source-input.md),
 [overall staged plan](../staged-plan.md), published issue #19 and prior lifecycle inquiry.
@@ -58,6 +60,8 @@ baseline suite, with a scoped issue update and committed artifacts.
 
 ## Step 1 — Write the operation and state contract
 
+[folded: Risk 1, robust] [folded: Risk 2, robust]
+
 ### Proposed changes
 
 Create `contract.md` in the #19 task root. Mark it as a normative Stage 1 specification,
@@ -79,6 +83,20 @@ conflicts/unknown outcomes. Equal payloads or equal parameters are not intent id
 Known missing state cannot silently initialize. Caller-owned request identities and
 receiver acceptance must be explicit; do not imply a distributed source/store/destination
 transaction or indefinite command recognition.
+
+Creation must explicitly distinguish a new submission from recovery/retry of an
+earlier request. Require caller-retained intent identity and expected predecessor
+context. A recognized request can return its recorded effect/current state; an
+unknown retry cannot create. Fresh bootstrap/successor creation has affirmative
+preconditions; missing known state or forgotten context never supplies them.
+State the limit after loss of all authoritative history instead of inventing proof.
+
+Preparation must carry the expected accepted position and control revision with
+its run reference. A delayed call cannot silently adopt a newer cursor or permission;
+it conflicts before a new source request. A genuinely new turn uses fresh status.
+At unchanged progress after a known failed attempt, a later eligible call may make
+a new source attempt; unresolved activity still requires explicit recovery. This
+defines bounded retry behavior without claiming indefinite prepare-command replay.
 
 Define independent state facts, accepted-position advancement, empty/final exhaustion,
 imported-origin coverage, attempt admission, durable timing, unknown-attempt recovery,
@@ -153,6 +171,8 @@ Evidence provenance, source visibility, account configuration, receiver guarante
 
 ## Step 3 — Specify failure cases and coverage
 
+[folded: Risk 1, robust] [folded: Risk 2, robust]
+
 ### Proposed changes
 
 Create `acceptance-matrix.md`. Carry all 22 final inquiry histories individually,
@@ -172,6 +192,12 @@ a read failure, mid-read control CAS changes, active earlier reader, public-oper
 health isolation and unchanged daily behavior. Include coverage tables from every
 public operation and invariant to one or more named cases; inspect success, retry,
 conflict and failure coverage rather than counting cases alone.
+
+Add explicit first-use-versus-unknown-retry cases for absent/pruned context, and
+delayed prepare calls after acknowledgment or pause/resume. Expected outcomes must
+include zero source sends and unchanged current progress for stale contexts. Known
+current pending replay remains exact. Cover the intentional new attempt at unchanged
+progress after a settled failure separately from recovery of an unresolved attempt.
 
 ### Output
 
