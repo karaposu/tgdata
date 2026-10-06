@@ -1,9 +1,11 @@
 ---
 model: gpt-6-astra
 effort: max
-revision: 1
+revision: 2
 ---
 # Stage 2 — durable run state and Gate A instrument
+
+**Critic folded:** 2026-10-07 — 2 mitigations (4 steps changed, 0 added).
 
 Inputs: [desc.md](desc.md), Stage 1 [contract](../contract.md),
 [staged plan](../staged-plan.md), [live-validation specification](../live-validation.md).
@@ -123,6 +125,13 @@ trusted to accept transitions only from its authorized writers.
 
 ## Step 1 — Implement values and the strict codec
 
+[folded: Risk 2, robust]
+
+Preserve canonical requested pacing seconds, but round its canonical decimal value
+up to whole microseconds when deriving a minimum UTC duration. Reuse this helper in
+creation representability and known pacing validation. Refuse overflow; sanitize clock
+provider failures as local errors and propagate cancellation.
+
 ### Proposed changes
 
 Create `tgdata/backfill.py` and `tgdata/backfill_state.py`. Reuse history-window and
@@ -160,6 +169,14 @@ HistoryWindow, MessageBatch v1, local error provenance, JSON precision, Python s
 5/5.
 
 ## Step 2 — Implement atomic start and known-run status
+
+[folded: Risk 1, robust] [folded: Risk 2, robust]
+
+Add keyword-only `create=True` to SQLiteSyncStore. The default keeps its existing
+behavior. With `create=False`, the constructor uses the current mode=rw/schema-check
+path without creating a file or schema, including when a file disappears before open.
+Subsequent load/CAS already use mode=rw. No SQL schema or backend protocol change.
+Use the upward-rounded duration helper for initial deadline representability.
 
 ### Proposed changes
 
@@ -206,6 +223,12 @@ Atomic replacement, uncertain commits, bounded retention, state namespace isolat
 
 ## Step 3 — Test persistence, identity and malformed state
 
+[folded: Risk 1, robust] [folded: Risk 2, robust]
+
+Add tests for existing-only open of missing/deleted/schema-less stores and unchanged
+default provisioning. Cover positive sub-/fractional-microsecond duration ceilings,
+zero, overflow, and sanitized clock-provider failures.
+
 ### Proposed changes
 
 Add `tgdata/smoke_tests/test_24_backfill_state.py`, using temporary SQLite and sockets
@@ -242,6 +265,11 @@ Subprocess crash boundaries, SQLite durability, custom async store contracts, pr
 4/5.
 
 ## Step 4 — Build the opt-in Gate A probe
+
+[folded: Risk 1, robust]
+
+Open known state using SQLiteSyncStore(create=False), not a separate path-exists check
+followed by its default constructor. An absent store is a non-mutating preflight failure.
 
 ### Proposed changes
 
