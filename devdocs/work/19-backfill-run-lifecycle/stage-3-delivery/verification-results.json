@@ -1,0 +1,81 @@
+{
+  "daily_example": {
+    "acknowledged_through": 104,
+    "messages": 4
+  },
+  "instrument_checks": 10,
+  "live_traffic_this_stage": false,
+  "prebuild_checks": 5,
+  "product_commit": "3140dcda296d6c16b54bcbde124641bab9efeb7e",
+  "python": "3.11.10",
+  "suites": [
+    {
+      "executed_passes": 41,
+      "live_skips": 0,
+      "name": "test_25_backfill_delivery"
+    },
+    {
+      "executed_passes": 23,
+      "live_skips": 0,
+      "name": "test_24_backfill_state"
+    },
+    {
+      "executed_passes": 22,
+      "live_skips": 0,
+      "name": "test_23_fixed_windows"
+    },
+    {
+      "executed_passes": 25,
+      "live_skips": 0,
+      "name": "test_22_daily_continuation"
+    },
+    {
+      "executed_passes": 33,
+      "live_skips": 0,
+      "name": "test_19_message_batches"
+    },
+    {
+      "executed_passes": 28,
+      "live_skips": 0,
+      "name": "test_18_read_budget"
+    },
+    {
+      "executed_passes": 12,
+      "live_skips": 0,
+      "name": "test_17_session_store"
+    },
+    {
+      "executed_passes": 21,
+      "live_skips": 0,
+      "name": "test_16_health_events"
+    },
+    {
+      "executed_passes": 11,
+      "live_skips": 0,
+      "name": "test_15_login_checks"
+    },
+    {
+      "executed_passes": 11,
+      "live_skips": 0,
+      "name": "test_14_flood_threshold"
+    },
+    {
+      "executed_passes": 5,
+      "live_skips": 1,
+      "name": "test_13_device_identity"
+    },
+    {
+      "executed_passes": 5,
+      "live_skips": 2,
+      "name": "test_12_proxy"
+    },
+    {
+      "executed_passes": 2,
+      "live_skips": 0,
+      "name": "test11_helpers"
+    }
+  ],
+  "telethon": "1.45.0",
+  "total_executed": 239,
+  "total_live_skips": 3
+}

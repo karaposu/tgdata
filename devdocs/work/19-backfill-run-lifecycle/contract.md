@@ -1,17 +1,20 @@
 ---
 model: gpt-6-astra
 effort: max
-status: contract-with-stage-2-foundation
+status: contract-with-stage-3-delivery
 contract_version: 1
 ---
 # Planned backfill run contract
 
 This specifies the full behavior for [issue #19](https://github.com/karaposu/tgdata/issues/19).
-Stage 2 implements the internal start/retry/status foundation and strict saved state
-at `1425fd7`; see [available usage](../../../docs/backfill_state.md). The remaining
-operations and public TgData facade are not implemented. Method/type sketches below
-describe the contract, not current imports. [Gate A passed](validation/gate-a.md)
-on 2026-10-07; Stage 3 is unblocked but remains unimplemented.
+Stages 2–3 implement internal start/retry/status and prepare/replay/acknowledgment,
+at `1425fd7` and `3140dcd`; see [available usage](../../../docs/backfill_state.md).
+Minimal end/terminal closure is included to preserve this contract's saved-state
+invariants, but Stage 4's dedicated completion/uncertain-write audit remains pending.
+Further positive timing admission/recovery, controls and the public facade are later
+stages; Stage 3 fails closed where their machinery is required. The sketches below
+describe the complete contract, not current imports/readiness. Gate A passed; Gate B
+is still required after Stage 4 for the new delivery composition.
 
 The [source record](stage-1-contract/source-input.md), [assumptions](assumptions.md),
 [acceptance matrix](acceptance-matrix.md) and [live-validation specification](live-validation.md)

@@ -1,12 +1,13 @@
 ---
 model: gpt-6-astra
 effort: max
-status: gate-a-foundation-evidence
+status: stage-3-local-delivery-evidence
 ---
 # Backfill acceptance and failure matrix
 
-This is the test specification for [contract.md](contract.md). Stage 2 now has scoped
-local evidence at `1425fd7`, listed below and in [verification](stage-2-state/verification.md).
+This is the test specification for [contract.md](contract.md). Stage 2 has scoped
+local evidence at `1425fd7`; Stage 3 adds actual internal delivery checks at `3140dcd`,
+recorded in [its verification](stage-3-delivery/verification.md).
 A case still marked UNRUN has not completed its full listed composition; that does
 not discard its partial observations. Gate A's foundation scope has now passed; later
 operation/composition requirements remain unrun as specified below.
@@ -14,6 +15,26 @@ operation/composition requirements remain unrun as specified below.
 C01–C22 preserve the final inquiry's 22 histories in their original order. C23–C44 add operation, storage, live-oracle and selected-critique boundaries. Gate A foundation tests can use the existing reader with the Stage 2 record; they do not claim that Stage 3 preparation already exists. Cases spanning multiple stages are repeated at their first full composition.
 
 LIVE means actual Telegram via Telethon 1.45.0; INJECTED means an identified local interruption/order/fault around real source/store/receiver paths; LOCAL means no server behavior is inferred. No Telegram source writes are allowed.
+
+## Stage 3 local delivery evidence — 2026-10-07
+
+The actual new engine passed 41 delivery groups using real SQLite, SDK/batch/artifact
+code, controlled storage faults and a real local receiver. Transport was synthetic;
+Gate B still must run the new composition with real data after Stage 4.
+
+| Cases / boundary | Observed locally in Stage 3 | Still unverified |
+|---|---|---|
+| C03, C04, C30, C31, C37 | Real successor/retained-receipt behavior, equal-hash run isolation, stale/unknown context refusal | Live new-engine/retirement composition |
+| C12–C14, C23 | Original fresh/relative query, imported cursor, empty/final minimal closure and full-batch follow-up | Dedicated Stage 4 completion/final-commit matrix and Gate B |
+| C15–C17, C29 | Exact pending replay, real receiver commit/lost reply, media relocation/corruption/removal, ack independent of local media | Operational receiver/media custody and actual Gate B payloads |
+| C21, C25, C26 | Actual publication/ack process exits, uncertain real commit cleanup, errors kept separate from source failure | Stage 4 expanded empty/final/uncertain-outcome matrix |
+| C27, C28, C35, C36 | Confirmed admission, overlap/unknown-attempt refusal, real cancellation, stale cursor/control checks, compatible late-result preservation | Control/recovery operations and live race composition |
+| C33, C34, C43, C44 | No local health recovery/verdict, legacy regressions, strict loaded bounds and exact receipt/context validation | Public facade and later full integration |
+
+Seeded control/recovery snapshots only test preservation. Stage 3's positive timing
+guard refuses further source admission where Stage 5 machinery is needed; it is not
+implemented pacing/recovery. Case statuses below still refer to their full specified
+composition; no unrun live or later-stage portion is credited from these local checks.
 
 ## Stage 2 evidence scope — 2026-10-07
 

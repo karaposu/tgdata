@@ -1,6 +1,6 @@
 ---
 status: draft
-revision: 5
+revision: 6
 model: gpt-6-astra
 effort: max
 ---
@@ -72,6 +72,21 @@ sources and exclusive test-budget context; [live validation passed](validation/g
 on 2026-10-07. This revision 5 handoff unblocks Stage 3. Stages 3–8 and Gates B–D remain
 pending; the live receipts are separate from the original offline passes.
 
+## Stage 3 implementation handoff — revision 6
+
+Stage 3 is implemented and verified at `3140dcd`, through its separate
+[description/plan/critic/experiment](stage-3-delivery/implementation.md). The actual
+new engine passed 41 delivery groups; the supported offline sweep passed 239 groups
+with three explicit live skips, plus ten Gate A instrument checks and the daily example.
+No new live gate is claimed. [Verification](stage-3-delivery/verification.md) records
+the scope, initial test-fixture corrections and remaining limits.
+
+The existing codec required minimal end/terminal closure inside preparation and ack;
+that shared path now exists. Stage 4 still owns its dedicated completion/uncertain-write
+review and full fault matrix. Positive timing admission and explicit recovery remain
+Stage 5, with an explicit fail-closed boundary in Stage 3. Controls/facade remain later.
+Next is Stage 4, then mandatory live Gate B. Stages 4–8 and Gates B–D remain pending.
+
 ## What is the task
 
 Add a durable lifecycle around one group's planned historical read, so the caller
@@ -123,7 +138,7 @@ The following conditions attach to their named gates:
 - **What must happen:** implementation is requested and the repository's preparation,
   plan critique and fold checkpoints are completed. **Who:** maintainer and implementing
   session. **Blocks:** production-code execution of each selected stage. **Status:** DONE
-  for Stage 2; OPEN for later stages, subject first to the mandatory live gates.
+  for Stages 2–3; OPEN for later stages, subject first to the mandatory live gates.
 - **What must happen:** merge check, fresh PR critique and explicit merge go-ahead.
   **Who:** implementing/reviewing session and maintainer. **Blocks:** merging after
   Stage 8. **Status:** OPEN. Nothing in this plan performs those actions now.
@@ -461,6 +476,9 @@ is recovered without unexplained omissions, and retry/restart preserves intent.
 
 ## Stage 3 — Prepare, retain and acknowledge one batch
 
+**Built and locally verified:** `3140dcd`; scoped results in
+[stage-3-delivery/](stage-3-delivery/verification.md). This does not pass Gate B.
+
 ### Proposed changes
 
 **3.1 — Admit and record one source attempt.** Require the run plus expected accepted
@@ -520,6 +538,12 @@ MessageBatch v1, media blobs, partial_result, error provenance, existing health 
 5/5. Persisted observation, external delivery and acknowledgment are separate failure points.
 
 ## Stage 4 — Make completion and uncertain storage outcomes truthful
+
+Stage 3 already includes the minimal end/closure predicates required by the strict
+codec while publishing/acknowledging a batch. Treat 4.1–4.2 as audit/refinement of that
+shared implementation and completion-specific edge coverage, not a second competing
+transition path. The expanded uncertain-write/final-commit matrix and Gate B remain
+unimplemented/unrun; Stage 4 must still pass its own pipeline and checks.
 
 ### Proposed changes
 
@@ -921,5 +945,6 @@ normal-return-means-done behavior.
 This overall document remains a staged runtime plan. Stage 1 established the contract;
 Stage 2 built and locally verified the persistence foundation and live instrument.
 Their separate implementation/verification reports preserve each checkpoint's evidence.
-The later [Gate A](validation/gate-a.md) passed real-source validation. Next is Stage 3.
-Stages 3–8 and Gates B–D remain pending. No protected-branch merge is implied here.
+The later [Gate A](validation/gate-a.md) passed real-source validation, and Stage 3
+then passed its scoped local delivery implementation. Next is Stage 4 followed by
+Gate B. Stages 4–8 and Gates B–D remain pending; no protected-branch merge is implied.
