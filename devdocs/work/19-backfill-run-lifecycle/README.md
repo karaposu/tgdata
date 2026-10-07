@@ -1,11 +1,11 @@
 # Backfill run lifecycle — issue #19
 
-**Stages 1–7 are built; Gates A/B/C passed.** Product `17fccbc` adds the six public
-TgData operations, typed exports, public documentation and an offline durable receiver/
-restart example. Verification passed 342 actual offline checks (three explicit legacy
-live skips), ten guard checks and both examples. **Next: Stage 8 — combined validation
-and review preparation, followed by mandatory real public-flow Gate D.** No Stage 7
-Telegram traffic or new live-gate claim is implied.
+**Stages 1–8 are built; Gates A/B/C/D passed.** Runtime `17fccbc`, combined public
+tests `405218e`, public documentation `1d0f7a9` and completion evidence `30c9c24` are
+committed and pushed. Verification passed 357 actual offline checks (three explicit
+legacy live skips), 19 instrument checks and both examples. Gate D independently
+qualified the complete public/source/SQLite/receiver flow. Formal review follows;
+these stage checkpoints have not been merged into dev.
 
 This branch starts from dev `45bab71` and incorporates #18 through `e9b5154` in
 feature-only merge `5d0789e`. This does not merge or approve #18 into dev. Stage 2
@@ -13,7 +13,7 @@ product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd
 
 - [Contract](contract.md): operations, identity, retry/conflict/durability and state rules.
 - [Assumptions](assumptions.md): what is selected, observed or still unverified.
-- [Acceptance matrix](acceptance-matrix.md): 44 cases with evidence through Gate C and scoped Stage 7 public checks.
+- [Acceptance matrix](acceptance-matrix.md): all 44 cases have individual scoped evidence through Gate D.
 - [Live validation](live-validation.md): existing group, read-only, mandatory Gates A–D.
 - [Staged plan](staged-plan.md): the whole feature's eight stages and four gates.
 - [Stage 1 implementation](stage-1-contract/implementation.md) and
@@ -41,6 +41,13 @@ product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd
 - [Stage 7 implementation](stage-7-public-api/implementation.md) and
   [verification](stage-7-public-api/verification.md): 23 public/example groups, 342
   supported offline passes, actual application namespace/receiver prebuild and process restart.
+- [Stage 8 implementation](stage-8-validation/implementation.md) and
+  [verification](stage-8-validation/verification.md): combined public fault matrix,
+  357 supported offline passes and complete feature traceability.
+- [Gate D report](validation/gate-d.md): 250 historical records plus two daily records,
+  actual process/commit failures, public controls, pacing and verified photo custody.
+- [Merge check](merge-check.md): formal fidelity review and code-only PR projection;
+  the fresh PR critique remains a separate gate.
 - [Public backfill API](../../../docs/backfill_runs.md) and
   [offline example](../../../examples/backfill_runs.py).
 - [Internal state reference](../../../docs/backfill_state.md) and
@@ -49,8 +56,10 @@ product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd
   interruptions, 23 repeated state tests and 10 instrument checks; all passed.
 
 [Issue #19](https://github.com/karaposu/tgdata/issues/19) tracks this lifecycle slice of
-#18. Stage 8/Gate D are next; no PR or merge is implied. Gate C private records remain under
-`/private/tmp/tgdata19-gate-c-live-20261007`. Both original Gate B unknown-state files
-remain byte-identical to their earlier hashes. Reuse the existing Gate A ledger for
-later live work: its policy remains 5,000/day and last observed usage after Stage 6
-is 2,334. Stage 7 did not connect to Telegram or mutate that ledger.
+#18. The feature archive preserves these documents; the PR candidate contains the
+27 product files only. Its base is dev `45bab71`. No stage or #18 prerequisite has
+merged into dev; earlier #5/#9/#6 features already have.
+Gate D private records remain under `/private/tmp/tgdata19-gate-d-live-20261007`.
+Original Gate B unknown-state files remain byte-identical. The existing account ledger
+policy remains 5,000/day; after Gate D, charged use was 3,262 with 40 reserved.
+No new live reads are required for an unchanged product-tree review.

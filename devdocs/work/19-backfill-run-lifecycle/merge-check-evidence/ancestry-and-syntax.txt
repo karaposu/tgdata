@@ -1,0 +1,5 @@
+PASS: all 8 staged warm baselines are ancestors of 30c9c24.
+PASS: exact 27 product files in candidate; no devdocs delta.
+PASS: 57 product Python files parse as Python 3.7. Runtime tests use Python 3.11.10/Telethon 1.45.0.
+PASS: feature stages and #18 foundations are not ancestors of origin/dev 45bab71.
+Model metadata: gpt-6-astra/max at 2026-10-07T05:34:50.039Z, retained same session.
