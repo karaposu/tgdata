@@ -1,10 +1,9 @@
-# Backfill state and delivery — Stages 2–3
+# Backfill state, delivery and completion — Stages 2–4
 
 This internal staged interface implements **start, status, prepare/replay and
 acknowledge**. Preparation retains one exact batch before returning it; acknowledgment
-records the caller's durable acceptance. Minimal end/completion transitions preserve
-saved-state invariants, while Stage 4's dedicated completion/uncertain-write audit
-remains pending. Positive timing/recovery, controls and the public facade retain
+records the caller's durable acceptance. Completion and uncertain-write handling
+are covered through Stage 4. Positive timing/recovery, controls and the public facade retain
 their later stages. No new `TgData` methods or package-root exports are introduced.
 
 The internal modules below support this staged delivery. The existing daily
@@ -78,9 +77,20 @@ can produce completed runs. Cancel/abandon operations remain later-stage work.
 
 Only the current and immediate prior run are retained. Prior status is marked
 `history_limited`; older references/requests refuse. Generations and revisions cannot
-wrap. A backend failure after commit may still have committed: reload/retry the same
-context. Cancellation propagates; it does not prove rollback. Backend errors expose
-operation and exception type, never raw error text or saved payloads.
+wrap. A backend failure after commit may still have committed. After an ordinary
+ambiguous create, publication or acknowledgment reply, the engine makes **one**
+authoritative read-back. A validated snapshot identical to the full attempted state
+confirms success, including empty completion or final acceptance. It makes no second
+write or source call. A start confirmed this way returns `applied=True`; a later
+retained request retry returns `applied=False`.
+
+An absent, changed or unreadable snapshot leaves the write unconfirmed; corrupt state
+raises its validation error. A changed snapshot may contain a later valid transition,
+so a failure is never proof of rollback. Inspect status or retry the same retained
+request/receipt deliberately. The engine does not partially match fields or overwrite
+newer state to recover a reply. Backend errors expose operation and exception type,
+never raw error text or saved payloads. Cancellation propagates without reconciliation
+I/O. Neither cancellation nor an ambiguous admission reply grants permission to read.
 
 ## Prepare, deliver and acknowledge
 
@@ -134,7 +144,9 @@ Actual `end` evidence is retained independently of delivery. Empty exhaustion ne
 no fake batch. A final nonempty batch stays pending until acknowledged; only then can
 the run be completed. A `limit` batch, failed read or interrupted prefix never proves
 completion. Existing cancellation takes precedence over a later final acceptance.
-Stage 4 still supplies the dedicated completion/reconciliation audit and full fault matrix.
+Completion preserves the declared origin and frozen window. An imported run certifies
+only its declared tail, without verifying the caller's skipped archive. A completed
+run reopens without another source read; rescanning requires deliberate new intent.
 
 ## Failures, timing and staged limits
 
@@ -146,12 +158,12 @@ cause used for Telegram health classification. Source error text is not stored.
 
 Cancellation or an unconfirmed write can leave `status.attempt_id` unresolved. Another
 prepare raises `BackfillRecoveryRequired`, with content-free status, instead of reading
-again. If publication actually committed before its reply failed, reopening/retry
-replays the persisted batch. If acknowledgment committed, retrying that same complete
+again. If publication actually committed but exact read-back could not confirm it,
+reopening/retry replays the persisted batch. If acknowledgment committed, retrying that same complete
 receipt recognizes it. No automatic rollback/reset is inferred. Explicit recovery is
 Stage 5; do not clear an attempt or create a replacement run to bypass it.
 
-The example chooses `pause_seconds=0` to exercise repeated Stage 3 source turns. This
+The example chooses `pause_seconds=0` to exercise repeated internal source turns. This
 disables only the run's extra spacing, never the configured budget/server restrictions.
 A first positive-pause turn records its real end/deadline, but another source admission
 requiring positive timing fails closed with a staged configuration error until Stage 5.
@@ -186,9 +198,12 @@ representation and saved timing facts; actual wait enforcement is Stage 5.
 ## Verification and live gate
 
 Run `python -m tgdata.smoke_tests.test_24_backfill_state` and
-`python -m tgdata.smoke_tests.test_25_backfill_delivery`. They exercise actual SQLite,
+`python -m tgdata.smoke_tests.test_25_backfill_delivery`, followed by
+`python -m tgdata.smoke_tests.test_26_backfill_completion`. They exercise actual SQLite,
 process exits around commit, receiver transactions, custom-backend faults and blocked
 network access. Delivery tests use actual SDK/batch/media code with synthetic transport.
+Completion tests include exact read-back versus unavailable/moved-on state, original
+source-error provenance, and actual process exits around empty completion/final ack.
 Seeded control/recovery fixtures test preservation, not unimplemented operations.
 
 Gate A already passed real-source foundation validation on the issue branch. Gate B

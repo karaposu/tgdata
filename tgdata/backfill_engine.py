@@ -1,4 +1,4 @@
-"""Durable historical-run creation and one-batch delivery.
+"""Durable historical-run delivery, completion and exact write confirmation.
 
 Positive timing eligibility, controls, recovery and the public facade retain their
 later stages. A source callback never runs before confirmed durable admission.
@@ -88,12 +88,35 @@ class BackfillEngine:
             raise BackfillConflictError('lifecycle revision capacity is insufficient for this transition')
         return current + 1
 
-    async def _write(self, raw, value, reserve=1):
+    async def _commit(self, chat_id, raw, state, *, reconcile=True):
+        """Confirm one CAS, optionally reading back its exact candidate on error.
+
+        A different/absent snapshot does not prove rollback: the write may still
+        be unknown or later state may have superseded it. Never write again here.
+        Admission opts out; its ambiguous reply must not authorize a source call.
+        """
+        encoded = state.to_json()
+        try:
+            written = await self._backend('compare_and_swap', chat_id, raw, encoded)
+            if type(written) is not bool:
+                raise BackfillStorageError(
+                    'backfill compare_and_swap must return a boolean; outcome may be unknown')
+            return written
+        except BackfillStorageError as write_error:
+            if not reconcile:
+                raise
+            try:
+                _, observed = await self._load(chat_id)
+            except BackfillStorageError:
+                raise write_error from None
+            if observed is not None and observed.to_json() == encoded:
+                return True
+            raise write_error from None
+
+    async def _write(self, raw, value, reserve=1, *, reconcile=True):
         value['state_revision'] = str(self._revision(value, reserve))
         next_state = _BackfillState(value)
-        written = await self._backend('compare_and_swap', int(value['chat_id']), raw, next_state.to_json())
-        if type(written) is not bool:
-            raise BackfillStorageError('backfill compare_and_swap must return a boolean; outcome may be unknown')
+        written = await self._commit(int(value['chat_id']), raw, next_state, reconcile=reconcile)
         return written, next_state
 
     def _now(self):
@@ -202,7 +225,7 @@ class BackfillEngine:
             raise BackfillClockError('clock precedes saved lifecycle evidence; no source admission')
         row['attempt'] = dict(attempt_id=uuid4().hex, after_id=row['after_id'],
                               control_revision=row['control_revision'], admitted_at=_encode_date(admitted))
-        written, state = await self._write(raw, value, reserve=3)
+        written, state = await self._write(raw, value, reserve=3, reconcile=False)
         if not written:
             raise BackfillConflictError('state changed before source admission; no read was started')
         return state.to_dict()['current'], root
@@ -245,8 +268,8 @@ class BackfillEngine:
 
     @staticmethod
     def _complete_if_fulfilled(row):
-        # The existing codec forbids fulfilled exhaustion without a terminal
-        # fact. This minimal closure does not replace Stage 4's fault audit.
+        # Empty-end settlement and final acknowledgment share this closure.
+        # End evidence alone cannot discharge owed work or supersede cancellation.
         if (row['terminal_outcome'] is None and row['exhaustion'] is not None
                 and row['pending'] is None and row['attempt'] is None and row['abandoned'] is None):
             row['terminal_outcome'] = 'completed'
@@ -385,7 +408,8 @@ class BackfillEngine:
         """Create explicit new intent or recognize a retained creation request.
 
         Unknown retry never creates. Retained matching requests do not read time or
-        write. A failed CAS conflicts; an uncertain commit must be retried/reloaded.
+        write. Ambiguous replies get one exact-state read-back; otherwise inspect
+        or retry the same request. A confirmed false CAS remains a conflict.
         """
         if not isinstance(request, BackfillStartRequest):
             raise BackfillConfigurationError('start requires BackfillStartRequest')
@@ -444,9 +468,7 @@ class BackfillEngine:
             chat_id=str(request.chat_id), state_revision=str(revision),
             current=initial_record(request, generation, created, window), previous=previous,
         ))
-        written = await self._backend('compare_and_swap', request.chat_id, raw, next_state.to_json())
-        if type(written) is not bool:
-            raise BackfillStorageError('backfill compare_and_swap must return a boolean; outcome may be unknown')
+        written = await self._commit(request.chat_id, raw, next_state)
         if not written:
             raise BackfillConflictError('backfill state changed; reload before retrying')
         return BackfillStartResult(True, next_state.status())

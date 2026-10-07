@@ -314,7 +314,8 @@ async def test_backend_failures_return_types_and_privacy():
         async def compare_and_swap(self,*args):
             assert await actual.compare_and_swap(*args)
             raise RuntimeError(SECRET)
-    await rejects(BackfillStorageError,engine(LostReply()).start(request(),submission='new'))
+    # Stage 4 confirms this exact durable candidate with one authoritative load.
+    assert (await engine(LostReply()).start(request(),submission='new')).applied
     assert not (await engine(actual,forbid_clock).start(request(),submission='retry')).applied
 
 
@@ -329,8 +330,7 @@ async def test_actual_sqlite_commit_then_close_error():
         kwargs['factory']=BadClose
         return original(*args,**kwargs)
     with patch('tgdata.sync_store.sqlite3.connect',side_effect=connect):
-        error=await rejects(BackfillStorageError,engine(backend).start(request(),submission='new'))
-        assert SECRET not in str(error)
+        assert (await engine(backend).start(request(),submission='new')).applied
     assert not (await engine(SQLiteSyncStore(backend.path,create=False),forbid_clock).start(
         request(),submission='retry')).applied
 

@@ -265,3 +265,19 @@ synthetic transport. Media relocation/corruption/removal, control-state preserva
 equal hashes across runs, counter/clock edges and local health isolation are covered.
 No account/login/network is used. Future control/recovery snapshots are labeled fixtures;
 positive timing eligibility and the next live gate remain their later stages.
+
+
+### Test 26: backfill completion (Stage 4, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_26_backfill_completion
+```
+
+Exercises empty/final completion, declared fresh/imported scope, failed full-batch
+follow-up and confirmed ambiguous writes. The real SQLite matrix includes exceptions
+and malformed replies before/after commit, absent/old/newer/corrupt/unreadable read-back,
+no-send admission uncertainty, cancellation and original source-prefix exceptions.
+Owned processes exit immediately before/after actual create/publication/empty-completion/
+final-ack commits. Reopen checks owed work, unresolved attempts and durable completion.
+Sockets are blocked; source replies are synthetic through Telethon 1.45.0. Seeded
+operator states test preservation only; live Gate B is a separate required execution.

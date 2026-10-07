@@ -317,19 +317,20 @@ async def test_publication_failure_keeps_attempt_or_committed_pending():
         wrapped=FaultStore(backend)
         (wrapped.after if committed else wrapped.fail)[2]=OSError(SECRET)
         eng=engine(wrapped,tg.get_message_batch)
-        error=await f.expect(BackfillStorageError,eng.prepare(ctx))
-        assert SECRET not in str(error) and health.classify(error,True) is None
-        assert len(sender.reads)==1
         if committed:
+            confirmed=await eng.prepare(ctx)
+            assert confirmed.batch.next_after_id==102 and not confirmed.replayed
             turn=await engine(backend,forbidden_reader,forbidden_clock).prepare(ctx)
             assert turn.replayed and turn.status.attempt_id is None and turn.batch.next_after_id==102
         else:
+            error=await f.expect(BackfillStorageError,eng.prepare(ctx))
+            assert SECRET not in str(error) and health.classify(error,True) is None
             await f.expect(BackfillRecoveryRequired,eng.prepare(ctx))
             assert (await engine(backend).status(ctx.run)).pending_batch_id is None
         assert len(sender.reads)==1
 
 
-async def test_real_sqlite_post_commit_close_error_reconciles_by_replay():
+async def test_real_sqlite_post_commit_close_error_confirms_then_replays():
     backend,eng,_,_,sender,_,ctx=await setup()
     original=sqlite3.connect
     class BadClose(sqlite3.Connection):
@@ -341,8 +342,8 @@ async def test_real_sqlite_post_commit_close_error_reconciles_by_replay():
             if pending:raise sqlite3.OperationalError(SECRET)
     def connect(*args,**kwargs):kwargs['factory']=BadClose;return original(*args,**kwargs)
     with patch('tgdata.sync_store.sqlite3.connect',side_effect=connect):
-        error=await f.expect(BackfillStorageError,eng.prepare(ctx))
-    assert SECRET not in str(error) and len(sender.reads)==1
+        confirmed=await eng.prepare(ctx)
+    assert confirmed.batch.next_after_id==102 and len(sender.reads)==1
     replay=await engine(SQLiteSyncStore(backend.path,create=False),forbidden_reader,forbidden_clock).prepare(ctx)
     assert replay.replayed and replay.batch.next_after_id==102
 
@@ -646,7 +647,8 @@ async def test_ack_conflict_preserves_newer_cancel_and_duplicate_race():
 async def test_ack_uncertain_commit_retries_without_effect_or_clock():
     (backend,_,_,_,_,_,_),turn=await prepared()
     wrapped=FaultStore(backend);wrapped.after[1]=OSError(SECRET)
-    await f.expect(BackfillStorageError,engine(wrapped,forbidden_reader).acknowledge(turn.delivery))
+    confirmed=await engine(wrapped,forbidden_reader).acknowledge(turn.delivery)
+    assert confirmed.after_id==102 and confirmed.pending_batch_id is None
     raw=await backend.load(CHAT)
     status=await engine(SQLiteSyncStore(backend.path,create=False),forbidden_reader,forbidden_clock).acknowledge(turn.delivery)
     assert status.after_id==102 and status.pending_batch_id is None
