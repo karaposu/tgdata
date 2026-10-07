@@ -72,8 +72,8 @@ not turn tgdata into an application worker or scheduler.
 - [ASSUMPTION] One owning process/event loop, exclusive client/session ownership,
   trustworthy UTC and caller-enforced single reader per group. Clock regression
   and unresolved attempt state refuse new source permission.
-- [ASSUMPTION] Offline implementation proceeds while the optional two-account live
-  setup question is unanswered; synthetic account tests are never called live proof.
+- [ASSUMPTION] User confirmed one account for now and offline-first delivery; the two-account
+  live gate stays pending. Synthetic account tests are never called live proof.
 
 ## Priority Level
 

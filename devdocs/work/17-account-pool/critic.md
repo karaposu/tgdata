@@ -23,6 +23,8 @@ cannot recover the original FloodWait and100-record prefix after observer cancel
 Passing result: zero wrong-owner history/charge; original FloodWait7200 and exact
 100-record interrupted prefix survive with the source child ended.
 
+Result: PASS — zero wrong-owner history/charges; retaining the actual source outcome preserved FloodWaitError7200 and100 interrupted records after observer cancellation. Ran the real composed probe before plan step1 on 2026-10-08. Evidence: `probes/plan_premises.py`. No Telegram connection.
+
 ## High-level summary
 
 The owned account design survives. Two implementation boundaries need precision:
@@ -135,10 +137,10 @@ always propagates. Test both successful and failing source bodies with blocked
 callbacks, including long-wait retention and no extra source attempt.
 **Why this is robust:** covers the actual two-stage completion boundary without
 changing global health delivery or weakening the callback contract for other callers.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* Selected robust/elegant: this pool is the only new timed observer composition. Existing _reported and listener paths form a possible broader class, but changing them expands scope and is unnecessary for the owned outcome holder. The local fix survives a future shared mechanism.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -151,7 +153,7 @@ for every asynchronous reporting path.
 
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* Revisit shared source/observer outcome capture when another timed public operation needs it; existing TgData decorators/listeners would then be concrete additional consumers.
 
 ## Risk 2 — Rechecking an old client may ignore a repaired stored login
 
@@ -192,10 +194,10 @@ all stored restrictions until the new identity is verified and settlement commit
 test an actual StoredSession credential replacement with no overwritten new key.
 **Why this is robust:** repairs the precise stale object while preserving the
 pool's durable restrictions and session-store conflict behavior.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* Selected robust/elegant: retire/reload the exclusive slot and retain durable facts. Persistent TgData sessions are another rotation instance, but a global generation protocol changes their ownership contract and the pluggable store interface. This narrow reload remains useful if such a protocol is added.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -208,7 +210,7 @@ arbitrary callers, beyond this pool's exclusive-owner contract.
 
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* Revisit credential generations only when live rotation across multiple independent client owners is requested; #7 remains paused and no new prerequisite is introduced.
 
 ## Execution preconditions
 
