@@ -331,3 +331,20 @@ a source call, deduplicates complete observations, separates daily/history names
 and completes after ack. Completed repeats have zero source reads; missing known state
 and repeated provisioning refuse. Sockets are blocked. Public/live Gate D remains after
 Stage 8; this suite does not claim deployment or Telegram behavior from synthetic inputs.
+
+### Test 30: combined public backfill failures (Stage 8, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_30_backfill_integration
+```
+
+Fifteen groups combine public operations with real SQLite and Telethon 1.45.0 using
+synthetic transport. Owned processes exit before and after commits for creation,
+admission, publication, empty completion, acknowledgment, control, recovery,
+abandonment and successor creation. Admission uncertainty sends nothing; receiver
+transactions precede acknowledgments. Additional histories cover source errors with
+failed publication, cancelled replies, late final data, opposing controls, identical
+successor batches, missing/corrupt media after acceptance and storage cleanup errors.
+Sockets are forbidden. These process tests do not simulate a disk power failure or
+certify another backend. Mandatory real public Gate D is recorded separately in
+`devdocs/work/19-backfill-run-lifecycle/validation/gate-d.md` when executed.
