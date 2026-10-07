@@ -1,9 +1,14 @@
 ---
 model: gpt-6-astra
 effort: max
-revision: 1
+revision: 2
 ---
 # Stage 3 — prepare, retain, replay and acknowledge
+
+**Critic folded:** 2026-10-07 — 0 content mitigations; the required primitive experiment
+ran before Step 1 and PASSED (five checks). No implementation step added or changed.
+See [critic.md](critic.md) and [prebuild results](prebuild-results.txt). The existing
+explicit cancellation-suppression requirement is confirmed necessary by the probe.
 
 Inputs: [desc.md](desc.md), [contract](../contract.md), [Gate A PASS](../validation/gate-a.md).
 Baseline: `8023adf`, product `1425fd7`; Telethon 1.45.0 only. No rejected PR-critic or

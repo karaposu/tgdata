@@ -1,0 +1,6 @@
+PASS real SQLite exact CAS, owned pending codec and reopen
+PASS actual artifact relocation/integrity refusal leaves pending metadata unchanged
+PASS actual committed metadata survives close failure; accepted state is independent of local media
+PASS actual cancellation/commit and causal suppression; baseline inherited verdict: True
+PASS actual subprocess exits before/after SQLite create commit
+Result: PASS — five existing-primitive checks; new Stage 3 engine and live gate not claimed

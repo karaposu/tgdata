@@ -29,6 +29,12 @@ Passing result: all stated primitive assertions hold, actual committed outcomes 
 their lost/error response, and the required error-boundary technique prevents a local
 cancellation from acquiring the handled RPC verdict.
 
+Result: PASS — 2026-10-07. All five actual-primitive assertions passed before any
+implementation step. Exact pending data survived reopen; corruption refused without
+state change; a committed write survived its close error; causal suppression removed
+the observed inherited cancellation verdict; actual pre/post-commit process exits
+matched expectations. Receipt: [prebuild-results.txt](prebuild-results.txt).
+
 ## High-Level Summary
 
 The plan's structure survives review. No additional High/Medium/Low finding is left
