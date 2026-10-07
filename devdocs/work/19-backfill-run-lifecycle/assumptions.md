@@ -1,7 +1,7 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-7-public-local-evidence-gate-d-pending
+status: stage-8-and-gate-d-PASS
 ---
 # Backfill assumptions and evidence register
 
@@ -27,7 +27,15 @@ Stage 7 adds OBSERVED-LOCAL public facade/receiver evidence at `17fccbc`: 23 new
 public/example groups, 342 actual supported offline passes, ten guard checks and
 both examples. Its real SQLite namespace/receiver prototype passed before build;
 actual process exit/reopen proves the specified local receiver boundary. No new
-Telegram/account/ledger action occurred. **Stage 8/Gate D remain pending.**
+Telegram/account/ledger action occurred. At that checkpoint Stage 8/Gate D were pending; their completed evidence follows.
+
+## Stage 8 current completion
+
+[Gate D passed](validation/gate-d.md) at product `405218e`, after the mandatory real
+prebuild and 357 actual supported offline passes. All 12 assumptions have explicit scoped
+Stage 8 dispositions below. The test composition is qualified; future source views,
+receivers/backends and deployment ownership/clock guarantees are not extrapolated from it.
+Earlier evidence paragraphs remain historical receipts. Formal review/merge are pending.
 
 ## Status vocabulary
 
@@ -63,6 +71,8 @@ remain excluded, as previously directed; this is not a deferred implementation s
 
 ## A01 — Real history selection and canonical group identity
 
+**Stage 8 disposition:** OBSERVED-LIVE at D: independently qualified 250-record fixed scope, 120/120/10 public turns, real second SDK pages, two separately expected daily records and verified photo. A/B retain broader date/tie/empty boundary cases.
+
 **Premise:** the selected account/group supports the declared ID/date scan, including
 canonical identity, ordering, real SDK pagination, boundary inclusion and end signals.
 **Kind/status:** OBSERVED-LIVE within Gate A's two selected existing groups/intervals:
@@ -84,6 +94,8 @@ immediately after Stage 2, with basic characterization sooner if resources exist
 
 ## A02 — Conditional durable storage is sufficient for a lifecycle aggregate
 
+**Stage 8 disposition:** OBSERVED-LOCAL at `405218e`: nine public actual commit exit pairs. D adds actual receiver/source/recovery/ack process boundaries and independent SQL audit. Power loss and other backends remain unverified.
+
 **Premise:** a selected backend's exact conditional replacement commits the whole
 record durably, and lost/failed replies can be reconciled by loading it.
 **Kind/status:** OBSERVED-LOCAL through Stage 4's exact read-back/final-boundary matrix
@@ -104,6 +116,8 @@ INV-01, INV-09. **Waste if false:** revise storage boundary before delivery/cont
 
 ## A03 — Frozen enrollment does not recalculate its intent on retry
 
+**Stage 8 disposition:** OBSERVED-LOCAL at `405218e` plus D original creation retry after exit: same scope/ref and original known deadline; unknown creation retry remains refusal. Relative-date forbidden-clock checks remain in test24.
+
 **Premise:** immutable input recognition and saved boundaries preserve one run;
 absence/pruning cannot turn an unknown retry into new intent.
 **Kind/status:** OBSERVED-LOCAL for internal Stage 2 start/retry/status and OBSERVED-LIVE
@@ -123,6 +137,8 @@ on recognized retry; before/after-commit failure injection, then live query reus
 
 ## A04 — Exact observation and media custody support replay
 
+**Stage 8 disposition:** OBSERVED-LIVE at D: exact photo replay after reopen, receiver size/hash matches independent download, corrupt/missing disposable source copy refuses without refetch; ack succeeds from prior receiver custody.
+
 **Premise:** the complete pending value and required bytes stay available until accepted
 or explicitly abandoned; replay never silently substitutes a fresh observation.
 **Kind/status:** OBSERVED-LOCAL and OBSERVED-LIVE at Gate B for exact pending/media
@@ -130,7 +146,7 @@ custody, real receiver commitment, process restart, relocation/corruption/remova
 ack without local source copies. Production deployment durability remains UNVERIFIED.
 **Stage 3 evidence:** OBSERVED-LOCAL exact pending replay, relocation, missing/corrupt/
 symlink refusal and valid acknowledgment after media removal; actual new-engine live
-payload custody is now observed at B; deployment durability remains for D/adoption.
+payload custody is now observed at B; Gate D now observes the selected composition; another deployment still requires equivalent evidence.
 **Falsifier:** replay changes data/ref, re-contacts Telegram, loses pending after an
 error, or treats a missing/corrupt artifact as permission to read on.
 **Cheapest earlier check:** retain an actual prepared batch, restart and verify payload/
@@ -141,6 +157,8 @@ artifact hashes; remove/corrupt only disposable test copies and inspect unchange
 **Waste if false:** revise custody before completion, pacing and retirement rely on it.
 
 ## A05 — The destination's acceptance is durable and repeat-safe
+
+**Stage 8 disposition:** OBSERVED-LIVE selected D receiver: fsynced file custody before one full-snapshot/receipt/message-index transaction; lost acknowledgment replay deduplicates. No operational production receiver is certified.
 
 **Premise:** acknowledgment attests committed receiver data/artifacts; repeated batches
 and overlapping collections do not repeat the caller's irreversible processing effects.
@@ -165,6 +183,8 @@ integration/backend before Gate D/adoption. Inspect commit point before choosing
 
 ## A06 — The composed source attempt has an observable local outcome
 
+**Stage 8 disposition:** OBSERVED-LIVE at D: actual raw-result exit, local second-send refusal with useful 100-record prefix, held actual result across pause, original attempt identity and durable settlement. No server restriction was manufactured.
+
 **Premise:** raw reads/SDK retries, disconnect and cancellation can be distinguished
 from admission and durable result settlement sufficiently to enforce this contract.
 **Kind/status:** OBSERVED-LIVE with local injection for the raw read at Gate A;
@@ -184,6 +204,8 @@ B delivery boundaries and C full recovery. No claim a bounded batch bounds wall 
 
 ## A07 — Clock evidence can support the chosen wait
 
+**Stage 8 disposition:** OBSERVED-LIVE same-host D: waits 12.036/12.041 seconds; conservative recovery 12.040 seconds; failed-photo follow-up 12.035 seconds. UTC/monotonic edge cases remain LOCAL. Reliable UTC after restart is still required.
+
 **Premise:** supported deployment time is trustworthy enough for known deadlines;
 within-process monotonic evidence and persistent UTC are not confused.
 **Kind/status:** OBSERVED-LOCAL through Stage 5 for independent UTC/monotonic clocks,
@@ -200,6 +222,8 @@ wait and process restart at Gate C. Do not change the host clock or fake a live 
 INV-06, INV-07. **Waste if false:** revise time/recovery assumptions before API rollout.
 
 ## A08 — Budget admission remains authoritative at send time
+
+**Stage 8 disposition:** OBSERVED-LIVE at D: original policy 5,000 unchanged, fresh identity checked by budget adapter, charged 2,334→3,262, reserved 19→40. Blocked 20+1 claims retained; no local-operation charge/refund. Actual budget-exhaustion composition remains Gate C plus offline public tests.
 
 **Premise:** actual requests use verified account identity and durable budget claims;
 a saved retry hint cannot grant or reserve capacity.
@@ -221,6 +245,8 @@ before then, actual accounting observed at Gate A/B and full lifecycle wait at G
 **Waste if false:** repair actual send boundary before asserting safe source eligibility.
 
 ## A09 — Scoped revisions and recognition prevent temporal reapplication
+
+**Stage 8 disposition:** OBSERVED-LIVE with INJECTED ordering at D: opposing controls, delayed original resume, both terminal orders, four equal-hash generations, retained versus retired/pruned receipts. Original contexts never silently rebase.
 
 **Premise:** creation mode, expected predecessor, prepare cursor/control context and
 accepted command/receipt scope prevent old calls from acquiring new effects.
@@ -244,6 +270,8 @@ INV-05, INV-08, INV-09, INV-10. **Waste if false:** revise state/authority befor
 
 ## A10 — Recovery can re-establish the single-reader precondition
 
+**Stage 8 disposition:** OBSERVED-LIVE/LOCAL at D: parent explicitly waited for 14 owned workers; source exit 81 preceded recovery, actual recovery commit exit 82 preceded retry; busy local recovery refused. Caller-owned exclusion beyond these workers remains a deployment prerequisite.
+
 **Premise:** the caller can confirm the previous worker has stopped before recovering
 an uncertain attempt; the library can reject a still-active local attempt.
 **Kind/status:** caller ownership policy selected; Stage 5 OBSERVED-LOCAL exact recovery,
@@ -263,6 +291,8 @@ also attempt recovery while the local reader is intentionally still running.
 **Waste if false:** deployment must enforce exclusive ownership or select a different scope.
 
 ## A11 — Existing-group evidence can supply an independent bounded oracle
+
+**Stage 8 disposition:** OBSERVED-LIVE at D: independent descending search still 350 records, frozen 250-record prefix before tested reads, small fixture 46 and independent photo hash. No expected-set revision or unbounded source search; future visibility still needs qualification.
 
 **Premise:** the selected existing group has a manageable stable visible interval,
 and a separate client/export/manual enumeration can establish the expected IDs/dates
@@ -287,6 +317,8 @@ records completeness and drift. **Coverage:** C40–C42; INV-01, INV-04, INV-11.
 
 ## A12 — Existing contracts and health remain isolated
 
+**Stage 8 disposition:** OBSERVED-LOCAL 357 supported passes plus OBSERVED-LIVE D public local/source attribution, daily/history row isolation and full receiver snapshots. INJECTED prior-health fixtures remained unchanged during source-free operations. Paused #7 ownership redesign remains outside scope.
+
 **Premise:** new runtime APIs keep daily/window state and batch v1 unchanged, and local
 status/control/replay/ack do not become Telegram health observations.
 **Kind/status:** OBSERVED-LOCAL for namespace refusal, Stage 3 local prepare/replay/ack
@@ -296,7 +328,7 @@ identity. Gate C traced no RPC attributable to intervening local operations.
 Gate B local restart workers blocked sockets while settling live-data receipts;
 Stage 7 public methods now have OBSERVED-LOCAL health/context/lifetime/namespace
 evidence, including synthetic-transport actual SDK source exceptions. Full public/live
-integration remains UNVERIFIED for D.
+integration is now OBSERVED-LIVE at Gate D for the selected SQLite/receiver composition; another deployment remains unverified.
 **Falsifier:** legacy inputs/state change behavior, wrong-kind state is accepted, local
 error emits a Telegram verdict, or offline operation clears a source health failure.
 **Cheapest earlier check:** supported dev offline regression suite now; repeat affected
@@ -311,13 +343,14 @@ Stage 7; local checks as changed, integration Gate D.
 | Input | Current status | Owner | Required by |
 |---|---|---|---|
 | Existing group and read-only test approach | SELECTED by user | Maintainer | All gates |
-| Specific canonical group ID and approved account/session/config label | DONE for A/B/C; two user-selected existing sources and verified project login; credentials omitted | Maintainer | Gate A |
-| Existing closed interval, independent complete ID/date oracle and source/view metadata | DONE for A/B/C; frozen before tested reads, archived in gate evidence | Maintainer + implementer | Gate A |
-| Existing media fixture and independent hashes for advertised download mode | DONE for A/B/C; independent hash and actual receiver copy agree | Maintainer + implementer | A/B |
-| Source request allowance, external harness spacing and test budget path | DONE for A/B/C; 5,000 cap, 2,334 charged after C, no reset; paths retained privately | Maintainer + implementer | Gate A |
+| Specific canonical group ID and approved account/session/config label | DONE for A/B/C/D; two user-selected existing sources and verified project login; credentials omitted | Maintainer | Gate A |
+| Existing closed interval, independent complete ID/date oracle and source/view metadata | DONE for A/B/C/D; frozen before tested reads, archived in gate evidence | Maintainer + implementer | Gate A |
+| Existing media fixture and independent hashes for advertised download mode | DONE for A/B/C/D; independent hash and actual receiver copy agree | Maintainer + implementer | A/B |
+| Source request allowance, external harness spacing and test budget path | DONE for A/B/C/D; 5,000 cap; after D 3,262 charged/40 conservatively reserved, no reset; paths retained privately | Maintainer + implementer | Gate A |
 | Actual state backend/integration base containing #18 foundations | DONE: real SQLite, feature-only merge `5d0789e`, isolated live-case stores | Maintainer + implementer | Stage 2/Gate A |
-| Durable test receiver and declared commit/ack point | DONE for B/C: actual SQLite transaction after verified durable blob custody; Gates B/C PASS | Implementer/integrator | Gate B |
-| Operational receiver, worker ownership and clock assumptions | UNSET | Integrator | Gate D/adoption |
+| Durable test receiver and declared commit/ack point | DONE for B/C/D: actual full-snapshot SQLite transaction after verified durable blob custody; Gates B/C/D PASS | Implementer/integrator | Gate B |
+| Selected Gate D receiver, owned-worker waits and observed same-host clocks | OBSERVED in the actual test composition; Gate D PASS | Implementer | Gate D |
+| Another operational receiver, worker ownership and clock guarantees | UNSET/UNVERIFIED until that deployment is selected; not a remaining implementation step | Integrator | Operational adoption |
 
 Gate reports transition evidence states only after running the named checks. A blocked
 resource is never converted to evidence by a policy choice or a documentation audit.

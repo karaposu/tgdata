@@ -1,0 +1,14 @@
+Initial independent audit: AssertionError at audit_gate_d.py:84, 2026-10-07.
+The new audit applied its successful-history-response assertion to every SDK call.
+Actual exceptions were exactly three GetFileRequest/FileMigrateError routing replies:
+prebuild independent photo, prebuild public download, and Gate D photo-source.
+Each was followed by answered GetFileRequest calls in the same operation; independently
+hashed receiver bytes were intact. Telethon 1.45.0 downloads.py:112-116 explicitly
+handles this routing response by borrowing the destination DC sender and continuing.
+The frozen plan already allows selected media/file/DC authorization transport.
+
+Small instrument correction: apply successful response assertions to history RPCs;
+separately require every exceptional file reply to be exactly FileMigrateError with
+answered same-operation continuation. Keep all oracle, byte, receipt, state, timing,
+budget and read-only expectations unchanged. No runtime change or new live run.
+The initial assertion was an audit scope error, not a Telegram/lifecycle failure.

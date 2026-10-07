@@ -1,7 +1,7 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-7-public-local-evidence-gate-d-pending
+status: stage-8-and-gate-d-PASS
 ---
 # Backfill acceptance and failure matrix
 
@@ -16,6 +16,18 @@ now supplement those historical records; they do not credit unbuilt later operat
 C01–C22 preserve the final inquiry's 22 histories in their original order. C23–C44 add operation, storage, live-oracle and selected-critique boundaries. Gate A foundation tests can use the existing reader with the Stage 2 record; they do not claim that Stage 3 preparation already exists. Cases spanning multiple stages are repeated at their first full composition.
 
 LIVE means actual Telegram via Telethon 1.45.0; INJECTED means an identified local interruption/order/fault around real source/store/receiver paths; LOCAL means no server behavior is inferred. No Telegram source writes are allowed.
+
+## Stage 8 and Gate D — current completion record
+
+**PASS at `405218e`: 357 actual supported offline checks, three explicit legacy live
+skips, 19 instrument checks and both examples.** [Verification](stage-8-validation/verification.md).
+[Gate D PASS](validation/gate-d.md) adds the complete public/real-source/SQLite/receiver
+composition, exact 250-message history plus two daily records, controls, source and
+commit exits, 100-record interrupted prefix, verified photo custody and real pacing.
+Every C01–C44 status below now names its scoped actual evidence; no blanket range
+claim replaces missing cases. [Whole-feature readiness audit](stage-8-validation/review-readiness.md).
+Formal merge-check/PR/fresh PR critique and operational adoption remain separate.
+The earlier stage sections below are historical checkpoints, not outstanding gate status.
 
 ## Stage 7 public composition evidence — 2026-10-07
 
@@ -154,7 +166,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Creating another generation or moving the window.
 **Operations:** OP-START OP-STATUS. **Requirements:** INV-01 INV-05 INV-09.
 **Evidence / earliest check:** LOCAL/INJECTED; saved query also used LIVE at A; Stage 2 / Gate A.
-**Status:** UNRUN.
+**Status:** PASS (scoped): D main-local original creation retry; test24 relative-window forbidden-clock retry. Named LOCAL regression: test_30 `test_creation_real_commit_exit_pair`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C02 — Changed input reuses creation identity
 
@@ -163,7 +175,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Reinterpreting the earlier command.
 **Operations:** OP-START. **Requirements:** INV-01 INV-05.
 **Evidence / earliest check:** LOCAL; Stage 2 / Gate A.
-**Status:** LOCAL PASS at `1425fd7` for internal OP-START; no gate PASS implied.
+**Status:** PASS (scoped): LOCAL immutable-intent refusal; common engine revalidated through public retries. Named LOCAL regression: test_24 `test_changed_input_and_active_successor_conflict`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C03 — Deliberate identical new job
 
@@ -172,7 +184,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Collapsing jobs solely because parameters match.
 **Operations:** OP-START. **Requirements:** INV-01 INV-03 INV-05.
 **Evidence / earliest check:** LOCAL/INJECTED; repeat with real history; Stage 2 / Gate A; composition C.
-**Status:** PASS at Gate C / `0d6bb26`: actual terminal settled predecessors produce distinct generations with identical source bytes and independent acceptance.
+**Status:** PASS (scoped): D controls: four real equal-hash generations. Named LOCAL regression: test_30 `test_successor_real_commit_exit_pair_keeps_old_receipt_read_only`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C04 — Forgotten old start
 
@@ -181,7 +193,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Treating nonrecognition as evidence of first use.
 **Operations:** OP-START OP-STATUS. **Requirements:** INV-01 INV-05 INV-10.
 **Evidence / earliest check:** LOCAL; Stage 2 / Gate A.
-**Status:** PASS at Gate C / `0d6bb26`: actual controls/ack/successors produce retained and pruned histories; old retry/new requests refuse without mutation.
+**Status:** PASS (scoped): D controls: first generation pruned, old receipt refused. Named LOCAL regression: test_28 `test_retained_accepted_receipt_and_previous_cancel_are_read_only_then_pruned`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C05 — Known state unavailable
 
@@ -190,7 +202,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Resetting progress or calculating another window.
 **Operations:** OP-STATUS OP-START OP-RECOVER. **Requirements:** INV-01 INV-09 INV-11.
 **Evidence / earliest check:** LOCAL/INJECTED on real backend; Stage 2 / Gate A; recovery rechecked C.
-**Status:** LOCAL PASS through Stage 6 for missing/corrupt/unavailable state and command/recovery refusal; public integration remains D.
+**Status:** PASS (scoped): LOCAL public missing/malformed/file-loss and cleanup boundaries. Named LOCAL regression: test_30 `test_missing_malformed_known_state_and_cleanup_preserve_uncertainty`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C06 — Old resume response arrives last
 
@@ -199,7 +211,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Displaying/using arrival order as new permission.
 **Operations:** OP-CONTROL OP-STATUS. **Requirements:** INV-05 INV-08.
 **Evidence / earliest check:** LOCAL/INJECTED around actual storage; Stage 6 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: matrix supplement delays accepted resume reply until after newer pause; stored pause remains authoritative.
+**Status:** PASS (scoped): D controls: delayed accepted resume arrives after newer pause. Named LOCAL regression: test_30 `test_opposing_controls_and_delayed_resume_are_revision_ordered`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C07 — Unaccepted stale resume
 
@@ -208,7 +220,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Changing the request to the current revision for the caller.
 **Operations:** OP-CONTROL. **Requirements:** INV-05 INV-06 INV-08.
 **Evidence / earliest check:** LOCAL/INJECTED; Stage 6 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: stale unaccepted/forgotten resume refuses with unchanged stored facts and no RPC.
+**Status:** PASS (scoped): D controls: stale resume refuses; original context retained. Named LOCAL regression: test_28 `test_stale_resume_prepare_and_forgotten_command_refuse`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C08 — Two conflicting controls
 
@@ -217,7 +229,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Choosing a winner from client clocks.
 **Operations:** OP-CONTROL OP-STATUS. **Requirements:** INV-08 INV-09.
 **Evidence / earliest check:** INJECTED with real storage/await barriers; Stage 6 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: actual shared-load CAS barrier gives exactly one accepted control and one conflict.
+**Status:** PASS (scoped): D controls: actual shared-load/CAS barrier accepts exactly one decision. Named LOCAL regression: test_30 `test_opposing_controls_and_delayed_resume_are_revision_ordered`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C09 — Completion before cancellation
 
@@ -226,7 +238,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Relabeling an accepted completion.
 **Operations:** OP-ACK OP-CONTROL. **Requirements:** INV-03 INV-04 INV-08.
 **Evidence / earliest check:** INJECTED using actual receiver/store; live payload; Stage 6 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: actual final receiver/ack commits completed before cancel; cancel reports terminal without writing.
+**Status:** PASS (scoped): D controls: completion-first then cancellation reports terminal. Named LOCAL regression: test_30 `test_ack_real_commit_exit_pair_follows_receiver`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C10 — Cancellation before final receipt
 
@@ -235,7 +247,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Resurrection or relabeling cancellation as completed.
 **Operations:** OP-CONTROL OP-ACK. **Requirements:** INV-03 INV-04 INV-08.
 **Evidence / earliest check:** INJECTED using actual receiver/store; live payload; Stage 6 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: cancel before actual final ack remains cancelled while cursor/receipt advance.
+**Status:** PASS (scoped): D controls: cancellation-first then final receiver/ack remains cancelled. Named LOCAL regression: test_30 `test_late_final_result_cancel_order_and_equal_hash_successor`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C11 — Final receipt while paused
 
@@ -244,7 +256,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Making acknowledgment depend on permission to fetch.
 **Operations:** OP-CONTROL OP-ACK. **Requirements:** INV-03 INV-04 INV-06 INV-08.
 **Evidence / earliest check:** LIVE plus controlled local receipt order; Stage 6 / Gate C; basic completion B.
-**Status:** PASS at Gate C / `0d6bb26`: exact final live batch replays/commits/acks while paused and completes without resume or extra RPC.
+**Status:** PASS (scoped): D prebuild and controls: exact final ack completes while paused. Named LOCAL regression: test_30 `test_control_real_commit_exit_pair_preserves_delivery`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C12 — Imported midpoint
 
@@ -253,7 +265,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Claiming this run collected the skipped prefix.
 **Operations:** OP-START OP-PREPARE OP-STATUS. **Requirements:** INV-01 INV-04.
 **Evidence / earliest check:** LIVE bounded oracle plus LOCAL origin checks; Gate A foundation; Stage 4 / Gate B completion.
-**Status:** PASS at Gate B / `b1f6495` for internal imported-tail completion with live oracle; public integration remains D.
+**Status:** PASS (scoped): D prebuild/unknown/photo: imported after13 completes declared photo tail only. Named LOCAL regression: test_24 `test_imported_origin_is_not_acceptance_or_exhaustion`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C13 — Daily progress cannot seed fresh backfill silently
 
@@ -262,7 +274,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Borrowing the newer daily cursor without explicit import.
 **Operations:** OP-START OP-PREPARE. **Requirements:** INV-01 INV-03 INV-04.
 **Evidence / earliest check:** LIVE from independent scopes; LOCAL state comparison; Gate A foundation; B/D composition.
-**Status:** UNRUN.
+**Status:** PASS (scoped): D main: fresh history after0; daily starts at independent recent origin; rows isolated. Named LOCAL regression: test_29 `test_daily_and_backfill_progress_are_separate_and_no_auto_namespace_exists`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C14 — Full last batch followed by refusal
 
@@ -271,7 +283,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Treating full size or latest known ID as proof of end.
 **Operations:** OP-PREPARE OP-ACK. **Requirements:** INV-04 INV-11.
 **Evidence / earliest check:** LIVE plus local budget/failure injection; Stage 4 / Gate B.
-**Status:** PASS at Gate B / `b1f6495`: live full batch followed by injected local send refusal remains incomplete; actual budget/auth counterparts passed offline.
+**Status:** PASS (scoped): D photo: full one-record batch then local refusal remains incomplete; later real end. Named LOCAL regression: test_25 `test_exact_full_batch_needs_real_end_not_length`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C15 — Missing local artifact after receiver acceptance
 
@@ -280,7 +292,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Replacement download, or refusing acceptance solely because local replay is unavailable.
 **Operations:** OP-PREPARE OP-ACK. **Requirements:** INV-02 INV-03 INV-11.
 **Evidence / earliest check:** LIVE media and real receiver; INJECTED local removal; Stage 3 / Gate B.
-**Status:** PASS at Gate B / `b1f6495`: real receiver owns the photo; missing replay refuses; final ack succeeds after removal of source copies.
+**Status:** PASS (scoped): D photo: durable receiver bytes precede source removal and actual ack-commit exit. Named LOCAL regression: test_30 `test_media_receipt_custody_ack_without_source_bytes_and_health`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C16 — Live pending receipt outlives history policy
 
@@ -289,7 +301,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Expiring the live obligation or its ability to settle.
 **Operations:** OP-PREPARE OP-ACK. **Requirements:** INV-02 INV-05 INV-10.
 **Evidence / earliest check:** LOCAL/INJECTED with actual storage and saved bytes; Stage 3 / Gate B; pruning rechecked C.
-**Status:** PASS at Gate C / `0d6bb26`: older history is pruned while active exact pending remains replayable/acknowledgeable; attempted replacement refuses. History retention is count-based, not a TTL.
+**Status:** PASS (scoped): C retention matrix and D controls: prior histories retire/prune without expiring current pending. Named LOCAL regression: test_28 `test_retired_equal_hash_receipt_never_accepts_successor`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C17 — Budget ends after usable prefix
 
@@ -298,7 +310,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Advancing without ack or treating a short interrupted prefix as end.
 **Operations:** OP-PREPARE OP-ACK. **Requirements:** INV-02 INV-03 INV-04 INV-06 INV-11.
 **Evidence / earliest check:** LIVE with real budget/store/receiver; Stage 3 / Gate B; timing C.
-**Status:** PASS at Gate C / `0d6bb26`: actual restrictive budget exhausts after three complete records; prefix persists and reaches receiver/ack; timing and test-only cap increase preserve charges.
+**Status:** PASS (scoped): C actual bounded budget exhaustion; D 100-record locally interrupted prefix with retained charges. Named LOCAL regression: test_29 `test_public_budget_prefix_and_failed_prefix_save_keep_provenance`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C18 — Crash after possible send
 
@@ -307,7 +319,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Inferring no send, worker death or accepted output from missing response.
 **Operations:** OP-PREPARE OP-RECOVER. **Requirements:** INV-06 INV-07 INV-09 INV-12.
 **Evidence / earliest check:** LIVE plus INJECTED subprocess interruption; Stage 5 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: actual source answer then owned exit 81; parent wait, unresolved refusal, real recovery and measured conservative wait.
+**Status:** PASS (scoped): D unknown-source: actual raw return/exit81, confirmed child death then recovery. Named LOCAL regression: test_30 `test_admission_real_commit_exit_pair_never_sends`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C19 — Restart during known wait
 
@@ -316,7 +328,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Resetting or continually restarting the pause.
 **Operations:** OP-PREPARE OP-STATUS. **Requirements:** INV-06 INV-07.
 **Evidence / earliest check:** LIVE elapsed timing plus LOCAL injected-clock edges; Stage 5 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: actual restart gives decreasing early waits; next source after saved deadline; early/late ack never restarts it.
+**Status:** PASS (scoped): D main-local: restart preserves deadline, decreasing early wait; later real reads >=12s. Named LOCAL regression: test_29 `test_clock_minimum_survives_public_calls_and_close`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C20 — Untrustworthy time evidence
 
@@ -325,7 +337,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Inventing readiness or claiming protection against all undetectable clock jumps.
 **Operations:** OP-PREPARE OP-RECOVER OP-STATUS. **Requirements:** INV-06 INV-07.
 **Evidence / earliest check:** LOCAL; separate from LIVE timing evidence; Stage 5 / Gate C.
-**Status:** LOCAL PASS at `a180151`: independent clock regressions/invalid values/overflow refuse; UTC/monotonic minima protect local intervals. Trusted UTC limit remains.
+**Status:** PASS (scoped): LOCAL UTC/monotonic fault boundaries; trusted UTC after restart remains deployment assumption. Named LOCAL regression: test_27 `test_clock_regression_and_invalid_ns_refuse_without_admission`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C21 — Commit succeeded but response failed
 
@@ -334,7 +346,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Reverting accepted progress or issuing compensating new source work blindly.
 **Operations:** OP-START OP-PREPARE OP-ACK OP-CONTROL OP-RECOVER OP-STATUS. **Requirements:** INV-03 INV-05 INV-09.
 **Evidence / earliest check:** INJECTED at actual store commits; A create; B publish/ack/end; C controls/recovery.
-**Status:** PASS through Stage 6/Gate C: all actual local commit boundaries covered; live-origin recovery process exit/retry and control post-commit close error confirm retained outcomes.
+**Status:** PASS (scoped): All nine test30 commit exit pairs; D actual receiver/source/recovery/ack exits; no power-loss claim. Named LOCAL regression: test_30 `test_cancelled_publication_and_ack_reply_reopen_actual_effect`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C22 — Paused, pending and rate-limited together
 
@@ -343,7 +355,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Letting one display label erase another restriction or obligation.
 **Operations:** OP-PREPARE OP-ACK OP-STATUS OP-CONTROL. **Requirements:** INV-02 INV-03 INV-06 INV-08 INV-11.
 **Evidence / earliest check:** LIVE payload plus INJECTED conditions; Stage 6 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: paused actual budget-error prefix stays owed with failure/wait facts; real receiver/ack works and resume preserves source wait.
+**Status:** PASS (scoped): C actual combined paused budget prefix; D independently repeats public pause/delivery/failure boundaries. Named LOCAL regression: test_28 `test_paused_failed_budget_prefix_replays_and_ack_preserves_wait_and_failure`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C23 — Empty and nonempty exhausted scope
 
@@ -352,7 +364,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Equating arbitrary None/error with end, or reading again after completed status.
 **Operations:** OP-PREPARE OP-ACK OP-STATUS. **Requirements:** INV-03 INV-04 INV-09.
 **Evidence / earliest check:** LIVE oracle with actual storage and crash boundaries; Stage 4 / Gate B.
-**Status:** PASS at Gate B / `b1f6495`: real empty/final scope and actual before/after completion/ack process exits.
+**Status:** PASS (scoped): D main final partial/ack and photo actual empty end without fake receipt. Named LOCAL regression: test_30 `test_empty_end_real_commit_exit_pair`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C24 — Failure before a usable prefix
 
@@ -361,7 +373,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Returning successful empty completion.
 **Operations:** OP-PREPARE OP-STATUS. **Requirements:** INV-03 INV-04 INV-11.
 **Evidence / earliest check:** LIVE read with INJECTED local failure; LOCAL source categories; Stage 3 / Gate B; recovery C.
-**Status:** PASS for local/auth/budget cases and Gate B injected failed-follow-up/post-answer uncertainty; no naturally occurring server failure is claimed.
+**Status:** PASS (scoped): D photo local pre-send failure: no pending/end/cursor advance; no natural server denial claimed. Named LOCAL regression: test_25 `test_no_prefix_failure_settles_without_end_or_cursor_advance`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C25 — Prefix save also fails
 
@@ -370,7 +382,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Cleanup/storage replacing the original context silently or signaling fake source recovery.
 **Operations:** OP-PREPARE. **Requirements:** INV-02 INV-09 INV-11.
 **Evidence / earliest check:** INJECTED with real backend; existing local health checks; Stage 3 / Gate B.
-**Status:** LOCAL PASS through tests 25/26 at `b1f6495`; original read failure and local storage provenance stay separate. Live payload custody/restart also passes B.
+**Status:** PASS (scoped): LOCAL public SDK error plus failed real publication, unchanged health during recovery/wait. Named LOCAL regression: test_30 `test_failed_prefix_and_publication_keep_source_provenance_then_recover`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C26 — Admission write failed or uncertain
 
@@ -379,7 +391,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Sending because the write probably worked or probably rolled back.
 **Operations:** OP-PREPARE OP-RECOVER. **Requirements:** INV-06 INV-09 INV-12.
 **Evidence / earliest check:** INJECTED actual backend; count real send boundary; Stage 3 / Gate B.
-**Status:** PASS through Stage 6/Gate C: local admission uncertainty remains no-send; actual unknown-source process exit refuses another read until explicit stopped-attempt recovery.
+**Status:** PASS (scoped): D unknown attempt refuses new prepare; LOCAL before/after admission exits send zero. Named LOCAL regression: test_30 `test_admission_real_commit_exit_pair_never_sends`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C27 — Late source result after control mutation
 
@@ -388,7 +400,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Whole-record stale overwrite, new fetch to repair CAS, or silent discard solely because control changed.
 **Operations:** OP-PREPARE OP-CONTROL. **Requirements:** INV-02 INV-05 INV-08 INV-09.
 **Evidence / earliest check:** LIVE plus INJECTED await barrier; Stage 6 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: real result/error return held before publication; pause/cancel retained with usable data and no repair refetch.
+**Status:** PASS (scoped): D controls: real result held before publication preserves newer pause; LOCAL late cancellation. Named LOCAL regression: test_30 `test_late_final_result_cancel_order_and_equal_hash_successor`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C28 — Recovery while old reader lives
 
@@ -397,7 +409,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Treating a timeout or boolean alone as a distributed ownership proof.
 **Operations:** OP-RECOVER OP-PREPARE. **Requirements:** INV-06 INV-12.
 **Evidence / earliest check:** INJECTED subprocess/local-task control; Stage 5 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: active local real-result preparation refuses recovery despite claimed quiescence; owned-process exit is separately confirmed before recovery.
+**Status:** PASS (scoped): D controls: busy recover/abandon refuse; parent confirms each owned worker exit. Named LOCAL regression: test_29 `test_one_cached_engine_preserves_busy_source_and_late_control`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C29 — Corrupt pending artifact
 
@@ -406,7 +418,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Accepting changed bytes because filename/path matches.
 **Operations:** OP-PREPARE. **Requirements:** INV-02 INV-11.
 **Evidence / earliest check:** LIVE media plus INJECTED filesystem fault; Stage 3 / Gate B.
-**Status:** PASS at Gate B / `b1f6495`: corrupt and missing live-photo copies refuse without refetch/state mutation.
+**Status:** PASS (scoped): D photo: corrupt disposable copy refuses unchanged, no refetch or health recovery. Named LOCAL regression: test_30 `test_media_receipt_custody_ack_without_source_bytes_and_health`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C30 — Wrong collection, destination or run receipt
 
@@ -415,7 +427,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Treating a payload hash as collection/destination authority.
 **Operations:** OP-ACK. **Requirements:** INV-03 INV-05.
 **Evidence / earliest check:** LOCAL/INJECTED with real stored observations; LIVE where equal observations exist; Stage 3 / Gate B.
-**Status:** PASS at Gate B / `b1f6495`: real equal hashes across collections and wrong run/destination/collection references refuse unchanged.
+**Status:** PASS (scoped): B wrong destination/run/collection; D controls same-hash full-scoped receipts; test29 receiver scope. Named LOCAL regression: test_25 `test_wrong_and_unknown_receipts_preserve_pending`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C31 — Duplicate latest ack with newer pending
 
@@ -424,7 +436,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Clearing another pending batch or advancing twice.
 **Operations:** OP-ACK OP-STATUS. **Requirements:** INV-02 INV-03 INV-05 INV-10.
 **Evidence / earliest check:** Real storage and receiver; LIVE payload; Stage 3 / Gate B.
-**Status:** PASS at Gate B / `b1f6495`: latest duplicate preserves newer pending; older unrecognized receipt refuses.
+**Status:** PASS (scoped): B latest same-run duplicate preserves newer pending; D prior-run duplicate preserves successor pending. Named LOCAL regression: test_25 `test_scoped_ack_duplicate_and_zero_pause_continuation`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C32 — Explicit abandonment and successor
 
@@ -433,7 +445,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Pretending abandoned data was accepted, or letting a late retired receipt affect the successor.
 **Operations:** OP-CONTROL OP-START OP-ACK. **Requirements:** INV-03 INV-05 INV-08 INV-10 INV-12.
 **Evidence / earliest check:** LOCAL/INJECTED with actual storage; Stage 6 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: cancel in-flight, refuse busy abandonment/successor, settle owed real data, abandon preserving cancelled/cursor, then scoped successor; old receipt harmless.
+**Status:** PASS (scoped): D controls: cancel/abandon after quiescence; unchanged cursor, distinct successor. Named LOCAL regression: test_30 `test_abandon_real_commit_exit_pair_retires_receipt`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C33 — Local public operations and health
 
@@ -442,7 +454,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Treating local success/failure as fresh Telegram evidence.
 **Operations:** OP-STATUS OP-CONTROL OP-ACK OP-PREPARE OP-RECOVER OP-START. **Requirements:** INV-11.
 **Evidence / earliest check:** LOCAL call counters; LIVE attributed trace at D; Stage 7 / Gate D; affected local checks earlier.
-**Status:** LOCAL public evidence at `17fccbc`: prior health survives tested status/start/replay/ack/control and store/media errors; recovery separately makes no source calls; actual raw SDK error is attributed once. Full combined/LIVE public attribution remains Gate D.
+**Status:** PASS (scoped): D all socket/config-blocked local workers and operation-tagged live RPC traces; injected fixture labeled. Named LOCAL regression: test_29 `test_local_operations_preserve_prior_health_and_make_no_calls`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C34 — Legacy compatibility and separate collections
 
@@ -451,7 +463,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Silently migrating daily data or advancing another collection.
 **Operations:** OP-START OP-PREPARE OP-ACK OP-STATUS. **Requirements:** INV-01 INV-03 INV-09.
 **Evidence / earliest check:** LOCAL regressions plus LIVE sequential integration; On any shared edit; Stage 7 / Gate D.
-**Status:** LOCAL public PASS at `17fccbc`: supported legacy regressions, namespace refusal and independent daily/history cursors in the actual SQLite example. LIVE sequential public integration remains Gate D.
+**Status:** PASS (scoped): 357 actual supported offline passes; D main daily/history state and receiver integration. Named LOCAL regression: test_29 `test_daily_and_backfill_progress_are_separate_and_no_auto_namespace_exists`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C35 — Delayed prepare after acknowledgment
 
@@ -460,7 +472,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Turning the old call into fetch-next at the new cursor.
 **Operations:** OP-PREPARE OP-ACK. **Requirements:** INV-05 INV-06.
 **Evidence / earliest check:** LOCAL/INJECTED actual lifecycle state; LIVE request attribution; Stage 3 / Gate B.
-**Status:** PASS at Gate B / `b1f6495`: stale prepare after ack conflicts before another source request.
+**Status:** PASS (scoped): D main-local explicitly refuses original pre-ack prepare context without source. Named LOCAL regression: test_25 `test_scoped_ack_duplicate_and_zero_pause_continuation`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C36 — Delayed prepare after pause/resume
 
@@ -469,7 +481,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Automatically using the newer operator permission.
 **Operations:** OP-PREPARE OP-CONTROL. **Requirements:** INV-05 INV-06 INV-08.
 **Evidence / earliest check:** INJECTED barriers with actual state; LIVE turns; Stage 6 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: stale prepare after actual controls refuses before replay/admission with identical state and no RPC.
+**Status:** PASS (scoped): D controls stale prepare after accepted controls refuses with unchanged pending. Named LOCAL regression: test_30 `test_opposing_controls_and_delayed_resume_are_revision_ordered`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C37 — Absent slot is not unknown retry permission
 
@@ -478,7 +490,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Inferring new intent from absence or hiding total-history loss.
 **Operations:** OP-START OP-STATUS. **Requirements:** INV-01 INV-05 INV-09.
 **Evidence / earliest check:** LOCAL real backend; Stage 2 / Gate A.
-**Status:** LOCAL PASS at `1425fd7` for internal start/status and real SQLite; no gate PASS implied.
+**Status:** PASS (scoped): LOCAL public absent slot: retry/status refuse; test30 before-creation exit retains absence. Named LOCAL regression: test_29 `test_unknown_start_and_run_never_bootstrap`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C38 — Intentional retry after settled failure
 
@@ -487,7 +499,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Promising indefinite old-prepare replay or treating every repeated call as free source work.
 **Operations:** OP-PREPARE OP-RECOVER. **Requirements:** INV-06 INV-07 INV-12.
 **Evidence / earliest check:** LIVE failure injection plus LOCAL timing cases; Stage 5 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: actual zero-prefix budget failure settles without end/progress; early retry has no RPC; elapsed retry admits a distinct attempt and rechecks still-exhausted allowance without a history send.
+**Status:** PASS (scoped): C real allowance recheck; D photo explicit later retry after failed follow-up and actual >=12s wait. Named LOCAL regression: test_30 `test_failed_prefix_and_publication_keep_source_provenance_then_recover`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C39 — Recovery reply lost
 
@@ -496,7 +508,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Resetting the wait each time or recovering a different current attempt.
 **Operations:** OP-RECOVER OP-STATUS. **Requirements:** INV-05 INV-07 INV-09 INV-12.
 **Evidence / earliest check:** INJECTED actual store/process boundary; Stage 5 / Gate C.
-**Status:** PASS at Gate C / `0d6bb26`: actual post-recovery commit exit 82; new process retries twice with forbidden clocks, identical deadline and no write; early wait and later real read measured.
+**Status:** PASS (scoped): D recovery commit exit82 then exact retry/deadline; next real read >=12s. Named LOCAL regression: test_30 `test_recovery_real_commit_exit_pair_preserves_original_command`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C40 — Missing independent oracle or source drift
 
@@ -505,7 +517,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Retrospectively changing expected results, seeding Telegram messages, or passing synthetic-only live coverage.
 **Operations:** VALIDATION. **Requirements:** INV-04 INV-11.
 **Evidence / earliest check:** LIVE independent existing-history evidence; Fixture qualification / Gate A; recheck every gate.
-**Status:** OBSERVED at Gates A/B: independent complete fixtures, no retrospective expected-set changes, matching post-check; requalify future runs.
+**Status:** PASS (scoped): A rejected non-group/undersized fixture; D direct qualified sets frozen before reads, unchanged counts; drift guard retained. Named LOCAL regression: test_24 `test_window_and_clock_failures_are_local`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C41 — Real SDK and caller pagination
 
@@ -514,7 +526,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Counting repeated small first pages as an SDK boundary test or using the same reader as the sole oracle.
 **Operations:** OP-START OP-PREPARE. **Requirements:** INV-01 INV-04 INV-11.
 **Evidence / earliest check:** LIVE, existing group, read-only; Gate A foundation; Gate B/D new API.
-**Status:** PASS for internal composition at Gate B / `b1f6495`: 350 accepted records, 120/120/110 batches, six real SDK requests and actual second pages. Public D remains.
+**Status:** PASS (scoped): D 250 exact records in120/120/10; actual second SDK pages; source differs from independent descending oracle. Named LOCAL regression: test_25 `test_short_slice_is_not_itself_source_exhaustion`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C42 — Exact date selection and media mode
 
@@ -523,7 +535,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Claiming unseen cases passed, downloading excluded media, or creating fixture messages.
 **Operations:** OP-START OP-PREPARE. **Requirements:** INV-01 INV-02 INV-04 INV-11.
 **Evidence / earliest check:** LIVE plus separate LOCAL malformed/bounds cases; Gate A foundation; B/D composition.
-**Status:** PASS for Gate B internal fresh/imported reference/download composition and independent photo hash; public D remains.
+**Status:** PASS (scoped): A/B full boundary matrix; D fresh/imported closed scopes and independent real photo digest. Named LOCAL regression: test_25 `test_fresh_relative_query_uses_original_window_after_clock_moves`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C43 — Invalid or incompatible saved state
 
@@ -532,7 +544,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Interpreting lifecycle as daily state or guessing unknown fields.
 **Operations:** OP-START OP-PREPARE OP-STATUS OP-ACK OP-CONTROL OP-RECOVER. **Requirements:** INV-01 INV-09 INV-11.
 **Evidence / earliest check:** LOCAL real backend with injected corrupt records; Stage 2 / Gate A; public regression D.
-**Status:** UNRUN.
+**Status:** PASS (scoped): Strict codec suites plus test30 public malformed/missing state; no bootstrap or repair. Named LOCAL regression: test_24 `test_malformed_outer_and_request_refused`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## C44 — Input, scope and identity normalization
 
@@ -541,7 +553,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Using a different input form to reset an accepted intent or losing precision in identifiers.
 **Operations:** OP-START OP-PREPARE OP-ACK OP-CONTROL OP-RECOVER OP-STATUS. **Requirements:** INV-01 INV-05 INV-09.
 **Evidence / earliest check:** LOCAL; valid saved query also checked LIVE at A; Stage 2 / Gate A; later operations as implemented.
-**Status:** UNRUN.
+**Status:** PASS (scoped): Strict input/counter/codec suites plus test29 typed public exports/required args/bad address refusal. Named LOCAL regression: test_24 `test_input_and_portable_identity`; see [Stage 8 case map](stage-8-validation/coverage-map.md).
 
 ## Operation coverage
 

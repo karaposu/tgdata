@@ -1,20 +1,34 @@
 ---
-status: draft
-revision: 10
+status: implemented-gates-A-through-D-PASS
+revision: 11
 model: gpt-6-astra
 effort: max
 ---
 # Planned backfill lifecycle — staged implementation plan
 
-Imported overall draft for #19, prepared from the completed
-[lifecycle source record](stage-1-contract/source-input.md#behavioral-basis).
-It does not mark a formal pipeline step complete or authorize implementation,
-publication or merge. It leaves the existing daily-continuation and fixed-window
-implementation records intact.
+Overall plan for #19, derived from the completed
+[lifecycle source record](stage-1-contract/source-input.md#behavioral-basis). All eight
+stages are now implemented through their separate desc/plan/critic/fold/verification
+chains, and mandatory Gates A–D passed. This aggregate is their map, not a claim that
+one monolithic plan was critiqued. Formal merge-check/PR/fresh PR critique and merge
+remain pending. Daily/fixed-window prerequisite records are preserved.
 
 Planning baseline: branch `feat/18-daily-group-continuation` at `d1f37f7`;
 product code at `e9b5154`. Session metadata confirmed GPT 6 Astra / max for this
 planning turn. Target SDK: **Telethon 1.45.0 only**.
+
+## Stage 8 completion — revision 11
+
+Product `405218e` adds 15 combined public fault groups, including 18 actual before/after
+commit exits. The supported regression passed 357 actual checks (three explicit legacy
+live skips), plus 19 instrument checks and both examples. [Verification](stage-8-validation/verification.md).
+[Gate D PASS](validation/gate-d.md) qualifies the complete public source/backend/receiver
+composition and independent saved-record audit. Real history/daily delivery, controls,
+unknown-attempt recovery, byte custody and pacing all passed without runtime changes.
+[Whole-feature traceability](stage-8-validation/review-readiness.md) closes all 44 cases
+and selected critic remedies within their stated scopes. Preparation/implementation
+is complete; review, merge and operational adoption are separate remaining decisions.
+The sections below retain earlier checkpoint history.
 
 ## Revision 2 — validate assumptions before building on them
 
@@ -197,16 +211,18 @@ The following conditions attach to their named gates:
 - **What must happen:** execute and record each required validation gate successfully.
   **Who:** implementing session, with the maintainer reviewing changed assumptions.
   **Blocks:** Gate A → Stage 3; Gate B → Stage 5; Gate C → Stage 7; Gate D → feature
-  review/release readiness. **Status:** A passed; B–D remain OPEN/unrun.
+  review/release readiness. **Status:** CLOSED — A/B/C/D passed; see their gate reports.
 
 - **What must happen:** the integration names its durable destination acceptance
   point and supplies its chosen pacing and retry policy. **Who:** application owner.
-  **Blocks:** Stage 8, step 8.3, operational adoption only. **Status:** OPEN.
-  A local durable receiver can exercise the library contract before this.
+  **Blocks:** operational adoption of another deployment only. **Status:** selected
+  Gate D test integration CLOSED/PASS; future operational destination remains OPEN
+  when selected. The tested byte/snapshot acceptance point and 12-second pacing are
+  explicit; they do not certify an arbitrary deployment.
 - **What must happen:** implementation is requested and the repository's preparation,
   plan critique and fold checkpoints are completed. **Who:** maintainer and implementing
   session. **Blocks:** production-code execution of each selected stage. **Status:** DONE
-  for Stages 2–3; OPEN for later stages, subject first to the mandatory live gates.
+  for all eight scoped stages, including required prebuild experiments and Gates A–D.
 - **What must happen:** merge check, fresh PR critique and explicit merge go-ahead.
   **Who:** implementing/reviewing session and maintainer. **Blocks:** merging after
   Stage 8. **Status:** OPEN. Nothing in this plan performs those actions now.
