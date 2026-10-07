@@ -5,18 +5,18 @@ articulated-surfacing-routed
 A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
-- [x] Surfacing
-- [x] Sensemaking
-- [x] Decomposition
-- [x] Innovation
-- [x] Critique
-- [x] Routelister
+- [ ] Surfacing
+- [ ] Sensemaking
+- [ ] Decomposition
+- [ ] Innovation
+- [ ] Critique
+- [ ] Routelister
 ## Iteration
-1
+2
 ## Status
 ACTIVE
 ## Next Discipline
-Iteration assessment
+Surfacing
 ## History
 - 2026-10-07_23-34: Articulate-Simple complete, HIGH-PROCEED, 1 item/4 variants. Checker absent; manual 9/9 failure-mode checks passed, bundle complete. Mechanical derivation and all four MQ/WHY/variant preservation checked. Next: Surfacing.
 - 2026-10-07_23-35: Surfacing complete; 18 items, 3 cycles, PROCEED. Checker absent; manual 6/6 trace/summary/coverage/metadata/frontier/telemetry checks passed. Next: Sensemaking.
@@ -25,3 +25,4 @@ Iteration assessment
 - 2026-10-07_23-47: Innovation complete; 7/7 mechanisms, 17 candidates, 5 actionable survivors assembled. Checker absent; manual coverage/generation/audit/tests/assembly/telemetry checks 6/6 PASS. Next: Critique.
 - 2026-10-07_23-53: Critique iteration1 complete; 17 candidates, 7 dimensions, assembly REFINE on durable admission and timeout prefixes. Manual structural check 6/6 PASS; checker absent. Next: Routelister, then narrow iteration2.
 - 2026-10-07_23-54: Routelister complete; 10 identities, both files written. Checker absent; manual header/records/exclusions/telemetry/index check 5/5 PASS. Next: narrow iteration2, because the assembly needs source-boundary refinement.
+- 2026-10-07_23-54: Iteration1 assessed: original question not fully answered. Preserve framing and index; retain named iteration1 outputs. Iteration2 focus: durable account attempt admission/settlement/recovery and completed prefixes at pool timeout, within the existing ownership assembly.
