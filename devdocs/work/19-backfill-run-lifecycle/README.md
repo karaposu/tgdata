@@ -1,6 +1,6 @@
 # Backfill run lifecycle — issue #19
 
-**Stages 1–2 are built; Stage 2 is verified offline. Gate A is BLOCKED and unrun.**
+**Stages 1–2 are built and Gate A has passed real Telegram validation.**
 Stage 2 adds durable run identity, strict state, start/retry/reopen/status and the
 opt-in Gate A instrument. Stages 3–8 remain pending. Source preparation, acknowledgment,
 completion, controls, recovery and the public facade are not implemented for this lifecycle.
@@ -11,19 +11,21 @@ product code/tests/public docs are committed in `1425fd7`.
 
 - [Contract](contract.md): operations, identity, retry/conflict/durability and state rules.
 - [Assumptions](assumptions.md): what is selected, observed or still unverified.
-- [Acceptance matrix](acceptance-matrix.md): 44 cases with scoped Stage 2 local evidence.
+- [Acceptance matrix](acceptance-matrix.md): 44 cases with scoped Stage 2/Gate A evidence.
 - [Live validation](live-validation.md): existing group, read-only, mandatory Gates A–D.
 - [Staged plan](staged-plan.md): the whole feature's eight stages and four gates.
 - [Stage 1 implementation](stage-1-contract/implementation.md) and
   [verification](stage-1-contract/verification.md): scoped pipeline and test receipts.
 - [Stage 2 implementation](stage-2-state/implementation.md) and
   [verification](stage-2-state/verification.md): 198 offline test groups, 3 explicit
-  live skips and 9 offline instrument checks.
+  live skips and 9 initial offline instrument checks; later live evidence is separate.
 - [Stage 2 usage](../../../docs/backfill_state.md) and
   [probe usage](stage-2-state/probe-usage.md).
-- [Gate A report](validation/gate-a.md): missing inputs, evidence limits and resumption.
+- [Gate A report](validation/gate-a.md): seven live comparisons, two controlled
+  interruptions, 23 repeated state tests and 10 instrument checks; all passed.
 
 [Issue #19](https://github.com/karaposu/tgdata/issues/19) tracks this lifecycle slice of
-#18. Next: qualify the selected existing account/group, independent oracle and bounded
-source allowance, then execute/review Gate A. Stage 3 cannot start until Gate A passes.
-No real account/config was accessed and no Telegram traffic occurred in Stage 2 verification.
+#18. Next: Stage 3, exact pending delivery and acknowledgment. Gates B–D remain pending.
+The user-selected live sources, restored login, bounded ledger, startup-tool correction
+and observations are recorded in the gate report. No Stage 3 implementation or merge
+is implied by Gate A passing.

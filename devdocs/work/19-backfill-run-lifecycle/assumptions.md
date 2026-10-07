@@ -1,7 +1,7 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-2-local-evidence
+status: gate-a-foundation-evidence
 ---
 # Backfill assumptions and evidence register
 
@@ -9,8 +9,8 @@ This register belongs to [the contract](contract.md). A selected policy is not a
 empirically proved property, and an existing component receipt is not evidence that
 the new lifecycle works. Stage 1 supplied the specifications. Stage 2 now has scoped
 local evidence at `1425fd7`, recorded in [verification](stage-2-state/verification.md).
-No live gate has run. [Case IDs](acceptance-matrix.md) retain the unverified portions
-of every composite case.
+[Gate A passed](validation/gate-a.md) with scoped live evidence on 2026-10-07.
+[Case IDs](acceptance-matrix.md) retain unverified portions of every later composite case.
 
 ## Status vocabulary
 
@@ -19,6 +19,8 @@ of every composite case.
   it says nothing about an untested composition or deployment.
 - `OBSERVED-LOCAL`: actual Stage 2 code was exercised offline within the stated scope;
   it is not live-source, future-operation or deployment evidence.
+- `OBSERVED-LIVE`: actual Telegram/SDK behavior in the named account/view/window and
+  composition; it is not evidence for unimplemented operations or arbitrary deployments.
 - `SOURCE-CONFIRMED`: source/format fact checked against the named code.
 - `UNVERIFIED`: behavioral premise awaiting the specified evidence.
 - `UNSET`: a required external input has not been supplied/verified.
@@ -46,10 +48,13 @@ remain excluded, as previously directed; this is not a deferred implementation s
 
 **Premise:** the selected account/group supports the declared ID/date scan, including
 canonical identity, ordering, real SDK pagination, boundary inclusion and end signals.
-**Kind/status:** behavioral; UNVERIFIED for live Telegram. Existing offline SDK tests
-and source are not live evidence.
+**Kind/status:** OBSERVED-LIVE within Gate A's two selected existing groups/intervals:
+350-record real SDK pagination, dates, ties/gaps, empty/full/end and imported scope.
+Other account/view/SDK conditions require equivalent evidence.
 **Evidence now:** BatchEngine/_HistoryWindow at #18 e9b5154 and prior fixed-window
 verification; replies there are synthetic. Batch v1's explicit identity is source-confirmed.
+The later [Gate A report](validation/gate-a.md) adds actual independently expected
+source comparisons, real SDK page traces and the selected photo hash.
 **Falsifier:** independently recorded visible IDs within the frozen scope are omitted,
 extra records appear, the source identity changes, or exhaustion contradicts the oracle.
 **Cheapest earlier check:** existing raw reader on a selected, independently enumerated
@@ -83,8 +88,8 @@ INV-01, INV-09. **Waste if false:** revise storage boundary before delivery/cont
 
 **Premise:** immutable input recognition and saved boundaries preserve one run;
 absence/pruning cannot turn an unknown retry into new intent.
-**Kind/status:** OBSERVED-LOCAL for internal Stage 2 start/retry/status; saved query use
-against real Telegram remains UNVERIFIED at Gate A.
+**Kind/status:** OBSERVED-LOCAL for internal Stage 2 start/retry/status and OBSERVED-LIVE
+for saved-query reuse after process restart at Gate A. Later operations remain unverified.
 **Evidence now:** test_24 at `1425fd7` preserves dates and identity across reopen, lost
 reply and a forbidden retry clock; changed requests conflict and unknown retries refuse.
 Successor/pruned recognition uses explicitly seeded terminal snapshots. It does not
@@ -132,8 +137,9 @@ integration/backend before Gate D/adoption. Inspect commit point before choosing
 
 **Premise:** raw reads/SDK retries, disconnect and cancellation can be distinguished
 from admission and durable result settlement sufficiently to enforce this contract.
-**Kind/status:** UNVERIFIED for live composition; existing code exposes raw results/
-partial errors but does not implement the new attempt marker.
+**Kind/status:** OBSERVED-LIVE with local injection for the raw read's answered-response
+cancellation and refused follow-up at Gate A. Durable attempt/admission/recovery logic
+is not implemented and remains UNVERIFIED for the later composition.
 **Falsifier:** source activity occurs before durable admission, another read overlaps
 unresolved activity, or a late result cannot be attributed to its original attempt.
 **Cheapest earlier check:** characterize actual existing raw read at Gate A, including
@@ -160,8 +166,9 @@ INV-06, INV-07. **Waste if false:** revise time/recovery assumptions before API 
 
 **Premise:** actual requests use verified account identity and durable budget claims;
 a saved retry hint cannot grant or reserve capacity.
-**Kind/status:** SOURCE-CONFIRMED and prior component receipts for dev budget code;
-UNVERIFIED for this live composition/new lifecycle status.
+**Kind/status:** OBSERVED-LIVE for fresh account verification and preserved real charges
+at Gate A, including cancellation/refused-send charges. Quota/warm-up/expiry and the new
+lifecycle timing/status composition remain UNVERIFIED for later gates.
 **Falsifier:** refused message traffic is sent, retries bypass charging, cached health
 identity bills the wrong account, or local lifecycle code refunds old charges.
 **Cheapest earlier check:** small local test allowance with actual bounded source reads,
@@ -206,8 +213,9 @@ also attempt recovery while the local reader is intentionally still running.
 **Premise:** the selected existing group has a manageable stable visible interval,
 and a separate client/export/manual enumeration can establish the expected IDs/dates
 and selected media before the reader under test runs.
-**Kind/status:** UNVERIFIED; actual group, interval and oracle UNSET. Read-only approach
-is SELECTED and is not waived by fixture difficulty.
+**Kind/status:** OBSERVED-LIVE for Gate A's independently enumerated ID/date intervals
+and selected photo hash. The first source was too small for an SDK page; a second
+user-selected existing source supplied that missing case. Read-only scope was retained.
 **Falsifier:** expected results come only from the tested function, enumerate only a
 sample while claiming completeness, omit required page/boundary cases, or drift during
 measurement without an independent explanation.
@@ -217,7 +225,7 @@ already-existing interval within authorized scope if necessary, never send seed 
 without the required evidence. Live behavior was not needed to write this specification.
 **Owner:** caller supplies/identifies existing group and independent view; implementer
 records completeness and drift. **Coverage:** C40–C42; INV-01, INV-04, INV-11.
-**Waste if false:** Gate A stays BLOCKED/INCONCLUSIVE; do not build dependent stages.
+**Waste if false:** reopen Gate A as BLOCKED/INCONCLUSIVE; stop dependent work.
 
 ## A12 — Existing contracts and health remain isolated
 
@@ -239,11 +247,11 @@ Stage 7; local checks as changed, integration Gate D.
 | Input | Current status | Owner | Required by |
 |---|---|---|---|
 | Existing group and read-only test approach | SELECTED by user | Maintainer | All gates |
-| Specific canonical group ID and approved account/session/config label | UNSET; no credentials requested/stored here | Maintainer | Gate A |
-| Existing closed interval, independent complete ID/date oracle and source/view metadata | UNSET | Maintainer + implementer | Gate A |
-| Existing media fixture and independent hashes for advertised download mode | UNSET | Maintainer + implementer | A/B |
-| Source request allowance, external harness spacing and test budget path | UNSET | Maintainer + implementer | Gate A |
-| Actual state backend/integration base containing #18 foundations | DONE locally: real SQLite, feature-only merge `5d0789e`; selected live store path remains UNSET | Maintainer + implementer | Stage 2/Gate A |
+| Specific canonical group ID and approved account/session/config label | DONE for A; two user-selected existing sources and verified project login; credentials omitted | Maintainer | Gate A |
+| Existing closed interval, independent complete ID/date oracle and source/view metadata | DONE for A; frozen before tested reads, archived in gate evidence | Maintainer + implementer | Gate A |
+| Existing media fixture and independent hashes for advertised download mode | DONE for A; one selected photo; requalify at B | Maintainer + implementer | A/B |
+| Source request allowance, external harness spacing and test budget path | DONE for A; 5,000 cap, 1,118 charged, no reset; paths retained privately | Maintainer + implementer | Gate A |
+| Actual state backend/integration base containing #18 foundations | DONE: real SQLite, feature-only merge `5d0789e`, isolated live-case stores | Maintainer + implementer | Stage 2/Gate A |
 | Durable test receiver and declared commit/ack point | UNSET | Implementer/integrator | Gate B |
 | Operational receiver, worker ownership and clock assumptions | UNSET | Integrator | Gate D/adoption |
 

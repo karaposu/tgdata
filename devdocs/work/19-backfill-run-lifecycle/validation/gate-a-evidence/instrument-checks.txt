@@ -1,0 +1,12 @@
+PASS existing-only offline preflight and unchanged state
+PASS independent oracle/limit/shape preflight refusals
+PASS actual write/join/wrong-target RPCs refused before send
+PASS actual request-type caps
+PASS actual SDK connect restores or initializes real state without account-wide difference
+PASS actual Telethon iterator/page and budget composition with synthetic transport
+Telegram is having internal issues ServerError: RPCError 500: injected test failure (caused by NoneType)
+PASS SDK retry cannot bypass actual-send history cap
+PASS independent comparison distinguishes match, omission and date mismatch
+PASS full instrument composition with real state/reader/budget and synthetic transport; not LIVE
+PASS CLI defaults offline, never overwrites evidence, and never emits gate PASS
+Passed: 10/10; LOCAL/INJECTED only, no live gate

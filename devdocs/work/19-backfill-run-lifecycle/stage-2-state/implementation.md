@@ -1,14 +1,15 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-2-built-gate-a-blocked
+status: stage-2-and-gate-a-complete
 date: 2026-10-07
 ---
 # Stage 2 implementation record
 
-**Stages 1–2 are built; Stage 2 has passed its offline verification.** This task-impl
-run reaches the OPEN execution blocker before Step 6 (Gate A). It is not an abort or
-rejected plan. Stages 3–8 remain pending.
+**Stages 1–2 are built; Stage 2 and Gate A are complete.** The initial task-impl run
+stopped at Step 6's missing-input blocker. The user later supplied the resources,
+requested login and authorized the live tests. [Gate A passed](../validation/gate-a.md)
+on 2026-10-07. Stages 3–8 remain pending.
 
 ## Pipeline and provenance
 
@@ -43,7 +44,8 @@ a PR or perform a protected-branch merge.
 - [x] Step 4: opt-in bounded Gate A instrument, example manifest, usage and 9 offline checks.
 - [x] Step 5: public/task documentation, supported offline verification and separate
       product/evidence checkpoints; feature-branch push and scoped #19 publication.
-- [ ] Step 6: actual Gate A. **BLOCKED** on selected account/group/oracle/allowance inputs.
+- [x] Step 6: actual Gate A. **PASS**, with seven comparisons, two controlled
+      interruptions, repeated storage checks and the diagnostic startup correction.
 
 This completion record is published with the work-evidence commit; the final branch
 HEAD and GitHub issue activity record its push/publication. Steps 1–5 can be completed
@@ -75,9 +77,7 @@ See [runtime usage](../../../../docs/backfill_state.md),
 
 ## Next handoff
 
-The maintainer identifies the already-authenticated account/config, existing canonical
-group and independent existing-history view; the implementer qualifies a closed complete
-oracle and bounded allowance with authoritative budget/disposable paths. Then follow
-[Gate A](../validation/gate-a.md) and the [live specification](../live-validation.md).
-Only a recorded Gate A PASS allows Stage 3. No permission to seed messages, join groups,
-skip critical cases or replace live evidence with synthetic observations is implied.
+Stage 3 is now unblocked by the recorded [Gate A PASS](../validation/gate-a.md).
+Its preparation/delivery/acknowledgment work remains a separate implementation stage.
+Requalify affected inputs/evidence if source, SDK, store or diagnostic behavior changes.
+Gates B–D remain pending; no source writes, joining or skipped critical cases are authorized.

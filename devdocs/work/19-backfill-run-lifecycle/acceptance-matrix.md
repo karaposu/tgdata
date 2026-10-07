@@ -1,14 +1,15 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-2-partial-local-evidence
+status: gate-a-foundation-evidence
 ---
 # Backfill acceptance and failure matrix
 
 This is the test specification for [contract.md](contract.md). Stage 2 now has scoped
 local evidence at `1425fd7`, listed below and in [verification](stage-2-state/verification.md).
 A case still marked UNRUN has not completed its full listed composition; that does
-not discard its partial local observations. No live case or gate has passed.
+not discard its partial observations. Gate A's foundation scope has now passed; later
+operation/composition requirements remain unrun as specified below.
 
 C01–C22 preserve the final inquiry's 22 histories in their original order. C23–C44 add operation, storage, live-oracle and selected-critique boundaries. Gate A foundation tests can use the existing reader with the Stage 2 record; they do not claim that Stage 3 preparation already exists. Cases spanning multiple stages are repeated at their first full composition.
 
@@ -28,8 +29,30 @@ LIVE means actual Telegram via Telethon 1.45.0; INJECTED means an identified loc
 | C43, C44 | Strict nested codec/input/counter checks and unchanged-state refusal through internal start/status | Later transition operations and valid saved query's live use |
 
 No prepare, acknowledgment, completion, pacing admission, control or recovery operation
-is covered by a seeded snapshot. All other cases remain unrun. [Gate A](validation/gate-a.md)
-is BLOCKED on actual inputs. The probe's individual MATCH cannot automatically pass it.
+is covered by a seeded snapshot. These initial local receipts did not pass a live gate.
+The later Gate A evidence below is a separate execution and aggregate review.
+
+## Gate A live foundation evidence — 2026-10-07
+
+[Gate A PASS](validation/gate-a.md) records seven independently expected real-source
+comparisons, actual SDK pages, an independent photo hash and two controlled local
+interruptions around actual reads. test_24 also passed 23/23 again. Each individual
+scan still reports INCONCLUSIVE; the documented aggregate review closes the gate.
+
+| Cases | Observed at A | Still outside this evidence |
+|---|---|---|
+| C01–C05, C37 | Real creation/reopen/retry/refusal tests paired with real saved-query reuse | C03 terminal transitions and C05 recovery are later operations |
+| C12, C13 | Imported tail and fresh historical origins drive the declared real query | Lifecycle completion and integrated daily scheduling |
+| C14 | A real full batch followed by a refused send remains interrupted, not end | New lifecycle completion and actual quota-expiry/wait integration |
+| C18, C24–C28 (characterization only) | Cancellation after a real answered response retains charges and leaves state unchanged | Durable attempt admission/settlement and unknown-outcome recovery |
+| C40 | Existing-source qualification, refusal of a non-group and replacement of an undersized page fixture | Future source drift must be requalified, not assumed absent |
+| C41 | 350 expected records, six real SDK requests, three caller batches, actual second pages | Repeat through the new preparation/public APIs at B/D |
+| C42 | Date boundaries, ties/gaps, empty/full, fresh/imported scope and selected photo hash match | Later pending-media custody/replay |
+| C43, C44 | Repeated strict-state/input tests plus valid real query use | Later operation validation and public integration |
+
+Case-level UNRUN below retains the full stated composition for multi-stage cases;
+it does not negate the scoped foundation observations above. No later stage is credited
+from seeded state, an individual MATCH or raw-reader tests.
 
 ## C01 — Start reply lost
 

@@ -79,13 +79,11 @@ No planning blocker identified for Stage 2 implementation and offline verificati
 The #18 runtime-base dependency is satisfied on this feature branch by `5d0789e`;
 its separate protected-branch review/merge remains outstanding.
 
-**Gate A live resources — OPEN execution condition.** Specific account/config label,
-canonical group, independently enumerated closed interval, allowed request/pacing budget
-and selected media evidence have not been supplied. They were requested asynchronously.
-This gates actual live execution and Stage 3, not types/state/start/status or the
-probe implementation/offline verification. Do not fabricate an oracle or select an
-arbitrary account/group from unrelated configs. Missing live evidence is not an abort
-of the implemented storage stage and cannot be reported as a passed gate.
+**Gate A live resources — CLOSED on 2026-10-07.** This condition was initially OPEN.
+The user later selected the account and two existing sources and confirmed exclusive
+test-budget context. Independent intervals/media were qualified and
+[Gate A passed](../validation/gate-a.md). No arbitrary account, fabricated oracle or
+synthetic-only substitute closed it. Stage 3 is unblocked but remains unimplemented.
 
 ## Inherited Lessons
 

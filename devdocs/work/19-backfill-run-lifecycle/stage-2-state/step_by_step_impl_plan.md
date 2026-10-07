@@ -35,7 +35,8 @@ than presume a real fixture or silently choose an account.
   pacing and authoritative budget context must be supplied/qualified.
   **Who:** maintainer identifies resources; implementer validates the fixture.
   **Blocks:** Step 6 actual Gate A execution and any subsequent Stage 3.
-  **Status:** OPEN; asynchronously requested. Steps 1–5 remain executable.
+  **Status:** CLOSED on 2026-10-07; inputs qualified and [Gate A passed](../validation/gate-a.md).
+  The initially blocked handoff remains in the earlier committed plan/evidence.
 - #18 runtime prerequisite is **DONE on this feature branch**, merge `5d0789e` only.
   Its separate review/merge into dev is not claimed or performed by this stage.
 

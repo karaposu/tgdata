@@ -1,6 +1,6 @@
 ---
 status: draft
-revision: 4
+revision: 5
 model: gpt-6-astra
 effort: max
 ---
@@ -67,8 +67,10 @@ Steps 2.1–2.4 and the opt-in instrument are built and verified offline. Start/
 are internal direct-module operations; later transitions remain unimplemented. Two
 selected Stage 2 critique remedies add existing-only SQLite reopening and upward
 microsecond rounding of minimum durations, without changing the chosen policy.
-Gate A is BLOCKED/unrun for actual fixture/account/oracle/allowance inputs. Stage 3
-and all subsequent stages remain pending. Local passes do not pass a live gate.
+Gate A was initially blocked on resources. The user supplied the account, two existing
+sources and exclusive test-budget context; [live validation passed](validation/gate-a.md)
+on 2026-10-07. This revision 5 handoff unblocks Stage 3. Stages 3–8 and Gates B–D remain
+pending; the live receipts are separate from the original offline passes.
 
 ## What is the task
 
@@ -107,13 +109,12 @@ The following conditions attach to their named gates:
   independent fixture manifest, bounded request allowance and test pacing. Reuse
   these choices at later gates while the scope remains the same. **Who:** application
   owner and implementing session. **Blocks:** Gate A after Stage 2, therefore Stage 3
-  and subsequent dependent work. **Status:** OPEN — not established by this planning
-  turn. An unavailable account or insufficient fixture does not turn an offline pass
-  into a live pass.
+  and subsequent dependent work. **Status:** CLOSED for A on 2026-10-07; qualified in
+  its report. Later gates requalify their own conditions; no offline pass substitutes.
 - **What must happen:** execute and record each required validation gate successfully.
   **Who:** implementing session, with the maintainer reviewing changed assumptions.
   **Blocks:** Gate A → Stage 3; Gate B → Stage 5; Gate C → Stage 7; Gate D → feature
-  review/release readiness. **Status:** OPEN — all four gates are unrun.
+  review/release readiness. **Status:** A passed; B–D remain OPEN/unrun.
 
 - **What must happen:** the integration names its durable destination acceptance
   point and supplies its chosen pacing and retry policy. **Who:** application owner.
@@ -920,5 +921,5 @@ normal-return-means-done behavior.
 This overall document remains a staged runtime plan. Stage 1 established the contract;
 Stage 2 built and locally verified the persistence foundation and live instrument.
 Their separate implementation/verification reports preserve each checkpoint's evidence.
-Next is [Gate A](validation/gate-a.md), currently BLOCKED/unrun. Stages 3–8 and Gates
-B–D remain pending. No live result or protected-branch merge is implied here.
+The later [Gate A](validation/gate-a.md) passed real-source validation. Next is Stage 3.
+Stages 3–8 and Gates B–D remain pending. No protected-branch merge is implied here.

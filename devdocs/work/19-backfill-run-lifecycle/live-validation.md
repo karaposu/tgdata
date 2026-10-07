@@ -1,16 +1,16 @@
 ---
 model: gpt-6-astra
 effort: max
-status: gate-a-blocked
+status: gate-a-pass-later-gates-pending
 ---
 # Read-only live validation specification
 
 This specifies Gates A–D for the [contract](contract.md) and
-[case matrix](acceptance-matrix.md). **All gates are UNRUN; Gate A is BLOCKED on actual
-inputs.** Stage 1 wrote the procedure. Stage 2 now supplies [live_probe.py](live_probe.py)
-and [usage](stage-2-state/probe-usage.md), exercised only with offline/synthetic transport.
-No real account/config has been accessed and no source traffic has occurred. The
-[Gate A report](validation/gate-a.md) records the missing inputs and scoped local evidence.
+[case matrix](acceptance-matrix.md). **Gate A passed on 2026-10-07; Gates B–D remain
+unrun.** The [Gate A report](validation/gate-a.md) records the actual account/resource
+qualification, seven source comparisons, controlled interruptions, storage evidence
+and diagnostic startup correction. [live_probe.py](live_probe.py) and its
+[usage](stage-2-state/probe-usage.md) retain explicit live opt-in and bounded scope.
 
 The user chose **an existing group, using read-only tests**. Every live source action
 must be a bounded read of that selected group's already-visible history. No messages,
@@ -22,21 +22,24 @@ stores, saved media copies, receiver records and process interruptions are expec
 
 Record these in the gate report before running. `UNSET` is not a default or approval.
 
+The table records Gate A's qualified setup alongside later-gate requirements.
+Requalify values at later gates; receiver/ownership requirements remain open.
+
 | Input | Required meaning | Current value |
 |---|---|---|
 | Code revision / package import path | Exact tested code, including #18 foundations for Gate A | Stage 2 product `1425fd7`; record actual checkout and tool commit on live execution |
 | SDK | Actual installed Telethon version | Required: 1.45.0 |
-| Account/session/config label | Caller-selected already-authenticated test context; never publish secrets | UNSET |
-| Canonical group ID | Specific existing group accessible to that account | UNSET |
-| Source visibility | Account/access/view used for the independent baseline | UNSET |
-| Closed interval | UTC start/end and declared exclusive origin | UNSET |
-| Oracle provenance | Independent client/export/manual enumeration, capture time, interval completeness | UNSET |
-| Expected ID/date set | All visible messages within that bounded interval, plus boundary witnesses | UNSET |
-| Page-crossing fixture | Enough existing records to cross a real SDK history page and multiple caller batches | UNSET |
-| Existing media fixture | Expected eligible record IDs, original bytes/hash/size where download mode is advertised | UNSET |
-| Source allowance and pacing | Total requests/messages/elapsed limit; external spacing before Stage 5 exists | UNSET |
-| State/artifact paths | Disposable isolated collection data, no existing progress overwritten | UNSET |
-| Budget policy/ledger | Chosen authoritative account allowance plus any stricter test cap | UNSET |
+| Account/session/config label | Caller-selected already-authenticated test context; never publish secrets | A: project config/session, restored and freshly verified |
+| Canonical group ID | Specific existing group accessible to that account | A: arenda_stambul1 and programlama_sohbet, IDs in report |
+| Source visibility | Account/access/view used for the independent baseline | A: same verified account, independently enumerated view |
+| Closed interval | UTC start/end and declared exclusive origin | A: seven saved scopes in evidence |
+| Oracle provenance | Independent client/export/manual enumeration, capture time, interval completeness | A: direct descending RPC captures before tested reads |
+| Expected ID/date set | All visible messages within that bounded interval, plus boundary witnesses | A: archived frozen sets and boundary witnesses |
+| Page-crossing fixture | Enough existing records to cross a real SDK history page and multiple caller batches | A: 350-record interval, six SDK pages, three caller batches |
+| Existing media fixture | Expected eligible record IDs, original bytes/hash/size where download mode is advertised | A: independently hashed 173,837-byte selected photo |
+| Source allowance and pacing | Total requests/messages/elapsed limit; external spacing before Stage 5 exists | A: bounded per-run caps, 180 seconds, five-second batch spacing |
+| State/artifact paths | Disposable isolated collection data, no existing progress overwritten | A: separate SQLite runs and local media directory, report paths |
+| Budget policy/ledger | Chosen authoritative account allowance plus any stricter test cap | A: persistent 5,000-read ledger, 1,118 charged, never reset |
 | Receiver acceptance point | Actual commit/durability boundary before acknowledgment | Gate B/D: UNSET |
 | Reader ownership | How the caller excludes another source worker and confirms process exit | Gate C/D: UNSET |
 
@@ -260,7 +263,7 @@ earlier gates. Only independent work may proceed while a gate is blocked.
 
 ## 10. Stage 1 handoff
 
-The executable harness is Stage 2 work. Current actual resource values are in
-[assumptions.md](assumptions.md) and remain UNSET. These document procedures and local
-existing-component probes do not fulfill any live gate. Stage 2 remains a separately
-selected implementation step on a base containing its #18 prerequisites.
+At the Stage 1 handoff the executable harness was future Stage 2 work and actual
+resources were unset. Stage 2 has since supplied the harness and Gate A has passed
+the separately recorded live execution. Stage 1 documents and local component probes
+alone did not fulfill that gate. Gates B–D remain pending.

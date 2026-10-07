@@ -1,13 +1,15 @@
 ---
 model: gpt-6-astra
 effort: max
-status: offline-pass-live-blocked
+status: historical-stage-2-offline-checkpoint
 date: 2026-10-07
 ---
 # Stage 2 verification
 
-**PASS for the implemented offline scope. Gate A is BLOCKED/unrun.** No real config,
-account or Telegram connection was used. Stages 3–8 have not been implemented.
+**PASS for the original Stage 2 offline scope.** At this checkpoint Gate A was blocked
+and no real config/account or Telegram connection was used. The later
+[Gate A PASS](../validation/gate-a.md) is a separate live execution, not a reinterpretation
+of these receipts. Stages 3–8 remain unimplemented.
 
 ## Revision and environment
 
@@ -109,8 +111,8 @@ end signals and real downloaded media have not been verified.
 - Product code/tests/public docs and work-folder notes/tooling are separate commits.
   No PR, protected-branch merge, #7 change or `duncan` change belongs to this run.
 
-## Remaining gate
+## Gate handoff from this checkpoint
 
-See [Gate A](../validation/gate-a.md). The selected account/config, group, independent
-complete oracle, limits/pacing, authoritative budget and disposable live paths are
-still unset. Offline evidence cannot close those requirements. Stage 3 remains gated.
+At this checkpoint the actual source/oracle/allowance inputs were still unset, so
+Stage 3 remained gated. The later [Gate A report](../validation/gate-a.md) records
+their qualification and the actual live PASS. These offline receipts alone did not close it.
