@@ -30,6 +30,12 @@ Passing result: independent IDs/date/photo hash match the prepared observation;
 exact replay is local; actual durable receiver acceptance precedes ack; completion
 survives reopen; real post-commit failures leave the expected state readable.
 
+Result: PASS — 2026-10-07. Four checks passed on unchanged Stage 3: independent
+real photo selection/hash; exact offline replay and actual receiver dedup/ack/reopen;
+actual post-commit close errors for empty completion and final ack. 202 requested
+history slots, 48 charged reads, 786,432 requested media bytes. Existing ledger
+1118 → 1166 of 5000. [Receipt](prebuild-results.json). This is not Gate B PASS.
+
 ## High-Level Summary
 
 The plan stays within the established contract and uses a conservative confirmation

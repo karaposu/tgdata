@@ -1,0 +1,208 @@
+{
+  "budget_used_after": 1166,
+  "budget_used_before": 1118,
+  "checks": [
+    "real prepared photo matches independent ID/date/media oracle",
+    "offline exact replay, real durable receiver/dedup, final ack and complete reopen",
+    "actual post-commit close error: empty completion",
+    "actual post-commit close error: final ack"
+  ],
+  "code_revision": "3140dcd (unchanged Stage 3 product)",
+  "gate_verdict": "INCONCLUSIVE",
+  "pending_sha256": "1f754f10ba9d17f78fbf7c556d322cf3b5c32be8917fa2cea3e50af8804404cd",
+  "requested_media_bytes": 786432,
+  "requested_slots": 202,
+  "result": "PASS",
+  "rpc": [
+    {
+      "answered_at": "2026-10-07T10:03:43.506452Z",
+      "kind": "GetStateRequest",
+      "monotonic": 2875985.075414958,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T10:03:43.425446Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T10:03:43.596086Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2875985.156447666,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T10:03:43.506541Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T10:03:43.679496Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2875985.246563458,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T10:03:43.596650Z",
+      "turn": 0
+    },
+    {
+      "add_offset": 0,
+      "answered_at": "2026-10-07T10:03:43.840997Z",
+      "kind": "GetHistoryRequest",
+      "limit": 100,
+      "min_id": "0",
+      "monotonic": 2875985.331424708,
+      "offset_date": null,
+      "offset_id": "0",
+      "outcome": "answered",
+      "page": null,
+      "response_type": "ChannelMessages",
+      "returned_slots": 46,
+      "sent_at": "2026-10-07T10:03:43.681513Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T10:03:48.897936Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2875990.49544525,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T10:03:48.845434Z",
+      "turn": 0
+    },
+    {
+      "add_offset": 0,
+      "answered_at": "2026-10-07T10:03:48.991875Z",
+      "kind": "GetHistoryRequest",
+      "limit": 100,
+      "min_id": "0",
+      "monotonic": 2875990.551713625,
+      "offset_date": null,
+      "offset_id": "1",
+      "outcome": "answered",
+      "page": null,
+      "response_type": "ChannelMessages",
+      "returned_slots": 0,
+      "sent_at": "2026-10-07T10:03:48.901810Z",
+      "turn": 0
+    },
+    {
+      "kind": "GetFileRequest",
+      "monotonic": 2875990.645196666,
+      "outcome": "FileMigrateError",
+      "page": null,
+      "sent_at": "2026-10-07T10:03:48.995302Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T10:03:49.103648Z",
+      "kind": "GetConfigRequest",
+      "monotonic": 2875990.70061175,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T10:03:49.050708Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T10:03:50.801655Z",
+      "kind": "ExportAuthorizationRequest",
+      "monotonic": 2875992.386790125,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T10:03:50.736890Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T10:03:51.266647Z",
+      "kind": "GetFileRequest",
+      "monotonic": 2875992.65146475,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T10:03:51.001554Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T10:03:51.346745Z",
+      "kind": "GetFileRequest",
+      "monotonic": 2875992.916808375,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T10:03:51.266915Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T10:03:56.462516Z",
+      "kind": "GetChannelsRequest",
+      "monotonic": 2875998.025407708,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T10:03:56.375527Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T10:03:56.542631Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2875998.112745333,
+      "outcome": "answered",
+      "page": [
+        1,
+        1
+      ],
+      "sent_at": "2026-10-07T10:03:56.462877Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T10:03:56.608247Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2875998.194315708,
+      "outcome": "answered",
+      "page": [
+        1,
+        1
+      ],
+      "sent_at": "2026-10-07T10:03:56.544444Z",
+      "turn": 0
+    },
+    {
+      "add_offset": -2,
+      "answered_at": "2026-10-07T10:03:56.694395Z",
+      "kind": "GetHistoryRequest",
+      "limit": 2,
+      "min_id": "0",
+      "monotonic": 2875998.260491708,
+      "offset_date": null,
+      "offset_id": "14",
+      "outcome": "answered",
+      "page": [
+        1,
+        1
+      ],
+      "response_type": "ChannelMessages",
+      "returned_slots": 2,
+      "sent_at": "2026-10-07T10:03:56.610611Z",
+      "turn": 0
+    },
+    {
+      "kind": "GetFileRequest",
+      "monotonic": 2875998.349631333,
+      "outcome": "FileMigrateError",
+      "page": null,
+      "sent_at": "2026-10-07T10:03:56.699754Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T10:03:56.907044Z",
+      "kind": "GetFileRequest",
+      "monotonic": 2875998.450391833,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T10:03:56.800514Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T10:03:56.979115Z",
+      "kind": "GetFileRequest",
+      "monotonic": 2875998.557094208,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T10:03:56.907226Z",
+      "turn": 0
+    }
+  ]
+}

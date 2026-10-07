@@ -1,9 +1,14 @@
 ---
 model: gpt-6-astra
 effort: max
-revision: 1
+revision: 2
 ---
 # Stage 4 — completion and authoritative write confirmation
+
+**Critic folded:** 2026-10-07 — 0 content mitigations; required prebuild experiment
+ran before Step 1 and PASSED (4 checks). No implementation steps changed or added.
+202 requested live history slots count toward the 1500-slot Stage 4 cap; full Gate B
+still runs on the final product. See [critic](critic.md) and [receipt](prebuild-results.json).
 
 Baseline: `62d5f60`, Stage 3 product `3140dcd`. Inputs: [desc](desc.md),
 [contract](../contract.md), [staged plan](../staged-plan.md), [Gate A](../validation/gate-a.md).
