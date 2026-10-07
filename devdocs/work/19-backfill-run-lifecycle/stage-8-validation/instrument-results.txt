@@ -1,0 +1,2 @@
+Passed: 9/9 offline Gate D instrument checks
+Telethon 1.45.0; Python 3.11.10; sockets forbidden.

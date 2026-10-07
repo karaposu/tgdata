@@ -33,6 +33,16 @@ and reopen, receiver receipt follows verified byte/snapshot custody, paused repl
 completes correctly without source calls/health recovery, and original policy remains
 authoritative. Local guard/resource and receiver checks observe actual effects.
 
+Result: PASS — 202 requested history slots (250 allocated), 3 actual history requests;
+independent complete 46-record source and photo digest matched the real public download.
+Exact pending survived reopen; paused replay, full receiver snapshot and verified file
+custody preceded completion at 14. Local operations forbade sockets/config and preserved
+the labeled prior health fixture. Independent SQLite/file/trace audit passed; shared
+policy stayed 5,000 (charged use 2,334 → 2,382; existing 19 reserved retained), 2026-10-07.
+Nine actual offline receiver/guard/allocation instrument checks also passed. Evidence:
+`prebuild-results.json`, `instrument-results.txt`; raw originals stay private under
+`/private/tmp/tgdata19-gate-d-live-20261007`. No product change was needed.
+
 Unavailable login/access/capacity or an unqualifiable fixture is an execution condition,
 not evidence that this behavioral falsifier passed or failed. Record it explicitly and
 stop dependent live work; never call a synthetic substitute PASS.

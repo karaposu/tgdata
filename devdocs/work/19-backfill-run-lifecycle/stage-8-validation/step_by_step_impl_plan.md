@@ -5,6 +5,10 @@ revision: 1
 ---
 # Stage 8 — combined public evidence and live Gate D
 
+**Critic folded:** 2026-10-07 — 0 content mitigations (0 steps changed, 0 added).
+The mandatory real prebuild experiment passed before Step 1; see critic.md and
+prebuild-results.json. The existing plan now proceeds without design changes.
+
 Baseline `cb1297a`, runtime product `17fccbc`, description `863fbbc`. Gates A/B/C
 passed; Stage 7's 342 actual offline checks passed. Same-session warm model retained,
 gpt-6-astra/max verified. No PARKED/rejected PR-critic artifact exists in this stage.
