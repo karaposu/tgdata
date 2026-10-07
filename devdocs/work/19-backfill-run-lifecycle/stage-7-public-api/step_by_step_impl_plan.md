@@ -1,9 +1,13 @@
 ---
 model: gpt-6-astra
 effort: max
-revision: 1
+revision: 2
 ---
 # Stage 7 — public lifecycle and durable caller example
+
+**Critic folded:** 2026-10-07 — 1 robust mitigation, 2 steps changed, 0 added.
+The required real SQLite/receiver experiment ran before Step 1 and PASSED all seven
+checks on unchanged production code. See [critic](critic.md) and [probe](prebuild-results.json).
 
 Baseline `5b51cc3`, product `0d6bb26`; description `2379017`. Gate C PASS is the
 entry requirement. No PARKED marker/rejected PR critic exists. Model/effort verified
@@ -123,9 +127,15 @@ Use one application SQLite database with separate fixed application tables:
 - progress keyed by `(namespace, chat_id)`, storing opaque text. A small example-owned
   NamespaceStore implements async load/compare_and_swap through short real transactions;
 - retained application request/reference/command records, committed before submission;
-- accepted receipts keyed by complete backfill DeliveryRef (canonical JSON), and
+- accepted receipts keyed by complete backfill DeliveryRef (canonical JSON), each
+  retaining the full canonical batch snapshot in the same transaction, and
   deduplicated messages keyed by group/message ID. Daily receipt keys include a distinct
   daily namespace, source and batch hash so they cannot alias a backfill receipt.
+
+Validate destination, chat and hash before receiver acceptance. Duplicate receipt
+keys must match the complete stored batch exactly or refuse. The unique message table
+is a first-observation index; each receipt retains its exact observation even when
+an overlapping delivery differs. This does not implement edit reconciliation.
 
 Application database setup is explicit, operations reopen with SQLite `mode=rw`, and
 transactions use synchronous=FULL plus BEGIN IMMEDIATE for compare/write. No connection
@@ -240,7 +250,7 @@ Actual SDK fixtures, local health isolation, source guards, status redaction, na
 
 4/5.
 
-## Step 3 — Durable offline application example
+## Step 3 — Durable offline application example [folded: Risk 1, robust]
 
 ### Proposed changes
 
@@ -251,6 +261,10 @@ Add example tests (in test29 or a focused example section) for the actual two-pr
 lost-ack run, exact replay/receipt dedup, independent progress, completed repeat with
 no source work, and refusal of missing known database/intent or duplicate --new.
 Use explicit fixed expected IDs/statuses/counts independent of implementation counters.
+Carry the qualified prebuild_store.py database/namespace/receiver design into this
+example, adapting public imports only. Test complete snapshots for differing valid
+observations of the same message ID, exact duplicate acceptance and wrong receiver
+chat/destination/hash refusal. No marker may stand in for the accepted batch snapshot.
 
 ### Output
 
@@ -269,7 +283,7 @@ SQLite durability/CAS, full receipt keys, app manifest, process exit, daily/hist
 
 4/5.
 
-## Step 4 — Public documentation and discovery
+## Step 4 — Public documentation and discovery [folded: Risk 1, robust]
 
 ### Proposed changes
 
@@ -277,7 +291,8 @@ Add `docs/backfill_runs.md` with one practical public flow, the six-method/resul
 reference, explicit first use versus restart, receiver commit/receipt requirements,
 partial-failure replay via saved delivery (not a bare partial hash), source end versus
 acceptance, pause/cancel/abandonment, exact recovery and worker lifetime, timing/account
-restrictions, portable identity and bounded historical recognition. Define stored status
+restrictions, portable identity and bounded historical recognition. Explain the example receiver's full snapshot-per-receipt storage separately from its
+first-observation message index; neither implies edit reconciliation. Define stored status
 fields without percentages, ready flags or fresh account/health claims. Explain that
 IDs/labels are caller supplied and must not contain secrets; status excludes message
 content, while pending storage intentionally contains the batch needed for replay.

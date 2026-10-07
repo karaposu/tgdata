@@ -30,6 +30,12 @@ Passing result: actual SQLite/process evidence preserves exact pending/receipts 
 independent namespaces, refuses missing known state, reconciles committed outcomes,
 and needs no change to the production lifecycle/store contract.
 
+Result: PASS — 2026-10-07. All seven actual SQLite/namespace/receiver/process checks
+passed on unchanged production code `0d6bb26`. Exact observations survive receiver
+commit/reopen; one competing CAS wins; known missing state refuses; committed close
+errors reconcile and cleanup preserves primary errors. No Telegram calls or product
+edits. See [prebuild-results.json](prebuild-results.json).
+
 ## High-level summary
 
 The facade design fits the tested lifecycle: persistent cached engines, typed ownership,

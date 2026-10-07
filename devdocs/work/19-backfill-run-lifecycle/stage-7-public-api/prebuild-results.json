@@ -1,0 +1,15 @@
+{
+  "result": "PASS",
+  "checks": [
+    "actual isolated namespaces and exact CAS",
+    "actual competing process CAS: exactly one winner",
+    "full observations retained across same-ID dedup; wrong scope refuses",
+    "known missing file/schema refuses without provisioning",
+    "owned receiver-commit exit/reopen: exact replay, one effect, independent daily/history",
+    "actual committed-then-close-error reconciles existing lifecycle command",
+    "actual cleanup failures do not replace primary error"
+  ],
+  "count": 7,
+  "product": "unchanged 0d6bb26",
+  "evidence": "LOCAL real SQLite/process/receiver; synthetic batch inputs, no Telegram"
+}
