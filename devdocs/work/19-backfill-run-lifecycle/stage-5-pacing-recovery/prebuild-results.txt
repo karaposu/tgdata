@@ -1,0 +1,6 @@
+PASS actual UTC and integer monotonic_ns observe a positive elapsed interval
+PASS strict v1 known/unknown-end recovery candidates reopen exactly without invented data
+PASS actual post-commit close error retains the exact recovery identity/deadline
+PASS actual subprocess exits before/after recovery-candidate commits preserve the correct side
+PASS actual Gate B stopped-worker rows support the candidate in disposable copies; originals unchanged
+Passed: 5/5 primitive checks; LOCAL only, not new recovery behavior or Gate C

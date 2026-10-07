@@ -1,9 +1,13 @@
 ---
 model: gpt-6-astra
 effort: max
-revision: 1
+revision: 2
 ---
 # Stage 5 — pacing and exact-attempt recovery
+
+**Critic folded:** 2026-10-07 — 0 content mitigations. The required primitive experiment
+ran before Step 1 and PASSED all 5 checks; no implementation step changed or added.
+See [critic](critic.md) and [receipt](prebuild-results.txt). Gate C remains after Stage 6.
 
 Baseline `246a187`, product `b1f6495`; [description](desc.md), [contract](../contract.md),
 [Gate B PASS](../validation/gate-b.md). No PARKED or rejected PR-critic artifact exists.

@@ -27,6 +27,12 @@ Passing result: exact proposed identities/deadlines survive the actual persisten
 boundaries; unknown originals remain untouched; real nanosecond elapsed evidence is
 valid. Then the actual new methods still require Step 5's complete temporal/fault tests.
 
+Result: PASS — 2026-10-07. All five actual-primitive checks passed before Step 1:
+real elapsed UTC/nanoseconds; strict known/unknown-end records; commit-then-close
+failure; actual before/after-commit process exits; and disposable copies of both
+Gate B unknown records, with original file hashes unchanged. No source traffic or
+budget access. [Receipt](prebuild-results.txt).
+
 ## High-Level Summary
 
 The plan's shape survives review. No additional High/Medium/Low content finding is
