@@ -149,7 +149,7 @@ async def test_values_are_exact_owned_and_not_public_facade():
     f.rejected(FrozenInstanceError,lambda:setattr(delivery,'batch_id','b'*64))
     import tgdata
     assert not hasattr(tgdata,'BackfillTurn') and not hasattr(tgdata.TgData,'prepare_backfill')
-    assert not hasattr(BackfillEngine,'control') and callable(BackfillEngine.recover)
+    assert callable(BackfillEngine.control) and callable(BackfillEngine.recover)
 
 
 async def test_confirmed_admission_precedes_actual_reader_without_db_lock():

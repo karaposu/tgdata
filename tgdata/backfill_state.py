@@ -276,6 +276,8 @@ class _BackfillState:
         pending = row['pending']
         pacing = row['pacing']
         recovery = row['last_recovery']
+        control = row['last_control']
+        abandoned = row['abandoned']
         failure = row['last_failure']
         return BackfillStatus(
             run=BackfillRunRef.from_dict(row['ref']), state_revision=int(value['state_revision']),
@@ -305,4 +307,10 @@ class _BackfillState:
             last_recovery_id=recovery['command_id'] if recovery else None,
             last_recovered_attempt_id=recovery['attempt_id'] if recovery else None,
             last_recovery_at=_date(recovery['recovered_at']) if recovery else None,
+            last_control_action=control['action'] if control else None,
+            last_control_expected_revision=int(control['expected_revision']) if control else None,
+            last_control_state_revision=int(control['state_revision']) if control else None,
+            abandoned_batch_id=abandoned['batch_id'] if abandoned else None,
+            abandoned_next_after_id=int(abandoned['next_after_id']) if abandoned else None,
+            abandoned_at=_date(abandoned['observed_at']) if abandoned else None,
         )

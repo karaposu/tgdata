@@ -298,3 +298,19 @@ newer attempts, wrong/stale context, clock failures and original error provenanc
 covered. Actual SDK/budget code uses synthetic transport to verify prefixes, indefinite/
 expired hints, account changes and retained cancelled charges. Sockets are blocked.
 A short real elapsed-time case is local evidence; it does not pass live Gate C.
+
+
+### Test 28: backfill operator controls (Stage 6, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_28_backfill_controls
+```
+
+Runs actual pause/resume/cancel/abandon transitions with SQLite and the real SDK over
+synthetic transport. Covers exact command retries, no-change decisions, stale contexts,
+opposing controls and delayed replies; controls during admission/source/publication;
+both final-ack/cancel orders; explicit retirement and equal-hash successor isolation.
+Near-limit revisions preserve owed settlement/ack capacity. Actual SQLite close failures
+and process exits exercise lost control replies. Controls preserve pacing/budgets and
+create no Telegram health evidence. Sockets are blocked. Real timing, actual allowance
+exhaustion and owned-worker recovery remain separately measured by mandatory Gate C.

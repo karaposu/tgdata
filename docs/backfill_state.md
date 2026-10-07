@@ -1,11 +1,12 @@
-# Backfill lifecycle — Stages 2–5
+# Backfill lifecycle — Stages 2–6
 
 This internal staged interface implements **start, status, prepare/replay,
-acknowledge and explicit recovery**, with durable per-run pacing. Preparation retains
+acknowledge, explicit recovery and operator controls**, with durable per-run pacing. Preparation retains
 one exact batch before returning it; acknowledgment
 records the caller's durable acceptance. Completion and uncertain-write handling
 are covered through Stage 4; Stage 5 adds positive timing and recovery.
-Controls and the public facade retain their later stages. No new `TgData` methods or
+Stage 6 adds pause/resume/cancel/abandon and safe succession. The public facade remains
+a later stage. No new `TgData` methods or
 package-root exports are introduced.
 
 The internal modules below support this staged delivery. The existing daily
@@ -75,7 +76,9 @@ or retained-prior status without writing; changed input conflicts. An unknown `r
 never creates, including when the row is absent. Missing known references raise rather
 than becoming fresh enrollment. A new successor requires the exact current predecessor
 to be terminal, quiescent and free of owed output. Preparation/final acknowledgment
-can produce completed runs. Cancel/abandon operations remain later-stage work.
+can produce completed runs. Cancel/abandon can also make a run terminal, but a successor
+still waits for admitted work and owed delivery to settle or be explicitly retired.
+The same engine refuses succession while local preparation/replay remains active.
 
 Only the current and immediate prior run are retained. Prior status is marked
 `history_limited`; older references/requests refuse. Generations and revisions cannot
@@ -151,6 +154,61 @@ completion. Existing cancellation takes precedence over a later final acceptance
 Completion preserves the declared origin and frozen window. An imported run certifies
 only its declared tail, without verifying the caller's skipped archive. A completed
 run reopens without another source read; rescanning requires deliberate new intent.
+
+## Pause, resume, cancel and abandon
+
+Retain a command identity and its original expected control revision before submission:
+
+```python
+from uuid import uuid4
+
+status = await engine.status(reference)
+pause_args = dict(command_id=uuid4().hex,
+                  expected_control_revision=status.control_revision,
+                  action="pause")
+result = await engine.control(reference, **pause_args)
+```
+
+Use `action="resume"`, `"cancel"` or `"abandon"` for a new deliberate decision, with
+its own retained ID/context. An accepted command advances control revision once,
+including a pause on an already paused run or resume on an already active run.
+Ordinary delivery progress does not change that control revision. Exact recognized
+retries return the addressed current status without applying the decision again.
+Changed inputs with a retained ID and unaccepted stale contexts conflict; never
+automatically replace a retry's expected revision. Only the latest command is retained.
+
+Pause denies new source admission. It lets an already admitted bounded turn finish
+its SDK calls and publish its result; it does not promise instant traffic termination.
+Resume grants operator permission while preserving pending data, wait deadlines,
+unresolved activity and actual account restrictions. Replay and valid acknowledgment
+remain possible while paused or cancelled, using current preparation context.
+
+Cancel is terminal and preserves all admitted activity and owed delivery. If it commits
+before final acknowledgment, that acknowledgment records delivery while the run stays
+cancelled. If completion commits first, cancellation reports completed. Commit order
+decides; a delayed command response may describe an older revision, so its arrival
+does not replace newer stored status. No control can resume terminal work.
+
+Abandon explicitly withdraws the remaining delivery guarantee. It requires no uncertain
+attempt and no active local preparation; stop the worker and recover its exact attempt
+first when necessary. It records `abandoned_batch_id`, `abandoned_next_after_id` and
+`abandoned_at`, clears pending and leaves the accepted cursor unchanged. With no owed
+batch the hash is None and recorded next cursor equals accepted progress. An active
+run becomes abandoned; a cancelled run stays cancelled. It neither deletes files nor
+creates a successor. A retired receipt cannot accept a later run with identical bytes.
+
+`BackfillControlResult` exposes command ID/action, `applied`, `outcome` and status.
+`outcome="accepted"` is a new decision (`applied=True`) or retained exact retry
+(`False`). `outcome="terminal"` reports an existing terminal outcome without accepting
+another command, writing or consuming a revision. The exception is an explicit first
+abandonment of a current cancelled run. Retained previous terminal runs remain read-only.
+Status also exposes the last control action, original expected revision and accepted
+state revision. These are facts, not a grant for a new command or source read.
+
+Controls do no Telegram, budget or health work. Only a new abandonment reads UTC for
+its observation timestamp; other control decisions need neither clock. They preserve
+revision capacity for still-owed source publication/acknowledgment. Exact write
+confirmation and cancellation behavior are the same as for other local transitions.
 
 ## Failures, timing and staged limits
 
@@ -274,8 +332,8 @@ cannot authenticate a fabricated event history.
 
 References and requests are immutable. Portable IDs/generations/revisions are canonical
 decimal strings; object attributes remain integers. Status is immutable, content-free
-and attributable to a run/state revision. It is not a grant to read, proof of source
-availability, or a claimed implemented pacing/control state machine.
+and attributable to a run/state revision. It is not a grant to read or proof of source
+availability.
 
 Pacing seconds are finite/nonnegative and must be representable. The requested normalized
 value remains part of intent. Minimum datetime durations round **up** to whole microseconds,
@@ -287,13 +345,16 @@ these intervals with independent UTC/monotonic evidence.
 Run `python -m tgdata.smoke_tests.test_24_backfill_state` and
 `python -m tgdata.smoke_tests.test_25_backfill_delivery`, followed by
 `python -m tgdata.smoke_tests.test_26_backfill_completion` and
-`python -m tgdata.smoke_tests.test_27_backfill_pacing`. They exercise actual SQLite,
+`python -m tgdata.smoke_tests.test_27_backfill_pacing` and
+`python -m tgdata.smoke_tests.test_28_backfill_controls`. They exercise actual SQLite,
 process exits around commit, receiver transactions, custom-backend faults and blocked
 network access. Delivery tests use actual SDK/batch/media code with synthetic transport.
 Completion tests include exact read-back versus unavailable/moved-on state, original
 source-error provenance, and actual process exits around empty completion/final ack.
 Stage 5 tests execute actual recovery with independent clocks, real budget admission,
-and process exits at recovery commits. Seeded controls still test preservation only.
+and process exits at recovery commits. Stage 6 tests execute actual controls, concurrent
+settlement, terminal ordering, abandonment, receipt isolation and control commit exits;
+older seeded fixtures remain preservation tests only.
 
 Gates A/B passed the selected real-source foundation and delivery/completion composition
 on the issue branch. Real pacing/budget/recovery/control validation belongs to mandatory

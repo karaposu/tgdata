@@ -309,17 +309,25 @@ class BackfillStatus:
     last_recovery_id: Optional[str] = None
     last_recovered_attempt_id: Optional[str] = None
     last_recovery_at: Optional[datetime] = None
+    last_control_action: Optional[str] = None
+    last_control_expected_revision: Optional[int] = None
+    last_control_state_revision: Optional[int] = None
+    abandoned_batch_id: Optional[str] = None
+    abandoned_next_after_id: Optional[int] = None
+    abandoned_at: Optional[datetime] = None
 
     def to_dict(self):
         result = asdict(self)
         result['run'] = self.run.to_dict()
         for name in ('state_revision', 'initial_after_id', 'after_id', 'control_revision',
-                     'pending_next_after_id', 'last_failure_account_id'):
+                     'pending_next_after_id', 'last_failure_account_id',
+                     'last_control_expected_revision', 'last_control_state_revision',
+                     'abandoned_next_after_id'):
             if result[name] is not None:
                 result[name] = str(result[name])
         for name in ('start_date', 'end_date', 'created_at', 'pacing_not_before',
                      'last_failure_at', 'last_failure_retry_at', 'pacing_ended_at',
-                     'last_recovery_at'):
+                     'last_recovery_at', 'abandoned_at'):
             if result[name] is not None:
                 result[name] = _encode_date(result[name])
         return result
@@ -332,6 +340,32 @@ class BackfillStartResult:
 
     def to_dict(self):
         return {'applied': self.applied, 'status': self.status.to_dict()}
+
+
+@dataclass(frozen=True)
+class BackfillControlResult:
+    command_id: str
+    action: str
+    applied: bool
+    outcome: str
+    status: BackfillStatus
+
+    def __post_init__(self):
+        _token(self.command_id, 'command_id')
+        _choice(self.action, ('pause', 'resume', 'cancel', 'abandon'), 'action')
+        _choice(self.outcome, ('accepted', 'terminal'), 'control outcome')
+        if type(self.applied) is not bool or not isinstance(self.status, BackfillStatus):
+            raise BackfillConfigurationError('control result requires boolean applied and status')
+        if self.outcome == 'accepted':
+            if (self.status.last_control_id != self.command_id or
+                    self.status.last_control_action != self.action):
+                raise BackfillConfigurationError('control result differs from retained command')
+        elif self.applied or self.status.terminal_outcome is None:
+            raise BackfillConfigurationError('terminal result requires an existing terminal outcome')
+
+    def to_dict(self):
+        return dict(command_id=self.command_id, action=self.action, applied=self.applied,
+                    outcome=self.outcome, status=self.status.to_dict())
 
 
 @dataclass(frozen=True)

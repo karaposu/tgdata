@@ -1,7 +1,7 @@
 """Durable historical-run delivery, completion and exact write confirmation.
 
-Pacing and exact-attempt recovery remain local to this engine/store. Controls and
-the public facade retain later stages. Source reads require confirmed admission.
+Pacing, exact-attempt recovery and operator controls share this engine/store.
+The public facade remains a later stage. Source reads require confirmed admission.
 """
 
 import asyncio
@@ -13,6 +13,7 @@ from uuid import uuid4
 
 from .backfill import (
     BackfillRunRef, BackfillStartRequest, BackfillStartResult, BackfillRecoveryResult,
+    BackfillControlResult,
     BackfillPrepareContext, BackfillDeliveryRef, BackfillTurn, BackfillError,
     BackfillConfigurationError, BackfillConflictError, BackfillStorageError,
     BackfillUnknownRun, BackfillUnknownCommand, BackfillUnknownReceipt,
@@ -493,6 +494,74 @@ class BackfillEngine:
                 return accepted.status()
         raise BackfillConflictError('acknowledgment kept conflicting; inspect or retry the same receipt')
 
+    async def control(self, run, *, command_id, expected_control_revision, action):
+        """Record permission/retirement without accepting or discarding data implicitly.
+
+        Command identity includes its original expected control revision. Ordinary
+        progress can race with a decision; a newer control cannot be overwritten.
+        Pause/cancel preserve admitted work, whose late settlement reloads intent.
+        Only explicit, quiescent abandonment withdraws an owed delivery guarantee.
+        """
+        if not isinstance(run, BackfillRunRef):
+            raise BackfillConfigurationError('control requires BackfillRunRef')
+        run = BackfillRunRef.from_dict(run.to_dict())
+        self._scope(run)
+        command_id = _token(command_id, 'command_id')
+        expected_control_revision = _integer(expected_control_revision, 'expected_control_revision')
+        _choice(action, ('pause', 'resume', 'cancel', 'abandon'), 'action')
+        for _ in range(4):
+            raw, state, value, key = await self._known(run)
+            row = value[key]
+            recovery = row['last_recovery']
+            if recovery is not None and recovery['command_id'] == command_id:
+                raise BackfillConflictError('command identity belongs to a retained recovery decision')
+            previous = row['last_control']
+            if previous is not None and previous['command_id'] == command_id:
+                if (previous['action'] != action or
+                        int(previous['expected_revision']) != expected_control_revision):
+                    raise BackfillConflictError('control identity was accepted with different input')
+                return BackfillControlResult(command_id, action, False, 'accepted',
+                                             state.status(previous=key == 'previous'))
+            if int(row['control_revision']) != expected_control_revision:
+                raise BackfillConflictError('control context is stale; do not rebase its retry')
+
+            # Terminal reporting is not another accepted command. The one allowed
+            # mutation is withdrawing a current cancelled run's remaining delivery.
+            terminal = row['terminal_outcome']
+            if terminal is not None and not (
+                    key == 'current' and terminal == 'cancelled' and action == 'abandon'
+                    and row['abandoned'] is None):
+                return BackfillControlResult(command_id, action, False, 'terminal',
+                                             state.status(previous=key == 'previous'))
+            if action == 'abandon' and (row['attempt'] is not None or run.chat_id in self._preparing):
+                raise BackfillConflictError('abandonment requires a quiescent source; recover stopped uncertainty first')
+
+            # A control must not consume the revisions owed to publication/ack.
+            reserve = (1 if action == 'abandon' else
+                       3 if row['attempt'] is not None else 2 if row['pending'] is not None else 1)
+            revision = self._revision(value, reserve)
+            if action == 'abandon':
+                pending = row['pending']
+                row['abandoned'] = dict(
+                    batch_id=pending['batch_id'] if pending else None,
+                    next_after_id=pending['next_after_id'] if pending else row['after_id'],
+                    observed_at=_encode_date(self._now()))
+                row['pending'] = None
+                row['terminal_outcome'] = terminal or 'abandoned'
+                row['operator_intent'] = row['terminal_outcome']
+            else:
+                row['operator_intent'] = {'pause': 'paused', 'resume': 'active', 'cancel': 'cancelled'}[action]
+                if action == 'cancel':
+                    row['terminal_outcome'] = 'cancelled'
+            row['control_revision'] = str(expected_control_revision + 1)
+            row['last_control'] = dict(command_id=command_id, action=action,
+                expected_revision=str(expected_control_revision), accepted_revision=row['control_revision'],
+                state_revision=str(revision))
+            written, accepted = await self._write(raw, value, reserve=reserve)
+            if written:
+                return BackfillControlResult(command_id, action, True, 'accepted', accepted.status())
+        raise BackfillConflictError('control kept conflicting; inspect or retry the same command')
+
     async def recover(self, run, *, attempt_id, command_id, expected_control_revision,
                       previous_reader_stopped):
         """Settle one stopped uncertain attempt without reading or accepting data.
@@ -618,6 +687,8 @@ class BackfillEngine:
             if (current['terminal_outcome'] is None or current['attempt'] is not None
                     or current['pending'] is not None):
                 raise BackfillConflictError('predecessor is not terminal, quiescent and settled')
+            if request.chat_id in self._preparing:
+                raise BackfillConflictError('cannot replace a run while local preparation is active')
             if current_ref.generation >= MAX_LONG or int(value['state_revision']) >= MAX_LONG:
                 raise BackfillConflictError('lifecycle counter limit reached; context cannot wrap')
             generation = current_ref.generation + 1
