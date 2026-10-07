@@ -1,0 +1,16 @@
+{
+  "actual_offline_passes": 393,
+  "explicit_legacy_live_skips": 3,
+  "all_subprocesses_passed": true,
+  "example_count": 3,
+  "new_pool_tests": 36,
+  "live_two_account_gate": "PENDING \u2014 user confirmed one account, offline first",
+  "compile": {
+    "files": 66,
+    "compile": true,
+    "python37_grammar": true,
+    "runtime": "3.11.10"
+  },
+  "telethon": "1.45.0",
+  "isolated_package": "PASS \u2014 runtime copy excludes tests and work docs"
+}

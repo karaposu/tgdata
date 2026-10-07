@@ -1,0 +1,88 @@
+Read Budget Tests — Telethon 1.45.0; synthetic credentials; no Telegram sockets
+
+TEST 1: policy_and_defaults
+✓ Passed
+
+TEST 2: persistence_and_isolation
+✓ Passed
+
+TEST 3: warmup_and_policy_changes
+✓ Passed
+
+TEST 4: rolling_window_and_clock
+✓ Passed
+
+TEST 5: settlement_and_late_responses
+✓ Passed
+
+TEST 6: process_claims
+Telegram is having internal issues RpcCallFailError: Telegram is having internal issues, please try again later. (caused by NoneType)
+✓ Passed
+
+TEST 7: identity_authority
+✓ Passed
+
+TEST 8: identity_changes_before_send
+✓ Passed
+
+TEST 9: missing_policy_and_logout
+✓ Passed
+
+TEST 10: refunds_and_wire_bounds
+✓ Passed
+
+TEST 11: retry_admission
+✓ Passed
+
+TEST 12: concurrent_clients_and_cancellation
+✓ Passed
+
+TEST 13: forward_and_reverse_pages
+✓ Passed
+
+TEST 14: ids_keep_position
+✓ Passed
+
+TEST 15: request_families_and_wrappers
+✓ Passed
+
+TEST 16: no_updates_wrapper_and_metadata
+✓ Passed
+
+TEST 17: admission_after_resolution
+✓ Passed
+
+TEST 18: no_budget_message_path
+✓ Passed
+
+TEST 19: storage_failures
+✓ Passed
+
+TEST 20: settlement_failure_keeps_charge
+✓ Passed
+
+TEST 21: fetch_partial_and_filtered_rows
+✓ Passed
+
+TEST 22: search_and_count
+✓ Passed
+
+TEST 23: polling_partial_stop
+✓ Passed
+
+TEST 24: media_partial_and_default
+✓ Passed
+
+TEST 25: discovery_partial
+✓ Passed
+
+TEST 26: conversion_and_callback_errors
+✓ Passed
+
+TEST 27: budget_errors_are_local
+✓ Passed
+
+TEST 28: factory_paths
+✓ Passed
+
+Passed: 28/28

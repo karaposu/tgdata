@@ -1,0 +1,102 @@
+Message Batch Tests — Telethon 1.45.0; synthetic credentials; no Telegram sockets
+
+TEST 1: golden_wire_and_no_enrichment
+✓ Passed
+
+TEST 2: immutable_value_and_save_reload
+✓ Passed
+
+TEST 3: senderless_and_service_records
+✓ Passed
+
+TEST 4: dates_nulls_and_large_signed_ids
+✓ Passed
+
+TEST 5: strict_json_and_schema
+✓ Passed
+
+TEST 6: record_cursor_and_blob_constraints
+✓ Passed
+
+TEST 7: ordered_pages_and_explicit_group
+✓ Passed
+
+TEST 8: end_empty_and_max_cursor
+✓ Passed
+
+TEST 9: invalid_input_before_connection
+✓ Passed
+
+TEST 10: source_and_peer_validation
+✓ Passed
+
+TEST 11: budget_prefix_empty_and_resume
+✓ Passed
+
+TEST 12: original_network_and_rpc_errors
+✓ Passed
+
+TEST 13: bad_record_preserves_prefix
+✓ Passed
+
+TEST 14: document_bytes_dedup_and_root_independence
+✓ Passed
+
+TEST 15: photo_variants_and_unsupported_media
+✓ Passed
+
+TEST 16: changed_bytes_change_identity
+✓ Passed
+
+TEST 17: missing_and_truncated_media
+✓ Passed
+
+TEST 18: existing_blob_integrity
+✓ Passed
+
+TEST 19: manifest_integrity
+✓ Passed
+
+TEST 20: concurrent_complete_publication
+✓ Passed
+
+TEST 21: cancelled_download_cleanup
+✓ Passed
+
+TEST 22: media_refresh_obeys_budget
+✓ Passed
+
+TEST 23: local_errors_do_not_inherit_health_verdicts
+✓ Passed
+
+TEST 24: saved_replay_and_ack_order
+✓ Passed
+
+TEST 25: legacy_dataframe_and_media_contracts
+✓ Passed
+
+TEST 26: native_path_error_under_handled_rpc
+✓ Passed
+
+TEST 27: local_io_provenance_matrix
+✓ Passed
+
+TEST 28: sdk_transport_cause_is_preserved
+✓ Passed
+
+TEST 29: primary_rpc_survives_real_cleanup_denial
+✓ Passed
+
+TEST 30: secondary_failures_and_logging_cannot_mask_primary
+✓ Passed
+
+TEST 31: cancellation_survives_cleanup_denial
+✓ Passed
+
+TEST 32: cleanup_only_media_and_manifest_errors
+✓ Passed
+
+TEST 33: verification_error_and_cleanup_precedence
+✓ Passed
+
+Passed: 33/33

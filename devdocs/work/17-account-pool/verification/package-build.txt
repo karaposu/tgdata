@@ -1,0 +1,67 @@
+running build
+running build_py
+creating /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build
+creating /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib
+creating /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/sync_engine.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/connection_engine.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/history_window.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/budget_client.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/models.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/health.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/account_pool.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/sync_store.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/__init__.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/pool_state.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/backfill_state.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/tgdata.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/batch_engine.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/backfill_engine.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/message_engine.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/backfill.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/pool_source.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/utils.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/read_budget.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/progress_facade.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/message_batch.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/progress.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/session_store.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/discovery_engine.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+copying tgdata/batch_files.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata
+creating /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_username_support.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_31_account_pool.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_00_connection.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_07_real_time_event_handler.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_12_proxy.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_05_with_progress_feature.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_30_backfill_integration.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_17_session_store.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_08_polling.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_18_read_budget.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_14_flood_threshold.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/my_test.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_03_get_all_messages.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_29_backfill_public.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_28_backfill_controls.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/__init__.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_04_get_all_messages_in_batches.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_02_get_message_count.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_26_backfill_completion.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_polling_debug.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_16_health_events.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_06_polling_simple.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_debug_min_id.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_13_device_identity.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_19_message_batches.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_08_batch_callback.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_27_backfill_pacing.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_15_login_checks.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_22_daily_continuation.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_01_list_group_chats.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_25_backfill_delivery.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_24_backfill_state.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_11_discover_groups.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_07_on_new_message_simple.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_23_fixed_windows.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_10_advanced_features.py -> /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-package-3_fgsgba/build/lib/tgdata/smoke_tests

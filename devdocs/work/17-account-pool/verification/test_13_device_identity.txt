@@ -1,0 +1,34 @@
+Authentication failed: stand-in: no network in this test
+Device Identity Tests
+============================================================
+config (item 6): /private/tmp/tgdata17-intentionally-absent-config.ini
+
+TEST 1: no identity keys — Telethon's machine defaults, as before...
+✓ Unpinned: {'device_model': 'arm64', 'system_version': '25.6.0', 'app_version': '1.45.0', 'lang_code': 'en', 'system_lang_code': 'en'}
+
+TEST 2: pinned keys are presented as written...
+✓ Spaces kept, quotes and inline comments stripped; lang_code alone set system_lang_code
+✓ An explicit system_lang_code wins; unpinned fields keep the machine defaults
+✓ Empty values count as not pinned
+
+TEST 3: the real connection paths carry the identity...
+✓ Use-and-close, persistent and pool clients all present the pinned identity (3 built)
+
+TEST 4: device_identity() and pinning what is presented now...
+  presented now:
+    device_model = arm64
+    system_version = 25.6.0
+    app_version = 1.45.0
+    lang_code = en
+    system_lang_code = en
+✓ Pasting config_lines back pins exactly the same identity, all five fields
+
+TEST 5: health_check reports the presented identity...
+✓ health_check()['device_identity'] matches the pinned values
+
+TEST 6: Telegram accepts a connection presenting a pinned identity (throwaway session)...
+! skipped — /private/tmp/tgdata17-intentionally-absent-config.ini not found (only its api_id / api_hash are read)
+
+Summary
+============================================================
+Passed: 6/6

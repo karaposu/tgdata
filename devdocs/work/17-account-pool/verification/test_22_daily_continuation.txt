@@ -1,0 +1,78 @@
+Daily Continuation Tests — Telethon 1.45.0; offline SDK/SQLite
+
+TEST: store_protocol_and_no_store
+✓ Passed
+
+TEST: enrollment_validation_and_idempotence
+✓ Passed
+
+TEST: prepare_ack_and_daily_continuation
+✓ Passed
+
+TEST: restarted_pending_is_offline_exact_replay
+✓ Passed
+
+TEST: acknowledgment_identity_and_old_retries
+✓ Passed
+
+TEST: empty_end_and_maximum_cursor
+✓ Passed
+
+TEST: read_budget_prefix_is_pending
+✓ Passed
+
+TEST: original_read_errors_and_no_prefix
+✓ Passed
+
+TEST: failed_prefix_save_exposes_both_failures
+✓ Passed
+
+TEST: backend_failures_conflicts_and_uncertain_ack
+✓ Passed
+
+TEST: custom_async_store_and_local_health_isolation
+✓ Passed
+
+TEST: corrupt_state_refuses_without_network
+✓ Passed
+
+TEST: sqlite_schema_path_and_missing_database
+✓ Passed
+
+TEST: status_and_current_group_are_independent
+✓ Passed
+
+TEST: media_replay_relocation_and_refusal
+✓ Passed
+
+TEST: reference_options_and_invalid_limits
+✓ Passed
+
+TEST: real_overlap_and_cancelled_read
+✓ Passed
+
+TEST: cancelled_store_load_and_committed_stage
+✓ Passed
+
+TEST: batch_source_cursor_and_mode_validation
+✓ Passed
+
+TEST: offline_operations_do_not_recover_health
+✓ Passed
+
+TEST: process_exit_at_actual_ack_commit
+✓ Passed
+
+TEST: real_receiver_lost_acknowledgment
+✓ Passed
+
+TEST: sqlite_cleanup_precedence_and_safe_logs
+✓ Passed
+
+TEST: backend_return_and_empty_pending_validation
+✓ Passed
+
+TEST: offline_example
+✓ Passed
+
+Passed: 25/25

@@ -1,0 +1,99 @@
+Backfill Pacing/Recovery Tests — Telethon 1.45.0; LOCAL/INJECTED actual SQLite/SDK
+
+TEST: test_wait_values_and_recovery_status_are_owned
+✓ Passed
+
+TEST: test_early_late_ack_and_repeated_observation_do_not_move_deadline
+✓ Passed
+
+TEST: test_early_wait_needs_no_reader_media_root_or_sleep
+✓ Passed
+
+TEST: test_reopen_remaining_wait_uses_utc_once_then_monotonic
+✓ Passed
+
+TEST: test_forward_wall_step_cannot_beat_known_elapsed_minimum
+✓ Passed
+
+TEST: test_clock_regression_and_invalid_ns_refuse_without_admission
+✓ Passed
+
+TEST: test_exact_submicrosecond_pause_and_explicit_zero
+✓ Passed
+
+TEST: test_unknown_recovery_and_retry_preserve_one_full_wait
+✓ Passed
+
+TEST: test_known_cancelled_end_keeps_original_deadline
+✓ Passed
+
+TEST: test_known_end_survives_failed_publication_and_long_storage_await
+✓ Passed
+
+TEST: test_recovery_quiescence_input_scope_and_capacity_refusals
+✓ Passed
+
+TEST: test_local_active_read_admission_and_publication_all_refuse_recovery
+✓ Passed
+
+TEST: test_recovery_recognizes_original_input_across_controls
+✓ Passed
+
+TEST: test_recovery_preserves_paused_cancelled_and_stronger_saved_deadline
+✓ Passed
+
+TEST: test_reconcile_pending_completed_and_failure_without_clock_or_artifacts
+✓ Passed
+
+TEST: test_old_recovery_never_clears_newer_attempt_or_pending
+✓ Passed
+
+TEST: test_recovery_actual_commit_error_nonbool_and_unreadable_reply
+✓ Passed
+
+TEST: test_cancelled_recovery_commit_or_readback_stays_reconcilable
+✓ Passed
+
+TEST: test_concurrent_recoveries_have_one_durable_effect
+✓ Passed
+
+TEST: test_recovery_false_cas_does_not_rebase_control_or_loop_forever
+✓ Passed
+
+TEST: test_invalid_recovery_clock_missing_or_corrupt_state_never_repairs
+✓ Passed
+
+TEST: test_budget_prefix_expired_hint_and_account_switch_recheck_actual_guard
+✓ Passed
+
+TEST: test_indefinite_budget_stop_is_not_zero_wait_or_completion
+✓ Passed
+
+TEST: test_recovery_never_refunds_cancelled_budget_claims
+✓ Passed
+
+TEST: test_direct_sdk_wait_hint_keeps_original_error_without_cached_account
+✓ Passed
+
+TEST: test_local_error_context_does_not_supply_source_hint_or_health
+✓ Passed
+
+TEST: test_cancelled_end_clock_failure_does_not_replace_cancellation
+✓ Passed
+
+TEST: test_unrepresentable_end_and_recovery_deadlines_leave_attempt_unknown
+✓ Passed
+
+TEST: test_real_elapsed_wait_does_not_sleep_inside_engine
+✓ Passed
+
+TEST: test_generation_change_does_not_reuse_an_old_wait_anchor
+✓ Passed
+
+TEST: test_recovery_cas_race_cannot_clear_a_replacement_attempt
+✓ Passed
+
+TEST: test_process_exit_recovery_before_after_commit_keeps_exact_deadline
+✓ Passed
+
+Passed: 32/32

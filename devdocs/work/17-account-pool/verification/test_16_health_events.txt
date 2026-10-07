@@ -1,0 +1,89 @@
+Account Health Event Tests
+============================================================
+
+TEST 1: verdicts come only from Telegram's own names...
+✓ 22 names give the desc's verdict and scope
+✓ unknown 401/403/406/420 are unclassified, with the name; 400, 5xx, file references: nothing
+✓ the cause chain is followed (explicit cause, implicit context; never a suppressed one)
+✓ AuthRequiredError by .reason and cause (a first login: nothing); GroupAccessError; transport and lookup misses: nothing
+
+TEST 2: the boundary re-raises the same exception after one JSON-ready event...
+✓ same object; one event before the caller saw it: {"kind": "health", "time": "2026-10-07T21:57:58.330239+00:00", "account": {"label": "acct-2", "session": "account_1", "user_id": null}, "verdict": "no access", "scope": "group", "group": 123, "call": "get_message_count", "request": "GetHistoryRequest", "wait_seconds": null, "error": "CHANNEL_PRIVATE", "source": "error"}
+
+TEST 3: delivery — async callbacks awaited, raising callbacks harmless...
+✓ an async callback is awaited before the exception reaches the caller
+✓ a raising callback (sync or async) changes nothing; WARNING with traceback once, then DEBUG
+
+TEST 4: Telethon's silent sleeps become events; the console shows what it showed...
+✓ waiting (sleep, GetStateRequest, 1 s, FLOOD_WAIT_X, get_message_count), then ok; the console received nothing
+✓ a user who asked for the sleep lines still gets them; Telethon's warnings still arrive
+✓ after dictConfig disabled every logger: still captured, still nothing printed
+
+TEST 5: two accounts at once — each callback gets only its own sleeps...
+✓ A received only A's sleep, B only B's — concurrent, one process
+
+TEST 6: counted once — four waits in the fetch loop, then the give-up...
+✓ four waiting events (handled), none for the RuntimeError that wraps the last
+
+TEST 7: 'ok' only when a later success proves the condition ended...
+✓ logged out, then any success: ok for the account
+✓ restricted from get_messages: get_message_count succeeding is no ok; get_messages is
+✓ no access to 123: a success on 456 is no ok; a success on 123 is
+
+TEST 8: the summary in health_check()['health']...
+✓ {"account": {"label": "acct-8", "session": null, "user_id": null}, "verdict": "banned", "since": "2026-10-07T21:58:02.387667+00:00", "error": "USER_DEACTIVATED_BAN", "waiting": {"GetHistoryRequest": {"seconds": 120, "since": "2026-10-07T21:58:02.387596+00:00", "until": "2026-10-07T22:00:02.387596+00:00"}}, "no_access": {"321": {"since": "2026-10-07T21:58:02.387638+00:00", "error": "CHANNEL_PRIVATE"}}, "waits": 1, "wait_seconds": 120, "events": 4, "last_unclassified": "SOMETHING_NEW_403"}
+
+TEST 9: one log line per event, at the verdict's level...
+✓ WARNING: logged out, banned, restricted, unclassified; INFO: waiting, no access, ok
+  e.g. health: logged out [account] AUTH_KEY_UNREGISTERED — call=get_message_count account=acct-9
+
+TEST 10: polling stops on what retrying cannot fix, and only on that...
+✓ CHANNEL_PRIVATE, a ban, GroupAccessError, AuthRequiredError: stopped after one iteration with the same exception, reported once
+✓ a network error, the give-up after flood waits, a 500: retried until max_iterations
+✓ an exception in the callback reaches the caller
+
+TEST 11: validate_connection() — False with the reason, reported, never a recovery...
+✓ False; WARNING 'Connection validation failed: logged out (AUTH_KEY_UNREGISTERED)'; one swallowed event; no ok
+✓ a logout Telethon's get_me() turns into None is asked about directly: False, reported
+✓ a later True is a recovery: ok
+
+TEST 12: the real-time listener's logout is reported and still raised...
+✓ logged out, call=run_with_event_loop; the same exception propagated
+
+TEST 13: without a health_callback, everything behaves as before...
+✓ same exception object, same results, same signatures; the summary is kept anyway
+
+TEST 14: a bug in the health code never changes what a call raises or returns...
+✓ the same exception; the same results; 'health reporting failed' once at WARNING
+✓ a bug while capturing a silent sleep never reaches Telethon's request
+
+TEST 15: a sleep in a task started during a call belongs to the account, not the call...
+✓ waiting with call=None, no open wait, no ok
+
+TEST 16: a call never recovers from what it reported itself (discovery's real code)...
+✓ a search that swallowed a logout and returned: logged out, no ok
+✓ a wait discovery slept, then the retried request succeeded: ok for SearchRequest
+✓ a lookup wait discovery skipped: waiting, still open in the summary, no ok
+
+TEST 17: a per-item group is the item itself, normalised...
+✓ group 'roomname' (from '@RoomName'); a later get_messages naming it recovered it
+
+TEST 18: health_check() asks Telegram — a logout behind get_me() is found and reported...
+✓ unhealthy; errors: 'logged out (AUTH_KEY_UNREGISTERED)'; one event; ['health'] agrees
+✓ a later healthy check is a recovery, already in the same result's ['health']
+✓ a check that never reached Telegram is no recovery
+✓ with a pool: every connection checked; the primary reported once, not twice
+
+TEST 19: a call answered before a logout, and finishing after it, is no recovery...
+✓ no ok from the search answered before the logout; ok from a call answered after it
+
+TEST 20: a call that sends no request recovers nothing...
+✓ download_media_by_id(123, []) sent nothing and recovered neither the account nor group 123
+
+TEST 21: a callback that calls tgdata is not called back for its own calls' events...
+✓ one nested call and one callback run; the nested event recorded, not delivered back
+✓ the scheduled path too: the callback's own call slept, was counted, and was not delivered back
+
+Summary
+============================================================
+Passed: 21/21

@@ -1,0 +1,46 @@
+Authentication failed: stand-in: no network in this test
+FloodWait 2s on SearchRequest — waiting, then retrying
+FloodWait 2s on SearchRequest — waiting, then retrying
+Per-Request Flood Threshold Tests
+============================================================
+Telethon 1.45.0
+
+TEST 1: a per-request threshold of 0 raises a short wait at once...
+✓ FloodWaitError (1 s) raised after 0.00s and one send
+  note: Telethon's own client ignores the per-request value — the known defect this works around
+
+TEST 2: requests without the option still sleep a short wait and retry...
+✓ Slept 1.0s, retried once, returned the result — Telethon's normal behaviour
+
+TEST 3: one client, a per-request 0 and a plain request at the same time...
+✓ The per-request 0 raised while the plain request slept and returned
+
+TEST 4: no side effects on the client or on tasks started mid-request...
+✓ Requesting task saw 0, a task started mid-request saw 60; afterwards 60; setter stores 5 and caps 10**9 at 86400
+
+TEST 5: a wait Telethon already knows about is raised before sending...
+✓ Raised from Telethon's pending-wait check; nothing was sent
+
+TEST 6: a request without its own value does not inherit an enclosing one...
+✓ Slept 1.0s as normal; the enclosing value was intact afterwards
+
+TEST 7: every connection path builds the honouring client...
+✓ Use-and-close, persistent and pool clients all honour the option (3 built)
+
+TEST 8: a short wait on a discovery request: heartbeat ticks, then a retry...
+✓ Beats ['search', 'flood-wait 2s', 'search']; the same search was sent again and returned
+
+TEST 9: a wait above max_flood_wait raises DiscoveryInterrupted...
+✓ DiscoveryInterrupted(retry_after=2) after 0.00s
+
+TEST 10: a wait on a username lookup is never slept through...
+✓ similar_groups: the seed was skipped after 0.00s, with a warning
+✓ linked_groups: DiscoveryInterrupted(retry_after=5) after 0.00s
+
+TEST 11: premium flood waits are handled as waits...
+✓ search_groups: the premium wait was slept with ticks and the search retried
+✓ linked_groups: a premium lookup wait raised DiscoveryInterrupted(retry_after=5)
+
+Summary
+============================================================
+Passed: 11/11

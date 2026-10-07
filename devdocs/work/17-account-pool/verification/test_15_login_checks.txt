@@ -1,0 +1,49 @@
+Authentication failed: session '/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata_login_test_0046a81a/session_2' is not logged in (AUTH_KEY_UNREGISTERED) — Telegram logged it out. tgdata never asks for a login code on its own; log in again by hand: TgData(..., interactive_login=True) in a terminal
+Authentication failed: session '/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata_login_test_0046a81a/session_2' is not logged in (AUTH_KEY_UNREGISTERED) — Telegram logged it out. tgdata never asks for a login code on its own; log in again by hand: TgData(..., interactive_login=True) in a terminal
+Authentication failed: session '/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata_login_test_0046a81a/session_3': Telegram reports the account banned or deleted (USER_DEACTIVATED_BAN) — logging in again will not help
+Authentication failed: session '/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata_login_test_0046a81a/session_4' has never been logged in (AUTH_KEY_UNREGISTERED), and there is no terminal to type the login code into — run it once by hand in a terminal, or pass interactive_login=True
+Authentication failed: session '/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata_login_test_0046a81a/session_7' has never been logged in (AUTH_KEY_UNREGISTERED), and there is no terminal to type the login code into — run it once by hand in a terminal, or pass interactive_login=True
+Rate limited during authentication, waiting 2 seconds...
+Authentication failed: session '/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata_login_test_0046a81a/session_12' is not logged in (AUTH_KEY_UNREGISTERED) — Telegram logged it out. tgdata never asks for a login code on its own; log in again by hand: TgData(..., interactive_login=True) in a terminal
+Login Check Tests
+============================================================
+
+TEST 1: a logged-in session connects — no interactive login, no code...
+✓ Connected after one status check
+
+TEST 2+3: logged out, used before, at a terminal — refused, and refused again...
+✓ AuthRequiredError (AUTH_KEY_UNREGISTERED); no interactive login, no code
+✓ Asked again: a fresh check, refused again, still no code
+
+TEST 4: banned, even with interactive_login=True at a terminal...
+✓ AuthRequiredError(banned=True, USER_DEACTIVATED_BAN); no code
+
+TEST 5: a brand-new session with no terminal...
+✓ AuthRequiredError (never logged in, no terminal); no code
+
+TEST 6: a brand-new session at a terminal — first login still works...
+✓ The interactive login ran once
+
+TEST 7: logged out, interactive_login=True, at a terminal — deliberate re-login...
+✓ The interactive login ran once
+
+TEST 8: interactive_login=False — not even a first login at a terminal...
+✓ AuthRequiredError; no interactive login
+
+TEST 9: a flood wait during the check is waited out, then the check repeats...
+✓ Waited 2.0s, checked again, connected
+
+TEST 10: the use-and-close client tells a logout, a ban and a wait apart...
+✓ AuthRequiredError(AUTH_KEY_UNREGISTERED)
+✓ AuthRequiredError(USER_DEACTIVATED_BAN)
+✓ A 120 s wait raised as FloodWaitError, not as 'not logged in'
+
+TEST 11: AuthRequiredError keeps its old type and gains the persistent path's...
+✓ Both a RuntimeError and a ConnectionError
+
+TEST 12: a logged-out pool connection fails start-up and leaves nothing open...
+✓ AuthRequiredError; both clients closed; nothing kept; no code
+
+Summary
+============================================================
+Passed: 11/11

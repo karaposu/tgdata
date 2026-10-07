@@ -1,0 +1,17 @@
+{
+  "README.md": "3ca865196460c9e1d84da18db5d4f22e2d502a196b89b46ad58fad90aea41110",
+  "docs/account_pool.md": "472035f82dced41b0ab348faa91ce8540d483253664f3729cfff63d9a4236ed3",
+  "docs/backfill_runs.md": "20b2d0a4150c12d9019fdb18675732401ddaa58147f9fd8f38e14863f9870318",
+  "docs/daily_continuation.md": "59107a8ec4d954a4ed67e0b7887d2025925a1d9b928347afe5ee2f3505d2500f",
+  "examples/account_pool.py": "2dedc3ef209a07d17a05b96d83036527c83ed1f402249a4d41f4edbbb26b577e",
+  "tgdata/__init__.py": "64bc4b11c362cec3b8a4655feb8597ea4b9726cf931188349892b9a0f5c7be7c",
+  "tgdata/account_pool.py": "ead2d4b39286707711778d21712a274788d9763730942bbc80d0119217d3d8ad",
+  "tgdata/batch_engine.py": "6471d274c6b43a9f04a3eb935616ec9d476f77e394e4a76c51911f1ce42e3546",
+  "tgdata/connection_engine.py": "d19679c8218f43fe964608b05ecfa95e8b00aa9f2fbfdb4a8c8d904770f5619f",
+  "tgdata/pool_source.py": "3f584f30ad82f2a6e45eede39b6ecc7b76d7ec3ad265f88e82a369d48afb4b0e",
+  "tgdata/pool_state.py": "bd19dfe23f2bd17fdc7de75a6015f0df311a3ba86dbb13273fe6886eb2da88a0",
+  "tgdata/progress_facade.py": "ac94ec7eccf64cdefacf3e8d1f92615d0d0382dfeb906418842c38140878511d",
+  "tgdata/tgdata.py": "2ca9fe8673020f078e3c6fabba2e176c93321c3f266f653729935117c786499f",
+  "tgdata/smoke_tests/README.md": "7d310fcf860a3f2670728c97aebcdbcde34b4b24c0f659ef9d60a9376053a37a",
+  "tgdata/smoke_tests/test_31_account_pool.py": "6540901d0ef6aed79103d2d1b1a1494ea30da63a916cb322b5875e0b0d10b6f0"
+}

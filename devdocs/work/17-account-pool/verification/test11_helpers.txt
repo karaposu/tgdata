@@ -1,0 +1,8 @@
+TEST: build_search_queries (no network)...
+✓ 12 queries in both orders, 8 in one; case-insensitive dedup
+
+TEST: empty and unresolved frames (no network)...
+✓ Empty result keeps every column and its dtypes
+✓ Unresolved link row: NA id and flags, @name kept, dtypes unchanged
+✓ Link regex: deep links, s/, boost/ and telegram.me kept; invites, c/ and joinchat skipped
+Passed: 2/2 explicitly awaited offline helpers

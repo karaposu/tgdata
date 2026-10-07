@@ -1,0 +1,172 @@
+[
+  {
+    "name": "test_31_account_pool",
+    "returncode": 0,
+    "summary": [
+      "Passed: 36/36"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_30_backfill_integration",
+    "returncode": 0,
+    "summary": [
+      "Passed: 15/15"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_29_backfill_public",
+    "returncode": 0,
+    "summary": [
+      "Passed: 23/23"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_28_backfill_controls",
+    "returncode": 0,
+    "summary": [
+      "Passed: 32/32"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_27_backfill_pacing",
+    "returncode": 0,
+    "summary": [
+      "Passed: 32/32"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_26_backfill_completion",
+    "returncode": 0,
+    "summary": [
+      "Passed: 16/16"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_25_backfill_delivery",
+    "returncode": 0,
+    "summary": [
+      "Passed: 41/41"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_24_backfill_state",
+    "returncode": 0,
+    "summary": [
+      "Passed: 23/23"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_23_fixed_windows",
+    "returncode": 0,
+    "summary": [
+      "Passed: 22/22"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_22_daily_continuation",
+    "returncode": 0,
+    "summary": [
+      "Passed: 25/25"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_19_message_batches",
+    "returncode": 0,
+    "summary": [
+      "Passed: 33/33"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_18_read_budget",
+    "returncode": 0,
+    "summary": [
+      "Passed: 28/28"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_17_session_store",
+    "returncode": 0,
+    "summary": [
+      "Passed: 12/12"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_16_health_events",
+    "returncode": 0,
+    "summary": [
+      "Passed: 21/21"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_15_login_checks",
+    "returncode": 0,
+    "summary": [
+      "Passed: 11/11"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_14_flood_threshold",
+    "returncode": 0,
+    "summary": [
+      "Passed: 11/11"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "test_13_device_identity",
+    "returncode": 0,
+    "summary": [
+      "Passed: 6/6"
+    ],
+    "live_skips": 1
+  },
+  {
+    "name": "test_12_proxy",
+    "returncode": 0,
+    "summary": [
+      "Passed: 7/7"
+    ],
+    "live_skips": 2
+  },
+  {
+    "name": "test11_helpers",
+    "returncode": 0,
+    "summary": [
+      "Passed: 2/2 explicitly awaited offline helpers"
+    ],
+    "live_skips": 0
+  },
+  {
+    "name": "daily_continuation_example",
+    "returncode": 0,
+    "summary": [],
+    "live_skips": 0
+  },
+  {
+    "name": "backfill_runs_example",
+    "returncode": 0,
+    "summary": [],
+    "live_skips": 0
+  },
+  {
+    "name": "account_pool_example",
+    "returncode": 0,
+    "summary": [],
+    "live_skips": 0
+  }
+]

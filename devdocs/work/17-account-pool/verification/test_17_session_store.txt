@@ -1,0 +1,46 @@
+Session '/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata_store_test_gaquqwpv/account_2' was logged in or removed elsewhere — not overwritten or deleted, and this client's changes are not saved
+Authentication failed: session '/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata_store_test_gaquqwpv/account_9' has never been logged in (AUTH_KEY_UNREGISTERED), and there is no terminal to type the login code into — run it once by hand in a terminal, or pass interactive_login=True
+Authentication failed: session '/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata_store_test_gaquqwpv/account_10' has never been logged in (AUTH_KEY_UNREGISTERED), and there is no terminal to type the login code into — run it once by hand in a terminal, or pass interactive_login=True
+Authentication failed: session '/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata_store_test_gaquqwpv/account_13' is not logged in (AUTH_KEY_UNREGISTERED) — Telegram logged it out. tgdata never asks for a login code on its own; log in again by hand: TgData(..., interactive_login=True) in a terminal
+health: logged out [account] AUTH_KEY_UNREGISTERED — call=get_message_count account=account-17
+Session Store Tests
+============================================================
+Telethon 1.45.0; offline, synthetic credentials, sockets blocked
+
+TEST 1: file_default
+✓ Passed
+
+TEST 2: every_connection_path
+✓ Passed
+
+TEST 3: round_trip
+✓ Passed
+
+TEST 4: bounded_cache
+✓ Passed
+
+TEST 5: save_points
+✓ Passed
+
+TEST 6: failures
+✓ Passed
+
+TEST 7: login_rules
+✓ Passed
+
+TEST 8: log_out
+✓ Passed
+
+TEST 9: two_clients
+✓ Passed
+
+TEST 10: mixed_rows
+✓ Passed
+
+TEST 11: clone
+✓ Passed
+
+TEST 12: health_identity
+✓ Passed
+
+Passed: 12/12

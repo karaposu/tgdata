@@ -1,0 +1,69 @@
+Fixed Window Tests — Telethon 1.45.0; offline SDK/SQLite
+
+TEST: invalid_dates_before_connection_or_files
+✓ Passed
+
+TEST: half_open_window_and_timezone_normalization
+✓ Passed
+
+TEST: timestamp_ties_across_sdk_pages
+✓ Passed
+
+TEST: full_excluded_pages_and_fractional_start
+✓ Passed
+
+TEST: empty_end_exact_limit_and_max_cursor
+✓ Passed
+
+TEST: nonzero_cursor_intersects_window_and_gaps
+✓ Passed
+
+TEST: wire_date_extremes
+✓ Passed
+
+TEST: relative_enrollment_freezes_once
+✓ Passed
+
+TEST: initialization_conflicts_and_bad_durations
+✓ Passed
+
+TEST: restart_replay_ack_and_timestamp_ties
+✓ Passed
+
+TEST: media_selection_and_pending_replay
+✓ Passed
+
+TEST: budget_counts_excluded_slots_and_preserves_prefix
+✓ Passed
+
+TEST: budget_before_any_included_record_is_not_end
+✓ Passed
+
+TEST: read_failure_and_failed_prefix_persistence
+✓ Passed
+
+TEST: invalid_message_date_and_local_health
+✓ Passed
+
+TEST: v1_state_and_default_reader_are_unchanged
+✓ Passed
+
+TEST: corrupt_window_state_and_pending_refused
+✓ Passed
+
+TEST: reader_output_must_match_window
+✓ Passed
+
+TEST: daily_and_history_collections_stay_independent
+✓ Passed
+
+TEST: uncertain_initialization_reuses_committed_window
+✓ Passed
+
+TEST: process_exit_at_window_ack_commit
+✓ Passed
+
+TEST: cancelled_read_retains_window_and_releases_guard
+✓ Passed
+
+Passed: 22/22

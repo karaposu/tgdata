@@ -1,0 +1,45 @@
+Attempt 1 at connecting failed: ConnectionError: [Errno 61] Could not connect to proxy 127.0.0.1:63768 [Connect call failed ('127.0.0.1', 63768)]
+Attempt 2 at connecting failed: ConnectionError: [Errno 61] Could not connect to proxy 127.0.0.1:63768 [Connect call failed ('127.0.0.1', 63768)]
+Attempt 3 at connecting failed: ConnectionError: [Errno 61] Could not connect to proxy 127.0.0.1:63768 [Connect call failed ('127.0.0.1', 63768)]
+Attempt 4 at connecting failed: ConnectionError: [Errno 61] Could not connect to proxy 127.0.0.1:63768 [Connect call failed ('127.0.0.1', 63768)]
+Attempt 5 at connecting failed: ConnectionError: [Errno 61] Could not connect to proxy 127.0.0.1:63768 [Connect call failed ('127.0.0.1', 63768)]
+Attempt 6 at connecting failed: ConnectionError: [Errno 61] Could not connect to proxy 127.0.0.1:63768 [Connect call failed ('127.0.0.1', 63768)]
+Attempt 1 at connecting failed: ConnectionErrorExtra: Connection refused by destination host
+Attempt 2 at connecting failed: ConnectionErrorExtra: Connection refused by destination host
+Attempt 3 at connecting failed: ConnectionErrorExtra: Connection refused by destination host
+Attempt 4 at connecting failed: ConnectionErrorExtra: Connection refused by destination host
+Attempt 5 at connecting failed: ConnectionErrorExtra: Connection refused by destination host
+Attempt 6 at connecting failed: ConnectionErrorExtra: Connection refused by destination host
+Proxy Support Tests
+============================================================
+config (items 6–7): /private/tmp/tgdata17-intentionally-absent-config.ini
+proxy library installed: True
+
+TEST 1: proxy URL parsing and masking...
+✓ socks5 / socks4 / http parsed; password decoded and masked; 7 bad forms refused
+
+TEST 2: config loading...
+✓ No proxy key: direct, exactly as before
+✓ proxy = none: direct
+✓ require_proxy = true with no proxy: refused before any connection
+✓ require_proxy = maybe: refused
+✓ Quoted proxy with an inline comment parsed; password absent from repr
+
+TEST 3: every client is built with the proxy...
+✓ Main and pool clients carry the proxy; a direct config carries none; health shows it masked
+
+TEST 4: a dead proxy fails — no fallback to a direct connection...
+✓ Connection refused through the dead proxy after 6s: Connection to Telegram failed 5 time(s)
+
+TEST 5: a proxy that refuses the tunnel fails, and the attempt went to the proxy...
+✓ The proxy was asked for 149.154.167.51:443 (6 attempts), refused, and the client stopped there
+
+TEST 6: a working proxy carries the whole connection (throwaway session, no login)...
+! skipped — /private/tmp/tgdata17-intentionally-absent-config.ini not found (only its api_id / api_hash are read)
+
+TEST 7: a real proxy from the config...
+! skipped — /private/tmp/tgdata17-intentionally-absent-config.ini not found
+
+Summary
+============================================================
+Passed: 7/7

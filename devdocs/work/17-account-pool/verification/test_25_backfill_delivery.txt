@@ -1,0 +1,126 @@
+Backfill Delivery Tests — Telethon 1.45.0; LOCAL/INJECTED, actual SQLite/SDK
+
+TEST: test_values_are_exact_owned_and_public_facade_is_available
+✓ Passed
+
+TEST: test_confirmed_admission_precedes_actual_reader_without_db_lock
+✓ Passed
+
+TEST: test_restart_replay_is_offline_exact_and_has_no_clock
+✓ Passed
+
+TEST: test_fresh_relative_query_uses_original_window_after_clock_moves
+✓ Passed
+
+TEST: test_scoped_ack_duplicate_and_zero_pause_continuation
+✓ Passed
+
+TEST: test_wrong_and_unknown_receipts_preserve_pending
+✓ Passed
+
+TEST: test_equal_hashes_in_distinct_runs_have_distinct_authority
+✓ Passed
+
+TEST: test_empty_and_final_end_obey_existing_codec_invariants
+✓ Passed
+
+TEST: test_exact_full_batch_needs_real_end_not_length
+✓ Passed
+
+TEST: test_short_slice_is_not_itself_source_exhaustion
+✓ Passed
+
+TEST: test_positive_pause_waits_then_allows_eligible_admission
+✓ Passed
+
+TEST: test_failed_or_unconfirmed_admission_never_calls_source
+✓ Passed
+
+TEST: test_publication_failure_keeps_attempt_or_committed_pending
+✓ Passed
+
+TEST: test_real_sqlite_post_commit_close_error_confirms_then_replays
+✓ Passed
+
+TEST: test_same_engine_overlap_and_other_instance_unknown_attempt
+✓ Passed
+
+TEST: test_two_instances_race_one_confirmed_admission
+✓ Passed
+
+TEST: test_future_pause_or_cancel_during_read_preserves_result
+✓ Passed
+
+TEST: test_false_publication_cas_reloads_compatible_control_without_refetch
+✓ Passed
+
+TEST: test_bounded_conflicts_leave_source_result_unconfirmed
+✓ Passed
+
+TEST: test_budget_prefix_is_pending_with_verified_account_metadata
+✓ Passed
+
+TEST: test_original_rpc_prefix_and_failed_save_keep_separate_provenance
+✓ Passed
+
+TEST: test_no_prefix_failure_settles_without_end_or_cursor_advance
+✓ Passed
+
+TEST: test_invalid_source_results_do_not_settle_or_advance
+✓ Passed
+
+TEST: test_media_replay_relocation_corruption_and_ack_after_removal
+✓ Passed
+
+TEST: test_media_failure_retains_only_actual_completed_prefix
+✓ Passed
+
+TEST: test_directory_mismatch_is_pre_admission_local_refusal
+✓ Passed
+
+TEST: test_cancellation_after_committed_publication_replays_exactly
+✓ Passed
+
+TEST: test_cancellation_inside_rpc_prefix_save_is_not_rpc_health
+✓ Passed
+
+TEST: test_cancelled_load_releases_guard_and_no_source_runs
+✓ Passed
+
+TEST: test_clock_failures_leave_correct_uncertainty_and_ack_order
+✓ Passed
+
+TEST: test_revision_headroom_precedes_source_and_does_not_wrap
+✓ Passed
+
+TEST: test_invalid_saved_pending_bound_is_not_repaired
+✓ Passed
+
+TEST: test_ack_conflict_preserves_newer_cancel_and_duplicate_race
+✓ Passed
+
+TEST: test_ack_uncertain_commit_retries_without_effect_or_clock
+✓ Passed
+
+TEST: test_prior_run_receipt_cannot_ack_equal_hash_successor
+✓ Passed
+
+TEST: test_incompatible_late_source_context_is_not_overwritten
+✓ Passed
+
+TEST: test_local_operations_never_recover_source_health
+✓ Passed
+
+TEST: test_future_unknown_timing_blocks_source_but_not_pending_ack
+✓ Passed
+
+TEST: test_real_receiver_commit_with_lost_reply_replays_without_duplication
+✓ Passed
+
+TEST: test_process_exit_before_and_after_pending_commit
+✓ Passed
+
+TEST: test_process_exit_before_and_after_ack_commit
+✓ Passed
+
+Passed: 41/41
