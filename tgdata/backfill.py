@@ -12,7 +12,7 @@ import unicodedata
 from typing import Optional
 
 from .history_window import _HistoryWindow, _decode_date, _encode_date, _utc
-from .message_batch import BatchFormatError, MAX_BATCH_MESSAGES, MAX_MESSAGE_ID, MAX_LONG, MIN_LONG
+from .message_batch import MessageBatch, BatchFormatError, MAX_BATCH_MESSAGES, MAX_MESSAGE_ID, MAX_LONG, MIN_LONG
 
 
 class BackfillError(RuntimeError):
@@ -45,6 +45,24 @@ class BackfillStateError(BackfillError):
 
 
 class BackfillStorageError(BackfillError):
+    pass
+
+
+class BackfillUnknownReceipt(BackfillError):
+    pass
+
+
+class BackfillRecoveryRequired(BackfillError):
+    def __init__(self, message, status=None):
+        super().__init__(message)
+        self.status = status
+
+
+class BackfillMediaError(BackfillError):
+    pass
+
+
+class BackfillClockError(BackfillConfigurationError):
     pass
 
 
@@ -308,3 +326,96 @@ class BackfillStartResult:
 
     def to_dict(self):
         return {'applied': self.applied, 'status': self.status.to_dict()}
+
+
+def _owned_ref(value):
+    if not isinstance(value, BackfillRunRef):
+        raise BackfillConfigurationError('a complete BackfillRunRef is required')
+    return BackfillRunRef.from_dict(value.to_dict())
+
+
+@dataclass(frozen=True)
+class BackfillPrepareContext:
+    run: BackfillRunRef
+    expected_after_id: int
+    expected_control_revision: int
+
+    def __post_init__(self):
+        object.__setattr__(self, 'run', _owned_ref(self.run))
+        object.__setattr__(self, 'expected_after_id', _integer(
+            self.expected_after_id, 'expected_after_id', 0, MAX_MESSAGE_ID))
+        object.__setattr__(self, 'expected_control_revision', _integer(
+            self.expected_control_revision, 'expected_control_revision'))
+
+    def to_dict(self):
+        return dict(run=self.run.to_dict(), expected_after_id=str(self.expected_after_id),
+                    expected_control_revision=str(self.expected_control_revision))
+
+    @classmethod
+    def from_dict(cls, value):
+        _keys(value, ('run', 'expected_after_id', 'expected_control_revision'), 'prepare context')
+        return cls(BackfillRunRef.from_dict(value['run']),
+                   _wire_integer(value['expected_after_id'], 'expected_after_id', 0, MAX_MESSAGE_ID),
+                   _wire_integer(value['expected_control_revision'], 'expected_control_revision'))
+
+    @classmethod
+    def from_status(cls, status):
+        if not isinstance(status, BackfillStatus):
+            raise BackfillConfigurationError('prepare context requires BackfillStatus')
+        return cls(status.run, status.after_id, status.control_revision)
+
+
+@dataclass(frozen=True)
+class BackfillDeliveryRef:
+    run: BackfillRunRef
+    destination_id: str
+    batch_id: str
+
+    def __post_init__(self):
+        object.__setattr__(self, 'run', _owned_ref(self.run))
+        object.__setattr__(self, 'destination_id', _token(self.destination_id, 'destination_id'))
+        if type(self.batch_id) is not str or re.fullmatch('[0-9a-f]{64}', self.batch_id) is None:
+            raise BackfillConfigurationError('batch_id must be a lowercase SHA-256 identifier')
+
+    def to_dict(self):
+        return dict(run=self.run.to_dict(), destination_id=self.destination_id, batch_id=self.batch_id)
+
+    @classmethod
+    def from_dict(cls, value):
+        _keys(value, ('run', 'destination_id', 'batch_id'), 'delivery reference')
+        return cls(BackfillRunRef.from_dict(value['run']), value['destination_id'], value['batch_id'])
+
+
+@dataclass(frozen=True)
+class BackfillTurn:
+    status: BackfillStatus
+    batch: Optional[MessageBatch] = None
+    delivery: Optional[BackfillDeliveryRef] = None
+    replayed: bool = False
+
+    def __post_init__(self):
+        if not isinstance(self.status, BackfillStatus) or type(self.replayed) is not bool:
+            raise BackfillConfigurationError('turn requires a status and boolean replay marker')
+        if self.batch is None:
+            if self.delivery is not None or self.status.pending_batch_id is not None or self.replayed:
+                raise BackfillConfigurationError('a no-data turn cannot claim pending delivery')
+            return
+        if not isinstance(self.batch, MessageBatch) or not isinstance(self.delivery, BackfillDeliveryRef):
+            raise BackfillConfigurationError('a data turn requires a batch and full delivery reference')
+        batch = MessageBatch(self.batch.to_dict())
+        delivery = BackfillDeliveryRef.from_dict(self.delivery.to_dict())
+        value = batch.to_dict()
+        if (delivery.run != self.status.run or delivery.destination_id != self.status.destination_id
+                or delivery.batch_id != value['batch_id'] or self.status.pending_batch_id != value['batch_id']
+                or int(value['chat_id']) != self.status.run.chat_id
+                or int(value['after_id']) != self.status.after_id
+                or value['media_mode'] != self.status.media_mode
+                or int(value['next_after_id']) != self.status.pending_next_after_id
+                or len(value['messages']) != self.status.pending_message_count):
+            raise BackfillConfigurationError('turn data differs from its addressed pending status')
+        object.__setattr__(self, 'batch', batch)
+        object.__setattr__(self, 'delivery', delivery)
+
+    def to_dict(self):
+        return dict(status=self.status.to_dict(), batch=self.batch.to_dict() if self.batch else None,
+                    delivery=self.delivery.to_dict() if self.delivery else None, replayed=self.replayed)

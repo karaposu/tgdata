@@ -149,7 +149,9 @@ async def test_input_and_portable_identity():
     raises(BackfillConfigurationError, lambda: BackfillRunRef.from_dict(data))
     import tgdata
     assert not hasattr(tgdata.TgData, 'start_backfill')
-    assert not hasattr(BackfillEngine, 'prepare') and not hasattr(BackfillEngine, 'acknowledge')
+    # Stage 3 adds these internal operations; later controls/facade remain absent.
+    assert callable(BackfillEngine.prepare) and callable(BackfillEngine.acknowledge)
+    assert not hasattr(BackfillEngine, 'control') and not hasattr(BackfillEngine, 'recover')
 
 
 async def test_duration_precision_and_bounds():

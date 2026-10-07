@@ -250,3 +250,18 @@ stale predecessors, malformed state, uncertain results, local-error privacy and 
 state isolation are covered. Existing-only store reopening and conservative sub-microsecond
 pacing representation are included. No Telegram/config/login is used. Snapshot fixtures
 for later lifecycle facts do not test their unimplemented transitions; no live gate passes.
+
+### Test 25: backfill delivery (Stage 3, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_25_backfill_delivery
+```
+
+Exercises durable source admission, exact restart/replay, complete delivery references,
+atomic acknowledgment, preserved failure prefixes and cancellation. Real SQLite
+process exits surround publication/ack commits; a real receiver transaction exercises
+a lost acceptance reply. The actual SDK iterator, budget and artifact paths use
+synthetic transport. Media relocation/corruption/removal, control-state preservation,
+equal hashes across runs, counter/clock edges and local health isolation are covered.
+No account/login/network is used. Future control/recovery snapshots are labeled fixtures;
+positive timing eligibility and the next live gate remain their later stages.

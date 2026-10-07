@@ -92,7 +92,8 @@ def _record(row, collection_id, chat_id, state_revision):
     pending = None
     if row['pending'] is not None:
         pending = MessageBatch(row['pending'])
-        _require(bool(pending.messages) and pending.chat_id == chat_id and pending.after_id == after
+        _require(0 < len(pending.messages) <= request.batch_size
+                 and pending.chat_id == chat_id and pending.after_id == after
                  and pending.media_mode == request.media_mode, 'pending observation differs from run')
         _require(ack is None or pending.batch_id != ack['batch_id'], 'pending was already accepted')
         for record in pending.messages:
