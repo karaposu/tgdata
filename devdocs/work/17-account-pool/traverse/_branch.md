@@ -11,7 +11,7 @@ Routing and failover for groups accounts can already read; keep #7 paused (recom
 
 ## Articulation Reference
 
-File: articulate_simple.md. Itemize count: 1; identifiers: A; verdict: HIGH-PROCEED; flagged conditions: none.
+File: docarchive/articulate_simple.md. Itemize count: 1; identifiers: A; verdict: HIGH-PROCEED; flagged conditions: none.
 
 ## Question
 

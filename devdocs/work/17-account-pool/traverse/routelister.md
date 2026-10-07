@@ -15,7 +15,7 @@ Move: Apply stale-cache and changed-credential cases to the proposed owner.
 Lands: A read cannot be charged or reported to another principal.
 WHY: Trustworthy automatic routing requires a verified source owner.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: `sensemaking_iter1.md / identity probe` (bc that probe exposes two simultaneous identity authorities).
+Guidance Mode: compact. Pointer: `docarchive/sensemaking_iter1.md / identity probe` (bc that probe exposes two simultaneous identity authorities).
 Depth-link: none; depth-signal: current evidence and unresolved facets in the pointer.
 
 ## Admission-time read allowance
@@ -25,7 +25,7 @@ Move: Bind existing ledger admission to the expected account.
 Lands: Routing cannot grant extra allowance or refund failed attempts.
 WHY: Daily account use remains within the configured policy.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: `decomposition_iter1.md / P1-P2` (bc the budget authority must stay singular).
+Guidance Mode: compact. Pointer: `docarchive/decomposition_iter1.md / P1-P2` (bc the budget authority must stay singular).
 Meaning-gaps: none perceived in the target contract; implementation evidence remains required.
 Depth-link: none; depth-signal: current evidence and unresolved facets in the pointer.
 
@@ -36,7 +36,7 @@ Move: Exercise actual SDK cancellation after a completed page.
 Lands: The owed prefix remains available and no second account starts.
 WHY: Daily delivery does not lose work because a slow page timed out.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: `sensemaking.md / timeout probe` (bc the real-component opt-in seam retained100 complete records).
+Guidance Mode: compact. Pointer: `docarchive/sensemaking.md / timeout probe` (bc the real-component opt-in seam retained100 complete records).
 Depth-link: none; depth-signal: current evidence and unresolved facets in the pointer.
 
 ## Durable account attempt ownership
@@ -46,7 +46,7 @@ Move: Define admission, settlement and unknown-attempt recovery.
 Lands: A restarted reader refuses an unresolved account attempt.
 WHY: Crash recovery cannot bypass restrictions observed before a failed write.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: `innovation.md / Q1F and Q3F` (bc durable admission prevents that unrecorded interval from granting fresh permission).
+Guidance Mode: compact. Pointer: `docarchive/innovation.md / Q1F and Q3F` (bc durable admission prevents that unrecorded interval from granting fresh permission).
 Depth-link: none; depth-signal: current evidence and unresolved facets in the pointer.
 
 ## Scoped account and group eligibility
@@ -56,7 +56,7 @@ Move: Make fact scope, expiry and repair explicit.
 Lands: Each candidate has an actionable permitted-or-blocked reason.
 WHY: Automatic selection can recover without confusing group denial with account death.
 Priority: HIGH; Confidence: MEDIUM; Essentiality: core.
-Guidance Mode: compact. Pointer: `innovation.md / Assembly A2` (bc different failures require different lifetimes).
+Guidance Mode: compact. Pointer: `docarchive/innovation.md / Assembly A2` (bc different failures require different lifetimes).
 Meaning-gaps: actual implementation of settled admission/recovery semantics — [mid] — the contract is concrete but still needs code evidence.
 Depth-link: none; depth-signal: current evidence and unresolved facets in the pointer.
 
@@ -67,7 +67,7 @@ Move: Check each resolution hint against the configured canonical chat.
 Lands: Changed handles cannot redirect a stored cursor.
 WHY: The caller continues the intended group across accounts.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: `innovation_iter1.md / P4F` (bc a human-facing alias is mutable).
+Guidance Mode: compact. Pointer: `docarchive/innovation_iter1.md / P4F` (bc a human-facing alias is mutable).
 Meaning-gaps: none perceived in the target contract; implementation evidence remains required.
 Depth-link: none; depth-signal: current evidence and unresolved facets in the pointer.
 
@@ -78,7 +78,7 @@ Move: Express deterministic drain/spread and one attempt per candidate.
 Lands: Calls terminate with a batch, original prefix error or explicit refusal.
 WHY: The application can request a group without implementing failover.
 Priority: MEDIUM; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: `critique_iter1.md / P3F` (bc serial ownership avoids ambiguous loser attempts).
+Guidance Mode: compact. Pointer: `docarchive/critique_iter1.md / P3F` (bc serial ownership avoids ambiguous loser attempts).
 Meaning-gaps: none perceived in the target contract; implementation evidence remains required.
 Depth-link: none; depth-signal: current evidence and unresolved facets in the pointer.
 
@@ -89,7 +89,7 @@ Move: Compose the pool reader with the actual progress facades.
 Lands: Pending replay and ack remain independent of account availability.
 WHY: Daily/history continuity retains its existing delivery guarantee.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: `sensemaking_iter1.md / replay probes` (bc the persisted observation already contains the owed data).
+Guidance Mode: compact. Pointer: `docarchive/sensemaking_iter1.md / replay probes` (bc the persisted observation already contains the owed data).
 Depth-link: none; depth-signal: current evidence and unresolved facets in the pointer.
 
 ## Multi-account qualification evidence
@@ -99,7 +99,7 @@ Move: Combine actual SDK offline fault histories with a bounded live gate.
 Lands: Each reliability claim has evidence and named limits.
 WHY: Users can distinguish a tested failure contract from live account assumptions.
 Priority: MEDIUM; Confidence: MEDIUM; Essentiality: core.
-Guidance Mode: compact. Pointer: `innovation_iter1.md / P5F` (bc real success and deterministic failures establish different claims).
+Guidance Mode: compact. Pointer: `docarchive/innovation_iter1.md / P5F` (bc real success and deterministic failures establish different claims).
 Meaning-gaps: available real-account gate resources — [mid] — offline results do not qualify real two-account behavior.
 Depth-link: none; depth-signal: current evidence and unresolved facets in the pointer.
 
@@ -110,7 +110,7 @@ Move: State what empty/end means after an account change.
 Lands: No union-history or equal-visibility guarantee is implied.
 WHY: The scraping user can judge coverage honestly.
 Priority: MEDIUM; Confidence: HIGH; Essentiality: core.
-Guidance Mode: compact. Pointer: `docs/daily_continuation.md as cited in critique.md` (bc same chat ID does not establish identical historical visibility).
+Guidance Mode: compact. Pointer: `docs/daily_continuation.md as cited in docarchive/critique.md` (bc same chat ID does not establish identical historical visibility).
 Depth-link: none; depth-signal: current evidence and unresolved facets in the pointer.
 
 ## Excluded
