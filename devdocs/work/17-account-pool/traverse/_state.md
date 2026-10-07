@@ -9,17 +9,18 @@ A → Su → S → D → I → C → R (always)
 - [x] Sensemaking
 - [x] Decomposition
 - [x] Innovation
-- [ ] Critique
+- [x] Critique
 - [ ] Routelister
 ## Iteration
 1
 ## Status
 ACTIVE
 ## Next Discipline
-Critique
+Routelister
 ## History
 - 2026-10-07_23-34: Articulate-Simple complete, HIGH-PROCEED, 1 item/4 variants. Checker absent; manual 9/9 failure-mode checks passed, bundle complete. Mechanical derivation and all four MQ/WHY/variant preservation checked. Next: Surfacing.
 - 2026-10-07_23-35: Surfacing complete; 18 items, 3 cycles, PROCEED. Checker absent; manual 6/6 trace/summary/coverage/metadata/frontier/telemetry checks passed. Next: Sensemaking.
 - 2026-10-07_23-40: Sensemaking complete, SV1–SV6; five real-composition probes pass, 8/9 ambiguities resolved. Manual structural check 7/7 (checker absent): versions, anchors, perspectives, counters, constraints, stabilization, telemetry. Next: Decomposition.
 - 2026-10-07_23-41: Decomposition complete; 5 questions, 7/7 self-evaluation dimensions PASS. Checker absent; manual five artifact-section and seven process-step checks passed. Next: Innovation.
 - 2026-10-07_23-47: Innovation complete; 7/7 mechanisms, 17 candidates, 5 actionable survivors assembled. Checker absent; manual coverage/generation/audit/tests/assembly/telemetry checks 6/6 PASS. Next: Critique.
+- 2026-10-07_23-53: Critique iteration1 complete; 17 candidates, 7 dimensions, assembly REFINE on durable admission and timeout prefixes. Manual structural check 6/6 PASS; checker absent. Next: Routelister, then narrow iteration2.
