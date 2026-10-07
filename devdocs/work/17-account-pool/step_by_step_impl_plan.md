@@ -4,7 +4,9 @@ effort: max
 ---
 # Implementation plan — #17 existing-access account pool
 
-Revision1. Input: `desc.md` at1254253; design: `traverse/finding.md` atd1daa84.
+**Critic folded:** 2026-10-08 — 2 selected robust mitigations (4 steps changed,0 added). Formal pre-build experiment PASS; see critic.md.
+
+Revision2. Input: `desc.md` at1254253; design: `traverse/finding.md` atd1daa84.
 Base: dev95ed4c7. No rejected PR critic exists for this task.
 
 ### What is the task
@@ -28,7 +30,7 @@ not substituted evidence of multi-process safety.
 **E1 — OPEN; inherited from desc.md.** Two distinct already-authenticated accounts,
 their approved local configurations, a shared readable group and a bounded shared
 allowance must be supplied/confirmed by the maintainer. **Blocks step9 only.**
-An optional resource question is pending; do not inspect arbitrary credentials or
+User confirmed one account for now and offline-first work; do not inspect arbitrary credentials or
 reset prior test allowances to manufacture the gate. Code/tests/docs proceed.
 
 ### How this implementation moves toward desired state
@@ -157,7 +159,7 @@ SQLiteSyncStore CAS, canonical JSON, ReadBudget, UTC and monotonic timing.
 ### Hardness Lvl
 4
 
-## Step 2 — Owned source and exact client behavior
+## Step 2 — Owned source and exact client behavior [folded: Risk1, robust]
 
 ### Proposed changes
 
@@ -179,7 +181,12 @@ defaulting to unchanged legacy behavior. Pool resolver calls bounded get_entity 
 the registered hint, checks canonical group before iteration, and never enumerates
 dialogs. Enable cancellation prefix only for pool-owned readers. Timer wrapper uses
 wait_for and transfers the completed prefix from the cancelled child's cause; plain
-external cancellation is never converted. Document cooperative timing and the SDK's
+external cancellation is never converted. Retain the body's completed batch or original
+error before HealthMonitor can await observers. If the internal timer expires during
+observer work, await child termination then preserve that already-complete outcome
+(including the real wait), rather than replacing it with PoolTimeoutError. Only an
+unfinished source body becomes a timeout with its retained cancellation prefix.
+Document cooperative timing and the SDK's
 bounded final server-error sleep, not a false hard-wall-clock guarantee.
 
 ### Output
@@ -194,7 +201,7 @@ entity/access hashes, media, asyncio cancellation.
 ### Hardness Lvl
 5
 
-## Step 3 — Router, admission and settlement
+## Step 3 — Router, admission and settlement [folded: Risk1, robust]
 
 ### Proposed changes
 
@@ -203,7 +210,9 @@ Reject duplicate configured IDs/groups at construction; validate source inputs b
 network/state admission. Enforce serial ownership and per-call max_attempts with no
 repeat candidate. Skip active/repair/deadline/age/budget-unavailable accounts. Persist
 fresh UUID admission, require definite write success, then run the owned child.
-Keep safe immutable attempt records. Classify actual source errors narrowly using
+Keep safe immutable attempt records. Classify the retained source-body outcome,
+never an observer-only timeout, so an actual flood wait cannot become a shorter
+transport cooldown. Classify actual source errors narrowly using
 the existing health taxonomy plus explicit SDK/transport types; catch local errors
 first. Retire only the exact token, never retry CAS into a different permission.
 If any nonempty prefix exists, stop with that error after settlement. Source-free
@@ -220,7 +229,7 @@ provenance, original exception identity, MessageBatch interrupted prefixes.
 ### Hardness Lvl
 5
 
-## Step 4 — Status, explicit repair/recovery and cleanup
+## Step 4 — Status, explicit repair/recovery and cleanup [folded: Risk2, robust]
 
 ### Proposed changes
 
@@ -230,7 +239,9 @@ retry_not_before), close() and async context management. Status reads stored fac
 and ledger eligibility, never authenticates. Recovery requires exact token, literal
 True quiescence assertion and explicit aware UTC time; keep stronger deadlines/repair
 flags and latest exact recovery retry recognition, including when newer work exists.
-Recheck is a durably admitted identity-only source attempt after known waits; it may
+Recheck after known waits first awaits retirement of that slot's owned client,
+reloads its configured session and repeats alias preflight. If retirement fails,
+refuse replacement/source use. A durably admitted identity-only source attempt then may
 clear repaired authentication/identity flags on fresh proof but never group denials
 or budget. Close blocks new work, cancels/awaits owned activity, disconnects every
 client; cleanup cannot replace a primary error. Context exit preserves its original
@@ -240,7 +251,8 @@ exception. Completed source-free progress operations remain usable after close.
 
 Actionable state and conservative restart/repair/shutdown operations.
 ### Safe in nature
-True — opt-in lifecycle only.
+False — repair deliberately reloads owned credential state; preserve replacement
+credentials during old-client cleanup and verify StoredSession conflict handling.
 ### Peripheral concepts
 Exact retry recognition, task quiescence, session persistence, callback reentrancy.
 ### Hardness Lvl
@@ -269,7 +281,7 @@ BackfillEngine factory seam, SyncEngine, local health exclusion, persisted repla
 ### Hardness Lvl
 4
 
-## Step 6 — Actual-composition offline tests
+## Step 6 — Actual-composition offline tests [folded: Risk1, robust; Risk2, robust]
 
 ### Proposed changes
 
@@ -283,6 +295,9 @@ prefix/no-failover, timer prefix and external cancellation, overlapping tasks,
 durable admission and ambiguous/failed writes, restart/missing/corrupt/schema-crossed
 state, stale recovery/late settlement, stronger wait preservation, repair/recheck,
 source-free daily/backfill replay/ack/control, media/local-error provenance and close.
+Also block health callbacks after both successful and failing source bodies and prove
+original data/wait preservation under internal timeout; replace actual stored login
+credentials and prove deliberate recheck reloads them without stale-key overwrite.
 
 Use controlled transport futures and commit-boundary backend wrappers to create
 real overlap/uncertain responses; do not substitute the reader's key behavior.
