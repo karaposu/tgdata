@@ -2,7 +2,9 @@
 model: gpt-6-astra
 effort: max
 ---
-# Stage 1 implementation plan — revision 1
+# Stage 1 implementation plan — revision 2
+
+**Critic folded:** 2026-10-08 — 1 mitigation (2 steps changed, 0 added). Prebuild REORDER experiment PASS; see critic.md and prebuild_probe.py.
 
 Repository convention uses `plan.md` for task-plan's output. Input: this folder's
 `desc.md` and completed `traverse/finding.md`. No parent revision 3 steps are resumed.
@@ -67,6 +69,12 @@ become the existing AuthRequiredError via the factory, preserving cause/reason.
 Empty/UserEmpty self results mean explicit missing authentication; malformed
 response/ID means unverifiable identity error. Do not use cached `_self_id` or
 `get_me(input_peer=True)`. `_close()` permanently ends handle admission.
+
+[folded: Risk 1, robust] Identity mismatch, absent/malformed self or authentication
+loss marks the handle inactive before raising, even when caught inside the body.
+A later proof or client access on that handle refuses; an account becoming valid
+again requires a new operation. Transient wait/server/transport errors retain their
+original type without rebinding ownership. No additional state machine is added.
 
 ### Output
 
@@ -168,6 +176,10 @@ two genuinely overlapping operations; close on connect/proof/body/success exits;
 body error plus failing close; caller cancellation during work and close, including
 repeat; disconnect's own cancellation; logger failure; no credential in diagnostic.
 Use bounded event waits so a broken test fails instead of hanging indefinitely.
+
+[folded: Risk 1, robust] Catch each identity-invalidating refusal inside the body,
+then change the reply back to the expected account and assert handle/client and
+real budget admission remain closed. Cleanup still runs once.
 
 ### Output
 
