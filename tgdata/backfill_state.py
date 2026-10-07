@@ -275,6 +275,7 @@ class _BackfillState:
         request = BackfillStartRequest.from_dict(row['request'])
         pending = row['pending']
         pacing = row['pacing']
+        recovery = row['last_recovery']
         failure = row['last_failure']
         return BackfillStatus(
             run=BackfillRunRef.from_dict(row['ref']), state_revision=int(value['state_revision']),
@@ -299,4 +300,9 @@ class _BackfillState:
             last_failure_retry_at=_date(failure['retry_at'], nullable=True) if failure else None,
             last_failure_account_id=int(failure['account_id']) if failure and failure['account_id'] else None,
             delivery_abandoned=row['abandoned'] is not None, history_limited=previous,
+            pacing_attempt_id=pacing['attempt_id'] if pacing else None,
+            pacing_ended_at=_date(pacing['ended_at'], nullable=True) if pacing else None,
+            last_recovery_id=recovery['command_id'] if recovery else None,
+            last_recovered_attempt_id=recovery['attempt_id'] if recovery else None,
+            last_recovery_at=_date(recovery['recovered_at']) if recovery else None,
         )

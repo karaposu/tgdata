@@ -304,6 +304,11 @@ class BackfillStatus:
     last_failure_account_id: Optional[int]
     delivery_abandoned: bool
     history_limited: bool
+    pacing_attempt_id: Optional[str] = None
+    pacing_ended_at: Optional[datetime] = None
+    last_recovery_id: Optional[str] = None
+    last_recovered_attempt_id: Optional[str] = None
+    last_recovery_at: Optional[datetime] = None
 
     def to_dict(self):
         result = asdict(self)
@@ -313,7 +318,8 @@ class BackfillStatus:
             if result[name] is not None:
                 result[name] = str(result[name])
         for name in ('start_date', 'end_date', 'created_at', 'pacing_not_before',
-                     'last_failure_at', 'last_failure_retry_at'):
+                     'last_failure_at', 'last_failure_retry_at', 'pacing_ended_at',
+                     'last_recovery_at'):
             if result[name] is not None:
                 result[name] = _encode_date(result[name])
         return result
@@ -326,6 +332,33 @@ class BackfillStartResult:
 
     def to_dict(self):
         return {'applied': self.applied, 'status': self.status.to_dict()}
+
+
+@dataclass(frozen=True)
+class BackfillRecoveryResult:
+    command_id: str
+    attempt_id: str
+    applied: bool
+    outcome: str
+    status: BackfillStatus
+
+    def __post_init__(self):
+        _token(self.command_id, 'command_id')
+        _token(self.attempt_id, 'attempt_id')
+        _choice(self.outcome, ('recovered', 'settled'), 'recovery outcome')
+        if type(self.applied) is not bool or not isinstance(self.status, BackfillStatus):
+            raise BackfillConfigurationError('recovery result requires boolean applied and status')
+        if self.outcome == 'recovered':
+            if (self.status.last_recovery_id != self.command_id or
+                    self.status.last_recovered_attempt_id != self.attempt_id):
+                raise BackfillConfigurationError('recovery result differs from retained command')
+        elif (self.applied or self.status.attempt_id is not None or
+              self.status.pacing_attempt_id != self.attempt_id):
+            raise BackfillConfigurationError('settled result requires the addressed source observation')
+
+    def to_dict(self):
+        return dict(command_id=self.command_id, attempt_id=self.attempt_id,
+                    applied=self.applied, outcome=self.outcome, status=self.status.to_dict())
 
 
 def _owned_ref(value):
@@ -392,10 +425,19 @@ class BackfillTurn:
     batch: Optional[MessageBatch] = None
     delivery: Optional[BackfillDeliveryRef] = None
     replayed: bool = False
+    wait_seconds: Optional[float] = None
 
     def __post_init__(self):
         if not isinstance(self.status, BackfillStatus) or type(self.replayed) is not bool:
             raise BackfillConfigurationError('turn requires a status and boolean replay marker')
+        if self.wait_seconds is not None:
+            seconds = _seconds(self.wait_seconds)
+            if (seconds <= 0 or self.batch is not None or self.delivery is not None or self.replayed
+                    or self.status.pending_batch_id is not None or self.status.attempt_id is not None
+                    or self.status.terminal_outcome is not None or self.status.operator_intent != 'active'
+                    or self.status.clock_uncertain or self.status.pacing_not_before is None):
+                raise BackfillConfigurationError('a pacing wait requires active quiescent nonterminal state')
+            object.__setattr__(self, 'wait_seconds', seconds)
         if self.batch is None:
             if self.delivery is not None or self.status.pending_batch_id is not None or self.replayed:
                 raise BackfillConfigurationError('a no-data turn cannot claim pending delivery')
@@ -418,4 +460,5 @@ class BackfillTurn:
 
     def to_dict(self):
         return dict(status=self.status.to_dict(), batch=self.batch.to_dict() if self.batch else None,
-                    delivery=self.delivery.to_dict() if self.delivery else None, replayed=self.replayed)
+                    delivery=self.delivery.to_dict() if self.delivery else None,
+                    replayed=self.replayed, wait_seconds=self.wait_seconds)

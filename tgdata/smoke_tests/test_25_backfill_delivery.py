@@ -149,7 +149,7 @@ async def test_values_are_exact_owned_and_not_public_facade():
     f.rejected(FrozenInstanceError,lambda:setattr(delivery,'batch_id','b'*64))
     import tgdata
     assert not hasattr(tgdata,'BackfillTurn') and not hasattr(tgdata.TgData,'prepare_backfill')
-    assert not hasattr(BackfillEngine,'control') and not hasattr(BackfillEngine,'recover')
+    assert not hasattr(BackfillEngine,'control') and callable(BackfillEngine.recover)
 
 
 async def test_confirmed_admission_precedes_actual_reader_without_db_lock():
@@ -283,16 +283,19 @@ async def test_short_slice_is_not_itself_source_exhaustion():
     assert turn.status.terminal_outcome is None
 
 
-async def test_positive_pause_is_recorded_but_further_admission_stays_gated():
-    (backend,eng,_,_,sender,_,ctx),turn=await prepared(pause_seconds=5)
+async def test_positive_pause_waits_then_allows_eligible_admission():
+    (backend,eng,tg,_,sender,_,ctx),turn=await prepared(pause_seconds=5)
     assert turn.status.pacing_not_before==NOW+timedelta(seconds=5)
     replay=await engine(backend,forbidden_reader,forbidden_clock).prepare(ctx)
     assert replay.replayed
     status=await eng.acknowledge(replay.delivery)
     before=await backend.load(CHAT)
-    await f.expect(BackfillConfigurationError,engine(backend,forbidden_reader,
-        lambda:NOW+timedelta(days=1)).prepare(BackfillPrepareContext.from_status(status)))
+    waiting=await eng.prepare(BackfillPrepareContext.from_status(status))
+    assert waiting.batch is None and waiting.wait_seconds==5
     assert await backend.load(CHAT)==before and len(sender.reads)==1
+    later=await engine(backend,tg.get_message_batch,lambda:NOW+timedelta(days=1)).prepare(
+        BackfillPrepareContext.from_status(status))
+    assert later.batch.after_id==102 and later.wait_seconds is None and len(sender.reads)==2
 
 
 async def test_failed_or_unconfirmed_admission_never_calls_source():

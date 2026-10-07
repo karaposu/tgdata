@@ -151,7 +151,7 @@ async def test_input_and_portable_identity():
     assert not hasattr(tgdata.TgData, 'start_backfill')
     # Stage 3 adds these internal operations; later controls/facade remain absent.
     assert callable(BackfillEngine.prepare) and callable(BackfillEngine.acknowledge)
-    assert not hasattr(BackfillEngine, 'control') and not hasattr(BackfillEngine, 'recover')
+    assert not hasattr(BackfillEngine, 'control') and callable(BackfillEngine.recover)
 
 
 async def test_duration_precision_and_bounds():

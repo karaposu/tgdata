@@ -281,3 +281,20 @@ Owned processes exit immediately before/after actual create/publication/empty-co
 final-ack commits. Reopen checks owed work, unresolved attempts and durable completion.
 Sockets are blocked; source replies are synthetic through Telethon 1.45.0. Seeded
 operator states test preservation only; live Gate B is a separate required execution.
+
+
+### Test 27: backfill pacing and recovery (Stage 5, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_27_backfill_pacing
+```
+
+Exercises positive/zero/sub-microsecond pacing, independent UTC/monotonic evidence,
+early/late acknowledgment, restart and nonblocking waits. Actual recovery methods
+check quiescence and exact run/attempt/command/control identity, preserve known ends
+or create one conservative unknown-end interval, and recognize lost replies without
+refreshing it. Real SQLite process exits surround recovery commits; concurrent recovery,
+newer attempts, wrong/stale context, clock failures and original error provenance are
+covered. Actual SDK/budget code uses synthetic transport to verify prefixes, indefinite/
+expired hints, account changes and retained cancelled charges. Sockets are blocked.
+A short real elapsed-time case is local evidence; it does not pass live Gate C.

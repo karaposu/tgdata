@@ -1,26 +1,28 @@
 """Durable historical-run delivery, completion and exact write confirmation.
 
-Positive timing eligibility, controls, recovery and the public facade retain their
-later stages. A source callback never runs before confirmed durable admission.
+Pacing and exact-attempt recovery remain local to this engine/store. Controls and
+the public facade retain later stages. Source reads require confirmed admission.
 """
 
 import asyncio
 from datetime import datetime, timedelta, timezone
 import os
 import re
+import time
 from uuid import uuid4
 
 from .backfill import (
-    BackfillRunRef, BackfillStartRequest, BackfillStartResult,
+    BackfillRunRef, BackfillStartRequest, BackfillStartResult, BackfillRecoveryResult,
     BackfillPrepareContext, BackfillDeliveryRef, BackfillTurn, BackfillError,
     BackfillConfigurationError, BackfillConflictError, BackfillStorageError,
     BackfillUnknownRun, BackfillUnknownCommand, BackfillUnknownReceipt,
     BackfillRecoveryRequired, BackfillMediaError, BackfillClockError, BackfillStateError,
-    _token, _choice, _pause_delta,
+    _token, _choice, _pause_delta, _integer,
 )
 from .batch_files import prepare_directory, _verify_existing, BatchStorageError
 from .backfill_state import _BackfillState, initial_record, SCHEMA, VERSION
 from .history_window import _HistoryWindow, _utc, _encode_date, _decode_date
+from .health import WAIT_ERRORS
 from .message_batch import MessageBatch, MAX_LONG
 from .read_budget import ReadBudgetExceeded, ReadBudgetError, ReadBudgetStorageError
 
@@ -32,16 +34,21 @@ def _utc_now():
 class BackfillEngine:
     """Internal staged engine over an isolated async opaque-text store namespace."""
 
-    def __init__(self, store, collection_id, *, read_batch=None, clock=_utc_now):
+    def __init__(self, store, collection_id, *, read_batch=None, clock=_utc_now,
+                 monotonic_ns=time.monotonic_ns):
         self._store = store
         self.collection_id = _token(collection_id, 'collection_id')
-        if not callable(clock):
-            raise BackfillConfigurationError('clock must be callable')
+        if not callable(clock) or not callable(monotonic_ns):
+            raise BackfillConfigurationError('clock and monotonic_ns must be callable')
         if read_batch is not None and not callable(read_batch):
             raise BackfillConfigurationError('read_batch must be callable or None')
         self._clock = clock
+        self._monotonic_ns = monotonic_ns
         self._read_batch = read_batch
         self._preparing = set()
+        self._last_clock = None
+        self._waits = {}
+        self._ends = {}
 
     async def _backend(self, operation, *args):
         try:
@@ -127,6 +134,61 @@ class BackfillEngine:
         except Exception as error:
             raise BackfillClockError('backfill clock failed ({})'.format(type(error).__name__)) from None
 
+    def _clock_pair(self):
+        """Source/recovery evidence only; local acceptance has its own timestamp."""
+        now = self._now()
+        try:
+            ticks = _integer(self._monotonic_ns(), 'monotonic nanoseconds')
+        except asyncio.CancelledError as error:
+            raise error from None
+        except Exception as error:
+            raise BackfillClockError('backfill monotonic clock failed ({})'.format(
+                type(error).__name__)) from None
+        if self._last_clock is not None:
+            old_now, old_ticks = self._last_clock
+            if now < old_now or ticks < old_ticks:
+                raise BackfillClockError('source clock evidence regressed; eligibility is uncertain')
+        self._last_clock = now, ticks
+        return now, ticks
+
+    @staticmethod
+    def _delta_ns(value):
+        return ((value.days * 86400 + value.seconds) * 1000000 + value.microseconds) * 1000
+
+    @staticmethod
+    def _check_time(row, now):
+        anchors = [row['created_at']]
+        if row['attempt'] is not None:
+            anchors.append(row['attempt']['admitted_at'])
+        if row['pacing'] is not None and row['pacing']['ended_at'] is not None:
+            anchors.append(row['pacing']['ended_at'])
+        if row['last_recovery'] is not None:
+            anchors.append(row['last_recovery']['recovered_at'])
+        if any(now < _decode_date(anchor) for anchor in anchors):
+            raise BackfillClockError('clock precedes saved source/recovery evidence; eligibility is uncertain')
+
+    @staticmethod
+    def _pacing_key(row, pacing):
+        return (BackfillRunRef.from_dict(row['ref']), pacing['attempt_id'],
+                pacing['ended_at'], pacing['not_before'], pacing['clock_uncertain'])
+
+    def _remember_wait(self, row, pacing, deadline_ns):
+        self._waits[int(row['ref']['chat_id'])] = self._pacing_key(row, pacing), deadline_ns
+
+    def _remaining_ns(self, row, sample):
+        now, ticks = sample
+        pacing = row['pacing']
+        remaining = self._delta_ns(_decode_date(pacing['not_before']) - now)
+        chat_id = int(row['ref']['chat_id'])
+        key = self._pacing_key(row, pacing)
+        saved = self._waits.get(chat_id)
+        if saved is None or saved[0] != key:
+            # After local context loss, UTC must be trusted. Anchor the remaining
+            # interval once; repeated observations must not restart the wait.
+            self._remember_wait(row, pacing, ticks + max(0, remaining))
+            saved = self._waits[chat_id]
+        return max(0, remaining, saved[1] - ticks)
+
     @staticmethod
     def _context_matches(context, row):
         if (context.expected_after_id != int(row['after_id']) or
@@ -204,22 +266,15 @@ class BackfillEngine:
                     if batch is not None else None)
         return BackfillTurn(status, batch, delivery, replayed)
 
-    async def _admit(self, raw, value, context, directory):
+    async def _admit(self, raw, value, context, directory, clock_sample=None):
         row = value['current']
         pacing = row['pacing']
-        if pacing is not None:
-            if pacing['clock_uncertain']:
-                raise BackfillRecoveryRequired('saved timing is uncertain; later recovery is required',
-                                               _BackfillState(value).status())
-            if (row['request']['pause_seconds'] > 0 or pacing['ended_at'] is None
-                    or pacing['not_before'] != pacing['ended_at']):
-                raise BackfillConfigurationError(
-                    'further paced source admission requires Stage 5; replay and acknowledgment remain available')
         if self._read_batch is None:
             raise BackfillConfigurationError('configure read_batch for new source preparation')
         self._revision(value, reserve=3)
         root = self._directory(row['request']['media_mode'], directory, needed=True)
-        admitted = self._now()
+        admitted, _ = clock_sample if clock_sample is not None else self._clock_pair()
+        self._check_time(row, admitted)
         if (admitted < _decode_date(row['created_at']) or
                 (pacing is not None and admitted < _decode_date(pacing['not_before']))):
             raise BackfillClockError('clock precedes saved lifecycle evidence; no source admission')
@@ -231,7 +286,7 @@ class BackfillEngine:
         return state.to_dict()['current'], root
 
     def _ended(self, admitted):
-        ended = self._now()
+        ended, ticks = self._clock_pair()
         if ended < _decode_date(admitted['attempt']['admitted_at']):
             raise BackfillClockError('clock regressed during the source attempt; settlement is unconfirmed')
         try:
@@ -239,6 +294,13 @@ class BackfillEngine:
         except (ValueError, OverflowError) as error:
             raise BackfillClockError('attempt deadline is unrepresentable ({})'.format(
                 type(error).__name__)) from None
+        run = BackfillRunRef.from_dict(admitted['ref'])
+        attempt_id = admitted['attempt']['attempt_id']
+        deadline_ns = ticks + self._delta_ns(_pause_delta(admitted['request']['pause_seconds']))
+        self._ends[run.chat_id] = (run, attempt_id, ended, deadline, deadline_ns)
+        pacing = dict(attempt_id=attempt_id, ended_at=_encode_date(ended),
+                      not_before=_encode_date(deadline), clock_uncertain=False)
+        self._remember_wait(admitted, pacing, deadline_ns)
         return ended, deadline
 
     @staticmethod
@@ -263,6 +325,16 @@ class BackfillEngine:
                 raise cancelled from None
             except (ValueError, TypeError, OverflowError, OSError):
                 retry_at = None
+        elif isinstance(error, WAIT_ERRORS):
+            # Only the direct reader error supplies this observation. Following
+            # incidental context or consulting health's cache could invent a wait
+            # or assign it to the wrong account. Actual SDK admission stays fresh.
+            seconds = getattr(error, 'seconds', None)
+            if type(seconds) is int and seconds >= 0:
+                try:
+                    retry_at = _encode_date(ended + timedelta(seconds=seconds))
+                except (ValueError, OverflowError):
+                    pass
         return dict(category=category, error_type=name, observed_at=_encode_date(ended),
                     retry_at=retry_at, account_id=account_id)
 
@@ -307,8 +379,8 @@ class BackfillEngine:
     async def prepare(self, context, *, download_media_to=None):
         """Prepare/replay one exact delivery using current run/cursor/control intent.
 
-        Further positive-pause timing and explicit recovery are later-stage work.
-        Pending replay remains local, including while paused or cancelled. The
+        Early pacing returns a wait without sleeping or reading. Pending replay
+        remains local, including while paused or cancelled. The
         caller excludes other source readers in separate collections/daily jobs.
         """
         if not isinstance(context, BackfillPrepareContext):
@@ -334,7 +406,17 @@ class BackfillEngine:
             if row['attempt'] is not None:
                 raise BackfillRecoveryRequired('source attempt is unresolved; inspect/recover before reading',
                                                state.status(previous=key == 'previous'))
-            admitted, root = await self._admit(raw, document, context, download_media_to)
+            sample = None
+            if row['pacing'] is not None:
+                if row['pacing']['clock_uncertain']:
+                    raise BackfillRecoveryRequired('saved timing is uncertain; no source admission',
+                                                   state.status(previous=key == 'previous'))
+                sample = self._clock_pair()
+                self._check_time(row, sample[0])
+                remaining = self._remaining_ns(row, sample)
+                if remaining:
+                    return BackfillTurn(state.status(), wait_seconds=remaining / 1000000000)
+            admitted, root = await self._admit(raw, document, context, download_media_to, sample)
             options = dict(after_id=int(admitted['after_id']), limit=admitted['request']['batch_size'],
                            download_media_to=root,
                            start_date=_decode_date(admitted['window']['start_date']),
@@ -342,6 +424,13 @@ class BackfillEngine:
             try:
                 result = await self._read_batch(chat_id, **options)
             except asyncio.CancelledError as error:
+                # Observe a quiescent local end if possible, but never delay or
+                # replace cancellation with persistence/clock work. After losing
+                # this local evidence, explicit recovery must wait a full interval.
+                try:
+                    self._ended(admitted)
+                except (Exception, asyncio.CancelledError):
+                    pass
                 raise error from None
             except Exception as read_error:
                 try:
@@ -403,6 +492,93 @@ class BackfillEngine:
             if written:
                 return accepted.status()
         raise BackfillConflictError('acknowledgment kept conflicting; inspect or retry the same receipt')
+
+    async def recover(self, run, *, attempt_id, command_id, expected_control_revision,
+                      previous_reader_stopped):
+        """Settle one stopped uncertain attempt without reading or accepting data.
+
+        The caller must establish quiescence across engines/processes. Local busy
+        preparation also refuses. Retained commands and settled outcomes reconcile
+        without a clock; unknown/replaced context never becomes a fresh recovery.
+        """
+        if not isinstance(run, BackfillRunRef):
+            raise BackfillConfigurationError('recover requires BackfillRunRef')
+        run = BackfillRunRef.from_dict(run.to_dict())
+        self._scope(run)
+        attempt_id = _token(attempt_id, 'attempt_id')
+        command_id = _token(command_id, 'command_id')
+        expected_control_revision = _integer(expected_control_revision, 'expected_control_revision')
+        if type(previous_reader_stopped) is not bool:
+            raise BackfillConfigurationError('previous_reader_stopped must be a boolean')
+        if not previous_reader_stopped:
+            raise BackfillConflictError('recovery requires the previous reader to have stopped')
+        for _ in range(4):
+            if run.chat_id in self._preparing:
+                raise BackfillConflictError('cannot recover while local preparation is active')
+            raw, state, value, key = await self._known(run)
+            if run.chat_id in self._preparing:
+                raise BackfillConflictError('cannot recover while local preparation is active')
+            row = value[key]
+            control = row['last_control']
+            if control is not None and control['command_id'] == command_id:
+                raise BackfillConflictError('command identity belongs to a retained control decision')
+            recovery = row['last_recovery']
+            if recovery is not None and recovery['command_id'] == command_id:
+                if (recovery['attempt_id'] != attempt_id or
+                        int(recovery['expected_control_revision']) != expected_control_revision):
+                    raise BackfillConflictError('recovery identity was accepted with different input')
+                return BackfillRecoveryResult(command_id, attempt_id, False, 'recovered',
+                                              state.status(previous=key == 'previous'))
+            if int(row['control_revision']) != expected_control_revision:
+                raise BackfillConflictError('recovery control context is stale; do not rebase its retry')
+            attempt = row['attempt']
+            if attempt is None:
+                if row['pacing'] is None or row['pacing']['attempt_id'] != attempt_id:
+                    raise BackfillConflictError('addressed attempt is unknown or no longer retained')
+                return BackfillRecoveryResult(command_id, attempt_id, False, 'settled',
+                                              state.status(previous=key == 'previous'))
+            if key != 'current' or attempt['attempt_id'] != attempt_id:
+                raise BackfillConflictError('recovery does not address the current unresolved attempt')
+            revision = self._revision(value)
+            now, ticks = self._clock_pair()
+            self._check_time(row, now)
+            known = self._ends.get(run.chat_id)
+            if known is not None and known[:2] == (run, attempt_id):
+                _, _, ended, deadline, deadline_ns = known
+                if now < ended:
+                    raise BackfillClockError('clock precedes the locally observed attempt end')
+            else:
+                ended = None
+                pause = _pause_delta(row['request']['pause_seconds'])
+                try:
+                    deadline = now + pause
+                except (ValueError, OverflowError) as error:
+                    raise BackfillClockError('recovery deadline is unrepresentable ({})'.format(
+                        type(error).__name__)) from None
+                deadline_ns = ticks + self._delta_ns(pause)
+            old_pacing = row['pacing']
+            if old_pacing is not None:
+                if old_pacing['not_before'] is not None:
+                    deadline = max(deadline, _decode_date(old_pacing['not_before']))
+                old_wait = self._waits.get(run.chat_id)
+                if old_wait is not None and old_wait[0] == self._pacing_key(row, old_pacing):
+                    deadline_ns = max(deadline_ns, old_wait[1])
+            deadline_ns = max(deadline_ns, ticks + max(0, self._delta_ns(deadline - now)))
+            row['attempt'] = None
+            row['pacing'] = dict(attempt_id=attempt_id,
+                ended_at=_encode_date(ended) if ended is not None else None,
+                not_before=_encode_date(deadline), clock_uncertain=False)
+            row['last_recovery'] = dict(command_id=command_id, attempt_id=attempt_id,
+                expected_control_revision=str(expected_control_revision),
+                state_revision=str(revision), recovered_at=_encode_date(now))
+            # Preserve elapsed evidence even when a real commit loses its reply.
+            # This is not permission to prepare before the durable state confirms it.
+            self._remember_wait(row, row['pacing'], deadline_ns)
+            written, accepted = await self._write(raw, value)
+            if written:
+                return BackfillRecoveryResult(command_id, attempt_id, True, 'recovered',
+                                              accepted.status())
+        raise BackfillConflictError('recovery kept conflicting; inspect or retry the same command')
 
     async def start(self, request, *, submission):
         """Create explicit new intent or recognize a retained creation request.
