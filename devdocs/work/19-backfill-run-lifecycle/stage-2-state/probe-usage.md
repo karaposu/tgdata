@@ -2,7 +2,8 @@
 
 This is an instrument for the [live validation procedure](../live-validation.md),
 not an automatic acceptance test of the whole gate. Read-only existing-group scope
-remains fixed. Actual account/config, group, oracle and approved limits are still unset.
+remains fixed. Record the actual account/config, group, oracle and limits before each
+run; the [Gate A report](../validation/gate-a.md) records the qualified live execution.
 The example JSON deliberately refuses preflight until its placeholders are replaced
 and its independent complete-history oracle is established. Its numeric limits are
 illustrative, not an approved traffic allowance or Telegram-safe recommendation.
@@ -59,7 +60,14 @@ are refused. Unsupported cached-entity/media-DC flows are a stopped/inconclusive
 not permission to broaden source access or bypass the guard. Read-only metadata and
 SDK media authorization on another DC are allowed only within the selected media mode.
 The instrument disables updates for its connection before connect; it does not change
-account settings. Telethon 1.45.0 private send/page seams are deliberately pinned.
+account settings. Live setup exposed that Telethon 1.45.0 still calls an account-wide
+`GetDifference` during startup when its message box is empty. The probe now restores
+real saved global update state where possible and replaces only the diagnostic
+`_on_login` initializer with real self/state metadata initialization, without that
+difference request. Missing or zero state is initialized from the actual server state;
+authentication, history iteration and budget admission remain real. Account-wide
+difference reads still refuse before send. These startup/send/page seams are pinned
+to 1.45.0; this instrument does not certify the application's passive-update behavior.
 
 Limits bound RPCs through the instrumented client call path, actual SDK history sends
 including retries, requested message slots, requested file-chunk bytes and total scan

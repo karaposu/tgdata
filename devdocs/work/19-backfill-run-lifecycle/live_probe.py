@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 import telethon
 from telethon import functions, types, utils
+from telethon._updates.session import SessionState
 from tgdata import TgData, SQLiteSyncStore, ReadBudget
 from tgdata.backfill import BackfillRunRef, BackfillStartRequest, _keys, _wire_integer, _json_load, _canonical
 from tgdata.backfill_engine import BackfillEngine
@@ -232,6 +233,29 @@ class ReadOnlyGuard:
         # Telethon 1.45's receive_updates=False representation; install before
         # connect. It scopes this diagnostic connection, not account settings.
         client._no_updates = True
+        # receive_updates=False does not suppress connect() -> _on_login() ->
+        # GetDifference when the SDK's message box is empty. Restore the real
+        # saved global state without enabling catch_up or permitting that
+        # account-wide read. Empty state is initialized from real self/state
+        # metadata only. This pinned diagnostic hook changes no history read,
+        # iterator, budget admission or authentication response.
+        require(not client._catch_up, 'probe_forbids_account_catch_up')
+        def load_state(state):
+            require(isinstance(state, types.updates.State), 'invalid_sdk_update_state')
+            client._message_box.load(SessionState(
+                0, 0, False, state.pts, state.qts, int(state.date.timestamp()),
+                state.seq, None), [])
+        saved = client.session.get_update_state(0)
+        if saved is not None and client._message_box.is_empty():
+            load_state(saved)
+
+        async def initialize_without_difference(user):
+            state = await client(functions.updates.GetStateRequest())
+            load_state(state)
+            client._mb_entity_cache.set_self_user(user.id, user.bot, user.access_hash)
+            client._authorized = True
+            return user
+        client._on_login = initialize_without_difference
 
 
 class ObservedSender:

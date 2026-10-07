@@ -18,7 +18,9 @@ spec = importlib.util.spec_from_file_location('backfill_gate_a_probe', str(PROBE
 p = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(p)
 
-from telethon import errors, functions, types
+from telethon import TelegramClient, errors, functions, types
+from telethon.crypto import AuthKey
+from telethon.sessions import MemorySession
 from tgdata import SQLiteSyncStore
 from tgdata.backfill import BackfillStartRequest
 from tgdata.backfill_engine import BackfillEngine
@@ -61,6 +63,48 @@ async def fixture(root):
     return store,manifest
 
 
+async def check_actual_connect_with_saved_state():
+    class Sender:
+        auth_key=AuthKey(bytes(range(256)))  # synthetic credential; no transport
+        def __init__(self):self.connected=False;self.calls=[]
+        async def connect(self,connection):self.connected=True;return True
+        async def disconnect(self):self.connected=False
+        def is_connected(self):return self.connected
+        def send(self,request,ordered=False):
+            while isinstance(request,p._WRAPPERS):request=request.query
+            self.calls.append(type(request).__name__)
+            if isinstance(request,functions.help.GetConfigRequest):result=None
+            elif isinstance(request,functions.users.GetUsersRequest):
+                result=[types.User(id=111,access_hash=222,first_name='Fixture',bot=False)]
+            elif isinstance(request,functions.updates.GetStateRequest):
+                result=types.updates.State(pts=10,qts=10,date=NOW,seq=1,unread_count=0)
+            else:raise AssertionError('unexpected transport request '+type(request).__name__)
+            future=asyncio.get_running_loop().create_future();future.set_result(result);return future
+
+    for saved in (None,0,10):
+        session=MemorySession()
+        if saved is not None:
+            session.set_update_state(0,types.updates.State(pts=saved,qts=saved,date=NOW,seq=1,unread_count=0))
+        client=TelegramClient(session,1,'0'*32)
+        sender=Sender();client._sender=sender
+        # Startup is real. Passive transport loops are idle because this
+        # deliberately tiny sender models requests, not a receive loop.
+        async def idle():await asyncio.Event().wait()
+        client._update_loop=idle;client._keepalive_loop=idle
+        guard=p.ReadOnlyGuard(CHAT,limits());guard.instrument(client)
+        try:
+            if saved:
+                await asyncio.wait_for(client.connect(),3)  # actual SDK startup
+                assert (await client.get_me(input_peer=False)).id==111
+                assert sender.calls==['GetConfigRequest','GetUsersRequest'],sender.calls
+                assert client._catch_up is False and not client._message_box.is_empty()
+            else:
+                await asyncio.wait_for(client.connect(),3)
+                assert sender.calls==['GetConfigRequest','GetUsersRequest','GetStateRequest'],sender.calls
+            assert 'GetDifferenceRequest' not in sender.calls
+        finally:await asyncio.wait_for(client.disconnect(),3)
+
+
 async def main():
     passed=0
     with tempfile.TemporaryDirectory(prefix='tgdata19_probe_checks_') as tmp, \
@@ -95,6 +139,7 @@ async def main():
             expect(p.ProbeStop,lambda:guard.before_send(functions.messages.GetHistoryRequest(
                 types.InputPeerChannel(8,8),0,None,0,1,0,0,0)))
             expect(p.ProbeStop,lambda:guard.before_send(functions.users.GetUsersRequest([types.InputUser(123,456)])))
+            expect(p.ProbeStop,lambda:guard.before_send(functions.updates.GetDifferenceRequest(pts=1,date=NOW,qts=1)))
             assert guard.rpc==[]
             passed+=1;print('PASS actual write/join/wrong-target RPCs refused before send')
 
@@ -103,6 +148,9 @@ async def main():
             expect(p.ProbeStop,lambda:one.before_send(b.f.history(1)))
             assert one.history_count==1 and one.slots==1
             passed+=1;print('PASS actual request-type caps')
+
+            await check_actual_connect_with_saved_state()
+            passed+=1;print('PASS actual SDK connect restores or initializes real state without account-wide difference')
 
             budget,_=b.f.ledger(1000)
             tg,client,sender=b.instance(budget)
@@ -179,8 +227,8 @@ async def main():
         finally:
             for client in b.f.CLIENTS:await client.disconnect()
             b.f.CLIENTS.clear()
-    print('Passed: {}/9; LOCAL/INJECTED only, no live gate'.format(passed))
-    return 0 if passed==9 else 1
+    print('Passed: {}/10; LOCAL/INJECTED only, no live gate'.format(passed))
+    return 0 if passed==10 else 1
 
 
 if __name__=='__main__':sys.exit(asyncio.run(main()))
