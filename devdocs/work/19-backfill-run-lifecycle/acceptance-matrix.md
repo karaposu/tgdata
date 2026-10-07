@@ -1,7 +1,7 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-5-local-timing-recovery-evidence
+status: stage-6-gate-c-evidence
 ---
 # Backfill acceptance and failure matrix
 
@@ -16,6 +16,22 @@ now supplement those historical records; they do not credit unbuilt later operat
 C01–C22 preserve the final inquiry's 22 histories in their original order. C23–C44 add operation, storage, live-oracle and selected-critique boundaries. Gate A foundation tests can use the existing reader with the Stage 2 record; they do not claim that Stage 3 preparation already exists. Cases spanning multiple stages are repeated at their first full composition.
 
 LIVE means actual Telegram via Telethon 1.45.0; INJECTED means an identified local interruption/order/fault around real source/store/receiver paths; LOCAL means no server behavior is inferred. No Telegram source writes are allowed.
+
+## Stage 6 and Gate C evidence — 2026-10-07
+
+Product `0d6bb26`: 32 new control groups and 319 total supported offline passes;
+three legacy live skips. [Verification](stage-6-controls/verification.md).
+[Gate C PASS](validation/gate-c.md) combines the core cases, exact matrix supplement
+and independent saved-record audit. Earlier tables below are historical checkpoints.
+
+| Cases / boundary | New scoped evidence | Still required |
+|---|---|---|
+| C03/04/06–11/16/21/22/27/28/32/36 | Actual commands, produced terminal histories, lost replies, late result/receipt orderings, quiescence, retirement and equal-hash successors; live-origin data and actual receiver/store | Public facade/selected deployment checks at D |
+| C17–20/24/26/38/39 | Live allowance exhaustion/prefixes, measured waits/restart, owned-worker source/recovery exits and stable deadline; deterministic time/expiry edge cases separately local | Arbitrary deployment clocks/ownership remain caller assumptions |
+| C25/33/34/35/37/43/44 | Full supported regressions and no local-operation RPC in Gate C traces; strict namespace/context/validation preserved | C33/C34 public/integrated daily flow at D |
+
+No required Gate C case was skipped. Existing raw reader/window/media semantics and
+state schema were unchanged, so A/B remain valid. **Next: Stage 7; Gate D is pending.**
 
 ## Stage 5 local pacing/recovery evidence — 2026-10-07
 
@@ -33,7 +49,8 @@ records recover/retry correctly; their originals and the real ledger remain unch
 | C35–C37, C43, C44 | Existing context/refusal/codec regressions plus new recovery input, changed-ID/control and newer-attempt protection | Future controls/facade and equivalent deployment backend |
 
 Seeded control snapshots do not implement control operations. Clock observations and
-LIVE-origin file copies are LOCAL evidence; **Gate C is still pending after Stage 6**.
+LIVE-origin file copies are LOCAL evidence. At this historical Stage 5 checkpoint,
+Gate C was pending; the Stage 6/Gate C section above records its later completion.
 
 ## Stage 4 and Gate B evidence — 2026-10-07
 
@@ -138,7 +155,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Collapsing jobs solely because parameters match.
 **Operations:** OP-START. **Requirements:** INV-01 INV-03 INV-05.
 **Evidence / earliest check:** LOCAL/INJECTED; repeat with real history; Stage 2 / Gate A; composition C.
-**Status:** UNRUN.
+**Status:** PASS at Gate C / `0d6bb26`: actual terminal settled predecessors produce distinct generations with identical source bytes and independent acceptance.
 
 ## C04 — Forgotten old start
 
@@ -147,7 +164,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Treating nonrecognition as evidence of first use.
 **Operations:** OP-START OP-STATUS. **Requirements:** INV-01 INV-05 INV-10.
 **Evidence / earliest check:** LOCAL; Stage 2 / Gate A.
-**Status:** LOCAL PASS at `1425fd7` from seeded terminal history; producing that history via later operations remains unrun.
+**Status:** PASS at Gate C / `0d6bb26`: actual controls/ack/successors produce retained and pruned histories; old retry/new requests refuse without mutation.
 
 ## C05 — Known state unavailable
 
@@ -156,7 +173,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Resetting progress or calculating another window.
 **Operations:** OP-STATUS OP-START OP-RECOVER. **Requirements:** INV-01 INV-09 INV-11.
 **Evidence / earliest check:** LOCAL/INJECTED on real backend; Stage 2 / Gate A; recovery rechecked C.
-**Status:** LOCAL PASS through Stage 5 for missing/corrupt/unavailable state and recovery refusal; full public integration remains D.
+**Status:** LOCAL PASS through Stage 6 for missing/corrupt/unavailable state and command/recovery refusal; public integration remains D.
 
 ## C06 — Old resume response arrives last
 
@@ -165,7 +182,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Displaying/using arrival order as new permission.
 **Operations:** OP-CONTROL OP-STATUS. **Requirements:** INV-05 INV-08.
 **Evidence / earliest check:** LOCAL/INJECTED around actual storage; Stage 6 / Gate C.
-**Status:** UNRUN.
+**Status:** PASS at Gate C / `0d6bb26`: matrix supplement delays accepted resume reply until after newer pause; stored pause remains authoritative.
 
 ## C07 — Unaccepted stale resume
 
@@ -174,7 +191,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Changing the request to the current revision for the caller.
 **Operations:** OP-CONTROL. **Requirements:** INV-05 INV-06 INV-08.
 **Evidence / earliest check:** LOCAL/INJECTED; Stage 6 / Gate C.
-**Status:** UNRUN.
+**Status:** PASS at Gate C / `0d6bb26`: stale unaccepted/forgotten resume refuses with unchanged stored facts and no RPC.
 
 ## C08 — Two conflicting controls
 
@@ -183,7 +200,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Choosing a winner from client clocks.
 **Operations:** OP-CONTROL OP-STATUS. **Requirements:** INV-08 INV-09.
 **Evidence / earliest check:** INJECTED with real storage/await barriers; Stage 6 / Gate C.
-**Status:** UNRUN.
+**Status:** PASS at Gate C / `0d6bb26`: actual shared-load CAS barrier gives exactly one accepted control and one conflict.
 
 ## C09 — Completion before cancellation
 
@@ -192,7 +209,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Relabeling an accepted completion.
 **Operations:** OP-ACK OP-CONTROL. **Requirements:** INV-03 INV-04 INV-08.
 **Evidence / earliest check:** INJECTED using actual receiver/store; live payload; Stage 6 / Gate C.
-**Status:** UNRUN.
+**Status:** PASS at Gate C / `0d6bb26`: actual final receiver/ack commits completed before cancel; cancel reports terminal without writing.
 
 ## C10 — Cancellation before final receipt
 
@@ -201,7 +218,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Resurrection or relabeling cancellation as completed.
 **Operations:** OP-CONTROL OP-ACK. **Requirements:** INV-03 INV-04 INV-08.
 **Evidence / earliest check:** INJECTED using actual receiver/store; live payload; Stage 6 / Gate C.
-**Status:** UNRUN.
+**Status:** PASS at Gate C / `0d6bb26`: cancel before actual final ack remains cancelled while cursor/receipt advance.
 
 ## C11 — Final receipt while paused
 
@@ -210,7 +227,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Making acknowledgment depend on permission to fetch.
 **Operations:** OP-CONTROL OP-ACK. **Requirements:** INV-03 INV-04 INV-06 INV-08.
 **Evidence / earliest check:** LIVE plus controlled local receipt order; Stage 6 / Gate C; basic completion B.
-**Status:** UNRUN.
+**Status:** PASS at Gate C / `0d6bb26`: exact final live batch replays/commits/acks while paused and completes without resume or extra RPC.
 
 ## C12 — Imported midpoint
 
@@ -255,7 +272,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Expiring the live obligation or its ability to settle.
 **Operations:** OP-PREPARE OP-ACK. **Requirements:** INV-02 INV-05 INV-10.
 **Evidence / earliest check:** LOCAL/INJECTED with actual storage and saved bytes; Stage 3 / Gate B; pruning rechecked C.
-**Status:** UNRUN.
+**Status:** PASS at Gate C / `0d6bb26`: older history is pruned while active exact pending remains replayable/acknowledgeable; attempted replacement refuses. History retention is count-based, not a TTL.
 
 ## C17 — Budget ends after usable prefix
 
@@ -264,7 +281,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Advancing without ack or treating a short interrupted prefix as end.
 **Operations:** OP-PREPARE OP-ACK. **Requirements:** INV-02 INV-03 INV-04 INV-06 INV-11.
 **Evidence / earliest check:** LIVE with real budget/store/receiver; Stage 3 / Gate B; timing C.
-**Status:** PARTIAL: actual budget prefixes pass locally; Gate B LIVE controlled-failure prefix passes with real budget accounting. Specific live quota/wait case remains Gate C.
+**Status:** PASS at Gate C / `0d6bb26`: actual restrictive budget exhausts after three complete records; prefix persists and reaches receiver/ack; timing and test-only cap increase preserve charges.
 
 ## C18 — Crash after possible send
 
@@ -273,7 +290,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Inferring no send, worker death or accepted output from missing response.
 **Operations:** OP-PREPARE OP-RECOVER. **Requirements:** INV-06 INV-07 INV-09 INV-12.
 **Evidence / earliest check:** LIVE plus INJECTED subprocess interruption; Stage 5 / Gate C.
-**Status:** PARTIAL: Gate B actual source crash remains preserved; Stage 5 local real-process recovery/deadline checks pass. Full LIVE recovery/wait case remains C.
+**Status:** PASS at Gate C / `0d6bb26`: actual source answer then owned exit 81; parent wait, unresolved refusal, real recovery and measured conservative wait.
 
 ## C19 — Restart during known wait
 
@@ -282,7 +299,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Resetting or continually restarting the pause.
 **Operations:** OP-PREPARE OP-STATUS. **Requirements:** INV-06 INV-07.
 **Evidence / earliest check:** LIVE elapsed timing plus LOCAL injected-clock edges; Stage 5 / Gate C.
-**Status:** LOCAL PASS at `a180151`: restart, repeated observations and early/late ack preserve deadlines. LIVE elapsed timing remains Gate C.
+**Status:** PASS at Gate C / `0d6bb26`: actual restart gives decreasing early waits; next source after saved deadline; early/late ack never restarts it.
 
 ## C20 — Untrustworthy time evidence
 
@@ -300,7 +317,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Reverting accepted progress or issuing compensating new source work blindly.
 **Operations:** OP-START OP-PREPARE OP-ACK OP-CONTROL OP-RECOVER OP-STATUS. **Requirements:** INV-03 INV-05 INV-09.
 **Evidence / earliest check:** INJECTED at actual store commits; A create; B publish/ack/end; C controls/recovery.
-**Status:** PARTIAL PASS through `a180151`: actual recovery commit exits/read-back/recognition added to prior create/publish/ack/end evidence. Controls remain Gate C.
+**Status:** PASS through Stage 6/Gate C: all actual local commit boundaries covered; live-origin recovery process exit/retry and control post-commit close error confirm retained outcomes.
 
 ## C22 — Paused, pending and rate-limited together
 
@@ -309,7 +326,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Letting one display label erase another restriction or obligation.
 **Operations:** OP-PREPARE OP-ACK OP-STATUS OP-CONTROL. **Requirements:** INV-02 INV-03 INV-06 INV-08 INV-11.
 **Evidence / earliest check:** LIVE payload plus INJECTED conditions; Stage 6 / Gate C.
-**Status:** UNRUN.
+**Status:** PASS at Gate C / `0d6bb26`: paused actual budget-error prefix stays owed with failure/wait facts; real receiver/ack works and resume preserves source wait.
 
 ## C23 — Empty and nonempty exhausted scope
 
@@ -345,7 +362,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Sending because the write probably worked or probably rolled back.
 **Operations:** OP-PREPARE OP-RECOVER. **Requirements:** INV-06 INV-09 INV-12.
 **Evidence / earliest check:** INJECTED actual backend; count real send boundary; Stage 3 / Gate B.
-**Status:** LOCAL PASS through Stage 5: ambiguous admission remains no-send; exact stopped-attempt recovery preserves facts. Full live recovery/timing remains Gate C.
+**Status:** PASS through Stage 6/Gate C: local admission uncertainty remains no-send; actual unknown-source process exit refuses another read until explicit stopped-attempt recovery.
 
 ## C27 — Late source result after control mutation
 
@@ -354,7 +371,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Whole-record stale overwrite, new fetch to repair CAS, or silent discard solely because control changed.
 **Operations:** OP-PREPARE OP-CONTROL. **Requirements:** INV-02 INV-05 INV-08 INV-09.
 **Evidence / earliest check:** LIVE plus INJECTED await barrier; Stage 6 / Gate C.
-**Status:** UNRUN.
+**Status:** PASS at Gate C / `0d6bb26`: real result/error return held before publication; pause/cancel retained with usable data and no repair refetch.
 
 ## C28 — Recovery while old reader lives
 
@@ -363,7 +380,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Treating a timeout or boolean alone as a distributed ownership proof.
 **Operations:** OP-RECOVER OP-PREPARE. **Requirements:** INV-06 INV-12.
 **Evidence / earliest check:** INJECTED subprocess/local-task control; Stage 5 / Gate C.
-**Status:** LOCAL PASS at `a180151`: active local source/admission/publication refuses recovery; explicit stopped-process recovery executes. Full live composition remains C.
+**Status:** PASS at Gate C / `0d6bb26`: active local real-result preparation refuses recovery despite claimed quiescence; owned-process exit is separately confirmed before recovery.
 
 ## C29 — Corrupt pending artifact
 
@@ -399,7 +416,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Pretending abandoned data was accepted, or letting a late retired receipt affect the successor.
 **Operations:** OP-CONTROL OP-START OP-ACK. **Requirements:** INV-03 INV-05 INV-08 INV-10 INV-12.
 **Evidence / earliest check:** LOCAL/INJECTED with actual storage; Stage 6 / Gate C.
-**Status:** UNRUN.
+**Status:** PASS at Gate C / `0d6bb26`: cancel in-flight, refuse busy abandonment/successor, settle owed real data, abandon preserving cancelled/cursor, then scoped successor; old receipt harmless.
 
 ## C33 — Local public operations and health
 
@@ -435,7 +452,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Automatically using the newer operator permission.
 **Operations:** OP-PREPARE OP-CONTROL. **Requirements:** INV-05 INV-06 INV-08.
 **Evidence / earliest check:** INJECTED barriers with actual state; LIVE turns; Stage 6 / Gate C.
-**Status:** UNRUN.
+**Status:** PASS at Gate C / `0d6bb26`: stale prepare after actual controls refuses before replay/admission with identical state and no RPC.
 
 ## C37 — Absent slot is not unknown retry permission
 
@@ -453,7 +470,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Promising indefinite old-prepare replay or treating every repeated call as free source work.
 **Operations:** OP-PREPARE OP-RECOVER. **Requirements:** INV-06 INV-07 INV-12.
 **Evidence / earliest check:** LIVE failure injection plus LOCAL timing cases; Stage 5 / Gate C.
-**Status:** LOCAL PASS at `a180151`: waits deny sends, elapsed intentional retry rechecks actual allowance, unknown work still refuses. LIVE integration remains C.
+**Status:** PASS at Gate C / `0d6bb26`: actual zero-prefix budget failure settles without end/progress; early retry has no RPC; elapsed retry admits a distinct attempt and rechecks still-exhausted allowance without a history send.
 
 ## C39 — Recovery reply lost
 
@@ -462,7 +479,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Resetting the wait each time or recovering a different current attempt.
 **Operations:** OP-RECOVER OP-STATUS. **Requirements:** INV-05 INV-07 INV-09 INV-12.
 **Evidence / earliest check:** INJECTED actual store/process boundary; Stage 5 / Gate C.
-**Status:** LOCAL PASS at `a180151`: actual recovery commit uncertainty/restart and exact retry keep one command/deadline. LIVE composition remains C.
+**Status:** PASS at Gate C / `0d6bb26`: actual post-recovery commit exit 82; new process retries twice with forbidden clocks, identical deadline and no write; early wait and later real read measured.
 
 ## C40 — Missing independent oracle or source drift
 

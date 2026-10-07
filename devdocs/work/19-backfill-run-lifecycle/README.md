@@ -1,15 +1,15 @@
 # Backfill run lifecycle — issue #19
 
-**Stages 1–5 are built; Gates A/B passed and Stage 5 is verified offline.**
-The internal engine supports durable delivery, qualified completion, exact write
-confirmation, per-run pacing and explicit interrupted-attempt recovery. Stage 5
-product is `a180151`: 287 actual offline groups passed, with three explicit legacy
-live skips. **Next: Stage 6 controls, then mandatory live Gate C.** The public facade
-and Gates C/D remain pending.
+**Stages 1–6 are built; Gates A/B/C passed.** Product `0d6bb26` adds exact
+pause/resume/cancel/abandon, preserves admitted delivery and terminal order, and protects
+successor/receipt scope. Verification passed 319 actual offline checks (three explicit
+legacy live skips), plus guard checks and mandatory real Gate C. **Next: Stage 7 —
+the public API, status documentation and durable-receiver example.** Stage 8/Gate D
+and whole-feature review remain pending.
 
 This branch starts from dev `45bab71` and incorporates #18 through `e9b5154` in
 feature-only merge `5d0789e`. This does not merge or approve #18 into dev. Stage 2
-product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd`; Stage 4 adds `b1f6495`; Stage 5 adds `a180151`.
+product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd`; Stage 4 adds `b1f6495`; Stage 5 adds `a180151`; Stage 6 adds `0d6bb26`.
 
 - [Contract](contract.md): operations, identity, retry/conflict/durability and state rules.
 - [Assumptions](assumptions.md): what is selected, observed or still unverified.
@@ -33,14 +33,18 @@ product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd
   [verification](stage-5-pacing-recovery/verification.md): 32 pacing/recovery groups,
   287 total actual offline passes, three live skips and actual recovery on disposable
   copies of Gate B state. This is not a live Gate C result.
+- [Stage 6 implementation](stage-6-controls/implementation.md) and
+  [verification](stage-6-controls/verification.md): 32 controls groups, 319 total actual
+  offline passes, real prebuild falsifier and 13 Gate C worker actions.
+- [Gate C report](validation/gate-c.md): actual allowance exhaustion, measured restart/
+  recovery waits, lost replies, forced operator/terminal orderings and equal-hash successors.
 - [Available staged usage](../../../docs/backfill_state.md) and
   [probe usage](stage-2-state/probe-usage.md).
 - [Gate A report](validation/gate-a.md): seven live comparisons, two controlled
   interruptions, 23 repeated state tests and 10 instrument checks; all passed.
 
 [Issue #19](https://github.com/karaposu/tgdata/issues/19) tracks this lifecycle slice of
-#18. **Next: Stage 6 — pause/resume/cancel, concurrent settlement, abandonment and
-successors**, then mandatory Gate C. No PR or merge is implied. Private Gate B records
-remain under `/private/tmp/tgdata19-gate-b-live-20261007`; both original unknown attempts
-remain unresolved. Stage 5 tested only disposable copies and made no Telegram calls.
-Reuse the existing Gate A ledger for later live work; its last Gate B usage was 2202/5000.
+#18. Stage 7 is next; no PR or merge is implied. Gate C private records remain under
+`/private/tmp/tgdata19-gate-c-live-20261007`. Both original Gate B unknown-state files
+remain byte-identical to their earlier hashes. Reuse the existing Gate A ledger for
+later live work: its policy remains 5,000/day and usage after Stage 6 is 2,334.

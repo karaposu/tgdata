@@ -1,23 +1,24 @@
 ---
 model: gpt-6-astra
 effort: max
-status: contract-with-stage-5-pacing-recovery
+status: contract-with-stage-6-controls-and-gate-c
 contract_version: 1
 ---
 # Planned backfill run contract
 
 This specifies the full behavior for [issue #19](https://github.com/karaposu/tgdata/issues/19).
-Stages 2–5 implement internal start/status, prepare/replay/acknowledgment, qualified
-completion, local pacing and explicit recovery through `a180151`; see
-[available usage](../../../docs/backfill_state.md). Stage 4's exact write confirmation
-and no-send admission uncertainty remain. Stage 5 returns local waits without sleeping,
-uses UTC plus local monotonic evidence, and recovers only an exact quiescent attempt.
+Stages 2–6 implement internal start/status, prepare/replay/acknowledgment, qualified
+completion, pacing, exact recovery and operator controls through `0d6bb26`; see
+[available usage](../../../docs/backfill_state.md). Pause/cancel preserve admitted
+work and owed output; only explicit quiescent abandonment withdraws delivery. Exact
+command revisions, terminal order and scoped successor/receipt handling are implemented.
 Source observations never replace the actual-send budget/account authority.
 
-Controls and the public facade remain later stages. The sketches below specify the
-full contract, not current imports/readiness. Gates A/B passed; Stage 5 has scoped
-[offline verification](stage-5-pacing-recovery/verification.md). Stage 6 and mandatory
-live Gate C are next. Recoveries of copied Gate B rows are local evidence, not Gate C.
+The public facade remains Stage 7 work. Gates A/B and mandatory [Gate C](validation/gate-c.md)
+passed; [Stage 6 verification](stage-6-controls/verification.md) records 319 actual
+supported offline passes plus real timing/budget/recovery/control evidence. The sketches
+below still describe the full contract, not public imports/readiness. Stage 8/Gate D
+and whole-feature review remain pending.
 
 The [source record](stage-1-contract/source-input.md), [assumptions](assumptions.md),
 [acceptance matrix](acceptance-matrix.md) and [live-validation specification](live-validation.md)

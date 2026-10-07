@@ -1,0 +1,5 @@
+Read-only audit initial run: AssertionError at assert len(states)==12.
+The manually entered artifact count was a bookkeeping error: 12 core worker actions reopen fewer state files.
+The specified cases produce exactly 11 state containers, including prebuild and matrix supplement.
+Replaced that count with the exact expected filename set; all per-state/receiver/traffic assertions retained.
+No product code, source expectation, transition or gate condition changed.

@@ -1,13 +1,14 @@
 ---
 model: gpt-6-astra
 effort: max
-status: gate-a-pass-later-gates-pending
+status: gates-a-b-c-pass-gate-d-pending
 ---
 # Read-only live validation specification
 
 This specifies Gates A–D for the [contract](contract.md) and
-[case matrix](acceptance-matrix.md). **Gate A passed on 2026-10-07; Gates B–D remain
-unrun.** The [Gate A report](validation/gate-a.md) records the actual account/resource
+[case matrix](acceptance-matrix.md). **Gates A/B/C passed on 2026-10-07; Gate D remains pending.**
+[Gate B](validation/gate-b.md) and [Gate C](validation/gate-c.md) record their actual
+source/store/receiver and timing/control observations. The [Gate A report](validation/gate-a.md) records the actual account/resource
 qualification, seven source comparisons, controlled interruptions, storage evidence
 and diagnostic startup correction. [live_probe.py](live_probe.py) and its
 [usage](stage-2-state/probe-usage.md) retain explicit live opt-in and bounded scope.
@@ -22,12 +23,12 @@ stores, saved media copies, receiver records and process interruptions are expec
 
 Record these in the gate report before running. `UNSET` is not a default or approval.
 
-The table records Gate A's qualified setup alongside later-gate requirements.
-Requalify values at later gates; receiver/ownership requirements remain open.
+The table retains Gate A's fixture provenance and records current evidence through C.
+Requalify values at later gates; operational deployment inputs remain open for D.
 
 | Input | Required meaning | Current value |
 |---|---|---|
-| Code revision / package import path | Exact tested code, including #18 foundations for Gate A | Stage 2 product `1425fd7`; record actual checkout and tool commit on live execution |
+| Code revision / package import path | Exact tested code, including #18 foundations for Gate A | A: `1425fd7`; B: `b1f6495`; C: `0d6bb26`, exact drivers/reports linked above |
 | SDK | Actual installed Telethon version | Required: 1.45.0 |
 | Account/session/config label | Caller-selected already-authenticated test context; never publish secrets | A: project config/session, restored and freshly verified |
 | Canonical group ID | Specific existing group accessible to that account | A: arenda_stambul1 and programlama_sohbet, IDs in report |
@@ -37,11 +38,11 @@ Requalify values at later gates; receiver/ownership requirements remain open.
 | Expected ID/date set | All visible messages within that bounded interval, plus boundary witnesses | A: archived frozen sets and boundary witnesses |
 | Page-crossing fixture | Enough existing records to cross a real SDK history page and multiple caller batches | A: 350-record interval, six SDK pages, three caller batches |
 | Existing media fixture | Expected eligible record IDs, original bytes/hash/size where download mode is advertised | A: independently hashed 173,837-byte selected photo |
-| Source allowance and pacing | Total requests/messages/elapsed limit; external spacing before Stage 5 exists | A: bounded per-run caps, 180 seconds, five-second batch spacing |
+| Source allowance and pacing | Total requests/messages/elapsed limit; external spacing before Stage 5 exists | C: 1,000 total requested-slot ceiling, 790 allocated/442 observed; 180-second cases; real 5/8-second waits |
 | State/artifact paths | Disposable isolated collection data, no existing progress overwritten | A: separate SQLite runs and local media directory, report paths |
-| Budget policy/ledger | Chosen authoritative account allowance plus any stricter test cap | A: persistent 5,000-read ledger, 1,118 charged, never reset |
-| Receiver acceptance point | Actual commit/durability boundary before acknowledgment | B: SQLite FULL transaction after verified/fsynced blobs, observed PASS; D: operational receiver UNSET |
-| Reader ownership | How the caller excludes another source worker and confirms process exit | B: sequential owned workers, exact exit codes; full recovery/deployment C/D remain pending |
+| Budget policy/ledger | Chosen authoritative account allowance plus any stricter test cap | A–C: same persistent 5,000-read ledger, 2,334 charged after C, never reset; separate stricter test cap 3 → 6 |
+| Receiver acceptance point | Actual commit/durability boundary before acknowledgment | B/C: SQLite FULL transaction after verified/fsynced blobs, observed PASS; D: operational receiver UNSET |
+| Reader ownership | How the caller excludes another source worker and confirms process exit | B/C: sequential owned workers, confirmed exits and actual recovery PASS; deployment ownership remains for D |
 
 Keep an existing authoritative account budget in force. A separate test cap may
 restrict it further; it must not grant extra allowance or bypass charges on an account
@@ -194,10 +195,10 @@ scope completes. **Advance:** permits Stage 5. Reopen A if source interpretation
 
 ## 7. Gate C — timing, recovery and operator intent
 
-**Still pending.** Stage 5 is implemented/offline verified at `a180151`; Stage 6 controls
-must be built before this full gate. Its local clock/budget tests and copied LIVE-origin
-state checks are not a Gate C result. Reuse the existing authorized account/ledger;
-Stage 5 performed no Telegram reads or real policy changes.
+**PASS on 2026-10-07 at `0d6bb26`.** [Gate C report](validation/gate-c.md) covers
+all required matrix orderings, actual timing/budget/recovery composition and audit.
+The existing 5,000/day ledger remains authoritative; usage is now 2,334. Local clock
+and copied-state checks remain separately labeled. Stage 7 may begin when requested.
 
 **Entry:** Gate B PASS and Stages 5–6; actual pacing/recovery/controls, exclusive test reader.
 
@@ -274,4 +275,4 @@ earlier gates. Only independent work may proceed while a gate is blocked.
 At the Stage 1 handoff the executable harness was future Stage 2 work and actual
 resources were unset. Stage 2 has since supplied the harness and Gate A has passed
 the separately recorded live execution. Stage 1 documents and local component probes
-alone did not fulfill that gate. Gate B subsequently passed at `b1f6495`; Gates C/D remain pending.
+alone did not fulfill that gate. Gate B subsequently passed at `b1f6495`; Gate C passed at `0d6bb26`. Gate D remains pending.

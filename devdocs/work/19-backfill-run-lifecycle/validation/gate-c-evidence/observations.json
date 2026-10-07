@@ -1,0 +1,4291 @@
+{
+  "allocations": [
+    {
+      "at": "2026-10-07T13:43:42.659438Z",
+      "name": "prebuild",
+      "slots": 250
+    },
+    {
+      "at": "2026-10-07T14:06:04.297650Z",
+      "name": "qualify",
+      "slots": 200
+    },
+    {
+      "at": "2026-10-07T14:06:17.815025Z",
+      "name": "budget",
+      "slots": 40
+    },
+    {
+      "at": "2026-10-07T14:06:32.785516Z",
+      "name": "pause",
+      "slots": 40
+    },
+    {
+      "at": "2026-10-07T14:06:39.155370Z",
+      "name": "terminal",
+      "slots": 40
+    },
+    {
+      "at": "2026-10-07T14:06:56.300368Z",
+      "name": "restart_seed",
+      "slots": 30
+    },
+    {
+      "at": "2026-10-07T14:07:05.569689Z",
+      "name": "restart_next",
+      "slots": 40
+    },
+    {
+      "at": "2026-10-07T14:07:20.407590Z",
+      "name": "unknown_source",
+      "slots": 20
+    },
+    {
+      "at": "2026-10-07T14:07:30.003559Z",
+      "name": "unknown_next",
+      "slots": 20
+    },
+    {
+      "at": "2026-10-07T14:07:36.054025Z",
+      "name": "succession",
+      "slots": 50
+    },
+    {
+      "at": "2026-10-07T14:13:40.623231Z",
+      "name": "matrix_extra",
+      "slots": 60
+    }
+  ],
+  "audit": {
+    "allocated_slots": 790,
+    "cap": 1000,
+    "code_revision": "0d6bb26",
+    "control_test_groups": 32,
+    "first_rpc": "2026-10-07T13:44:04.516791Z",
+    "gate": "C",
+    "history_requests": 23,
+    "last_rpc": "2026-10-07T14:14:19.751230Z",
+    "legacy_live_skips": 3,
+    "live_scope": "existing approved group; actual SDK/SQLite/receiver; local faults explicitly injected",
+    "no_local_rpc_after_source_entry": [
+      "budget",
+      "matrix_extra",
+      "pause",
+      "restart_next",
+      "restart_seed",
+      "succession",
+      "terminal",
+      "unknown_next",
+      "unknown_source"
+    ],
+    "preserved_gate_b_originals": [
+      {
+        "case": "empty_uncommitted",
+        "sha256": "4d36051567f5329eb1c7379b425d39f884efe404f5c7d0b2d9037d7cccc28f14",
+        "unchanged": true
+      },
+      {
+        "case": "unknown_source",
+        "sha256": "86b7f633d006b002c4dcdb9a8cdf433a97f9c8710f2014bb0f127a192c0ca228",
+        "unchanged": true
+      }
+    ],
+    "primary_after": 2334,
+    "primary_before": 2202,
+    "primary_limit": 5000,
+    "receivers": [
+      {
+        "ids": [
+          "1",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11"
+        ],
+        "messages": 6,
+        "name": "prebuild",
+        "receipts": 2
+      },
+      {
+        "ids": [
+          "1",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11"
+        ],
+        "messages": 6,
+        "name": "budget",
+        "receipts": 2
+      },
+      {
+        "ids": [
+          "1",
+          "7"
+        ],
+        "messages": 2,
+        "name": "pause",
+        "receipts": 1
+      },
+      {
+        "ids": [
+          "14"
+        ],
+        "messages": 1,
+        "name": "cancel-first",
+        "receipts": 1
+      },
+      {
+        "ids": [
+          "14"
+        ],
+        "messages": 1,
+        "name": "ack-first",
+        "receipts": 1
+      },
+      {
+        "ids": [
+          "1",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11"
+        ],
+        "messages": 6,
+        "name": "restart",
+        "receipts": 3
+      },
+      {
+        "ids": [
+          "1",
+          "7"
+        ],
+        "messages": 2,
+        "name": "unknown",
+        "receipts": 1
+      },
+      {
+        "ids": [
+          "14"
+        ],
+        "messages": 1,
+        "name": "succession",
+        "receipts": 2
+      },
+      {
+        "ids": [
+          "14"
+        ],
+        "messages": 1,
+        "name": "matrix",
+        "receipts": 2
+      }
+    ],
+    "requested_slots": 442,
+    "result": "PASS",
+    "rpc_types": [
+      "ExportAuthorizationRequest",
+      "GetChannelsRequest",
+      "GetConfigRequest",
+      "GetFileRequest",
+      "GetHistoryRequest",
+      "GetStateRequest",
+      "GetUsersRequest"
+    ],
+    "states": [
+      {
+        "file": "ack-first.sqlite3",
+        "state_sha256": "be4a5b33e066bed8f65859ff9b64a25bbaf51921198ba267295c85d4bf4bab5e",
+        "status": {
+          "abandoned_at": null,
+          "abandoned_batch_id": null,
+          "abandoned_next_after_id": null,
+          "after_id": "14",
+          "attempt_id": null,
+          "batch_size": 2,
+          "clock_uncertain": false,
+          "control_revision": "0",
+          "created_at": "2026-10-07T14:06:45.558527Z",
+          "delivery_abandoned": false,
+          "destination_id": "durable-receiver",
+          "end_date": "2026-10-03T21:18:22.000001Z",
+          "history_limited": false,
+          "initial_after_id": "13",
+          "last_acked_batch_id": "92c8daac27b732569e2a92da16e1eeacc39f12ec8af578f0d20d04b7c794e0d2",
+          "last_control_action": null,
+          "last_control_expected_revision": null,
+          "last_control_id": null,
+          "last_control_state_revision": null,
+          "last_days": null,
+          "last_failure_account_id": null,
+          "last_failure_at": null,
+          "last_failure_kind": null,
+          "last_failure_retry_at": null,
+          "last_failure_type": null,
+          "last_recovered_attempt_id": null,
+          "last_recovery_at": null,
+          "last_recovery_id": null,
+          "media_mode": "references",
+          "operator_intent": "active",
+          "origin": "imported",
+          "pacing_attempt_id": "c4b1fd4d2bfe4ed995f41484ea42a462",
+          "pacing_ended_at": "2026-10-07T14:06:45.819739Z",
+          "pacing_not_before": "2026-10-07T14:06:50.819739Z",
+          "pause_seconds": 5.0,
+          "pending_batch_id": null,
+          "pending_message_count": 0,
+          "pending_next_after_id": null,
+          "run": {
+            "chat_id": "-1004478311025",
+            "collection_id": "gate-c-ack-first",
+            "generation": "1",
+            "run_id": "first"
+          },
+          "source_exhausted": true,
+          "start_date": "2026-10-03T21:18:22.000000Z",
+          "state_revision": "4",
+          "terminal_outcome": "completed"
+        }
+      },
+      {
+        "file": "budget.sqlite3",
+        "state_sha256": "2ac9540ad9d3780d0ee532cc2ef16fde67eaf52a9d973bc3fa10732f45c0f582",
+        "status": {
+          "abandoned_at": null,
+          "abandoned_batch_id": null,
+          "abandoned_next_after_id": null,
+          "after_id": "11",
+          "attempt_id": null,
+          "batch_size": 5,
+          "clock_uncertain": false,
+          "control_revision": "3",
+          "created_at": "2026-10-07T14:06:18.768060Z",
+          "delivery_abandoned": false,
+          "destination_id": "durable-receiver",
+          "end_date": "2026-10-03T21:45:47.000001Z",
+          "history_limited": false,
+          "initial_after_id": "0",
+          "last_acked_batch_id": "77079941c84824a5bb908190608eb157f04211d1f3a128d52196beb7e2ce8378",
+          "last_control_action": "cancel",
+          "last_control_expected_revision": "2",
+          "last_control_id": "finish",
+          "last_control_state_revision": "10",
+          "last_days": null,
+          "last_failure_account_id": "selected-account",
+          "last_failure_at": "2026-10-07T14:06:27.577423Z",
+          "last_failure_kind": "budget",
+          "last_failure_retry_at": "2026-10-08T14:06:18.962297Z",
+          "last_failure_type": "ReadBudgetExceeded",
+          "last_recovered_attempt_id": null,
+          "last_recovery_at": null,
+          "last_recovery_id": null,
+          "media_mode": "references",
+          "operator_intent": "cancelled",
+          "origin": "fresh",
+          "pacing_attempt_id": "7512e389fc404a6db23e644dc504602d",
+          "pacing_ended_at": "2026-10-07T14:06:27.577423Z",
+          "pacing_not_before": "2026-10-07T14:06:35.577423Z",
+          "pause_seconds": 8.0,
+          "pending_batch_id": null,
+          "pending_message_count": 0,
+          "pending_next_after_id": null,
+          "run": {
+            "chat_id": "-1004478311025",
+            "collection_id": "gate-c-budget",
+            "generation": "1",
+            "run_id": "first"
+          },
+          "source_exhausted": false,
+          "start_date": "2026-09-28T18:05:31.000000Z",
+          "state_revision": "10",
+          "terminal_outcome": "cancelled"
+        }
+      },
+      {
+        "file": "cancel-first.sqlite3",
+        "state_sha256": "bd567f8b5e6355904f4b4f04691d64adec92e9b51e6c930f55c41263cdab83c4",
+        "status": {
+          "abandoned_at": null,
+          "abandoned_batch_id": null,
+          "abandoned_next_after_id": null,
+          "after_id": "14",
+          "attempt_id": null,
+          "batch_size": 2,
+          "clock_uncertain": false,
+          "control_revision": "1",
+          "created_at": "2026-10-07T14:06:40.257218Z",
+          "delivery_abandoned": false,
+          "destination_id": "durable-receiver",
+          "end_date": "2026-10-03T21:18:22.000001Z",
+          "history_limited": false,
+          "initial_after_id": "13",
+          "last_acked_batch_id": "92c8daac27b732569e2a92da16e1eeacc39f12ec8af578f0d20d04b7c794e0d2",
+          "last_control_action": "cancel",
+          "last_control_expected_revision": "0",
+          "last_control_id": "cancel-after-receiver-before-ack",
+          "last_control_state_revision": "4",
+          "last_days": null,
+          "last_failure_account_id": null,
+          "last_failure_at": null,
+          "last_failure_kind": null,
+          "last_failure_retry_at": null,
+          "last_failure_type": null,
+          "last_recovered_attempt_id": null,
+          "last_recovery_at": null,
+          "last_recovery_id": null,
+          "media_mode": "references",
+          "operator_intent": "cancelled",
+          "origin": "imported",
+          "pacing_attempt_id": "26724c8c16b540c5a578eacb86200afd",
+          "pacing_ended_at": "2026-10-07T14:06:40.523268Z",
+          "pacing_not_before": "2026-10-07T14:06:45.523268Z",
+          "pause_seconds": 5.0,
+          "pending_batch_id": null,
+          "pending_message_count": 0,
+          "pending_next_after_id": null,
+          "run": {
+            "chat_id": "-1004478311025",
+            "collection_id": "gate-c-cancel-first",
+            "generation": "1",
+            "run_id": "first"
+          },
+          "source_exhausted": true,
+          "start_date": "2026-10-03T21:18:22.000000Z",
+          "state_revision": "5",
+          "terminal_outcome": "cancelled"
+        }
+      },
+      {
+        "file": "empty-cancel-first.sqlite3",
+        "state_sha256": "feef0501d8199138dc2a6f2a53daec7fc4c8f2c13bec7ac53b334989815edfd4",
+        "status": {
+          "abandoned_at": null,
+          "abandoned_batch_id": null,
+          "abandoned_next_after_id": null,
+          "after_id": "51",
+          "attempt_id": null,
+          "batch_size": 2,
+          "clock_uncertain": false,
+          "control_revision": "1",
+          "created_at": "2026-10-07T14:06:50.846115Z",
+          "delivery_abandoned": false,
+          "destination_id": "durable-receiver",
+          "end_date": "2026-10-03T21:18:22.000001Z",
+          "history_limited": false,
+          "initial_after_id": "51",
+          "last_acked_batch_id": null,
+          "last_control_action": "cancel",
+          "last_control_expected_revision": "0",
+          "last_control_id": "cancel-before-empty-publication",
+          "last_control_state_revision": "5",
+          "last_days": null,
+          "last_failure_account_id": null,
+          "last_failure_at": null,
+          "last_failure_kind": null,
+          "last_failure_retry_at": null,
+          "last_failure_type": null,
+          "last_recovered_attempt_id": null,
+          "last_recovery_at": null,
+          "last_recovery_id": null,
+          "media_mode": "references",
+          "operator_intent": "cancelled",
+          "origin": "imported",
+          "pacing_attempt_id": "947921dc71f3441797606964ae7cd96d",
+          "pacing_ended_at": "2026-10-07T14:06:51.129553Z",
+          "pacing_not_before": "2026-10-07T14:06:56.129553Z",
+          "pause_seconds": 5.0,
+          "pending_batch_id": null,
+          "pending_message_count": 0,
+          "pending_next_after_id": null,
+          "run": {
+            "chat_id": "-1004478311025",
+            "collection_id": "gate-c-empty-cancel-first",
+            "generation": "2",
+            "run_id": "empty-window-tail"
+          },
+          "source_exhausted": true,
+          "start_date": "2026-10-03T21:18:22.000000Z",
+          "state_revision": "6",
+          "terminal_outcome": "cancelled"
+        }
+      },
+      {
+        "file": "matrix-retirement.sqlite3",
+        "state_sha256": "daf4546003a15555286c9bc823fa69cbda4230c32569fb6f22724c28fb091d5e",
+        "status": {
+          "abandoned_at": null,
+          "abandoned_batch_id": null,
+          "abandoned_next_after_id": null,
+          "after_id": "14",
+          "attempt_id": null,
+          "batch_size": 2,
+          "clock_uncertain": false,
+          "control_revision": "1",
+          "created_at": "2026-10-07T14:14:09.275191Z",
+          "delivery_abandoned": false,
+          "destination_id": "durable-receiver",
+          "end_date": "2026-10-03T21:18:22.000001Z",
+          "history_limited": false,
+          "initial_after_id": "13",
+          "last_acked_batch_id": "92c8daac27b732569e2a92da16e1eeacc39f12ec8af578f0d20d04b7c794e0d2",
+          "last_control_action": "pause",
+          "last_control_expected_revision": "0",
+          "last_control_id": "lost-pause",
+          "last_control_state_revision": "16",
+          "last_days": null,
+          "last_failure_account_id": null,
+          "last_failure_at": null,
+          "last_failure_kind": null,
+          "last_failure_retry_at": null,
+          "last_failure_type": null,
+          "last_recovered_attempt_id": null,
+          "last_recovery_at": null,
+          "last_recovery_id": null,
+          "media_mode": "references",
+          "operator_intent": "paused",
+          "origin": "imported",
+          "pacing_attempt_id": "1c16e961922a473b832c7f7b78134073",
+          "pacing_ended_at": "2026-10-07T14:14:09.511817Z",
+          "pacing_not_before": "2026-10-07T14:14:14.511817Z",
+          "pause_seconds": 5.0,
+          "pending_batch_id": null,
+          "pending_message_count": 0,
+          "pending_next_after_id": null,
+          "run": {
+            "chat_id": "-1004478311025",
+            "collection_id": "gate-c-matrix-retirement",
+            "generation": "3",
+            "run_id": "third"
+          },
+          "source_exhausted": true,
+          "start_date": "2026-10-03T21:18:22.000000Z",
+          "state_revision": "17",
+          "terminal_outcome": "completed"
+        }
+      },
+      {
+        "file": "no-prefix.sqlite3",
+        "state_sha256": "8f1733559f4c99a5e146e3fa0310ec62fb0a5825ac6ad5960473cbae62195f4e",
+        "status": {
+          "abandoned_at": null,
+          "abandoned_batch_id": null,
+          "abandoned_next_after_id": null,
+          "after_id": "0",
+          "attempt_id": null,
+          "batch_size": 2,
+          "clock_uncertain": false,
+          "control_revision": "1",
+          "created_at": "2026-10-07T14:14:14.541171Z",
+          "delivery_abandoned": false,
+          "destination_id": "durable-receiver",
+          "end_date": "2026-10-03T21:45:47.000001Z",
+          "history_limited": false,
+          "initial_after_id": "0",
+          "last_acked_batch_id": null,
+          "last_control_action": "cancel",
+          "last_control_expected_revision": "0",
+          "last_control_id": "finish",
+          "last_control_state_revision": "6",
+          "last_days": null,
+          "last_failure_account_id": "selected-account",
+          "last_failure_at": "2026-10-07T14:14:19.821387Z",
+          "last_failure_kind": "budget",
+          "last_failure_retry_at": "2026-10-08T14:06:18.962297Z",
+          "last_failure_type": "ReadBudgetExceeded",
+          "last_recovered_attempt_id": null,
+          "last_recovery_at": null,
+          "last_recovery_id": null,
+          "media_mode": "references",
+          "operator_intent": "cancelled",
+          "origin": "fresh",
+          "pacing_attempt_id": "48169f0b5e3946f0b354f690b488955c",
+          "pacing_ended_at": "2026-10-07T14:14:19.821387Z",
+          "pacing_not_before": "2026-10-07T14:14:24.821387Z",
+          "pause_seconds": 5.0,
+          "pending_batch_id": null,
+          "pending_message_count": 0,
+          "pending_next_after_id": null,
+          "run": {
+            "chat_id": "-1004478311025",
+            "collection_id": "gate-c-no-prefix",
+            "generation": "1",
+            "run_id": "first"
+          },
+          "source_exhausted": false,
+          "start_date": "2026-09-28T18:05:31.000000Z",
+          "state_revision": "6",
+          "terminal_outcome": "cancelled"
+        }
+      },
+      {
+        "file": "pause.sqlite3",
+        "state_sha256": "b5af5234caff4abbbf1ceaf5c746ac6e96c2c885d7bdf4c8a4cae19b89f4f2af",
+        "status": {
+          "abandoned_at": null,
+          "abandoned_batch_id": null,
+          "abandoned_next_after_id": null,
+          "after_id": "7",
+          "attempt_id": null,
+          "batch_size": 2,
+          "clock_uncertain": false,
+          "control_revision": "7",
+          "created_at": "2026-10-07T14:06:33.655108Z",
+          "delivery_abandoned": false,
+          "destination_id": "durable-receiver",
+          "end_date": "2026-10-03T21:45:47.000001Z",
+          "history_limited": false,
+          "initial_after_id": "0",
+          "last_acked_batch_id": "3e7faca66cb016a7c5caca8a105b13ddfee82701b952540745f217d34db142bf",
+          "last_control_action": "cancel",
+          "last_control_expected_revision": "6",
+          "last_control_id": "finish",
+          "last_control_state_revision": "11",
+          "last_days": null,
+          "last_failure_account_id": null,
+          "last_failure_at": null,
+          "last_failure_kind": null,
+          "last_failure_retry_at": null,
+          "last_failure_type": null,
+          "last_recovered_attempt_id": null,
+          "last_recovery_at": null,
+          "last_recovery_id": null,
+          "media_mode": "references",
+          "operator_intent": "cancelled",
+          "origin": "fresh",
+          "pacing_attempt_id": "6c5e90f307db4f33a59a64dc4bc65357",
+          "pacing_ended_at": "2026-10-07T14:06:33.929470Z",
+          "pacing_not_before": "2026-10-07T14:06:41.929470Z",
+          "pause_seconds": 8.0,
+          "pending_batch_id": null,
+          "pending_message_count": 0,
+          "pending_next_after_id": null,
+          "run": {
+            "chat_id": "-1004478311025",
+            "collection_id": "gate-c-pause",
+            "generation": "1",
+            "run_id": "first"
+          },
+          "source_exhausted": false,
+          "start_date": "2026-09-28T18:05:31.000000Z",
+          "state_revision": "11",
+          "terminal_outcome": "cancelled"
+        }
+      },
+      {
+        "file": "prebuild-state.sqlite3",
+        "state_sha256": "d77248822a278c1e084b596176ce251a351618e8cbe3ffc9fd703e4f4e60de02",
+        "status": {
+          "abandoned_at": null,
+          "abandoned_batch_id": null,
+          "abandoned_next_after_id": null,
+          "after_id": "11",
+          "attempt_id": null,
+          "batch_size": 5,
+          "clock_uncertain": false,
+          "control_revision": "0",
+          "created_at": "2026-10-07T13:44:09.996737Z",
+          "delivery_abandoned": false,
+          "destination_id": "receiver",
+          "end_date": "2026-10-03T21:45:47.000001Z",
+          "history_limited": false,
+          "initial_after_id": "0",
+          "last_acked_batch_id": "77079941c84824a5bb908190608eb157f04211d1f3a128d52196beb7e2ce8378",
+          "last_control_action": null,
+          "last_control_expected_revision": null,
+          "last_control_id": null,
+          "last_control_state_revision": null,
+          "last_days": null,
+          "last_failure_account_id": "selected-account",
+          "last_failure_at": "2026-10-07T13:44:20.640520Z",
+          "last_failure_kind": "budget",
+          "last_failure_retry_at": "2026-10-08T13:44:15.174877Z",
+          "last_failure_type": "ReadBudgetExceeded",
+          "last_recovered_attempt_id": null,
+          "last_recovery_at": null,
+          "last_recovery_id": null,
+          "media_mode": "references",
+          "operator_intent": "active",
+          "origin": "fresh",
+          "pacing_attempt_id": "5abe1b3234fa485dafc1794fd0d55507",
+          "pacing_ended_at": "2026-10-07T13:44:20.640520Z",
+          "pacing_not_before": "2026-10-07T13:44:25.640520Z",
+          "pause_seconds": 5.0,
+          "pending_batch_id": null,
+          "pending_message_count": 0,
+          "pending_next_after_id": null,
+          "run": {
+            "chat_id": "-1004478311025",
+            "collection_id": "stage6-prebuild",
+            "generation": "1",
+            "run_id": "run"
+          },
+          "source_exhausted": false,
+          "start_date": "2026-09-28T18:05:31.000000Z",
+          "state_revision": "7",
+          "terminal_outcome": null
+        }
+      },
+      {
+        "file": "restart.sqlite3",
+        "state_sha256": "ac25712bbd4e56d893f6e85bf7ca11737c1916a47ed3f1be815597da258694a3",
+        "status": {
+          "abandoned_at": null,
+          "abandoned_batch_id": null,
+          "abandoned_next_after_id": null,
+          "after_id": "11",
+          "attempt_id": null,
+          "batch_size": 2,
+          "clock_uncertain": false,
+          "control_revision": "1",
+          "created_at": "2026-10-07T14:06:57.270411Z",
+          "delivery_abandoned": false,
+          "destination_id": "durable-receiver",
+          "end_date": "2026-10-03T21:45:47.000001Z",
+          "history_limited": false,
+          "initial_after_id": "0",
+          "last_acked_batch_id": "18eb4ce7988ab54285ddafdd3823a0e2fd372f57a166375a2a73f7d95491eb0c",
+          "last_control_action": "cancel",
+          "last_control_expected_revision": "0",
+          "last_control_id": "finish",
+          "last_control_state_revision": "11",
+          "last_days": null,
+          "last_failure_account_id": null,
+          "last_failure_at": null,
+          "last_failure_kind": null,
+          "last_failure_retry_at": null,
+          "last_failure_type": null,
+          "last_recovered_attempt_id": null,
+          "last_recovery_at": null,
+          "last_recovery_id": null,
+          "media_mode": "references",
+          "operator_intent": "cancelled",
+          "origin": "fresh",
+          "pacing_attempt_id": "b1e229f5214c4773b8270f232ebaf345",
+          "pacing_ended_at": "2026-10-07T14:07:15.245585Z",
+          "pacing_not_before": "2026-10-07T14:07:23.245585Z",
+          "pause_seconds": 8.0,
+          "pending_batch_id": null,
+          "pending_message_count": 0,
+          "pending_next_after_id": null,
+          "run": {
+            "chat_id": "-1004478311025",
+            "collection_id": "gate-c-restart",
+            "generation": "1",
+            "run_id": "first"
+          },
+          "source_exhausted": false,
+          "start_date": "2026-09-28T18:05:31.000000Z",
+          "state_revision": "11",
+          "terminal_outcome": "cancelled"
+        }
+      },
+      {
+        "file": "succession.sqlite3",
+        "state_sha256": "848fe3c1331e92d318ea4f214d989cb8c8cd61457236eea29978667799f5b51a",
+        "status": {
+          "abandoned_at": null,
+          "abandoned_batch_id": null,
+          "abandoned_next_after_id": null,
+          "after_id": "14",
+          "attempt_id": null,
+          "batch_size": 2,
+          "clock_uncertain": false,
+          "control_revision": "0",
+          "created_at": "2026-10-07T14:07:49.946902Z",
+          "delivery_abandoned": false,
+          "destination_id": "durable-receiver",
+          "end_date": "2026-10-03T21:18:22.000001Z",
+          "history_limited": false,
+          "initial_after_id": "13",
+          "last_acked_batch_id": "26dbe05fe406ed60dd503e5be370abab2ca4e36da082c282e8e7dedff8dc84b3",
+          "last_control_action": null,
+          "last_control_expected_revision": null,
+          "last_control_id": null,
+          "last_control_state_revision": null,
+          "last_days": null,
+          "last_failure_account_id": null,
+          "last_failure_at": null,
+          "last_failure_kind": null,
+          "last_failure_retry_at": null,
+          "last_failure_type": null,
+          "last_recovered_attempt_id": null,
+          "last_recovery_at": null,
+          "last_recovery_id": null,
+          "media_mode": "download",
+          "operator_intent": "active",
+          "origin": "imported",
+          "pacing_attempt_id": "d74fbe8bc8f040628ce176707cf3892d",
+          "pacing_ended_at": "2026-10-07T14:07:50.421393Z",
+          "pacing_not_before": "2026-10-07T14:07:55.421393Z",
+          "pause_seconds": 5.0,
+          "pending_batch_id": null,
+          "pending_message_count": 0,
+          "pending_next_after_id": null,
+          "run": {
+            "chat_id": "-1004478311025",
+            "collection_id": "gate-c-succession",
+            "generation": "3",
+            "run_id": "third"
+          },
+          "source_exhausted": true,
+          "start_date": "2026-10-03T21:18:22.000000Z",
+          "state_revision": "12",
+          "terminal_outcome": "completed"
+        }
+      },
+      {
+        "file": "unknown.sqlite3",
+        "state_sha256": "65a8cc0a1d8b15d38e7a48ecb009006d65e246922489c0a09a2c88e6bfd1f891",
+        "status": {
+          "abandoned_at": null,
+          "abandoned_batch_id": null,
+          "abandoned_next_after_id": null,
+          "after_id": "7",
+          "attempt_id": null,
+          "batch_size": 2,
+          "clock_uncertain": false,
+          "control_revision": "1",
+          "created_at": "2026-10-07T14:07:21.255756Z",
+          "delivery_abandoned": false,
+          "destination_id": "durable-receiver",
+          "end_date": "2026-10-03T21:45:47.000001Z",
+          "history_limited": false,
+          "initial_after_id": "0",
+          "last_acked_batch_id": "3e7faca66cb016a7c5caca8a105b13ddfee82701b952540745f217d34db142bf",
+          "last_control_action": "cancel",
+          "last_control_expected_revision": "0",
+          "last_control_id": "finish",
+          "last_control_state_revision": "7",
+          "last_days": null,
+          "last_failure_account_id": null,
+          "last_failure_at": null,
+          "last_failure_kind": null,
+          "last_failure_retry_at": null,
+          "last_failure_type": null,
+          "last_recovered_attempt_id": null,
+          "last_recovery_at": null,
+          "last_recovery_id": null,
+          "media_mode": "references",
+          "operator_intent": "cancelled",
+          "origin": "fresh",
+          "pacing_attempt_id": "7af2ae897aeb480d9cd1eb022bec1116",
+          "pacing_ended_at": "2026-10-07T14:07:30.928000Z",
+          "pacing_not_before": "2026-10-07T14:07:38.928000Z",
+          "pause_seconds": 8.0,
+          "pending_batch_id": null,
+          "pending_message_count": 0,
+          "pending_next_after_id": null,
+          "run": {
+            "chat_id": "-1004478311025",
+            "collection_id": "gate-c-unknown",
+            "generation": "1",
+            "run_id": "first"
+          },
+          "source_exhausted": false,
+          "start_date": "2026-09-28T18:05:31.000000Z",
+          "state_revision": "7",
+          "terminal_outcome": "cancelled"
+        }
+      }
+    ],
+    "supported_offline_passes": 319,
+    "total_rpc": 130,
+    "workers": 13
+  },
+  "cases": [
+    {
+      "budget_after": {
+        "limit": 5000,
+        "used": 2300
+      },
+      "budget_before": {
+        "limit": 5000,
+        "used": 2254
+      },
+      "case": "qualify",
+      "checks": [
+        "46 exact independent ID/date observations unchanged",
+        "independently downloaded photo digest unchanged"
+      ],
+      "code_revision": "0d6bb26",
+      "events": [],
+      "history_requests": 2,
+      "pid": 6964,
+      "requested_media_bytes": 393216,
+      "requested_slots": 200,
+      "result": "PASS",
+      "rpc": [
+        {
+          "answered_at": "2026-10-07T14:06:05.119475Z",
+          "kind": "GetStateRequest",
+          "monotonic": 2890526.569505166,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:05.024244Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:05.194338Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890526.664800958,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:05.119552Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:05.277121Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890526.740215083,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:05.194964Z",
+          "turn": 0
+        },
+        {
+          "add_offset": 0,
+          "answered_at": "2026-10-07T14:06:05.425968Z",
+          "kind": "GetHistoryRequest",
+          "limit": 100,
+          "min_id": "0",
+          "monotonic": 2890526.836971166,
+          "offset_date": null,
+          "offset_id": "0",
+          "outcome": "answered",
+          "page": null,
+          "response_type": "ChannelMessages",
+          "returned_slots": 46,
+          "sent_at": "2026-10-07T14:06:05.291709Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:10.486639Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890531.97679425,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:10.431512Z",
+          "turn": 0
+        },
+        {
+          "add_offset": 0,
+          "answered_at": "2026-10-07T14:06:10.544711Z",
+          "kind": "GetHistoryRequest",
+          "limit": 100,
+          "min_id": "0",
+          "monotonic": 2890532.033691041,
+          "offset_date": null,
+          "offset_id": "1",
+          "outcome": "answered",
+          "page": null,
+          "response_type": "ChannelMessages",
+          "returned_slots": 0,
+          "sent_at": "2026-10-07T14:06:10.488475Z",
+          "turn": 0
+        },
+        {
+          "kind": "GetFileRequest",
+          "monotonic": 2890532.09327825,
+          "outcome": "FileMigrateError",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:10.548065Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:10.652254Z",
+          "kind": "GetConfigRequest",
+          "monotonic": 2890532.1458415,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:10.600621Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:12.243988Z",
+          "kind": "ExportAuthorizationRequest",
+          "monotonic": 2890533.731629875,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:12.186422Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:12.559122Z",
+          "kind": "GetFileRequest",
+          "monotonic": 2890533.900845583,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:12.355632Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:12.626686Z",
+          "kind": "GetFileRequest",
+          "monotonic": 2890534.104563333,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:12.559368Z",
+          "turn": 0
+        }
+      ],
+      "scope": "LIVE source; INJECTED owned local barriers"
+    },
+    {
+      "budget_after": {
+        "limit": 5000,
+        "used": 2306
+      },
+      "budget_before": {
+        "limit": 5000,
+        "used": 2300
+      },
+      "case": "budget",
+      "checks": [
+        "LIVE actual allowance 3 exhausted, usable prefix retained",
+        "INJECTED pause during real error return preserves original exception/data",
+        "busy recovery/abandon refused; replay/receiver/ack while paused and exhausted",
+        "test-only cap increase to 6 retains charges/shared 5000 policy",
+        "resume preserves wait; early call sends nothing; later real send rechecks both ledgers"
+      ],
+      "code_revision": "0d6bb26",
+      "early_wait_seconds": 7.978174,
+      "events": [
+        {
+          "after_id": "0",
+          "end": {
+            "monotonic_ns": 2890540704451583,
+            "utc": "2026-10-07T14:06:19.159301Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890540315576500,
+            "utc": "2026-10-07T14:06:18.770429Z"
+          },
+          "kind": "source",
+          "outcome": "ReadBudgetExceeded",
+          "turn": 1
+        },
+        {
+          "after": {
+            "monotonic_ns": 2890540719559083,
+            "utc": "2026-10-07T14:06:19.174401Z"
+          },
+          "before": {
+            "monotonic_ns": 2890540715077791,
+            "utc": "2026-10-07T14:06:19.169924Z"
+          },
+          "counts": {
+            "messages": 3,
+            "receipts": 1
+          },
+          "kind": "receiver-commit",
+          "receipt": {
+            "batch_id": "0b36f38de414b89fab14e7973d7a4a33f3b051221da365f1cecc4451727a227c",
+            "destination_id": "durable-receiver",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-budget",
+              "generation": "1",
+              "run_id": "first"
+            }
+          }
+        },
+        {
+          "after_id": "8",
+          "end": {
+            "monotonic_ns": 2890549122487000,
+            "utc": "2026-10-07T14:06:27.577402Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890548745777125,
+            "utc": "2026-10-07T14:06:27.200693Z"
+          },
+          "kind": "source",
+          "outcome": "ReadBudgetExceeded",
+          "turn": 2
+        },
+        {
+          "after": {
+            "monotonic_ns": 2890549130498375,
+            "utc": "2026-10-07T14:06:27.585415Z"
+          },
+          "before": {
+            "monotonic_ns": 2890549129091208,
+            "utc": "2026-10-07T14:06:27.584006Z"
+          },
+          "counts": {
+            "messages": 6,
+            "receipts": 2
+          },
+          "kind": "receiver-commit",
+          "receipt": {
+            "batch_id": "77079941c84824a5bb908190608eb157f04211d1f3a128d52196beb7e2ce8378",
+            "destination_id": "durable-receiver",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-budget",
+              "generation": "1",
+              "run_id": "first"
+            }
+          }
+        }
+      ],
+      "history_requests": 2,
+      "measured_intervals": [
+        8.041325542
+      ],
+      "pid": 7013,
+      "requested_media_bytes": 0,
+      "requested_slots": 6,
+      "result": "PASS",
+      "rpc": [
+        {
+          "answered_at": "2026-10-07T14:06:18.699094Z",
+          "kind": "GetStateRequest",
+          "monotonic": 2890540.187536583,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:18.642381Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:18.763847Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890540.244417416,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:18.699266Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:18.820987Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890540.315767583,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:18.770620Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:06:18.879539Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890540.366366708,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:18.821217Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:06:18.961068Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890540.426880916,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:18.881731Z",
+          "turn": 1
+        },
+        {
+          "add_offset": -3,
+          "answered_at": "2026-10-07T14:06:19.080285Z",
+          "kind": "GetHistoryRequest",
+          "limit": 3,
+          "min_id": "0",
+          "monotonic": 2890540.507944041,
+          "offset_date": "2026-09-28T18:05:30.000000Z",
+          "offset_id": "0",
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 3,
+          "sent_at": "2026-10-07T14:06:18.962735Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:06:19.156675Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890540.627839791,
+          "outcome": "answered",
+          "page": [
+            1,
+            2
+          ],
+          "sent_at": "2026-10-07T14:06:19.082693Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:06:27.293789Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890548.752147416,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:27.207054Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:06:27.363392Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890548.839326166,
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:27.294242Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:06:27.421328Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890548.91074725,
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:27.365658Z",
+          "turn": 2
+        },
+        {
+          "add_offset": -3,
+          "answered_at": "2026-10-07T14:06:27.507391Z",
+          "kind": "GetHistoryRequest",
+          "limit": 3,
+          "min_id": "0",
+          "monotonic": 2890548.968939291,
+          "offset_date": null,
+          "offset_id": "9",
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 3,
+          "sent_at": "2026-10-07T14:06:27.423844Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:06:27.575254Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890549.056126916,
+          "outcome": "answered",
+          "page": [
+            2,
+            2
+          ],
+          "sent_at": "2026-10-07T14:06:27.511043Z",
+          "turn": 2
+        }
+      ],
+      "scope": "LIVE source; INJECTED owned local barriers",
+      "test_budget": {
+        "after_limit": 6,
+        "before_limit": 3,
+        "increase": "explicit test policy; not natural expiry",
+        "used": 6
+      }
+    },
+    {
+      "budget_after": {
+        "limit": 5000,
+        "used": 2308
+      },
+      "budget_before": {
+        "limit": 5000,
+        "used": 2306
+      },
+      "case": "pause",
+      "checks": [
+        "INJECTED pause-before-real-result publication preserved",
+        "active prepare refuses recovery/abandonment",
+        "real durable receiver accepts paused data",
+        "stale resume refuses",
+        "opposing controls accept exactly one revision",
+        "delayed older response does not replace newer intent",
+        "local decisions send no history requests"
+      ],
+      "code_revision": "0d6bb26",
+      "events": [
+        {
+          "after_id": "0",
+          "end": {
+            "monotonic_ns": 2890555472496291,
+            "utc": "2026-10-07T14:06:33.927461Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890555203114166,
+            "utc": "2026-10-07T14:06:33.658079Z"
+          },
+          "ids": [
+            "1",
+            "7"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "limit",
+          "turn": 1
+        },
+        {
+          "after": {
+            "monotonic_ns": 2890555485440041,
+            "utc": "2026-10-07T14:06:33.940394Z"
+          },
+          "before": {
+            "monotonic_ns": 2890555476744500,
+            "utc": "2026-10-07T14:06:33.931708Z"
+          },
+          "counts": {
+            "messages": 2,
+            "receipts": 1
+          },
+          "kind": "receiver-commit",
+          "receipt": {
+            "batch_id": "3e7faca66cb016a7c5caca8a105b13ddfee82701b952540745f217d34db142bf",
+            "destination_id": "durable-receiver",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-pause",
+              "generation": "1",
+              "run_id": "first"
+            }
+          }
+        }
+      ],
+      "history_requests": 1,
+      "pid": 7071,
+      "requested_media_bytes": 0,
+      "requested_slots": 2,
+      "result": "PASS",
+      "rpc": [
+        {
+          "answered_at": "2026-10-07T14:06:33.600704Z",
+          "kind": "GetStateRequest",
+          "monotonic": 2890555.089699583,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:33.544657Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:33.652897Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890555.14581425,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:33.600778Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:33.726516Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890555.203278375,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:33.658243Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:06:33.789089Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890555.271720041,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:33.726684Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:06:33.849547Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890555.335366708,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:33.790327Z",
+          "turn": 1
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:06:33.925884Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2890555.395645125,
+          "offset_date": "2026-09-28T18:05:30.000000Z",
+          "offset_id": "0",
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:06:33.850609Z",
+          "turn": 1
+        }
+      ],
+      "scope": "LIVE source; INJECTED owned local barriers"
+    },
+    {
+      "budget_after": {
+        "limit": 5000,
+        "used": 2312
+      },
+      "budget_before": {
+        "limit": 5000,
+        "used": 2308
+      },
+      "case": "terminal",
+      "checks": [
+        "LIVE final end with data; actual receiver committed",
+        "INJECTED cancel-before-final-ack stays cancelled",
+        "ack-before-cancel stays completed",
+        "cancel-before-real-empty-publication stays cancelled; no false completed outcome"
+      ],
+      "code_revision": "0d6bb26",
+      "events": [
+        {
+          "after_id": "13",
+          "end": {
+            "monotonic_ns": 2890562068224000,
+            "utc": "2026-10-07T14:06:40.523238Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890561805430541,
+            "utc": "2026-10-07T14:06:40.260444Z"
+          },
+          "ids": [
+            "14"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "end",
+          "turn": 1
+        },
+        {
+          "after": {
+            "monotonic_ns": 2890562086683625,
+            "utc": "2026-10-07T14:06:40.541694Z"
+          },
+          "before": {
+            "monotonic_ns": 2890562074857625,
+            "utc": "2026-10-07T14:06:40.529867Z"
+          },
+          "counts": {
+            "messages": 1,
+            "receipts": 1
+          },
+          "kind": "receiver-commit",
+          "receipt": {
+            "batch_id": "92c8daac27b732569e2a92da16e1eeacc39f12ec8af578f0d20d04b7c794e0d2",
+            "destination_id": "durable-receiver",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-cancel-first",
+              "generation": "1",
+              "run_id": "first"
+            }
+          }
+        },
+        {
+          "kind": "terminal",
+          "order": "cancel-first",
+          "status": {
+            "abandoned_at": null,
+            "abandoned_batch_id": null,
+            "abandoned_next_after_id": null,
+            "after_id": "14",
+            "attempt_id": null,
+            "batch_size": 2,
+            "clock_uncertain": false,
+            "control_revision": "1",
+            "created_at": "2026-10-07T14:06:40.257218Z",
+            "delivery_abandoned": false,
+            "destination_id": "durable-receiver",
+            "end_date": "2026-10-03T21:18:22.000001Z",
+            "history_limited": false,
+            "initial_after_id": "13",
+            "last_acked_batch_id": "92c8daac27b732569e2a92da16e1eeacc39f12ec8af578f0d20d04b7c794e0d2",
+            "last_control_action": "cancel",
+            "last_control_expected_revision": "0",
+            "last_control_id": "cancel-after-receiver-before-ack",
+            "last_control_state_revision": "4",
+            "last_days": null,
+            "last_failure_account_id": null,
+            "last_failure_at": null,
+            "last_failure_kind": null,
+            "last_failure_retry_at": null,
+            "last_failure_type": null,
+            "last_recovered_attempt_id": null,
+            "last_recovery_at": null,
+            "last_recovery_id": null,
+            "media_mode": "references",
+            "operator_intent": "cancelled",
+            "origin": "imported",
+            "pacing_attempt_id": "26724c8c16b540c5a578eacb86200afd",
+            "pacing_ended_at": "2026-10-07T14:06:40.523268Z",
+            "pacing_not_before": "2026-10-07T14:06:45.523268Z",
+            "pause_seconds": 5.0,
+            "pending_batch_id": null,
+            "pending_message_count": 0,
+            "pending_next_after_id": null,
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-cancel-first",
+              "generation": "1",
+              "run_id": "first"
+            },
+            "source_exhausted": true,
+            "start_date": "2026-10-03T21:18:22.000000Z",
+            "state_revision": "5",
+            "terminal_outcome": "cancelled"
+          }
+        },
+        {
+          "after_id": "13",
+          "end": {
+            "monotonic_ns": 2890567364651208,
+            "utc": "2026-10-07T14:06:45.819703Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890567108926083,
+            "utc": "2026-10-07T14:06:45.563980Z"
+          },
+          "ids": [
+            "14"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "end",
+          "turn": 2
+        },
+        {
+          "after": {
+            "monotonic_ns": 2890567370782166,
+            "utc": "2026-10-07T14:06:45.825830Z"
+          },
+          "before": {
+            "monotonic_ns": 2890567368830416,
+            "utc": "2026-10-07T14:06:45.823881Z"
+          },
+          "counts": {
+            "messages": 1,
+            "receipts": 1
+          },
+          "kind": "receiver-commit",
+          "receipt": {
+            "batch_id": "92c8daac27b732569e2a92da16e1eeacc39f12ec8af578f0d20d04b7c794e0d2",
+            "destination_id": "durable-receiver",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-ack-first",
+              "generation": "1",
+              "run_id": "first"
+            }
+          }
+        },
+        {
+          "kind": "terminal",
+          "order": "ack-first",
+          "status": {
+            "abandoned_at": null,
+            "abandoned_batch_id": null,
+            "abandoned_next_after_id": null,
+            "after_id": "14",
+            "attempt_id": null,
+            "batch_size": 2,
+            "clock_uncertain": false,
+            "control_revision": "0",
+            "created_at": "2026-10-07T14:06:45.558527Z",
+            "delivery_abandoned": false,
+            "destination_id": "durable-receiver",
+            "end_date": "2026-10-03T21:18:22.000001Z",
+            "history_limited": false,
+            "initial_after_id": "13",
+            "last_acked_batch_id": "92c8daac27b732569e2a92da16e1eeacc39f12ec8af578f0d20d04b7c794e0d2",
+            "last_control_action": null,
+            "last_control_expected_revision": null,
+            "last_control_id": null,
+            "last_control_state_revision": null,
+            "last_days": null,
+            "last_failure_account_id": null,
+            "last_failure_at": null,
+            "last_failure_kind": null,
+            "last_failure_retry_at": null,
+            "last_failure_type": null,
+            "last_recovered_attempt_id": null,
+            "last_recovery_at": null,
+            "last_recovery_id": null,
+            "media_mode": "references",
+            "operator_intent": "active",
+            "origin": "imported",
+            "pacing_attempt_id": "c4b1fd4d2bfe4ed995f41484ea42a462",
+            "pacing_ended_at": "2026-10-07T14:06:45.819739Z",
+            "pacing_not_before": "2026-10-07T14:06:50.819739Z",
+            "pause_seconds": 5.0,
+            "pending_batch_id": null,
+            "pending_message_count": 0,
+            "pending_next_after_id": null,
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-ack-first",
+              "generation": "1",
+              "run_id": "first"
+            },
+            "source_exhausted": true,
+            "start_date": "2026-10-03T21:18:22.000000Z",
+            "state_revision": "4",
+            "terminal_outcome": "completed"
+          }
+        },
+        {
+          "after_id": "51",
+          "end": {
+            "monotonic_ns": 2890572673065166,
+            "utc": "2026-10-07T14:06:51.128155Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890572393570916,
+            "utc": "2026-10-07T14:06:50.848664Z"
+          },
+          "ids": [],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "end",
+          "turn": 3
+        },
+        {
+          "kind": "terminal",
+          "order": "empty-cancel-first",
+          "status": {
+            "abandoned_at": null,
+            "abandoned_batch_id": null,
+            "abandoned_next_after_id": null,
+            "after_id": "51",
+            "attempt_id": null,
+            "batch_size": 2,
+            "clock_uncertain": false,
+            "control_revision": "1",
+            "created_at": "2026-10-07T14:06:50.846115Z",
+            "delivery_abandoned": false,
+            "destination_id": "durable-receiver",
+            "end_date": "2026-10-03T21:18:22.000001Z",
+            "history_limited": false,
+            "initial_after_id": "51",
+            "last_acked_batch_id": null,
+            "last_control_action": "cancel",
+            "last_control_expected_revision": "0",
+            "last_control_id": "cancel-before-empty-publication",
+            "last_control_state_revision": "5",
+            "last_days": null,
+            "last_failure_account_id": null,
+            "last_failure_at": null,
+            "last_failure_kind": null,
+            "last_failure_retry_at": null,
+            "last_failure_type": null,
+            "last_recovered_attempt_id": null,
+            "last_recovery_at": null,
+            "last_recovery_id": null,
+            "media_mode": "references",
+            "operator_intent": "cancelled",
+            "origin": "imported",
+            "pacing_attempt_id": "947921dc71f3441797606964ae7cd96d",
+            "pacing_ended_at": "2026-10-07T14:06:51.129553Z",
+            "pacing_not_before": "2026-10-07T14:06:56.129553Z",
+            "pause_seconds": 5.0,
+            "pending_batch_id": null,
+            "pending_message_count": 0,
+            "pending_next_after_id": null,
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-empty-cancel-first",
+              "generation": "2",
+              "run_id": "empty-window-tail"
+            },
+            "source_exhausted": true,
+            "start_date": "2026-10-03T21:18:22.000000Z",
+            "state_revision": "6",
+            "terminal_outcome": "cancelled"
+          }
+        }
+      ],
+      "history_requests": 3,
+      "pid": 7120,
+      "requested_media_bytes": 0,
+      "requested_slots": 6,
+      "result": "PASS",
+      "rpc": [
+        {
+          "answered_at": "2026-10-07T14:06:40.200303Z",
+          "kind": "GetStateRequest",
+          "monotonic": 2890561.674347,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:40.129353Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:40.254517Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890561.745397875,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:40.200410Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:40.317700Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890561.805825916,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:40.260838Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:06:40.377912Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890561.863441791,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:40.318451Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:06:40.429581Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890561.924010875,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:40.379023Z",
+          "turn": 1
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:06:40.515587Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2890561.975946583,
+          "offset_date": null,
+          "offset_id": "14",
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:06:40.430960Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:06:45.623235Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890567.110238833,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:45.565290Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:06:45.683128Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890567.168648375,
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:45.623700Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:06:45.751708Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890567.229118208,
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:45.684164Z",
+          "turn": 2
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:06:45.817707Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2890567.297705708,
+          "offset_date": null,
+          "offset_id": "14",
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:06:45.752759Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:06:50.921511Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890572.394955416,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:50.850048Z",
+          "turn": 3
+        },
+        {
+          "answered_at": "2026-10-07T14:06:51.008456Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890572.467291625,
+          "outcome": "answered",
+          "page": [
+            3,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:50.922384Z",
+          "turn": 3
+        },
+        {
+          "answered_at": "2026-10-07T14:06:51.067872Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890572.554639791,
+          "outcome": "answered",
+          "page": [
+            3,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:51.009730Z",
+          "turn": 3
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:06:51.126758Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2890572.61514825,
+          "offset_date": null,
+          "offset_id": "52",
+          "outcome": "answered",
+          "page": [
+            3,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 0,
+          "sent_at": "2026-10-07T14:06:51.070240Z",
+          "turn": 3
+        }
+      ],
+      "scope": "LIVE source; INJECTED owned local barriers"
+    },
+    {
+      "budget_after": {
+        "limit": 5000,
+        "used": 2314
+      },
+      "budget_before": {
+        "limit": 5000,
+        "used": 2312
+      },
+      "case": "restart_seed",
+      "checks": [
+        "LIVE result and early receiver acknowledgment preserve attempt-end deadline"
+      ],
+      "code_revision": "0d6bb26",
+      "events": [
+        {
+          "after_id": "0",
+          "end": {
+            "monotonic_ns": 2890579082188291,
+            "utc": "2026-10-07T14:06:57.537330Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890578817993125,
+            "utc": "2026-10-07T14:06:57.273134Z"
+          },
+          "ids": [
+            "1",
+            "7"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "limit",
+          "turn": 1
+        },
+        {
+          "after": {
+            "monotonic_ns": 2890579086480625,
+            "utc": "2026-10-07T14:06:57.541620Z"
+          },
+          "before": {
+            "monotonic_ns": 2890579084696625,
+            "utc": "2026-10-07T14:06:57.539839Z"
+          },
+          "counts": {
+            "messages": 2,
+            "receipts": 1
+          },
+          "kind": "receiver-commit",
+          "receipt": {
+            "batch_id": "3e7faca66cb016a7c5caca8a105b13ddfee82701b952540745f217d34db142bf",
+            "destination_id": "durable-receiver",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-restart",
+              "generation": "1",
+              "run_id": "first"
+            }
+          }
+        }
+      ],
+      "history_requests": 1,
+      "pid": 7195,
+      "requested_media_bytes": 0,
+      "requested_slots": 2,
+      "result": "PASS",
+      "rpc": [
+        {
+          "answered_at": "2026-10-07T14:06:57.217153Z",
+          "kind": "GetStateRequest",
+          "monotonic": 2890578.684575333,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:57.139702Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:57.268509Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890578.762103875,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:57.217243Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:06:57.338963Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890578.818232625,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:06:57.273371Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:06:57.403169Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890578.883996541,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:57.339138Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:06:57.458670Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890578.949577708,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:06:57.404713Z",
+          "turn": 1
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:06:57.535772Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2890579.010093,
+          "offset_date": "2026-09-28T18:05:30.000000Z",
+          "offset_id": "0",
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:06:57.465195Z",
+          "turn": 1
+        }
+      ],
+      "saved_status": {
+        "abandoned_at": null,
+        "abandoned_batch_id": null,
+        "abandoned_next_after_id": null,
+        "after_id": "7",
+        "attempt_id": null,
+        "batch_size": 2,
+        "clock_uncertain": false,
+        "control_revision": "0",
+        "created_at": "2026-10-07T14:06:57.270411Z",
+        "delivery_abandoned": false,
+        "destination_id": "durable-receiver",
+        "end_date": "2026-10-03T21:45:47.000001Z",
+        "history_limited": false,
+        "initial_after_id": "0",
+        "last_acked_batch_id": "3e7faca66cb016a7c5caca8a105b13ddfee82701b952540745f217d34db142bf",
+        "last_control_action": null,
+        "last_control_expected_revision": null,
+        "last_control_id": null,
+        "last_control_state_revision": null,
+        "last_days": null,
+        "last_failure_account_id": null,
+        "last_failure_at": null,
+        "last_failure_kind": null,
+        "last_failure_retry_at": null,
+        "last_failure_type": null,
+        "last_recovered_attempt_id": null,
+        "last_recovery_at": null,
+        "last_recovery_id": null,
+        "media_mode": "references",
+        "operator_intent": "active",
+        "origin": "fresh",
+        "pacing_attempt_id": "f16a9766d43743e9952636b992bdbe59",
+        "pacing_ended_at": "2026-10-07T14:06:57.537376Z",
+        "pacing_not_before": "2026-10-07T14:07:05.537376Z",
+        "pause_seconds": 8.0,
+        "pending_batch_id": null,
+        "pending_message_count": 0,
+        "pending_next_after_id": null,
+        "run": {
+          "chat_id": "-1004478311025",
+          "collection_id": "gate-c-restart",
+          "generation": "1",
+          "run_id": "first"
+        },
+        "source_exhausted": false,
+        "start_date": "2026-09-28T18:05:31.000000Z",
+        "state_revision": "4",
+        "terminal_outcome": null
+      },
+      "scope": "LIVE source; INJECTED owned local barriers"
+    },
+    {
+      "case": "restart_early",
+      "checks": [
+        "actual fresh process returns decreasing wait without reader/network/write"
+      ],
+      "code_revision": "0d6bb26",
+      "events": [],
+      "pid": 7203,
+      "result": "PASS",
+      "saved_status": {
+        "abandoned_at": null,
+        "abandoned_batch_id": null,
+        "abandoned_next_after_id": null,
+        "after_id": "7",
+        "attempt_id": null,
+        "batch_size": 2,
+        "clock_uncertain": false,
+        "control_revision": "0",
+        "created_at": "2026-10-07T14:06:57.270411Z",
+        "delivery_abandoned": false,
+        "destination_id": "durable-receiver",
+        "end_date": "2026-10-03T21:45:47.000001Z",
+        "history_limited": false,
+        "initial_after_id": "0",
+        "last_acked_batch_id": "3e7faca66cb016a7c5caca8a105b13ddfee82701b952540745f217d34db142bf",
+        "last_control_action": null,
+        "last_control_expected_revision": null,
+        "last_control_id": null,
+        "last_control_state_revision": null,
+        "last_days": null,
+        "last_failure_account_id": null,
+        "last_failure_at": null,
+        "last_failure_kind": null,
+        "last_failure_retry_at": null,
+        "last_failure_type": null,
+        "last_recovered_attempt_id": null,
+        "last_recovery_at": null,
+        "last_recovery_id": null,
+        "media_mode": "references",
+        "operator_intent": "active",
+        "origin": "fresh",
+        "pacing_attempt_id": "f16a9766d43743e9952636b992bdbe59",
+        "pacing_ended_at": "2026-10-07T14:06:57.537376Z",
+        "pacing_not_before": "2026-10-07T14:07:05.537376Z",
+        "pause_seconds": 8.0,
+        "pending_batch_id": null,
+        "pending_message_count": 0,
+        "pending_next_after_id": null,
+        "run": {
+          "chat_id": "-1004478311025",
+          "collection_id": "gate-c-restart",
+          "generation": "1",
+          "run_id": "first"
+        },
+        "source_exhausted": false,
+        "start_date": "2026-09-28T18:05:31.000000Z",
+        "state_revision": "4",
+        "terminal_outcome": null
+      },
+      "scope": "LOCAL actual live-origin state; sockets blocked",
+      "wait_seconds": [
+        7.456876,
+        7.456498708
+      ]
+    },
+    {
+      "budget_after": {
+        "limit": 5000,
+        "used": 2318
+      },
+      "budget_before": {
+        "limit": 5000,
+        "used": 2314
+      },
+      "case": "restart_next",
+      "checks": [
+        "LIVE read after process reopen respects saved deadline",
+        "same-host monotonic bracket supports diagnostic elapsed comparison",
+        "late receiver ack does not start another wait; next read immediately eligible"
+      ],
+      "code_revision": "0d6bb26",
+      "events": [
+        {
+          "after_id": "7",
+          "end": {
+            "monotonic_ns": 2890588151176625,
+            "utc": "2026-10-07T14:07:06.606386Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890587850350666,
+            "utc": "2026-10-07T14:07:06.305560Z"
+          },
+          "ids": [
+            "8",
+            "9"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "limit",
+          "turn": 1
+        },
+        {
+          "after": {
+            "monotonic_ns": 2890596190065375,
+            "utc": "2026-10-07T14:07:14.645327Z"
+          },
+          "before": {
+            "monotonic_ns": 2890596183440250,
+            "utc": "2026-10-07T14:07:14.638704Z"
+          },
+          "counts": {
+            "messages": 4,
+            "receipts": 2
+          },
+          "kind": "receiver-commit",
+          "receipt": {
+            "batch_id": "67ee49424e90094a602c5da1ad9f3963bea841ea58cdb21a5c341600e0f0ca42",
+            "destination_id": "durable-receiver",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-restart",
+              "generation": "1",
+              "run_id": "first"
+            }
+          }
+        },
+        {
+          "after_id": "9",
+          "end": {
+            "monotonic_ns": 2890596790212750,
+            "utc": "2026-10-07T14:07:15.245486Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890596194901625,
+            "utc": "2026-10-07T14:07:14.650165Z"
+          },
+          "ids": [
+            "10",
+            "11"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "limit",
+          "turn": 2
+        },
+        {
+          "after": {
+            "monotonic_ns": 2890596796707000,
+            "utc": "2026-10-07T14:07:15.251971Z"
+          },
+          "before": {
+            "monotonic_ns": 2890596795031500,
+            "utc": "2026-10-07T14:07:15.250301Z"
+          },
+          "counts": {
+            "messages": 6,
+            "receipts": 3
+          },
+          "kind": "receiver-commit",
+          "receipt": {
+            "batch_id": "18eb4ce7988ab54285ddafdd3823a0e2fd372f57a166375a2a73f7d95491eb0c",
+            "destination_id": "durable-receiver",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-restart",
+              "generation": "1",
+              "run_id": "first"
+            }
+          }
+        }
+      ],
+      "history_requests": 2,
+      "measured_intervals": [
+        8.043725
+      ],
+      "pid": 7219,
+      "requested_media_bytes": 0,
+      "requested_slots": 4,
+      "restart_elapsed_seconds": 8.768162375,
+      "result": "PASS",
+      "rpc": [
+        {
+          "answered_at": "2026-10-07T14:07:06.226496Z",
+          "kind": "GetStateRequest",
+          "monotonic": 2890587.709815666,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:06.165012Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:07:06.302834Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890587.771362416,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:06.226571Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:07:06.383227Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890587.850595416,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:06.305804Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:06.456451Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890587.928171291,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:06.383380Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:06.527047Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890588.002384583,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:06.457591Z",
+          "turn": 1
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:07:06.604838Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2890588.073288,
+          "offset_date": null,
+          "offset_id": "8",
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:07:06.528487Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:14.793045Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890596.198309583,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:14.653569Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:07:14.917364Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890596.338323875,
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:14.793592Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:07:15.044923Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890596.463710875,
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:14.918981Z",
+          "turn": 2
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:07:15.242226Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2890596.5912145,
+          "offset_date": null,
+          "offset_id": "10",
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:07:15.046481Z",
+          "turn": 2
+        }
+      ],
+      "scope": "LIVE source; INJECTED owned local barriers"
+    },
+    {
+      "boundary": "after actual source answer, before durable publication",
+      "budget_before": {
+        "limit": 5000,
+        "used": 2318
+      },
+      "budget_used": 2320,
+      "case": "unknown_source",
+      "checks": [],
+      "code_revision": "0d6bb26",
+      "events": [
+        {
+          "after_id": "0",
+          "end": {
+            "monotonic_ns": 2890603040169958,
+            "utc": "2026-10-07T14:07:21.495492Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890602806883041,
+            "utc": "2026-10-07T14:07:21.262203Z"
+          },
+          "ids": [
+            "1",
+            "7"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "limit",
+          "turn": 1
+        }
+      ],
+      "pid": 7253,
+      "requested_slots": 2,
+      "result": "EXPECTED_EXIT",
+      "rpc": [
+        {
+          "answered_at": "2026-10-07T14:07:21.200981Z",
+          "kind": "GetStateRequest",
+          "monotonic": 2890602.696717875,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:21.152028Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:07:21.253806Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890602.745763416,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:21.201083Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:07:21.322598Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890602.807110875,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:21.262431Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:21.373763Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890602.867435875,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:21.322756Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:21.423237Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890602.919910083,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:21.375224Z",
+          "turn": 1
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:07:21.493744Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2890602.971603333,
+          "offset_date": "2026-09-28T18:05:30.000000Z",
+          "offset_id": "0",
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:07:21.426919Z",
+          "turn": 1
+        }
+      ],
+      "saved_status": {
+        "abandoned_at": null,
+        "abandoned_batch_id": null,
+        "abandoned_next_after_id": null,
+        "after_id": "0",
+        "attempt_id": "127b098f4b174720a521e2e94108bc5f",
+        "batch_size": 2,
+        "clock_uncertain": false,
+        "control_revision": "0",
+        "created_at": "2026-10-07T14:07:21.255756Z",
+        "delivery_abandoned": false,
+        "destination_id": "durable-receiver",
+        "end_date": "2026-10-03T21:45:47.000001Z",
+        "history_limited": false,
+        "initial_after_id": "0",
+        "last_acked_batch_id": null,
+        "last_control_action": null,
+        "last_control_expected_revision": null,
+        "last_control_id": null,
+        "last_control_state_revision": null,
+        "last_days": null,
+        "last_failure_account_id": null,
+        "last_failure_at": null,
+        "last_failure_kind": null,
+        "last_failure_retry_at": null,
+        "last_failure_type": null,
+        "last_recovered_attempt_id": null,
+        "last_recovery_at": null,
+        "last_recovery_id": null,
+        "media_mode": "references",
+        "operator_intent": "active",
+        "origin": "fresh",
+        "pacing_attempt_id": null,
+        "pacing_ended_at": null,
+        "pacing_not_before": null,
+        "pause_seconds": 8.0,
+        "pending_batch_id": null,
+        "pending_message_count": 0,
+        "pending_next_after_id": null,
+        "run": {
+          "chat_id": "-1004478311025",
+          "collection_id": "gate-c-unknown",
+          "generation": "1",
+          "run_id": "first"
+        },
+        "source_exhausted": false,
+        "start_date": "2026-09-28T18:05:31.000000Z",
+        "state_revision": "2",
+        "terminal_outcome": null
+      },
+      "scope": "LIVE source; INJECTED owned local barriers"
+    },
+    {
+      "boundary": "after actual recovery commit, before reply",
+      "case": "recover_crash",
+      "checks": [],
+      "code_revision": "0d6bb26",
+      "events": [],
+      "pid": 7256,
+      "result": "EXPECTED_EXIT",
+      "saved_status": {
+        "abandoned_at": null,
+        "abandoned_batch_id": null,
+        "abandoned_next_after_id": null,
+        "after_id": "0",
+        "attempt_id": null,
+        "batch_size": 2,
+        "clock_uncertain": false,
+        "control_revision": "0",
+        "created_at": "2026-10-07T14:07:21.255756Z",
+        "delivery_abandoned": false,
+        "destination_id": "durable-receiver",
+        "end_date": "2026-10-03T21:45:47.000001Z",
+        "history_limited": false,
+        "initial_after_id": "0",
+        "last_acked_batch_id": null,
+        "last_control_action": null,
+        "last_control_expected_revision": null,
+        "last_control_id": null,
+        "last_control_state_revision": null,
+        "last_days": null,
+        "last_failure_account_id": null,
+        "last_failure_at": null,
+        "last_failure_kind": null,
+        "last_failure_retry_at": null,
+        "last_failure_type": null,
+        "last_recovered_attempt_id": "127b098f4b174720a521e2e94108bc5f",
+        "last_recovery_at": "2026-10-07T14:07:21.969537Z",
+        "last_recovery_id": "lost-recovery",
+        "media_mode": "references",
+        "operator_intent": "active",
+        "origin": "fresh",
+        "pacing_attempt_id": "127b098f4b174720a521e2e94108bc5f",
+        "pacing_ended_at": null,
+        "pacing_not_before": "2026-10-07T14:07:29.969537Z",
+        "pause_seconds": 8.0,
+        "pending_batch_id": null,
+        "pending_message_count": 0,
+        "pending_next_after_id": null,
+        "run": {
+          "chat_id": "-1004478311025",
+          "collection_id": "gate-c-unknown",
+          "generation": "1",
+          "run_id": "first"
+        },
+        "source_exhausted": false,
+        "start_date": "2026-09-28T18:05:31.000000Z",
+        "state_revision": "3",
+        "terminal_outcome": null
+      },
+      "scope": "LOCAL actual live-origin state; sockets blocked"
+    },
+    {
+      "case": "recover_retry",
+      "checks": [
+        "confirmed owned source and recovery workers exited",
+        "unknown source refused another read",
+        "recovery committed full unknown-end interval",
+        "lost recovery reply recognized twice with forbidden clocks and identical deadline",
+        "new process early prepare returns wait with no network/write"
+      ],
+      "code_revision": "0d6bb26",
+      "events": [],
+      "pid": 7259,
+      "result": "PASS",
+      "saved_status": {
+        "abandoned_at": null,
+        "abandoned_batch_id": null,
+        "abandoned_next_after_id": null,
+        "after_id": "0",
+        "attempt_id": null,
+        "batch_size": 2,
+        "clock_uncertain": false,
+        "control_revision": "0",
+        "created_at": "2026-10-07T14:07:21.255756Z",
+        "delivery_abandoned": false,
+        "destination_id": "durable-receiver",
+        "end_date": "2026-10-03T21:45:47.000001Z",
+        "history_limited": false,
+        "initial_after_id": "0",
+        "last_acked_batch_id": null,
+        "last_control_action": null,
+        "last_control_expected_revision": null,
+        "last_control_id": null,
+        "last_control_state_revision": null,
+        "last_days": null,
+        "last_failure_account_id": null,
+        "last_failure_at": null,
+        "last_failure_kind": null,
+        "last_failure_retry_at": null,
+        "last_failure_type": null,
+        "last_recovered_attempt_id": "127b098f4b174720a521e2e94108bc5f",
+        "last_recovery_at": "2026-10-07T14:07:21.969537Z",
+        "last_recovery_id": "lost-recovery",
+        "media_mode": "references",
+        "operator_intent": "active",
+        "origin": "fresh",
+        "pacing_attempt_id": "127b098f4b174720a521e2e94108bc5f",
+        "pacing_ended_at": null,
+        "pacing_not_before": "2026-10-07T14:07:29.969537Z",
+        "pause_seconds": 8.0,
+        "pending_batch_id": null,
+        "pending_message_count": 0,
+        "pending_next_after_id": null,
+        "run": {
+          "chat_id": "-1004478311025",
+          "collection_id": "gate-c-unknown",
+          "generation": "1",
+          "run_id": "first"
+        },
+        "source_exhausted": false,
+        "start_date": "2026-09-28T18:05:31.000000Z",
+        "state_revision": "3",
+        "terminal_outcome": null
+      },
+      "scope": "LOCAL actual live-origin state; sockets blocked",
+      "wait_seconds": 7.516194
+    },
+    {
+      "budget_after": {
+        "limit": 5000,
+        "used": 2322
+      },
+      "budget_before": {
+        "limit": 5000,
+        "used": 2320
+      },
+      "case": "unknown_next",
+      "checks": [
+        "LIVE read follows conservative recovery deadline",
+        "unaccepted source position unchanged; reread exact expected prefix",
+        "actual receiver accepts recovered delivery; no manufactured exhaustion"
+      ],
+      "code_revision": "0d6bb26",
+      "events": [
+        {
+          "after_id": "0",
+          "end": {
+            "monotonic_ns": 2890612472571000,
+            "utc": "2026-10-07T14:07:30.927963Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890612242359250,
+            "utc": "2026-10-07T14:07:30.697749Z"
+          },
+          "ids": [
+            "1",
+            "7"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "limit",
+          "turn": 1
+        },
+        {
+          "after": {
+            "monotonic_ns": 2890612478619500,
+            "utc": "2026-10-07T14:07:30.934006Z"
+          },
+          "before": {
+            "monotonic_ns": 2890612475817750,
+            "utc": "2026-10-07T14:07:30.931208Z"
+          },
+          "counts": {
+            "messages": 2,
+            "receipts": 1
+          },
+          "kind": "receiver-commit",
+          "receipt": {
+            "batch_id": "3e7faca66cb016a7c5caca8a105b13ddfee82701b952540745f217d34db142bf",
+            "destination_id": "durable-receiver",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-unknown",
+              "generation": "1",
+              "run_id": "first"
+            }
+          }
+        }
+      ],
+      "history_requests": 1,
+      "pid": 7268,
+      "recovery_to_read_seconds": 8.728212,
+      "requested_media_bytes": 0,
+      "requested_slots": 2,
+      "result": "PASS",
+      "rpc": [
+        {
+          "answered_at": "2026-10-07T14:07:30.643478Z",
+          "kind": "GetStateRequest",
+          "monotonic": 2890612.1353545,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:30.590736Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:07:30.694120Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890612.18823325,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:30.643613Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:07:30.752623Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890612.24257225,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:30.697962Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:30.802083Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890612.2974145,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:30.752806Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:30.852656Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890612.348346875,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:30.803730Z",
+          "turn": 1
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:07:30.926592Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2890612.398294458,
+          "offset_date": "2026-09-28T18:05:30.000000Z",
+          "offset_id": "0",
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:07:30.853684Z",
+          "turn": 1
+        }
+      ],
+      "scope": "LIVE source; INJECTED owned local barriers"
+    },
+    {
+      "budget_after": {
+        "limit": 5000,
+        "used": 2328
+      },
+      "budget_before": {
+        "limit": 5000,
+        "used": 2322
+      },
+      "case": "succession",
+      "checks": [
+        "LIVE photo digest matches independent download",
+        "explicit abandonment records withdrawn obligation without accepted progress or blob deletion",
+        "equal-hash successor has distinct receipt; retired receipt refuses",
+        "retained accepted old receipt cannot settle equal-hash current pending",
+        "actual receiver has 2 scoped receipts and one unique message"
+      ],
+      "code_revision": "0d6bb26",
+      "events": [
+        {
+          "after_id": "13",
+          "end": {
+            "monotonic_ns": 2890620864943833,
+            "utc": "2026-10-07T14:07:39.320397Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890618334551791,
+            "utc": "2026-10-07T14:07:36.789987Z"
+          },
+          "ids": [
+            "14"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "end",
+          "turn": 1
+        },
+        {
+          "after_id": "13",
+          "end": {
+            "monotonic_ns": 2890626472060708,
+            "utc": "2026-10-07T14:07:44.927554Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890625891385541,
+            "utc": "2026-10-07T14:07:44.346878Z"
+          },
+          "ids": [
+            "14"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "end",
+          "turn": 2
+        },
+        {
+          "after": {
+            "monotonic_ns": 2890626479749833,
+            "utc": "2026-10-07T14:07:44.935234Z"
+          },
+          "before": {
+            "monotonic_ns": 2890626476866000,
+            "utc": "2026-10-07T14:07:44.932362Z"
+          },
+          "counts": {
+            "messages": 1,
+            "receipts": 1
+          },
+          "kind": "receiver-commit",
+          "receipt": {
+            "batch_id": "26dbe05fe406ed60dd503e5be370abab2ca4e36da082c282e8e7dedff8dc84b3",
+            "destination_id": "durable-receiver",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-succession",
+              "generation": "2",
+              "run_id": "second"
+            }
+          }
+        },
+        {
+          "after_id": "13",
+          "end": {
+            "monotonic_ns": 2890631965814333,
+            "utc": "2026-10-07T14:07:50.421348Z"
+          },
+          "entry": {
+            "monotonic_ns": 2890631495803375,
+            "utc": "2026-10-07T14:07:49.951336Z"
+          },
+          "ids": [
+            "14"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "end",
+          "turn": 3
+        },
+        {
+          "after": {
+            "monotonic_ns": 2890631970694000,
+            "utc": "2026-10-07T14:07:50.426232Z"
+          },
+          "before": {
+            "monotonic_ns": 2890631969724333,
+            "utc": "2026-10-07T14:07:50.425263Z"
+          },
+          "counts": {
+            "messages": 1,
+            "receipts": 2
+          },
+          "kind": "receiver-commit",
+          "receipt": {
+            "batch_id": "26dbe05fe406ed60dd503e5be370abab2ca4e36da082c282e8e7dedff8dc84b3",
+            "destination_id": "durable-receiver",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-succession",
+              "generation": "3",
+              "run_id": "third"
+            }
+          }
+        }
+      ],
+      "history_requests": 3,
+      "pid": 7291,
+      "requested_media_bytes": 1179648,
+      "requested_slots": 6,
+      "result": "PASS",
+      "rpc": [
+        {
+          "answered_at": "2026-10-07T14:07:36.715210Z",
+          "kind": "GetStateRequest",
+          "monotonic": 2890618.204042416,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:36.659471Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:07:36.779840Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890618.259852083,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:36.715289Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:07:36.852243Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890618.334824708,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:36.790261Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:36.930373Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890618.397065208,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:36.852495Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:37.019706Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890618.475911125,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:36.931346Z",
+          "turn": 1
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:07:37.093188Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2890618.565972166,
+          "offset_date": null,
+          "offset_id": "14",
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:07:37.021406Z",
+          "turn": 1
+        },
+        {
+          "kind": "GetFileRequest",
+          "monotonic": 2890618.639557125,
+          "outcome": "FileMigrateError",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:37.094995Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:37.214239Z",
+          "kind": "GetConfigRequest",
+          "monotonic": 2890618.695829416,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:37.151258Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:38.925774Z",
+          "kind": "ExportAuthorizationRequest",
+          "monotonic": 2890620.351224208,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:38.806623Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:39.240265Z",
+          "kind": "GetFileRequest",
+          "monotonic": 2890620.57870775,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:39.034154Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:39.318116Z",
+          "kind": "GetFileRequest",
+          "monotonic": 2890620.785194208,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:39.240644Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:07:44.422425Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890625.894709041,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:44.350196Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:07:44.493520Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890625.967716333,
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:44.423206Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:07:44.567872Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890626.053031666,
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:44.508512Z",
+          "turn": 2
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:07:44.642198Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2890626.114015416,
+          "offset_date": null,
+          "offset_id": "14",
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:07:44.569508Z",
+          "turn": 2
+        },
+        {
+          "kind": "GetFileRequest",
+          "monotonic": 2890626.1889485,
+          "outcome": "FileMigrateError",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:44.644441Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:07:44.854083Z",
+          "kind": "GetFileRequest",
+          "monotonic": 2890626.245538958,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:44.701022Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:07:44.924916Z",
+          "kind": "GetFileRequest",
+          "monotonic": 2890626.398757291,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:44.854253Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:07:50.019158Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2890631.497119875,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:49.952647Z",
+          "turn": 3
+        },
+        {
+          "answered_at": "2026-10-07T14:07:50.075132Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890631.563966375,
+          "outcome": "answered",
+          "page": [
+            3,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:50.019502Z",
+          "turn": 3
+        },
+        {
+          "answered_at": "2026-10-07T14:07:50.131673Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2890631.621853291,
+          "outcome": "answered",
+          "page": [
+            3,
+            1
+          ],
+          "sent_at": "2026-10-07T14:07:50.077378Z",
+          "turn": 3
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:07:50.201046Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2890631.677589041,
+          "offset_date": null,
+          "offset_id": "14",
+          "outcome": "answered",
+          "page": [
+            3,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:07:50.133121Z",
+          "turn": 3
+        },
+        {
+          "kind": "GetFileRequest",
+          "monotonic": 2890631.749007916,
+          "outcome": "FileMigrateError",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:50.204537Z",
+          "turn": 3
+        },
+        {
+          "answered_at": "2026-10-07T14:07:50.352879Z",
+          "kind": "GetFileRequest",
+          "monotonic": 2890631.805678,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:50.261205Z",
+          "turn": 3
+        },
+        {
+          "answered_at": "2026-10-07T14:07:50.419482Z",
+          "kind": "GetFileRequest",
+          "monotonic": 2890631.898299333,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:07:50.353833Z",
+          "turn": 3
+        }
+      ],
+      "scope": "LIVE source; INJECTED owned local barriers"
+    },
+    {
+      "budget_after": {
+        "limit": 5000,
+        "used": 2334
+      },
+      "budget_before": {
+        "limit": 5000,
+        "used": 2328
+      },
+      "case": "matrix_extra",
+      "checks": [
+        "C32: cancel actual admitted read; busy abandon/successor refuse; late data saved; explicit retirement preserves cancelled/cursor",
+        "C06: older accepted resume reply arrives after newer pause; stored pause stays authoritative",
+        "C36/C07: stale prepare/resume refuse without any RPC or state change",
+        "C11: actual final batch replay/receiver/ack while paused completes without resume or RPC",
+        "C03/C04: retained creation recognized; pruned creation retry/new refuse",
+        "C16: historical metadata pruned; active pending still replays and cannot be replaced",
+        "C21: actual post-commit control close failure confirms; retry has no second effect or RPC",
+        "C38: settled zero-prefix budget failure; early no RPC; later distinct attempt rechecks real account/allowance and sends no disallowed history"
+      ],
+      "code_revision": "0d6bb26",
+      "command_order": [
+        {
+          "action": "resume",
+          "applied": true,
+          "command_id": "old-resume-reply",
+          "outcome": "accepted",
+          "status": {
+            "abandoned_at": null,
+            "abandoned_batch_id": null,
+            "abandoned_next_after_id": null,
+            "after_id": "13",
+            "attempt_id": null,
+            "batch_size": 2,
+            "clock_uncertain": false,
+            "control_revision": "2",
+            "created_at": "2026-10-07T14:14:04.025559Z",
+            "delivery_abandoned": false,
+            "destination_id": "durable-receiver",
+            "end_date": "2026-10-03T21:18:22.000001Z",
+            "history_limited": false,
+            "initial_after_id": "13",
+            "last_acked_batch_id": null,
+            "last_control_action": "resume",
+            "last_control_expected_revision": "1",
+            "last_control_id": "old-resume-reply",
+            "last_control_state_revision": "10",
+            "last_days": null,
+            "last_failure_account_id": null,
+            "last_failure_at": null,
+            "last_failure_kind": null,
+            "last_failure_retry_at": null,
+            "last_failure_type": null,
+            "last_recovered_attempt_id": null,
+            "last_recovery_at": null,
+            "last_recovery_id": null,
+            "media_mode": "references",
+            "operator_intent": "active",
+            "origin": "imported",
+            "pacing_attempt_id": "587868829a7b403eaae6135b0e40df96",
+            "pacing_ended_at": "2026-10-07T14:14:04.253084Z",
+            "pacing_not_before": "2026-10-07T14:14:09.253084Z",
+            "pause_seconds": 5.0,
+            "pending_batch_id": "92c8daac27b732569e2a92da16e1eeacc39f12ec8af578f0d20d04b7c794e0d2",
+            "pending_message_count": 1,
+            "pending_next_after_id": "14",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-matrix-retirement",
+              "generation": "2",
+              "run_id": "second"
+            },
+            "source_exhausted": true,
+            "start_date": "2026-10-03T21:18:22.000000Z",
+            "state_revision": "10",
+            "terminal_outcome": null
+          }
+        },
+        {
+          "action": "pause",
+          "applied": true,
+          "command_id": "newer-pause",
+          "outcome": "accepted",
+          "status": {
+            "abandoned_at": null,
+            "abandoned_batch_id": null,
+            "abandoned_next_after_id": null,
+            "after_id": "13",
+            "attempt_id": null,
+            "batch_size": 2,
+            "clock_uncertain": false,
+            "control_revision": "3",
+            "created_at": "2026-10-07T14:14:04.025559Z",
+            "delivery_abandoned": false,
+            "destination_id": "durable-receiver",
+            "end_date": "2026-10-03T21:18:22.000001Z",
+            "history_limited": false,
+            "initial_after_id": "13",
+            "last_acked_batch_id": null,
+            "last_control_action": "pause",
+            "last_control_expected_revision": "2",
+            "last_control_id": "newer-pause",
+            "last_control_state_revision": "11",
+            "last_days": null,
+            "last_failure_account_id": null,
+            "last_failure_at": null,
+            "last_failure_kind": null,
+            "last_failure_retry_at": null,
+            "last_failure_type": null,
+            "last_recovered_attempt_id": null,
+            "last_recovery_at": null,
+            "last_recovery_id": null,
+            "media_mode": "references",
+            "operator_intent": "paused",
+            "origin": "imported",
+            "pacing_attempt_id": "587868829a7b403eaae6135b0e40df96",
+            "pacing_ended_at": "2026-10-07T14:14:04.253084Z",
+            "pacing_not_before": "2026-10-07T14:14:09.253084Z",
+            "pause_seconds": 5.0,
+            "pending_batch_id": "92c8daac27b732569e2a92da16e1eeacc39f12ec8af578f0d20d04b7c794e0d2",
+            "pending_message_count": 1,
+            "pending_next_after_id": "14",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-matrix-retirement",
+              "generation": "2",
+              "run_id": "second"
+            },
+            "source_exhausted": true,
+            "start_date": "2026-10-03T21:18:22.000000Z",
+            "state_revision": "11",
+            "terminal_outcome": null
+          }
+        }
+      ],
+      "events": [
+        {
+          "after_id": "13",
+          "end": {
+            "monotonic_ns": 2891000551625333,
+            "utc": "2026-10-07T14:13:59.009921Z"
+          },
+          "entry": {
+            "monotonic_ns": 2891000291935791,
+            "utc": "2026-10-07T14:13:58.750231Z"
+          },
+          "ids": [
+            "14"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "end",
+          "turn": 1
+        },
+        {
+          "after_id": "13",
+          "end": {
+            "monotonic_ns": 2891005794718000,
+            "utc": "2026-10-07T14:14:04.253052Z"
+          },
+          "entry": {
+            "monotonic_ns": 2891005571400208,
+            "utc": "2026-10-07T14:14:04.029735Z"
+          },
+          "ids": [
+            "14"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "end",
+          "turn": 2
+        },
+        {
+          "after": {
+            "monotonic_ns": 2891005810780750,
+            "utc": "2026-10-07T14:14:04.269112Z"
+          },
+          "before": {
+            "monotonic_ns": 2891005808611166,
+            "utc": "2026-10-07T14:14:04.266945Z"
+          },
+          "counts": {
+            "messages": 1,
+            "receipts": 1
+          },
+          "kind": "receiver-commit",
+          "receipt": {
+            "batch_id": "92c8daac27b732569e2a92da16e1eeacc39f12ec8af578f0d20d04b7c794e0d2",
+            "destination_id": "durable-receiver",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-matrix-retirement",
+              "generation": "2",
+              "run_id": "second"
+            }
+          }
+        },
+        {
+          "after_id": "13",
+          "end": {
+            "monotonic_ns": 2891011053408166,
+            "utc": "2026-10-07T14:14:09.511781Z"
+          },
+          "entry": {
+            "monotonic_ns": 2891010822246708,
+            "utc": "2026-10-07T14:14:09.280620Z"
+          },
+          "ids": [
+            "14"
+          ],
+          "kind": "source",
+          "outcome": "result",
+          "stop": "end",
+          "turn": 3
+        },
+        {
+          "after": {
+            "monotonic_ns": 2891011069748583,
+            "utc": "2026-10-07T14:14:09.528121Z"
+          },
+          "before": {
+            "monotonic_ns": 2891011067151666,
+            "utc": "2026-10-07T14:14:09.525524Z"
+          },
+          "counts": {
+            "messages": 1,
+            "receipts": 2
+          },
+          "kind": "receiver-commit",
+          "receipt": {
+            "batch_id": "92c8daac27b732569e2a92da16e1eeacc39f12ec8af578f0d20d04b7c794e0d2",
+            "destination_id": "durable-receiver",
+            "run": {
+              "chat_id": "-1004478311025",
+              "collection_id": "gate-c-matrix-retirement",
+              "generation": "3",
+              "run_id": "third"
+            }
+          }
+        },
+        {
+          "after_id": "0",
+          "end": {
+            "monotonic_ns": 2891016201085541,
+            "utc": "2026-10-07T14:14:14.659497Z"
+          },
+          "entry": {
+            "monotonic_ns": 2891016085809791,
+            "utc": "2026-10-07T14:14:14.544223Z"
+          },
+          "kind": "source",
+          "outcome": "ReadBudgetExceeded",
+          "turn": 4
+        },
+        {
+          "after_id": "0",
+          "end": {
+            "monotonic_ns": 2891021362921750,
+            "utc": "2026-10-07T14:14:19.821372Z"
+          },
+          "entry": {
+            "monotonic_ns": 2891021237664708,
+            "utc": "2026-10-07T14:14:19.696114Z"
+          },
+          "kind": "source",
+          "outcome": "ReadBudgetExceeded",
+          "turn": 5
+        }
+      ],
+      "history_requests": 3,
+      "measured_intervals": [
+        5.036579167
+      ],
+      "requested_slots": 6,
+      "result": "PASS",
+      "retired_status": {
+        "abandoned_at": "2026-10-07T14:13:59.018277Z",
+        "abandoned_batch_id": "92c8daac27b732569e2a92da16e1eeacc39f12ec8af578f0d20d04b7c794e0d2",
+        "abandoned_next_after_id": "14",
+        "after_id": "13",
+        "attempt_id": null,
+        "batch_size": 2,
+        "clock_uncertain": false,
+        "control_revision": "2",
+        "created_at": "2026-10-07T14:13:58.746808Z",
+        "delivery_abandoned": true,
+        "destination_id": "durable-receiver",
+        "end_date": "2026-10-03T21:18:22.000001Z",
+        "history_limited": false,
+        "initial_after_id": "13",
+        "last_acked_batch_id": null,
+        "last_control_action": "abandon",
+        "last_control_expected_revision": "1",
+        "last_control_id": "retire-cancelled",
+        "last_control_state_revision": "5",
+        "last_days": null,
+        "last_failure_account_id": null,
+        "last_failure_at": null,
+        "last_failure_kind": null,
+        "last_failure_retry_at": null,
+        "last_failure_type": null,
+        "last_recovered_attempt_id": null,
+        "last_recovery_at": null,
+        "last_recovery_id": null,
+        "media_mode": "references",
+        "operator_intent": "cancelled",
+        "origin": "imported",
+        "pacing_attempt_id": "7d41b1cae69246a6aadaa1b07444f452",
+        "pacing_ended_at": "2026-10-07T14:13:59.014562Z",
+        "pacing_not_before": "2026-10-07T14:14:04.014562Z",
+        "pause_seconds": 5.0,
+        "pending_batch_id": null,
+        "pending_message_count": 0,
+        "pending_next_after_id": null,
+        "run": {
+          "chat_id": "-1004478311025",
+          "collection_id": "gate-c-matrix-retirement",
+          "generation": "1",
+          "run_id": "first"
+        },
+        "source_exhausted": true,
+        "start_date": "2026-10-03T21:18:22.000000Z",
+        "state_revision": "5",
+        "terminal_outcome": "cancelled"
+      },
+      "rpc": [
+        {
+          "answered_at": "2026-10-07T14:13:58.642702Z",
+          "kind": "GetStateRequest",
+          "monotonic": 2891000.078368916,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:13:58.536654Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:13:58.743226Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2891000.184511041,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:13:58.642806Z",
+          "turn": 0
+        },
+        {
+          "answered_at": "2026-10-07T14:13:58.823384Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2891000.292126791,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:13:58.750422Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:13:58.877139Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2891000.365331791,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:13:58.823626Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:13:58.926626Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2891000.421621,
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "sent_at": "2026-10-07T14:13:58.879911Z",
+          "turn": 1
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:13:59.007960Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2891000.470776375,
+          "offset_date": null,
+          "offset_id": "14",
+          "outcome": "answered",
+          "page": [
+            1,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:13:58.929069Z",
+          "turn": 1
+        },
+        {
+          "answered_at": "2026-10-07T14:14:04.086174Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2891005.573489458,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:14:04.031821Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:14:04.138795Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2891005.628230458,
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "sent_at": "2026-10-07T14:14:04.086565Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:14:04.189445Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2891005.682373791,
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "sent_at": "2026-10-07T14:14:04.140699Z",
+          "turn": 2
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:14:04.251227Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2891005.732311375,
+          "offset_date": null,
+          "offset_id": "14",
+          "outcome": "answered",
+          "page": [
+            2,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:14:04.190645Z",
+          "turn": 2
+        },
+        {
+          "answered_at": "2026-10-07T14:14:09.333499Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2891010.823381583,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:14:09.281753Z",
+          "turn": 3
+        },
+        {
+          "answered_at": "2026-10-07T14:14:09.382917Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2891010.875543958,
+          "outcome": "answered",
+          "page": [
+            3,
+            1
+          ],
+          "sent_at": "2026-10-07T14:14:09.333916Z",
+          "turn": 3
+        },
+        {
+          "answered_at": "2026-10-07T14:14:09.443033Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2891010.925792,
+          "outcome": "answered",
+          "page": [
+            3,
+            1
+          ],
+          "sent_at": "2026-10-07T14:14:09.384164Z",
+          "turn": 3
+        },
+        {
+          "add_offset": -2,
+          "answered_at": "2026-10-07T14:14:09.509926Z",
+          "kind": "GetHistoryRequest",
+          "limit": 2,
+          "min_id": "0",
+          "monotonic": 2891010.985934,
+          "offset_date": null,
+          "offset_id": "14",
+          "outcome": "answered",
+          "page": [
+            3,
+            1
+          ],
+          "response_type": "ChannelMessages",
+          "returned_slots": 2,
+          "sent_at": "2026-10-07T14:14:09.444308Z",
+          "turn": 3
+        },
+        {
+          "answered_at": "2026-10-07T14:14:14.599225Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2891016.087036125,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:14:14.545444Z",
+          "turn": 4
+        },
+        {
+          "answered_at": "2026-10-07T14:14:14.656927Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2891016.141230125,
+          "outcome": "answered",
+          "page": [
+            4,
+            1
+          ],
+          "sent_at": "2026-10-07T14:14:14.599643Z",
+          "turn": 4
+        },
+        {
+          "answered_at": "2026-10-07T14:14:19.750058Z",
+          "kind": "GetChannelsRequest",
+          "monotonic": 2891021.23885025,
+          "outcome": "answered",
+          "page": null,
+          "sent_at": "2026-10-07T14:14:19.697301Z",
+          "turn": 5
+        },
+        {
+          "answered_at": "2026-10-07T14:14:19.818370Z",
+          "kind": "GetUsersRequest",
+          "monotonic": 2891021.292779333,
+          "outcome": "answered",
+          "page": [
+            5,
+            1
+          ],
+          "sent_at": "2026-10-07T14:14:19.751230Z",
+          "turn": 5
+        }
+      ]
+    }
+  ],
+  "clock_bracket": {
+    "child": 2890525755279000,
+    "meaning": "same-host diagnostics only; monotonic values are never persisted in run state",
+    "parent_after": 2890525841230500,
+    "parent_before": 2890525292243333
+  },
+  "drivers": {
+    "audit_gate_c.py": "ccccdfcec55a14139034396230b0d264ea0f120e1a54109048fd463bae9c5b87",
+    "gate_c_matrix.py": "e7e921aa00fedd7000db3352a0212288ed3791d45ed470abaf9dc7e77e9ed7a6",
+    "gate_c_probe.py": "bf83f12bad02318ceac275c7a45eaef09dd9e0c1909c15fed06cf4611dc660a6",
+    "gate_support.py": "f781e3d197a8deea55db6cb2fa3896f6f8d059dce2c2cfe39158b1bad43d7ddb",
+    "instrument_checks.py": "faf03aaaed09af21104a8e343fc533b81b6b0f386b3aba7c1cabf478d4af5f9d",
+    "prebuild_probe.py": "58fc4db445440eef44ac49c2a6cd679762c48efe273023be33d7802e2b472a57"
+  },
+  "exits": [
+    {
+      "expected_code": 0,
+      "observed_at": {
+        "monotonic_ns": 2890549324001791,
+        "utc": "2026-10-07T14:06:27.778687Z"
+      },
+      "pid": 7013,
+      "returncode": 0,
+      "waited": true
+    },
+    {
+      "expected_code": 0,
+      "observed_at": {
+        "monotonic_ns": 2890555688469083,
+        "utc": "2026-10-07T14:06:34.143367Z"
+      },
+      "pid": 7071,
+      "returncode": 0,
+      "waited": true
+    },
+    {
+      "expected_code": 0,
+      "observed_at": {
+        "monotonic_ns": 2890534353331125,
+        "utc": "2026-10-07T14:06:12.807981Z"
+      },
+      "pid": 6964,
+      "returncode": 0,
+      "waited": true
+    },
+    {
+      "expected_code": 82,
+      "observed_at": {
+        "monotonic_ns": 2890603571927708,
+        "utc": "2026-10-07T14:07:22.027167Z"
+      },
+      "pid": 7256,
+      "returncode": 82,
+      "waited": true
+    },
+    {
+      "expected_code": 0,
+      "observed_at": {
+        "monotonic_ns": 2890604135261375,
+        "utc": "2026-10-07T14:07:22.590545Z"
+      },
+      "pid": 7259,
+      "returncode": 0,
+      "waited": true
+    },
+    {
+      "expected_code": 0,
+      "observed_at": {
+        "monotonic_ns": 2890579769985250,
+        "utc": "2026-10-07T14:06:58.225091Z"
+      },
+      "pid": 7203,
+      "returncode": 0,
+      "waited": true
+    },
+    {
+      "expected_code": 0,
+      "observed_at": {
+        "monotonic_ns": 2890596947749208,
+        "utc": "2026-10-07T14:07:15.402924Z"
+      },
+      "pid": 7219,
+      "returncode": 0,
+      "waited": true
+    },
+    {
+      "expected_code": 0,
+      "observed_at": {
+        "monotonic_ns": 2890579202947416,
+        "utc": "2026-10-07T14:06:57.658021Z"
+      },
+      "pid": 7195,
+      "returncode": 0,
+      "waited": true
+    },
+    {
+      "expected_code": 0,
+      "observed_at": {
+        "monotonic_ns": 2890632121652583,
+        "utc": "2026-10-07T14:07:50.577091Z"
+      },
+      "pid": 7291,
+      "returncode": 0,
+      "waited": true
+    },
+    {
+      "expected_code": 0,
+      "observed_at": {
+        "monotonic_ns": 2890572835892375,
+        "utc": "2026-10-07T14:06:51.290889Z"
+      },
+      "pid": 7120,
+      "returncode": 0,
+      "waited": true
+    },
+    {
+      "expected_code": 0,
+      "observed_at": {
+        "monotonic_ns": 2890612585319500,
+        "utc": "2026-10-07T14:07:31.040670Z"
+      },
+      "pid": 7268,
+      "returncode": 0,
+      "waited": true
+    },
+    {
+      "expected_code": 81,
+      "observed_at": {
+        "monotonic_ns": 2890603060745833,
+        "utc": "2026-10-07T14:07:21.516022Z"
+      },
+      "pid": 7253,
+      "returncode": 81,
+      "waited": true
+    }
+  ],
+  "limits": [
+    "single approved account/view and real local SQLite receiver",
+    "5/8-second live policies; independent 240-second tests offline",
+    "test cap increase is not natural expiry; no artificial server wait/ban",
+    "same-host diagnostic monotonic comparison; production state stores UTC only",
+    "core-driver summary is scoped to its cases; formal Gate C also includes matrix supplement and independent saved-record audit"
+  ],
+  "oracle": {
+    "captured_at": {
+      "monotonic_ns": 2890534173627708,
+      "utc": "2026-10-07T14:06:12.628431Z"
+    },
+    "complete": true,
+    "messages": [
+      {
+        "date": "2026-09-28T18:05:31.000000Z",
+        "id": "1",
+        "media_kind": null
+      },
+      {
+        "date": "2026-09-28T18:36:36.000000Z",
+        "id": "7",
+        "media_kind": null
+      },
+      {
+        "date": "2026-09-28T18:36:48.000000Z",
+        "id": "8",
+        "media_kind": null
+      },
+      {
+        "date": "2026-09-28T18:44:14.000000Z",
+        "id": "9",
+        "media_kind": null
+      },
+      {
+        "date": "2026-10-03T21:18:22.000000Z",
+        "id": "10",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:18:22.000000Z",
+        "id": "11",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:18:22.000000Z",
+        "id": "12",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:18:22.000000Z",
+        "id": "13",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:18:22.000000Z",
+        "id": "14",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:18:23.000000Z",
+        "id": "15",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:18:23.000000Z",
+        "id": "16",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:18:23.000000Z",
+        "id": "17",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:30:42.000000Z",
+        "id": "18",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:30:42.000000Z",
+        "id": "19",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:30:42.000000Z",
+        "id": "20",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:30:42.000000Z",
+        "id": "21",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:30:42.000000Z",
+        "id": "22",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:30:42.000000Z",
+        "id": "23",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:30:42.000000Z",
+        "id": "24",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:30:42.000000Z",
+        "id": "25",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:33:48.000000Z",
+        "id": "26",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:33:48.000000Z",
+        "id": "27",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:33:48.000000Z",
+        "id": "28",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:33:48.000000Z",
+        "id": "29",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:33:48.000000Z",
+        "id": "30",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:33:48.000000Z",
+        "id": "31",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:33:48.000000Z",
+        "id": "32",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:33:48.000000Z",
+        "id": "33",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:40:52.000000Z",
+        "id": "34",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:40:52.000000Z",
+        "id": "35",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:40:52.000000Z",
+        "id": "36",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:40:52.000000Z",
+        "id": "37",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:40:52.000000Z",
+        "id": "38",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:40:52.000000Z",
+        "id": "39",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:40:52.000000Z",
+        "id": "40",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:40:52.000000Z",
+        "id": "41",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:40:52.000000Z",
+        "id": "42",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:40:52.000000Z",
+        "id": "43",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:43:41.000000Z",
+        "id": "44",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:43:41.000000Z",
+        "id": "45",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:43:41.000000Z",
+        "id": "46",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:43:41.000000Z",
+        "id": "47",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:43:41.000000Z",
+        "id": "48",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:43:41.000000Z",
+        "id": "49",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:43:41.000000Z",
+        "id": "50",
+        "media_kind": "MessageMediaPhoto"
+      },
+      {
+        "date": "2026-10-03T21:45:47.000000Z",
+        "id": "51",
+        "media_kind": "MessageMediaDocument"
+      }
+    ],
+    "method": "independent direct descending history to explicit empty page; direct SDK photo bytes",
+    "selected_photo": {
+      "date": "2026-10-03T21:18:22.000000Z",
+      "id": "14",
+      "sha256": "ee515f404f8e760679cfa72d55d832a599309fc0ca1035d9acf7c719b7b6c984",
+      "size": 173837
+    }
+  },
+  "prebuild": {
+    "budget_after": {
+      "limit": 5000,
+      "used": 2254
+    },
+    "budget_before": {
+      "limit": 5000,
+      "used": 2202
+    },
+    "checks": [
+      "independent exact live IDs/dates",
+      "two real ledgers at actual SDK send",
+      "error prefix persisted/replayed/receiver committed/acknowledged",
+      "early wait has no send",
+      "test-only cap 3 to 6 preserves charges and shared policy",
+      "later real request respects pacing"
+    ],
+    "code_revision": "5382f78; unchanged Stage 5 product",
+    "history_requests": 4,
+    "measured_send_spacing": 5.325347833801061,
+    "oracle_count": 46,
+    "requested_slots": 206,
+    "result": "PASS",
+    "rpc": [
+      {
+        "answered_at": "2026-10-07T13:44:04.584901Z",
+        "kind": "GetStateRequest",
+        "monotonic": 2889206.086723791,
+        "outcome": "answered",
+        "page": null,
+        "sent_at": "2026-10-07T13:44:04.516791Z",
+        "turn": 0
+      },
+      {
+        "answered_at": "2026-10-07T13:44:04.647602Z",
+        "kind": "GetUsersRequest",
+        "monotonic": 2889206.15492325,
+        "outcome": "answered",
+        "page": null,
+        "sent_at": "2026-10-07T13:44:04.585001Z",
+        "turn": 0
+      },
+      {
+        "answered_at": "2026-10-07T13:44:04.704644Z",
+        "kind": "GetUsersRequest",
+        "monotonic": 2889206.218081583,
+        "outcome": "answered",
+        "page": null,
+        "sent_at": "2026-10-07T13:44:04.648159Z",
+        "turn": 0
+      },
+      {
+        "add_offset": 0,
+        "answered_at": "2026-10-07T13:44:04.839468Z",
+        "kind": "GetHistoryRequest",
+        "limit": 100,
+        "min_id": "0",
+        "monotonic": 2889206.276130375,
+        "offset_date": null,
+        "offset_id": "0",
+        "outcome": "answered",
+        "page": null,
+        "response_type": "ChannelMessages",
+        "returned_slots": 46,
+        "sent_at": "2026-10-07T13:44:04.706206Z",
+        "turn": 0
+      },
+      {
+        "answered_at": "2026-10-07T13:44:09.900263Z",
+        "kind": "GetUsersRequest",
+        "monotonic": 2889211.416505583,
+        "outcome": "answered",
+        "page": null,
+        "sent_at": "2026-10-07T13:44:09.846222Z",
+        "turn": 0
+      },
+      {
+        "add_offset": 0,
+        "answered_at": "2026-10-07T13:44:09.982976Z",
+        "kind": "GetHistoryRequest",
+        "limit": 100,
+        "min_id": "0",
+        "monotonic": 2889211.4732945,
+        "offset_date": null,
+        "offset_id": "1",
+        "outcome": "answered",
+        "page": null,
+        "response_type": "ChannelMessages",
+        "returned_slots": 0,
+        "sent_at": "2026-10-07T13:44:09.903379Z",
+        "turn": 0
+      },
+      {
+        "answered_at": "2026-10-07T13:44:15.068691Z",
+        "kind": "GetChannelsRequest",
+        "monotonic": 2889216.581965041,
+        "outcome": "answered",
+        "page": null,
+        "sent_at": "2026-10-07T13:44:15.012065Z",
+        "turn": 1
+      },
+      {
+        "answered_at": "2026-10-07T13:44:15.118680Z",
+        "kind": "GetUsersRequest",
+        "monotonic": 2889216.638982458,
+        "outcome": "answered",
+        "page": [
+          1,
+          1
+        ],
+        "sent_at": "2026-10-07T13:44:15.069089Z",
+        "turn": 1
+      },
+      {
+        "answered_at": "2026-10-07T13:44:15.173015Z",
+        "kind": "GetUsersRequest",
+        "monotonic": 2889216.690882958,
+        "outcome": "answered",
+        "page": [
+          1,
+          1
+        ],
+        "sent_at": "2026-10-07T13:44:15.120988Z",
+        "turn": 1
+      },
+      {
+        "add_offset": -3,
+        "answered_at": "2026-10-07T13:44:15.244308Z",
+        "kind": "GetHistoryRequest",
+        "limit": 3,
+        "min_id": "0",
+        "monotonic": 2889216.745509916,
+        "offset_date": "2026-09-28T18:05:30.000000Z",
+        "offset_id": "0",
+        "outcome": "answered",
+        "page": [
+          1,
+          1
+        ],
+        "response_type": "ChannelMessages",
+        "returned_slots": 3,
+        "sent_at": "2026-10-07T13:44:15.175604Z",
+        "turn": 1
+      },
+      {
+        "answered_at": "2026-10-07T13:44:15.299357Z",
+        "kind": "GetUsersRequest",
+        "monotonic": 2889216.817408625,
+        "outcome": "answered",
+        "page": [
+          1,
+          2
+        ],
+        "sent_at": "2026-10-07T13:44:15.247515Z",
+        "turn": 1
+      },
+      {
+        "answered_at": "2026-10-07T13:44:20.394035Z",
+        "kind": "GetChannelsRequest",
+        "monotonic": 2889221.9035345,
+        "outcome": "answered",
+        "page": null,
+        "sent_at": "2026-10-07T13:44:20.333643Z",
+        "turn": 2
+      },
+      {
+        "answered_at": "2026-10-07T13:44:20.443330Z",
+        "kind": "GetUsersRequest",
+        "monotonic": 2889221.964387375,
+        "outcome": "answered",
+        "page": [
+          2,
+          1
+        ],
+        "sent_at": "2026-10-07T13:44:20.394508Z",
+        "turn": 2
+      },
+      {
+        "answered_at": "2026-10-07T13:44:20.499060Z",
+        "kind": "GetUsersRequest",
+        "monotonic": 2889222.0158695,
+        "outcome": "answered",
+        "page": [
+          2,
+          1
+        ],
+        "sent_at": "2026-10-07T13:44:20.445987Z",
+        "turn": 2
+      },
+      {
+        "add_offset": -3,
+        "answered_at": "2026-10-07T13:44:20.576145Z",
+        "kind": "GetHistoryRequest",
+        "limit": 3,
+        "min_id": "0",
+        "monotonic": 2889222.07085775,
+        "offset_date": null,
+        "offset_id": "9",
+        "outcome": "answered",
+        "page": [
+          2,
+          1
+        ],
+        "response_type": "ChannelMessages",
+        "returned_slots": 3,
+        "sent_at": "2026-10-07T13:44:20.500974Z",
+        "turn": 2
+      },
+      {
+        "answered_at": "2026-10-07T13:44:20.637561Z",
+        "kind": "GetUsersRequest",
+        "monotonic": 2889222.149094208,
+        "outcome": "answered",
+        "page": [
+          2,
+          2
+        ],
+        "sent_at": "2026-10-07T13:44:20.579213Z",
+        "turn": 2
+      }
+    ],
+    "test_used": 6
+  }
+}

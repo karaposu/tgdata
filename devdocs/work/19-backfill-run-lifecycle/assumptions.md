@@ -1,7 +1,7 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-5-local-timing-recovery-evidence
+status: stage-6-gate-c-evidence
 ---
 # Backfill assumptions and evidence register
 
@@ -18,8 +18,10 @@ selected real source and local durable receiver. Later/deployment claims remain 
 
 Stage 5 adds [local timing/recovery evidence](stage-5-pacing-recovery/verification.md)
 at `a180151`: 32 new groups and 287 actual supported offline passes. Actual recovery
-of copied LIVE-origin records remains LOCAL. Gate C still requires Stage 6 and real
-elapsed/source/control validation; no prior evidence is relabeled as that gate.
+of copied LIVE-origin records remains LOCAL. Stage 6 adds 32 actual control groups
+(319 total supported offline passes), and [Gate C passed](validation/gate-c.md) with
+real elapsed/source/control evidence at `0d6bb26`. Earlier local evidence is not
+relabeled as live. Public/deployment integration remains for Stage 7–8/Gate D.
 
 ## Status vocabulary
 
@@ -99,11 +101,12 @@ INV-01, INV-09. **Waste if false:** revise storage boundary before delivery/cont
 **Premise:** immutable input recognition and saved boundaries preserve one run;
 absence/pruning cannot turn an unknown retry into new intent.
 **Kind/status:** OBSERVED-LOCAL for internal Stage 2 start/retry/status and OBSERVED-LIVE
-for saved-query reuse after process restart at Gate A. Later operations remain unverified.
+for saved-query reuse after process restart at Gate A. Gate C adds actual produced
+successors, retained/pruned creation recognition and equal-hash receipt isolation.
 **Evidence now:** test_24 at `1425fd7` preserves dates and identity across reopen, lost
 reply and a forbidden retry clock; changed requests conflict and unknown retries refuse.
-Successor/pruned recognition uses explicitly seeded terminal snapshots. It does not
-prove the later completion/control transitions that will produce those snapshots.
+Earlier successor/pruned checks used seeded terminal snapshots. Stage 6/Gate C now
+produce those histories through actual controls, receiver acceptance and succession.
 **Falsifier:** retry observes a new clock, accepts changed settings, silently resets
 missing known state or creates from an unrecognized recovery request.
 **Cheapest earlier check:** Stage 2 start/reopen with actual storage and forbidden clock
@@ -160,8 +163,8 @@ from admission and durable result settlement sufficiently to enforce this contra
 OBSERVED-LOCAL for the new durable admission/settlement and cancellation boundaries
 in Stage 3, plus actual live new-engine attempts/settlement at Gate B, including a
 100-record interrupted prefix and preserved unresolved post-answer crash. Explicit
-recovery and timing now have Stage 5 LOCAL evidence; live composition/controls remain
-UNVERIFIED for Gate C.
+recovery and timing have Stage 5 LOCAL evidence and Gate C OBSERVED-LIVE composition
+with controlled local result barriers and owned source/recovery process exits.
 **Falsifier:** source activity occurs before durable admission, another read overlaps
 unresolved activity, or a late result cannot be attributed to its original attempt.
 **Cheapest earlier check:** characterize actual existing raw read at Gate A, including
@@ -177,8 +180,9 @@ B delivery boundaries and C full recovery. No claim a bounded batch bounds wall 
 within-process monotonic evidence and persistent UTC are not confused.
 **Kind/status:** OBSERVED-LOCAL through Stage 5 for independent UTC/monotonic clocks,
 positive/zero/sub-microsecond pacing, early/late ack, reopen, clock faults, actual
-measured local elapsed time and recovery commit boundaries. Deployment/live timing
-remains UNVERIFIED for Gate C; trusted UTC after local context loss remains required.
+measured local elapsed time and recovery commit boundaries. Gate C adds OBSERVED-LIVE
+5/8-second pacing across failure/restart/early/late ack and recovery. Trusted UTC after
+local context loss and deployment time qualification remain required.
 **Falsifier:** known wait shortens/restarts after observation-only calls, or contradictory
 clock evidence is converted to ready. Arbitrary unobservable jumps remain outside proof.
 **Cheapest earlier check:** injected independent clock readings locally, plus real elapsed
@@ -195,8 +199,10 @@ a saved retry hint cannot grant or reserve capacity.
 at Gates A/B, including cancellation/refused-send charges. Gate B reused the unchanged
 ledger and retained charges under controlled local failures; usage ended at 2202/5000.
 Stage 5 adds LOCAL actual-adapter prefixes, indefinite/expired hints, fresh account
-switch and preserved cancelled charges. Actual live quota/warm-up/expiry and timing/
-status integration remain UNVERIFIED for C.
+switch and preserved cancelled charges. Gate C OBSERVED-LIVE test-cap exhaustion,
+usable/empty prefixes and timing/control integration passed. Test cap 3 → 6 preserved
+charges and the authoritative 5,000 policy; current usage is 2,334. Natural expiry/
+warm-up remain deterministic offline evidence, not an induced live server restriction.
 **Falsifier:** refused message traffic is sent, retries bypass charging, cached health
 identity bills the wrong account, or local lifecycle code refunds old charges.
 **Cheapest earlier check:** small local test allowance with actual bounded source reads,
@@ -211,13 +217,14 @@ before then, actual accounting observed at Gate A/B and full lifecycle wait at G
 **Premise:** creation mode, expected predecessor, prepare cursor/control context and
 accepted command/receipt scope prevent old calls from acquiring new effects.
 **Kind/status:** OBSERVED-LOCAL for creation plus Stage 3 context/receipt scoping,
-stale rejection, latest/prior recognition and compatible settlement. Control/recovery
-operations retain later live/control evidence. Stage 5 now proves LOCAL recovery
+stale rejection, latest/prior recognition and compatible settlement. Stage 6/Gate C
+add actual control/recovery/terminal/retention orderings with live-origin data, including
+old resume after newer pause and equal-hash successors. Stage 5 proves LOCAL recovery
 identity, retained retries, changed-input/control conflict and replacement-attempt
 isolation. Gate B observed actual live-data wrong-scope/equal-hash
 receipt refusal, duplicate latest ack with newer pending, old receipt refusal and stale
 prepare after progress. The Stage 1 counterexamples
-motivated the mechanism; tests_24/25 now supply scoped implementation evidence.
+motivated the mechanism; tests 24–28 and Gates A/B/C supply scoped implementation evidence.
 **Falsifier:** delayed prepare reads after an already-accepted cursor/control change;
 old resume overrides pause; unknown start creates; wrong-run receipt advances progress.
 **Cheapest earlier check:** current/future-state operation-order cases with actual
@@ -234,8 +241,10 @@ an uncertain attempt; the library can reject a still-active local attempt.
 **Kind/status:** caller ownership policy selected; Stage 5 OBSERVED-LOCAL exact recovery,
 required true assertion, active local-read/admission/publication refusal and owned
 subprocess exit/commit boundaries. Copied actual Gate B unknown records also recover
-without mutating originals. Cross-process caller ownership and live full recovery
-remain UNVERIFIED for Gate C/deployment. No leases are provided.
+without mutating originals. Gate C OBSERVED-LIVE/INJECTED source exit, parent wait,
+recovery commit/reply loss and stable conservative deadline passed; active local
+preparation refused recovery. Deployment ownership remains the caller's precondition.
+No leases are provided.
 **Falsifier:** recovery is admitted while an earlier source worker remains active, or
 elapsed time alone is used as proof of death.
 **Cheapest earlier check:** controlled subprocess kill + wait-for-exit and recovery;
@@ -254,7 +263,9 @@ and selected media before the reader under test runs.
 and selected photo hash; Gate B requalified the 350-record interval, independently
 checked the same photo, and confirmed the 46-record source again after measurement.
 The first source was too small for an SDK page; a second
-user-selected existing source supplied that missing case. Read-only scope was retained.
+user-selected existing source supplied that missing case. Gate C independently
+requalified the 46-record view/photo before measured lifecycle reads; exact prefixes
+and media matched. Read-only scope was retained.
 **Falsifier:** expected results come only from the tested function, enumerate only a
 sample while claiming completeness, omit required page/boundary cases, or drift during
 measurement without an independent explanation.
@@ -271,8 +282,9 @@ records completeness and drift. **Coverage:** C40–C42; INV-01, INV-04, INV-11.
 **Premise:** new runtime APIs keep daily/window state and batch v1 unchanged, and local
 status/control/replay/ack do not become Telegram health observations.
 **Kind/status:** OBSERVED-LOCAL for namespace refusal, Stage 3 local prepare/replay/ack
-health isolation and supported regressions through `a180151` (287 actual passes),
-including local waits/recovery without invented health or account identity.
+health isolation and supported regressions through `0d6bb26` (319 actual passes),
+including actual controls and local waits/recovery without invented health/account
+identity. Gate C traced no RPC attributable to intervening local operations.
 Gate B local restart workers blocked sockets while settling live-data receipts;
 public facade/integration remains UNVERIFIED for D.
 **Falsifier:** legacy inputs/state change behavior, wrong-kind state is accepted, local
@@ -289,12 +301,12 @@ Stage 7; local checks as changed, integration Gate D.
 | Input | Current status | Owner | Required by |
 |---|---|---|---|
 | Existing group and read-only test approach | SELECTED by user | Maintainer | All gates |
-| Specific canonical group ID and approved account/session/config label | DONE for A/B; two user-selected existing sources and verified project login; credentials omitted | Maintainer | Gate A |
-| Existing closed interval, independent complete ID/date oracle and source/view metadata | DONE for A/B; frozen before tested reads, archived in gate evidence | Maintainer + implementer | Gate A |
-| Existing media fixture and independent hashes for advertised download mode | DONE for A/B; independent hash and actual receiver copy agree | Maintainer + implementer | A/B |
-| Source request allowance, external harness spacing and test budget path | DONE for A/B; 5,000 cap, 2,202 charged, no reset; paths retained privately | Maintainer + implementer | Gate A |
+| Specific canonical group ID and approved account/session/config label | DONE for A/B/C; two user-selected existing sources and verified project login; credentials omitted | Maintainer | Gate A |
+| Existing closed interval, independent complete ID/date oracle and source/view metadata | DONE for A/B/C; frozen before tested reads, archived in gate evidence | Maintainer + implementer | Gate A |
+| Existing media fixture and independent hashes for advertised download mode | DONE for A/B/C; independent hash and actual receiver copy agree | Maintainer + implementer | A/B |
+| Source request allowance, external harness spacing and test budget path | DONE for A/B/C; 5,000 cap, 2,334 charged after C, no reset; paths retained privately | Maintainer + implementer | Gate A |
 | Actual state backend/integration base containing #18 foundations | DONE: real SQLite, feature-only merge `5d0789e`, isolated live-case stores | Maintainer + implementer | Stage 2/Gate A |
-| Durable test receiver and declared commit/ack point | DONE for B: actual SQLite transaction after verified durable blob custody; Gate B PASS | Implementer/integrator | Gate B |
+| Durable test receiver and declared commit/ack point | DONE for B/C: actual SQLite transaction after verified durable blob custody; Gates B/C PASS | Implementer/integrator | Gate B |
 | Operational receiver, worker ownership and clock assumptions | UNSET | Integrator | Gate D/adoption |
 
 Gate reports transition evidence states only after running the named checks. A blocked

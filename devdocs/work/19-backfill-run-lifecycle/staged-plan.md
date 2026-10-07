@@ -1,6 +1,6 @@
 ---
 status: draft
-revision: 8
+revision: 9
 model: gpt-6-astra
 effort: max
 ---
@@ -121,6 +121,23 @@ was a test invocation catching synchronous TypeError with an async helper; expec
 refusal was unchanged and no runtime correction was needed. Actual recover/retry on
 two disposable copies of Gate B unknown records passed without changing originals or
 the real budget. No new Telegram traffic or Gate C claim. **Next: Stage 6, then Gate C.**
+
+## Stage 6 and Gate C handoff — revision 9
+
+Stage 6 is complete at `0d6bb26`: [implementation](stage-6-controls/implementation.md),
+[verification](stage-6-controls/verification.md), [folded plan](stage-6-controls/step_by_step_impl_plan.md).
+Exact operator controls preserve admitted work, pending delivery, pacing and first
+terminal outcome. Explicit abandonment records withdrawal without accepting data;
+new succession requires terminal/quiescent/settled state and protects full receipt scope.
+The existing strict v1 aggregate and settlement paths are reused.
+
+[Mandatory Gate C PASSED](validation/gate-c.md): 13 worker actions plus a separate
+prebuild experiment, 23 history requests/442 requested slots within a 1,000 ceiling.
+Actual account policy stayed 5,000/day; usage 2,202 → 2,334. Real timing, allowance
+exhaustion, stopped-worker recovery/lost replies and required control/terminal/receipt
+orderings passed. All 319 supported offline checks passed; three legacy live skips
+remain explicit. The original Gate B unknown records are unchanged. **Next: Stage 7.**
+Earlier handoffs above describe their historical checkpoints; Gate D remains pending.
 
 ## What is the task
 
@@ -723,6 +740,8 @@ ReadBudget, BudgetClientMixin, SDK retries/waits, trustworthy time, source owner
 
 ## Stage 6 — Preserve operator intent through concurrent settlement
 
+**Built/verified at `0d6bb26`; Gate C PASS.** See the scoped handoff above.
+
 ### Proposed changes
 
 **6.1 — Implement pause/resume as accepted control commands.** Persist command identity
@@ -782,6 +801,8 @@ CAS reconciliation, control revisions, terminal outcomes, artifact custody, comm
 5/5. This is the main temporal-race stage, not a cosmetic status feature.
 
 ## Gate C — Validate pacing, recovery and controls before Stage 7
+
+**PASS on 2026-10-07 at `0d6bb26`.** [Actual evidence and limits](validation/gate-c.md).
 
 **Premises under test:** saved timing limits source activity; actual SDK behavior
 fits the attempt boundary; controls and delayed results preserve accepted intent.
