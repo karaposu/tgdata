@@ -359,8 +359,10 @@ older seeded fixtures remain preservation tests only.
 
 Gates A/B passed the selected real-source foundation and delivery/completion composition
 on the issue branch. Gate C subsequently passed actual pacing/budget/recovery/control
-composition at Stage 6. Stage 7 adds the public facade; full public/live Gate D remains
-after Stage 8. These offline checks alone pass no live gate.
+composition at Stage 6. Stages 7–8 add public facade and combined failure tests.
+The separate public/live Gate D passed on 2026-10-07 with actual Telegram, SQLite
+and the selected byte/snapshot receiver. These offline checks alone do not establish
+live behavior or another deployment's guarantees.
 
 The issue branch retains the opt-in `devdocs/work/19-backfill-run-lifecycle/live_probe.py`
 instrument and its input specification. This is staged development tooling, not an

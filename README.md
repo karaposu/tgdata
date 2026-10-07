@@ -729,8 +729,10 @@ separate namespaces in one database.
 
 See [Backfill runs](docs/backfill_runs.md) for all six operations, status/error meanings,
 exact retries, operator controls and recovery. Run the real SQLite receiver/restart
-example without Telegram: `python examples/backfill_runs.py --demo`. The public API's
-offline checks are available; full public/live Gate D remains a later validation gate.
+example without Telegram: `python examples/backfill_runs.py --demo`. The public API
+passed offline fault tests and read-only live validation with Telethon 1.45.0, SQLite
+and the selected test receiver. Your deployment must establish its own receiver
+durability, reliable clock and single-reader ownership.
 
 ### Detecting & Downloading Media (photos / videos)
 

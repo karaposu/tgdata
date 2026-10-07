@@ -329,8 +329,8 @@ provenance. The SDK transport is synthetic; SQLite and receiver transactions are
 The example exits an owned process after receiver acceptance, reopens/replays without
 a source call, deduplicates complete observations, separates daily/history namespaces
 and completes after ack. Completed repeats have zero source reads; missing known state
-and repeated provisioning refuse. Sockets are blocked. Public/live Gate D remains after
-Stage 8; this suite does not claim deployment or Telegram behavior from synthetic inputs.
+and repeated provisioning refuse. Sockets are blocked. The separate Stage 8 public/live
+Gate D passed; this suite itself does not infer Telegram behavior from synthetic inputs.
 
 ### Test 30: combined public backfill failures (Stage 8, offline)
 
@@ -346,5 +346,6 @@ transactions precede acknowledgments. Additional histories cover source errors w
 failed publication, cancelled replies, late final data, opposing controls, identical
 successor batches, missing/corrupt media after acceptance and storage cleanup errors.
 Sockets are forbidden. These process tests do not simulate a disk power failure or
-certify another backend. Mandatory real public Gate D is recorded separately in
-`devdocs/work/19-backfill-run-lifecycle/validation/gate-d.md` when executed.
+certify another backend. Mandatory real public Gate D passed on 2026-10-07 with the
+selected SQLite/receiver composition; its feature-branch evidence is recorded in
+`devdocs/work/19-backfill-run-lifecycle/validation/gate-d.md`.

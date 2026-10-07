@@ -7,8 +7,10 @@ historical jobs. tgdata does not run a background scheduler or choose another ac
 
 The public API is available through `TgData(backfill_store=...)`. Existing daily
 continuation, fixed-window calls and MessageBatch v1 keep their behavior. This interface
-is verified with Telethon **1.45.0**; the issue's full public/live Gate D remains a
-separate validation step after Stage 8.
+is verified with Telethon **1.45.0**. The complete public flow passed read-only live
+Gate D on 2026-10-07 with SQLite and a selected durable test receiver, including real
+pagination, daily/history separation, recovery, controls and photo custody. This
+evidence does not certify a different receiver, backend, clock or worker deployment.
 
 | Operation | Returns | Source behavior |
 |---|---|---|
@@ -312,5 +314,8 @@ explicit inspection; retained command contexts are never silently rewritten to f
 Close TgData connections when done and retain your chosen state/artifact storage.
 
 Run `python -m tgdata.smoke_tests.test_29_backfill_public` for the offline public/example
-checks. Earlier internal checks remain in tests 24–28. Real public-flow validation is
-Gate D after Stage 8; offline success alone does not pass it.
+checks, and `python -m tgdata.smoke_tests.test_30_backfill_integration` for combined
+public failures and actual process exits around nine SQLite commit boundaries.
+Earlier internal checks remain in tests 24–28. Gate D separately exercised the real
+public source/backend/receiver composition; synthetic tests alone do not establish
+Telegram behavior or operational receiver durability.
