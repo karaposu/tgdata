@@ -31,6 +31,12 @@ ledgers stay authoritative, test-only increase retains charges, premature prepar
 does no source work, and real codec accepts all legal candidates/refuses invalid
 retirement. Controlled fault boundaries retain conservative charges.
 
+Result: PASS — 2026-10-07. Seven local actual-codec/SDK/ledger checks passed.
+The real 46-message oracle matched both three-message prefixes; 206 requested slots
+in four history calls, 5.3253478338 seconds between budgeted source sends, no early
+send, and test cap 3 → 6 retained all charges. Shared policy stayed 5,000; actual
+usage 2,202 → 2,254. No product code changed. See `prebuild-results.json`.
+
 ## High-level summary
 
 The transition design fits the existing aggregate and reuses the appropriate

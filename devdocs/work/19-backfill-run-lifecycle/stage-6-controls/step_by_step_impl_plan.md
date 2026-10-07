@@ -1,9 +1,13 @@
 ---
 model: gpt-6-astra
 effort: max
-revision: 1
+revision: 2
 ---
 # Stage 6 — controls, late settlement and retirement
+
+**Critic folded:** 2026-10-07 — 2 robust mitigations, 1 step changed, 0 added.
+The required experiment ran before Step 1 and PASSED (7 local checks plus the actual
+source/ledger prefix and pacing observations). See [critic](critic.md).
 
 Baseline `1896820`; description `8c0060d`. Same-session warmed context and the
 completed lifecycle traverse are retained. Telethon 1.45.0 only. No rejected PR
@@ -273,7 +277,7 @@ Supported SDK/runtime, staged interface availability, auditable artifact separat
 
 3/5.
 
-## Step 6 — Mandatory real Gate C
+## Step 6 — Mandatory real Gate C [folded: Risk 1, robust; Risk 2, robust]
 
 ### Proposed changes
 
@@ -287,7 +291,9 @@ private SQLite/media/receiver state. Never alter Gate A/B originals or unresolve
 Test-only allowance composition: two actual ReadBudget ledgers. Existing 5,000/day
 account policy remains authoritative. A separate cap (initially 3, then 6) may only
 restrict it. `.status` returns the actual status with the smaller remaining allowance;
-`._reserve` claims primary then test ledger and returns both real reservation objects;
+`._reserve` claims primary then test ledger and returns an immutable test-only composite
+reservation exposing both actual claims and their equal `amount`, as consumed by the
+real SDK adapter; execute that complete consumer, including oversized replies;
 `._settle` settles both. If the second reservation/settlement fails, retain any first
 charge conservatively, never reset/refund unknown source outcomes. Existing actual-send
 adapter receives the composition; reconfiguration applies only to the test ledger and
@@ -296,7 +302,12 @@ locally, then actual exhaustion/prefix/re-admission live. Never label cap increa
 natural rolling expiry. Test natural expiry separately with deterministic clocks.
 
 Bound Stage 6 live traffic, including a prebuild experiment, to at most 1,000 requested
-history slots and 4 MiB downloaded media per selected case, with a 180-second case
+history slots and 4 MiB downloaded media per selected case. Persist a fixed slot
+allocation for every launch (including prebuild and reruns) before it starts; their
+sum must never exceed 1,000. Each worker guard enforces that allocation. Crashes
+consume their full allocation; never reclaim uncertain capacity. Persist diagnostic
+send admission before awaiting the response. The prebuild already allocated 250
+slots and observed 206. Use a 180-second case
 deadline, sequential source workers and guard limits. Stop on unexpected view/account,
 FloodWait, logout, malformed data or exhausted authoritative allowance. Source pacing
 uses a small explicit 5–8 second run policy; this validates the same rule as offline

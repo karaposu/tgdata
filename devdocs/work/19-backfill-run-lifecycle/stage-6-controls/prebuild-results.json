@@ -1,0 +1,228 @@
+{
+  "budget_after": {
+    "limit": 5000,
+    "used": 2254
+  },
+  "budget_before": {
+    "limit": 5000,
+    "used": 2202
+  },
+  "checks": [
+    "independent exact live IDs/dates",
+    "two real ledgers at actual SDK send",
+    "error prefix persisted/replayed/receiver committed/acknowledged",
+    "early wait has no send",
+    "test-only cap 3 to 6 preserves charges and shared policy",
+    "later real request respects pacing"
+  ],
+  "code_revision": "5382f78; unchanged Stage 5 product",
+  "history_requests": 4,
+  "local_checks": "7/7 actual codec/SQLite/SDK/ledger/allocation checks",
+  "measured_send_spacing": 5.325347833801061,
+  "oracle_count": 46,
+  "pre_execution_instrument_corrections": [
+    "Use the existing interrupted stop label, not error, before the live run.",
+    "Set the restrictive budget on the engine factory as well as the existing client."
+  ],
+  "requested_slots": 206,
+  "result": "PASS",
+  "rpc": [
+    {
+      "answered_at": "2026-10-07T13:44:04.584901Z",
+      "kind": "GetStateRequest",
+      "monotonic": 2889206.086723791,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T13:44:04.516791Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T13:44:04.647602Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2889206.15492325,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T13:44:04.585001Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T13:44:04.704644Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2889206.218081583,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T13:44:04.648159Z",
+      "turn": 0
+    },
+    {
+      "add_offset": 0,
+      "answered_at": "2026-10-07T13:44:04.839468Z",
+      "kind": "GetHistoryRequest",
+      "limit": 100,
+      "min_id": "0",
+      "monotonic": 2889206.276130375,
+      "offset_date": null,
+      "offset_id": "0",
+      "outcome": "answered",
+      "page": null,
+      "response_type": "ChannelMessages",
+      "returned_slots": 46,
+      "sent_at": "2026-10-07T13:44:04.706206Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T13:44:09.900263Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2889211.416505583,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T13:44:09.846222Z",
+      "turn": 0
+    },
+    {
+      "add_offset": 0,
+      "answered_at": "2026-10-07T13:44:09.982976Z",
+      "kind": "GetHistoryRequest",
+      "limit": 100,
+      "min_id": "0",
+      "monotonic": 2889211.4732945,
+      "offset_date": null,
+      "offset_id": "1",
+      "outcome": "answered",
+      "page": null,
+      "response_type": "ChannelMessages",
+      "returned_slots": 0,
+      "sent_at": "2026-10-07T13:44:09.903379Z",
+      "turn": 0
+    },
+    {
+      "answered_at": "2026-10-07T13:44:15.068691Z",
+      "kind": "GetChannelsRequest",
+      "monotonic": 2889216.581965041,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T13:44:15.012065Z",
+      "turn": 1
+    },
+    {
+      "answered_at": "2026-10-07T13:44:15.118680Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2889216.638982458,
+      "outcome": "answered",
+      "page": [
+        1,
+        1
+      ],
+      "sent_at": "2026-10-07T13:44:15.069089Z",
+      "turn": 1
+    },
+    {
+      "answered_at": "2026-10-07T13:44:15.173015Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2889216.690882958,
+      "outcome": "answered",
+      "page": [
+        1,
+        1
+      ],
+      "sent_at": "2026-10-07T13:44:15.120988Z",
+      "turn": 1
+    },
+    {
+      "add_offset": -3,
+      "answered_at": "2026-10-07T13:44:15.244308Z",
+      "kind": "GetHistoryRequest",
+      "limit": 3,
+      "min_id": "0",
+      "monotonic": 2889216.745509916,
+      "offset_date": "2026-09-28T18:05:30.000000Z",
+      "offset_id": "0",
+      "outcome": "answered",
+      "page": [
+        1,
+        1
+      ],
+      "response_type": "ChannelMessages",
+      "returned_slots": 3,
+      "sent_at": "2026-10-07T13:44:15.175604Z",
+      "turn": 1
+    },
+    {
+      "answered_at": "2026-10-07T13:44:15.299357Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2889216.817408625,
+      "outcome": "answered",
+      "page": [
+        1,
+        2
+      ],
+      "sent_at": "2026-10-07T13:44:15.247515Z",
+      "turn": 1
+    },
+    {
+      "answered_at": "2026-10-07T13:44:20.394035Z",
+      "kind": "GetChannelsRequest",
+      "monotonic": 2889221.9035345,
+      "outcome": "answered",
+      "page": null,
+      "sent_at": "2026-10-07T13:44:20.333643Z",
+      "turn": 2
+    },
+    {
+      "answered_at": "2026-10-07T13:44:20.443330Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2889221.964387375,
+      "outcome": "answered",
+      "page": [
+        2,
+        1
+      ],
+      "sent_at": "2026-10-07T13:44:20.394508Z",
+      "turn": 2
+    },
+    {
+      "answered_at": "2026-10-07T13:44:20.499060Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2889222.0158695,
+      "outcome": "answered",
+      "page": [
+        2,
+        1
+      ],
+      "sent_at": "2026-10-07T13:44:20.445987Z",
+      "turn": 2
+    },
+    {
+      "add_offset": -3,
+      "answered_at": "2026-10-07T13:44:20.576145Z",
+      "kind": "GetHistoryRequest",
+      "limit": 3,
+      "min_id": "0",
+      "monotonic": 2889222.07085775,
+      "offset_date": null,
+      "offset_id": "9",
+      "outcome": "answered",
+      "page": [
+        2,
+        1
+      ],
+      "response_type": "ChannelMessages",
+      "returned_slots": 3,
+      "sent_at": "2026-10-07T13:44:20.500974Z",
+      "turn": 2
+    },
+    {
+      "answered_at": "2026-10-07T13:44:20.637561Z",
+      "kind": "GetUsersRequest",
+      "monotonic": 2889222.149094208,
+      "outcome": "answered",
+      "page": [
+        2,
+        2
+      ],
+      "sent_at": "2026-10-07T13:44:20.579213Z",
+      "turn": 2
+    }
+  ],
+  "test_used": 6
+}
