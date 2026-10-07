@@ -1,0 +1,228 @@
+{
+  "product": "17fccbc",
+  "actual_offline_passes": 342,
+  "legacy_live_skips": 3,
+  "telethon": "1.45.0",
+  "runtime": "3.11.10",
+  "grammar": "Python 3.7 grammar passed for 56 files; no 3.7 execution claim",
+  "local_prebuild_checks": 7,
+  "qualified_example_classes_identical": true,
+  "gate_d": "pending after Stage 8",
+  "results": [
+    {
+      "name": "test_29_backfill_public",
+      "reported": [
+        23,
+        23
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 23/23"
+      ]
+    },
+    {
+      "name": "test_28_backfill_controls",
+      "reported": [
+        32,
+        32
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 32/32"
+      ]
+    },
+    {
+      "name": "test_27_backfill_pacing",
+      "reported": [
+        32,
+        32
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 32/32"
+      ]
+    },
+    {
+      "name": "test_26_backfill_completion",
+      "reported": [
+        16,
+        16
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 16/16"
+      ]
+    },
+    {
+      "name": "test_25_backfill_delivery",
+      "reported": [
+        41,
+        41
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 41/41"
+      ]
+    },
+    {
+      "name": "test_24_backfill_state",
+      "reported": [
+        23,
+        23
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 23/23"
+      ]
+    },
+    {
+      "name": "test_23_fixed_windows",
+      "reported": [
+        22,
+        22
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 22/22"
+      ]
+    },
+    {
+      "name": "test_22_daily_continuation",
+      "reported": [
+        25,
+        25
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 25/25"
+      ]
+    },
+    {
+      "name": "test_19_message_batches",
+      "reported": [
+        33,
+        33
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 33/33"
+      ]
+    },
+    {
+      "name": "test_18_read_budget",
+      "reported": [
+        28,
+        28
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 28/28"
+      ]
+    },
+    {
+      "name": "test_17_session_store",
+      "reported": [
+        12,
+        12
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 12/12"
+      ]
+    },
+    {
+      "name": "test_16_health_events",
+      "reported": [
+        21,
+        21
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 21/21"
+      ]
+    },
+    {
+      "name": "test_15_login_checks",
+      "reported": [
+        11,
+        11
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 11/11"
+      ]
+    },
+    {
+      "name": "test_14_flood_threshold",
+      "reported": [
+        11,
+        11
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 11/11"
+      ]
+    },
+    {
+      "name": "test_13_device_identity",
+      "reported": [
+        6,
+        6
+      ],
+      "live_skips": 1,
+      "summary": [
+        "Passed: 6/6"
+      ]
+    },
+    {
+      "name": "test_12_proxy",
+      "reported": [
+        7,
+        7
+      ],
+      "live_skips": 2,
+      "summary": [
+        "Passed: 7/7"
+      ]
+    },
+    {
+      "name": "test11_helpers",
+      "reported": [
+        2,
+        2
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 2/2 explicitly awaited offline helpers"
+      ]
+    },
+    {
+      "name": "daily_example",
+      "reported": null,
+      "live_skips": 0,
+      "summary": [
+        "Stored messages: 4",
+        "Acknowledged through: 104"
+      ]
+    },
+    {
+      "name": "backfill_example",
+      "reported": null,
+      "live_skips": 0,
+      "summary": [
+        "{\"backfill\": \"completed\", \"cancelled_successor\": \"cancelled\", \"daily_after_id\": 105, \"historical_after_id\": 104, \"receipts\": 3, \"replay_source_reads\": 0, \"source_reads\": 3, \"unique_messages\": 5}"
+      ]
+    },
+    {
+      "name": "gate_a_instrument",
+      "reported": [
+        10,
+        10
+      ],
+      "live_skips": 0,
+      "summary": [
+        "Passed: 10/10; LOCAL/INJECTED only, no live gate"
+      ]
+    }
+  ]
+}

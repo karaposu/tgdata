@@ -1,6 +1,6 @@
 ---
 status: draft
-revision: 9
+revision: 10
 model: gpt-6-astra
 effort: max
 ---
@@ -138,6 +138,22 @@ exhaustion, stopped-worker recovery/lost replies and required control/terminal/r
 orderings passed. All 319 supported offline checks passed; three legacy live skips
 remain explicit. The original Gate B unknown records are unchanged. **Next: Stage 7.**
 Earlier handoffs above describe their historical checkpoints; Gate D remains pending.
+
+## Stage 7 implementation handoff — revision 10
+
+Stage 7 is complete at `17fccbc`: [implementation](stage-7-public-api/implementation.md),
+[verification](stage-7-public-api/verification.md), [folded plan](stage-7-public-api/step_by_step_impl_plan.md).
+The six typed TgData operations retain persistent engines, exact context and the existing
+raw-source health owner. Public values/errors and honest status semantics are documented.
+A real application SQLite example isolates daily/history progress, keeps full snapshots
+per receipt, survives an owned process exit before ack, and repeats completed work with
+zero source calls. Its source is explicitly synthetic, not a Telegram qualification.
+
+All 23 public/example groups and 342 actual supported offline checks passed, with three
+legacy live skips, ten guard checks and both examples. The required seven-check real
+namespace/receiver prebuild passed before product edits. Two health-test field/verdict
+references were corrected; no product repair was needed. **Next: Stage 8, then mandatory
+Gate D.** Gate C remains scoped to `0d6bb26`; no new live reads or policy changes occurred.
 
 ## What is the task
 
@@ -836,6 +852,9 @@ control/terminal outcome. Unknown outcomes remain visible instead of silently re
 reopen Gate B if delivery or completion semantics changed.
 
 ## Stage 7 — Expose the lifecycle through a small public API
+
+**Built/verified offline at `17fccbc`.** [Public API and example evidence](stage-7-public-api/verification.md).
+Stage 8/Gate D remain pending.
 
 ### Proposed changes
 

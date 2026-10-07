@@ -1,19 +1,19 @@
 # Backfill run lifecycle — issue #19
 
-**Stages 1–6 are built; Gates A/B/C passed.** Product `0d6bb26` adds exact
-pause/resume/cancel/abandon, preserves admitted delivery and terminal order, and protects
-successor/receipt scope. Verification passed 319 actual offline checks (three explicit
-legacy live skips), plus guard checks and mandatory real Gate C. **Next: Stage 7 —
-the public API, status documentation and durable-receiver example.** Stage 8/Gate D
-and whole-feature review remain pending.
+**Stages 1–7 are built; Gates A/B/C passed.** Product `17fccbc` adds the six public
+TgData operations, typed exports, public documentation and an offline durable receiver/
+restart example. Verification passed 342 actual offline checks (three explicit legacy
+live skips), ten guard checks and both examples. **Next: Stage 8 — combined validation
+and review preparation, followed by mandatory real public-flow Gate D.** No Stage 7
+Telegram traffic or new live-gate claim is implied.
 
 This branch starts from dev `45bab71` and incorporates #18 through `e9b5154` in
 feature-only merge `5d0789e`. This does not merge or approve #18 into dev. Stage 2
-product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd`; Stage 4 adds `b1f6495`; Stage 5 adds `a180151`; Stage 6 adds `0d6bb26`.
+product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd`; Stage 4 adds `b1f6495`; Stage 5 adds `a180151`; Stage 6 adds `0d6bb26`; Stage 7 adds `17fccbc`.
 
 - [Contract](contract.md): operations, identity, retry/conflict/durability and state rules.
 - [Assumptions](assumptions.md): what is selected, observed or still unverified.
-- [Acceptance matrix](acceptance-matrix.md): 44 cases with scoped Stage 2/Gate A/Stage 3 evidence.
+- [Acceptance matrix](acceptance-matrix.md): 44 cases with evidence through Gate C and scoped Stage 7 public checks.
 - [Live validation](live-validation.md): existing group, read-only, mandatory Gates A–D.
 - [Staged plan](staged-plan.md): the whole feature's eight stages and four gates.
 - [Stage 1 implementation](stage-1-contract/implementation.md) and
@@ -38,13 +38,19 @@ product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd
   offline passes, real prebuild falsifier and 13 Gate C worker actions.
 - [Gate C report](validation/gate-c.md): actual allowance exhaustion, measured restart/
   recovery waits, lost replies, forced operator/terminal orderings and equal-hash successors.
-- [Available staged usage](../../../docs/backfill_state.md) and
+- [Stage 7 implementation](stage-7-public-api/implementation.md) and
+  [verification](stage-7-public-api/verification.md): 23 public/example groups, 342
+  supported offline passes, actual application namespace/receiver prebuild and process restart.
+- [Public backfill API](../../../docs/backfill_runs.md) and
+  [offline example](../../../examples/backfill_runs.py).
+- [Internal state reference](../../../docs/backfill_state.md) and
   [probe usage](stage-2-state/probe-usage.md).
 - [Gate A report](validation/gate-a.md): seven live comparisons, two controlled
   interruptions, 23 repeated state tests and 10 instrument checks; all passed.
 
 [Issue #19](https://github.com/karaposu/tgdata/issues/19) tracks this lifecycle slice of
-#18. Stage 7 is next; no PR or merge is implied. Gate C private records remain under
+#18. Stage 8/Gate D are next; no PR or merge is implied. Gate C private records remain under
 `/private/tmp/tgdata19-gate-c-live-20261007`. Both original Gate B unknown-state files
 remain byte-identical to their earlier hashes. Reuse the existing Gate A ledger for
-later live work: its policy remains 5,000/day and usage after Stage 6 is 2,334.
+later live work: its policy remains 5,000/day and last observed usage after Stage 6
+is 2,334. Stage 7 did not connect to Telegram or mutate that ledger.

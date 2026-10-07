@@ -1,7 +1,7 @@
 ---
 model: gpt-6-astra
 effort: max
-status: gates-a-b-c-pass-gate-d-pending
+status: stage-7-offline-verified-gate-d-pending
 ---
 # Read-only live validation specification
 
@@ -197,8 +197,8 @@ scope completes. **Advance:** permits Stage 5. Reopen A if source interpretation
 
 **PASS on 2026-10-07 at `0d6bb26`.** [Gate C report](validation/gate-c.md) covers
 all required matrix orderings, actual timing/budget/recovery composition and audit.
-The existing 5,000/day ledger remains authoritative; usage is now 2,334. Local clock
-and copied-state checks remain separately labeled. Stage 7 may begin when requested.
+The existing 5,000/day ledger remains authoritative; usage at Gate C was 2,334. Local clock
+and copied-state checks remain separately labeled. Stage 7 subsequently completed offline at `17fccbc`; Gate D remains pending.
 
 **Entry:** Gate B PASS and Stages 5–6; actual pacing/recovery/controls, exclusive test reader.
 
@@ -219,6 +219,10 @@ without new source permission, and uncertainty stays visible. **Advance:** permi
 Reopen B if delivery/completion/authority changes invalidate its evidence.
 
 ## 8. Gate D — complete public flow
+
+**Pending.** Stage 7 public API/example is offline verified at `17fccbc`; Stage 8
+combined checks and the actual public source/backend/receiver run still must execute.
+No Stage 7 synthetic-source result passes this gate or refreshes account availability.
 
 **Entry:** Gate C PASS and Stages 7–8; the chosen public API/backend/receiver composition.
 

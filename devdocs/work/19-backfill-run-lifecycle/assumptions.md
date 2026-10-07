@@ -1,7 +1,7 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-6-gate-c-evidence
+status: stage-7-public-local-evidence-gate-d-pending
 ---
 # Backfill assumptions and evidence register
 
@@ -22,6 +22,12 @@ of copied LIVE-origin records remains LOCAL. Stage 6 adds 32 actual control grou
 (319 total supported offline passes), and [Gate C passed](validation/gate-c.md) with
 real elapsed/source/control evidence at `0d6bb26`. Earlier local evidence is not
 relabeled as live. Public/deployment integration remains for Stage 7–8/Gate D.
+
+Stage 7 adds OBSERVED-LOCAL public facade/receiver evidence at `17fccbc`: 23 new
+public/example groups, 342 actual supported offline passes, ten guard checks and
+both examples. Its real SQLite namespace/receiver prototype passed before build;
+actual process exit/reopen proves the specified local receiver boundary. No new
+Telegram/account/ledger action occurred. **Stage 8/Gate D remain pending.**
 
 ## Status vocabulary
 
@@ -141,6 +147,8 @@ and overlapping collections do not repeat the caller's irreversible processing e
 **Kind/status:** OBSERVED-LIVE with INJECTED local boundaries for the Gate B test
 receiver: durable SQLite receipt/message transaction after verified/fsynced media custody.
 Duplicate delivery and overlapping collections produced no repeated record effect.
+Stage 7 adds a qualified example receiver retaining full canonical snapshots per scoped
+receipt plus a first-observation index, with actual namespace CAS and process reopen.
 Production receiver remains UNSET/UNVERIFIED; a library receipt cannot verify the caller's
 assertion or establish a distributed transaction.
 **Evidence now:** prior local example/test exists; it is not the selected receiver.
@@ -282,11 +290,13 @@ records completeness and drift. **Coverage:** C40–C42; INV-01, INV-04, INV-11.
 **Premise:** new runtime APIs keep daily/window state and batch v1 unchanged, and local
 status/control/replay/ack do not become Telegram health observations.
 **Kind/status:** OBSERVED-LOCAL for namespace refusal, Stage 3 local prepare/replay/ack
-health isolation and supported regressions through `0d6bb26` (319 actual passes),
+health isolation and supported regressions through `17fccbc` (342 actual passes),
 including actual controls and local waits/recovery without invented health/account
 identity. Gate C traced no RPC attributable to intervening local operations.
 Gate B local restart workers blocked sockets while settling live-data receipts;
-public facade/integration remains UNVERIFIED for D.
+Stage 7 public methods now have OBSERVED-LOCAL health/context/lifetime/namespace
+evidence, including synthetic-transport actual SDK source exceptions. Full public/live
+integration remains UNVERIFIED for D.
 **Falsifier:** legacy inputs/state change behavior, wrong-kind state is accepted, local
 error emits a Telegram verdict, or offline operation clears a source health failure.
 **Cheapest earlier check:** supported dev offline regression suite now; repeat affected

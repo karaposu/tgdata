@@ -1,7 +1,7 @@
 ---
 model: gpt-6-astra
 effort: max
-status: contract-with-stage-6-controls-and-gate-c
+status: public-stage-7-offline-verified-gate-d-pending
 contract_version: 1
 ---
 # Planned backfill run contract
@@ -14,11 +14,16 @@ work and owed output; only explicit quiescent abandonment withdraws delivery. Ex
 command revisions, terminal order and scoped successor/receipt handling are implemented.
 Source observations never replace the actual-send budget/account authority.
 
-The public facade remains Stage 7 work. Gates A/B and mandatory [Gate C](validation/gate-c.md)
-passed; [Stage 6 verification](stage-6-controls/verification.md) records 319 actual
-supported offline passes plus real timing/budget/recovery/control evidence. The sketches
-below still describe the full contract, not public imports/readiness. Stage 8/Gate D
-and whole-feature review remain pending.
+Stage 7 exposes the six operations through `TgData(backfill_store=...)` and exports
+its typed values/errors at `17fccbc`. See [public usage](../../../docs/backfill_runs.md)
+and [Stage 7 verification](stage-7-public-api/verification.md): 342 actual offline
+passes, three explicit legacy live skips and an actual durable receiver/process-restart
+example. Package methods preserve the internal transition and source-health owners.
+
+Gates A/B and [Gate C](validation/gate-c.md) retain their scoped live evidence. Stage 8
+and mandatory public/live Gate D remain pending, along with whole-feature review.
+Names below correspond to the implemented public operations; the value/error reference
+is in the public documentation. None of this implies a dev merge or package release.
 
 The [source record](stage-1-contract/source-input.md), [assumptions](assumptions.md),
 [acceptance matrix](acceptance-matrix.md) and [live-validation specification](live-validation.md)
@@ -172,11 +177,12 @@ Telegram and the destination, or holds a database lock across network I/O.
 
 ## 4. Operation contracts
 
-Returned names are sketches. `Status` is immutable/content-free; `CommandOutcome`
-contains addressed identity, whether an effect was applied/recognized/refused and
-attributable current status; `Turn` contains status plus optional batch/delivery ref.
-Exact exception class names may be selected during coding; refusal categories below
-and their no-mutation semantics are normative.
+The sketches below use generic result names for the normative semantics. Stage 7
+exports BackfillStatus, BackfillStartResult, BackfillControlResult, BackfillRecoveryResult
+and BackfillTurn with the reviewed fields. Status is immutable/content-free; command
+results retain attributable outcomes; a Turn can also carry the exact batch/delivery.
+Concrete public errors are documented in docs/backfill_runs.md; the refusal categories
+and their no-mutation semantics below remain normative.
 
 ### OP-START — Create or recover the result of starting a run
 

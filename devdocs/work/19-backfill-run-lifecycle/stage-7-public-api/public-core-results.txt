@@ -1,0 +1,57 @@
+Public Backfill Tests — Telethon 1.45.0; LOCAL actual SQLite/SDK, synthetic transport
+
+TEST: test_exports_and_immutable_portable_values
+✓ Passed
+
+TEST: test_constructor_is_additive_and_disabled_calls_are_local
+✓ Passed
+
+TEST: test_bad_addresses_and_backend_do_not_open_config_or_source
+✓ Passed
+
+TEST: test_required_context_arguments_have_no_implicit_defaults
+✓ Passed
+
+TEST: test_public_delivery_reopen_exact_receipt_and_completion
+✓ Passed
+
+TEST: test_unknown_start_and_run_never_bootstrap
+✓ Passed
+
+TEST: test_public_controls_terminal_orders_and_scoped_successor
+✓ Passed
+
+TEST: test_one_cached_engine_preserves_busy_source_and_late_control
+✓ Passed
+
+TEST: test_clock_minimum_survives_public_calls_and_close
+✓ Passed
+
+TEST: test_cancelled_attempt_recovery_is_public_exact_and_local
+✓ Passed
+
+TEST: test_local_operations_preserve_prior_health_and_make_no_calls
+✓ Passed
+
+TEST: test_actual_source_error_is_reported_once_without_facade_recovery
+✓ Passed
+
+TEST: test_status_and_local_logs_exclude_payload_and_backend_error_text
+✓ Passed
+
+TEST: test_public_budget_prefix_and_failed_prefix_save_keep_provenance
+✓ Passed
+
+TEST: test_local_media_failure_does_not_clear_health_or_refetch
+✓ Passed
+
+TEST: test_ambiguous_admission_is_no_send_and_public_recovery_is_explicit
+✓ Passed
+
+TEST: test_public_lost_control_reply_recognizes_one_decision
+✓ Passed
+
+TEST: test_daily_and_backfill_progress_are_separate_and_no_auto_namespace_exists
+✓ Passed
+
+Passed: 18/18

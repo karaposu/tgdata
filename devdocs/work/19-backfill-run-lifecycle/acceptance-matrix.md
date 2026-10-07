@@ -1,7 +1,7 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-6-gate-c-evidence
+status: stage-7-public-local-evidence-gate-d-pending
 ---
 # Backfill acceptance and failure matrix
 
@@ -17,6 +17,22 @@ C01–C22 preserve the final inquiry's 22 histories in their original order. C23
 
 LIVE means actual Telegram via Telethon 1.45.0; INJECTED means an identified local interruption/order/fault around real source/store/receiver paths; LOCAL means no server behavior is inferred. No Telegram source writes are allowed.
 
+## Stage 7 public composition evidence — 2026-10-07
+
+Product `17fccbc`: 23 new public/example groups, 342 actual supported offline passes,
+three explicit legacy live skips. [Verification](stage-7-public-api/verification.md).
+Six public methods preserve typed context, engine lifetime/clock minima, source-health
+ownership and backend scope. Local status/logs exclude payload/credential sentinels.
+Actual SQLite example namespaces/receiver snapshots and an owned process restart pass;
+source observations remain synthetic. Existing A/B/C live evidence is not relabeled.
+
+C33/C34 now have scoped public LOCAL evidence, with their LIVE portions still required
+at Gate D. Public tests cover creation/recognition, exact delivery, terminal order,
+source overlap, recovery, clock retention, failure provenance and namespace boundaries.
+They do not replace every combined history in this matrix; prior internal suites retain
+their invariant coverage, and the complete public composition remains Stage 8/Gate D.
+**Next: Stage 8 and mandatory Gate D; no new live gate has passed in Stage 7.**
+
 ## Stage 6 and Gate C evidence — 2026-10-07
 
 Product `0d6bb26`: 32 new control groups and 319 total supported offline passes;
@@ -31,7 +47,8 @@ and independent saved-record audit. Earlier tables below are historical checkpoi
 | C25/33/34/35/37/43/44 | Full supported regressions and no local-operation RPC in Gate C traces; strict namespace/context/validation preserved | C33/C34 public/integrated daily flow at D |
 
 No required Gate C case was skipped. Existing raw reader/window/media semantics and
-state schema were unchanged, so A/B remain valid. **Next: Stage 7; Gate D is pending.**
+state schema were unchanged, so A/B remain valid. At the Stage 6 checkpoint Stage 7 was next; the Stage 7 section above records its
+later offline completion. Gate D remains pending.
 
 ## Stage 5 local pacing/recovery evidence — 2026-10-07
 
@@ -425,7 +442,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Treating local success/failure as fresh Telegram evidence.
 **Operations:** OP-STATUS OP-CONTROL OP-ACK OP-PREPARE OP-RECOVER OP-START. **Requirements:** INV-11.
 **Evidence / earliest check:** LOCAL call counters; LIVE attributed trace at D; Stage 7 / Gate D; affected local checks earlier.
-**Status:** UNRUN.
+**Status:** LOCAL public evidence at `17fccbc`: prior health survives tested status/start/replay/ack/control and store/media errors; recovery separately makes no source calls; actual raw SDK error is attributed once. Full combined/LIVE public attribution remains Gate D.
 
 ## C34 — Legacy compatibility and separate collections
 
@@ -434,7 +451,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Silently migrating daily data or advancing another collection.
 **Operations:** OP-START OP-PREPARE OP-ACK OP-STATUS. **Requirements:** INV-01 INV-03 INV-09.
 **Evidence / earliest check:** LOCAL regressions plus LIVE sequential integration; On any shared edit; Stage 7 / Gate D.
-**Status:** UNRUN.
+**Status:** LOCAL public PASS at `17fccbc`: supported legacy regressions, namespace refusal and independent daily/history cursors in the actual SQLite example. LIVE sequential public integration remains Gate D.
 
 ## C35 — Delayed prepare after acknowledgment
 
