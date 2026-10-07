@@ -8,7 +8,7 @@ A → Su → S → D → I → C → R (always)
 
 ## Progress
 - [x] Articulate-Simple
-- [ ] Surfacing
+- [x] Surfacing
 - [ ] Sensemaking
 - [ ] Decomposition
 - [ ] Innovation
@@ -22,7 +22,8 @@ A → Su → S → D → I → C → R (always)
 ACTIVE
 
 ## Next Discipline
-Surfacing
+Sensemaking
 
 ## History
 - 2026-10-08_01-50: Articulation HIGH-PROCEED; one item, three variants. Checker unavailable (tools/structural_check.sh absent); manual 9/9 plus branch preservation 5/5: item, MQ, WHY, exclusions, variants. Next: Surfacing.
+- 2026-10-08_01-51: Surfacing PROCEED; 13 tagged items, two cycles, all three articulation variants covered. Manual 7/7 checks (checker absent): input, trace, tags/confidence, derived state/recency, concepts, frontier, telemetry. Next: Sensemaking.
