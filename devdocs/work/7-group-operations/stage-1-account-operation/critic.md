@@ -23,6 +23,8 @@ Passing result: original auth wait/server failures propagate under fixed policy;
 fresh self ignores stale cache; disagreement precedes claim/send; actual disconnect
 settles before preserved cancellation is delivered. Document SDK server backoff.
 
+Result: PASS — real factory/Telethon connect, fresh self, zero-flood-sleep policy, original final RPC error, real SQLite before-send admission and retained disconnect under two cancellations all behaved as specified. ServerError still requests the SDK's final 2-second backoff. 2026-10-08. Evidence: `prebuild_probe.py`; sockets forbidden.
+
 ## High-level summary
 
 The selected shape is small and matches Stage 1. Earlier probes individually cover
