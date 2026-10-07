@@ -1,5 +1,5 @@
 ---
-status: implemented-gates-A-through-D-PASS
+status: merged-into-dev-gates-A-through-D-PASS
 revision: 11
 model: gpt-6-astra
 effort: max
@@ -10,8 +10,10 @@ Overall plan for #19, derived from the completed
 [lifecycle source record](stage-1-contract/source-input.md#behavioral-basis). All eight
 stages are now implemented through their separate desc/plan/critic/fold/verification
 chains, and mandatory Gates A–D passed. This aggregate is their map, not a claim that
-one monolithic plan was critiqued. Formal merge-check/PR/fresh PR critique and merge
-remain pending. Daily/fixed-window prerequisite records are preserved.
+one monolithic plan was critiqued. The formal merge check and fresh PR critique passed;
+the user authorized PR #20's subsequent dev merge at `95ed4c7`.
+[Merge verification](merge-record.md) records the exact tested/published tree.
+Daily/fixed-window prerequisite records are preserved; no package release is implied.
 
 Planning baseline: branch `feat/18-daily-group-continuation` at `d1f37f7`;
 product code at `e9b5154`. Session metadata confirmed GPT 6 Astra / max for this
@@ -225,7 +227,8 @@ The following conditions attach to their named gates:
   for all eight scoped stages, including required prebuild experiments and Gates A–D.
 - **What must happen:** merge check, fresh PR critique and explicit merge go-ahead.
   **Who:** implementing/reviewing session and maintainer. **Blocks:** merging after
-  Stage 8. **Status:** OPEN. Nothing in this plan performs those actions now.
+  Stage 8. **Status:** CLOSED — both reviews passed, the user explicitly authorized
+  merging, and PR #20 merged into dev as `95ed4c7`. See merge-record.md.
 
 ## How this implementation moves toward desired state
 

@@ -1,7 +1,7 @@
 ---
 model: gpt-6-astra
 effort: max
-status: public-stage-8-verified-gates-A-through-D-PASS
+status: merged-into-dev-gates-A-through-D-PASS
 contract_version: 1
 ---
 # Planned backfill run contract
@@ -24,9 +24,10 @@ Gates A/B and [Gate C](validation/gate-c.md) retain their scoped live evidence.
 Stage 8 and mandatory public/live [Gate D](validation/gate-d.md) passed at `405218e`,
 with 357 actual supported offline checks and the selected complete public/SQLite/
 receiver composition. [Merge check](merge-check.md) and [PR critique](pr-critic.md)
-record the separate formal review; a merge still requires maintainer go-ahead.
+record the separate formal review. The user authorized the subsequent merge into dev
+through PR #20 at `95ed4c7`; see [merge verification](merge-record.md).
 Names below correspond to the implemented public operations; the value/error reference
-is in the public documentation. None of this implies a dev merge or package release.
+is in the public documentation. This dev merge does not imply a package release.
 
 The [source record](stage-1-contract/source-input.md), [assumptions](assumptions.md),
 [acceptance matrix](acceptance-matrix.md) and [live-validation specification](live-validation.md)

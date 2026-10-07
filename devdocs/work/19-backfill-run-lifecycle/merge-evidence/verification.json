@@ -1,0 +1,22 @@
+{
+  "actual_offline_passes": 357,
+  "all_subprocesses_passed": true,
+  "base": "45bab7172621f576fa5e4b3265f87ec20da04fd5",
+  "branches_retained": true,
+  "compile_grammar_files": 57,
+  "examples_passed": 2,
+  "explicit_legacy_live_skips": 3,
+  "head": "719f2a9fad2dcd419d1d3aaaa9b68f79ae083080",
+  "main_unchanged": true,
+  "merge_commit": "95ed4c76c4d2aba7800d8793b16eb5d54cfba4ec",
+  "merged_at": "2026-10-07T19:16:38Z",
+  "pr": 20,
+  "preview_commit": "ef9fd98c0340d5d35bb72339c4008cdc56ab9aca",
+  "published_matches_tested": true,
+  "published_tree": "5477b58142ae6a0ef08873711352194dedea6741",
+  "python_runtime": "3.11.10",
+  "telethon": "1.45.0",
+  "tested_tree": "5477b58142ae6a0ef08873711352194dedea6741",
+  "work_doc_delta": false,
+  "worktree": "/private/tmp/tgdata-20-merge-verification"
+}

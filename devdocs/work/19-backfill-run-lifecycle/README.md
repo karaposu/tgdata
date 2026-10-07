@@ -1,14 +1,16 @@
 # Backfill run lifecycle — issue #19
 
-**Stages 1–8 are built; Gates A/B/C/D passed.** Runtime `17fccbc`, combined public
+**Stages 1–8 are merged into dev via [PR #20](https://github.com/karaposu/tgdata/pull/20),
+merge `95ed4c7`; Gates A/B/C/D and both review gates passed.** Runtime `17fccbc`, combined public
 tests `405218e`, public documentation `1d0f7a9` and completion evidence `30c9c24` are
 committed and pushed. Verification passed 357 actual offline checks (three explicit
 legacy live skips), 19 instrument checks and both examples. Gate D independently
-qualified the complete public/source/SQLite/receiver flow. Formal review follows;
-these stage checkpoints have not been merged into dev.
+qualified the complete public/source/SQLite/receiver flow. The final product from all
+stages and #18 foundations merged together. [Merge record and verification](merge-record.md).
 
-This branch starts from dev `45bab71` and incorporates #18 through `e9b5154` in
-feature-only merge `5d0789e`. This does not merge or approve #18 into dev. Stage 2
+This archive starts from dev `45bab71` and incorporated #18 through `e9b5154` in
+feature-only merge `5d0789e`. Those product prerequisites subsequently reached dev
+with PR #20; #18 remains a separate umbrella issue. Stage 2
 product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd`; Stage 4 adds `b1f6495`; Stage 5 adds `a180151`; Stage 6 adds `0d6bb26`; Stage 7 adds `17fccbc`.
 
 - [Contract](contract.md): operations, identity, retry/conflict/durability and state rules.
@@ -48,7 +50,8 @@ product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd
   actual process/commit failures, public controls, pacing and verified photo custody.
 - [Merge check](merge-check.md): formal fidelity review and code-only PR projection, PASS.
 - [Fresh PR critique](pr-critic.md): PR #20 soundness review with six new probes,
-  zero High/Medium/Low findings; merge still needs explicit go-ahead.
+  zero High/Medium/Low findings; the user subsequently authorized the merge.
+- [Merge record](merge-record.md): actual dev merge, 357-check verification and retained branches.
 - [Public backfill API](../../../docs/backfill_runs.md) and
   [offline example](../../../examples/backfill_runs.py).
 - [Internal state reference](../../../docs/backfill_state.md) and
@@ -59,8 +62,8 @@ product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd
 [Issue #19](https://github.com/karaposu/tgdata/issues/19) tracks this lifecycle slice of
 #18. The feature archive preserves these documents; the PR candidate contains the
 27 product files only in [PR #20](https://github.com/karaposu/tgdata/pull/20), head
-`719f2a9`, base dev `45bab71`. No stage or #18 prerequisite has
-merged into dev; earlier #5/#9/#6 features already have.
+`719f2a9`, base dev `45bab71`, merged as `95ed4c7`. All stage products and #18
+prerequisites are now on dev, alongside the earlier #5/#9/#6 features.
 Gate D private records remain under `/private/tmp/tgdata19-gate-d-live-20261007`.
 Original Gate B unknown-state files remain byte-identical. The existing account ledger
 policy remains 5,000/day; after Gate D, charged use was 3,262 with 40 reserved.
