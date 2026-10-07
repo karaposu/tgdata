@@ -1,5 +1,6 @@
 """Bounded raw-message preparation through tgdata's existing guarded client."""
 
+import asyncio
 from datetime import datetime, timezone
 import operator
 import os
@@ -144,8 +145,10 @@ def _record(message, client):
 
 
 class BatchEngine:
-    def __init__(self, connection_engine):
+    def __init__(self, connection_engine, *, _resolve_entity=None, _retain_cancelled_prefix=False):
         self.connection_engine = connection_engine
+        self._resolve_entity = _resolve_entity
+        self._retain_cancelled_prefix = _retain_cancelled_prefix
 
     async def fetch_batch(self, group_id, *, after_id=0, limit=200, download_media_to=None,
                           start_date=None, end_date=None):
@@ -164,10 +167,13 @@ class BatchEngine:
         scan_id = after_id
         try:
             async with self.connection_engine.session() as client:
-                try:
-                    entity = await client.get_entity(group_id)
-                except ValueError:
-                    entity = await MessageEngine._entity_after_dialog_sync(client, group_id)
+                if self._resolve_entity is not None:
+                    entity = await self._resolve_entity(client, group_id)
+                else:
+                    try:
+                        entity = await client.get_entity(group_id)
+                    except ValueError:
+                        entity = await MessageEngine._entity_after_dialog_sync(client, group_id)
                 if isinstance(entity, (types.ChatForbidden, types.ChannelForbidden)):
                     raise GroupAccessError('account has no access to the requested group')
                 if not isinstance(entity, (types.Chat, types.Channel)):
@@ -219,7 +225,9 @@ class BatchEngine:
                     # progress past the last completely prepared record.
             reason = 'limit' if len(records) == limit else 'end'
             return MessageBatch._from_records(chat_id, after_id, records, mode, reason)
-        except Exception as error:
+        except (Exception, asyncio.CancelledError) as error:
+            if isinstance(error, asyncio.CancelledError) and not self._retain_cancelled_prefix:
+                raise
             if chat_id is not None:
                 error.partial_result = MessageBatch._from_records(chat_id, after_id, records, mode, 'interrupted')
             raise

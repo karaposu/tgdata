@@ -349,3 +349,19 @@ Sockets are forbidden. These process tests do not simulate a disk power failure 
 certify another backend. Mandatory real public Gate D passed on 2026-10-07 with the
 selected SQLite/receiver composition; its feature-branch evidence is recorded in
 `devdocs/work/19-backfill-run-lifecycle/validation/gate-d.md`.
+
+### Test 31: existing-access account routing (offline)
+
+```bash
+python -m tgdata.smoke_tests.test_31_account_pool
+python examples/account_pool.py --demo
+```
+
+Thirty-six groups exercise the actual Telethon 1.45 factory/request path, budget
+ledger, SQLite pool state and daily/backfill facades over synthetic wire replies.
+They cover drain/spread, scoped failure/restart, stale identity and changed identity
+at admission, duplicate credentials, quota races, canonical groups, timeout prefixes,
+blocked health observers, real overlap/cancellation, uncertain writes, owned process
+exits around admission/settlement, exact recovery retries, login reload and source-free
+delivery. Sockets are blocked. Three legacy live skips elsewhere are not evidence
+for this suite; #17's two-account live gate remains pending.

@@ -524,6 +524,10 @@ class ConnectionEngine:
                                       if presented[key] is not None),
         }
 
+    def _client_options(self):
+        """Private policy seam; ordinary clients retain the SDK's defaults."""
+        return {}
+
     def _new_client(self, session_file: Optional[str] = None) -> TelegramClient:
         """
         THE door to Telegram: every client tgdata opens — the persistent one,
@@ -575,6 +579,7 @@ class ConnectionEngine:
             config.api_id,
             config.api_hash,
             proxy=dict(config.proxy) if config.proxy else None,
+            **self._client_options(),
             **identity
         )
         client._tgdata_read_budget = self.read_budget

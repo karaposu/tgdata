@@ -78,6 +78,10 @@ API. Different accounts may see different history; a stored cursor is not proof
 of complete Telegram history. Basic-group/channel migrations are not automatically
 treated as the same source.
 
+The optional [AccountPool](account_pool.md) selects among existing accounts while
+reusing these same progress methods. Pending replay and acknowledgment stay local;
+account selection happens only when a new source read is needed.
+
 ## Prepare, replay and acknowledge
 
 `sync_group(chat_id, *, limit=200, download_media_to=None)` returns a nonempty

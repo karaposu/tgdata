@@ -32,6 +32,8 @@ A production-grade Python library for extracting and processing Telegram group a
 - **Versioned message batches**: Read bounded raw snapshots with canonical JSON, replayable batch IDs, safe continuation cursors and optional content-addressed media
 - **Durable daily continuation**: Keep per-group progress and pending batches in a pluggable store, replay after restart, and advance only after explicit acknowledgment
 
+- **Account routing and failover**: An optional pool chooses among distinct existing accounts, enforces their budgets and preserves daily/backfill delivery; automatic joining is excluded
+
 ## Installation
 
 ```bash
@@ -362,6 +364,40 @@ until the policy changes; it does not automatically rise to `daily_limit`.
 The budget suite exercises real Telethon request/iterator code with scripted
 replies on 1.45.0 and 1.33.1. It does not test live Telegram response bounds or
 whether any chosen limit prevents account restrictions.
+
+## Account routing and failover
+
+Use `AccountPool` when tgdata should choose among distinct, already logged-in accounts
+for a group read. Supply account configurations, existing budget policies, canonical
+groups and persistent pool state. It supports raw batches and existing daily/backfill
+operations. Plain `TgData` connection pooling still means sessions of one account.
+
+```python
+from tgdata import AccountPool, PoolAccount, PoolGroup, ReadBudget, SQLiteAccountPoolStore
+
+pool = AccountPool(
+    [PoolAccount(111111, "account-a.ini"), PoolAccount(222222, "account-b.ini")],
+    [PoolGroup(-1001234567890, "@my_existing_group")],
+    read_budget=ReadBudget("existing-read-budgets.sqlite3"),
+    state_store=SQLiteAccountPoolStore("existing-pool.sqlite3", create=False),
+)
+try:
+    result = await pool.read(-1001234567890, after_id=500, limit=100)
+    print(result.account_id, result.batch.batch_id)
+finally:
+    await pool.close()
+```
+
+For first provisioning, create a new pool store and explicitly call `initialize()`;
+do not recreate missing known state on restart. Completed partial batches stop failover
+so their data can be delivered first. Unknown attempts require explicit recovery.
+No eligible account raises structured `PoolUnavailable`, not empty history.
+
+The adapter requires Telethon **1.45.0**, one owning process and exclusive sessions.
+It never joins or prompts. Results describe the selected account's visible history.
+Offline tests pass; two-account live qualification remains pending. See
+[Account pools](docs/account_pool.md) for selection, recovery and delivery contracts.
+Run the offline example with `python examples/account_pool.py --demo`.
 
 ## Quick Start
 
