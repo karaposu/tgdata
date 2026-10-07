@@ -1,7 +1,7 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-4-gate-b-evidence
+status: stage-5-local-timing-recovery-evidence
 ---
 # Backfill assumptions and evidence register
 
@@ -16,12 +16,17 @@ it did not replace the mandatory live Gate B. Stage 4 adds [completion verificat
 at `b1f6495`, and [Gate B passed](validation/gate-b.md) with the actual new engine,
 selected real source and local durable receiver. Later/deployment claims remain scoped below.
 
+Stage 5 adds [local timing/recovery evidence](stage-5-pacing-recovery/verification.md)
+at `a180151`: 32 new groups and 287 actual supported offline passes. Actual recovery
+of copied LIVE-origin records remains LOCAL. Gate C still requires Stage 6 and real
+elapsed/source/control validation; no prior evidence is relabeled as that gate.
+
 ## Status vocabulary
 
 - `SELECTED`: a normative scope/policy decision, not an observed implementation.
 - `OBSERVED-COMPONENT`: a specific existing component was exercised at a named revision;
   it says nothing about an untested composition or deployment.
-- `OBSERVED-LOCAL`: actual Stage 2 code was exercised offline within the stated scope;
+- `OBSERVED-LOCAL`: actual scoped runtime code was exercised offline within the stated scope;
   it is not live-source, future-operation or deployment evidence.
 - `OBSERVED-LIVE`: actual Telegram/SDK behavior in the named account/view/window and
   composition; it is not evidence for unimplemented operations or arbitrary deployments.
@@ -155,7 +160,8 @@ from admission and durable result settlement sufficiently to enforce this contra
 OBSERVED-LOCAL for the new durable admission/settlement and cancellation boundaries
 in Stage 3, plus actual live new-engine attempts/settlement at Gate B, including a
 100-record interrupted prefix and preserved unresolved post-answer crash. Explicit
-recovery and full timing/controls remain UNVERIFIED.
+recovery and timing now have Stage 5 LOCAL evidence; live composition/controls remain
+UNVERIFIED for Gate C.
 **Falsifier:** source activity occurs before durable admission, another read overlaps
 unresolved activity, or a late result cannot be attributed to its original attempt.
 **Cheapest earlier check:** characterize actual existing raw read at Gate A, including
@@ -169,7 +175,10 @@ B delivery boundaries and C full recovery. No claim a bounded batch bounds wall 
 
 **Premise:** supported deployment time is trustworthy enough for known deadlines;
 within-process monotonic evidence and persistent UTC are not confused.
-**Kind/status:** UNVERIFIED for deployment; trusted-time limitation explicitly retained.
+**Kind/status:** OBSERVED-LOCAL through Stage 5 for independent UTC/monotonic clocks,
+positive/zero/sub-microsecond pacing, early/late ack, reopen, clock faults, actual
+measured local elapsed time and recovery commit boundaries. Deployment/live timing
+remains UNVERIFIED for Gate C; trusted UTC after local context loss remains required.
 **Falsifier:** known wait shortens/restarts after observation-only calls, or contradictory
 clock evidence is converted to ready. Arbitrary unobservable jumps remain outside proof.
 **Cheapest earlier check:** injected independent clock readings locally, plus real elapsed
@@ -185,7 +194,9 @@ a saved retry hint cannot grant or reserve capacity.
 **Kind/status:** OBSERVED-LIVE for fresh account verification and preserved real charges
 at Gates A/B, including cancellation/refused-send charges. Gate B reused the unchanged
 ledger and retained charges under controlled local failures; usage ended at 2202/5000.
-Actual live quota/warm-up/expiry and timing/status integration remain UNVERIFIED for C.
+Stage 5 adds LOCAL actual-adapter prefixes, indefinite/expired hints, fresh account
+switch and preserved cancelled charges. Actual live quota/warm-up/expiry and timing/
+status integration remain UNVERIFIED for C.
 **Falsifier:** refused message traffic is sent, retries bypass charging, cached health
 identity bills the wrong account, or local lifecycle code refunds old charges.
 **Cheapest earlier check:** small local test allowance with actual bounded source reads,
@@ -201,7 +212,9 @@ before then, actual accounting observed at Gate A/B and full lifecycle wait at G
 accepted command/receipt scope prevent old calls from acquiring new effects.
 **Kind/status:** OBSERVED-LOCAL for creation plus Stage 3 context/receipt scoping,
 stale rejection, latest/prior recognition and compatible settlement. Control/recovery
-operations remain UNVERIFIED. Gate B observed actual live-data wrong-scope/equal-hash
+operations retain later live/control evidence. Stage 5 now proves LOCAL recovery
+identity, retained retries, changed-input/control conflict and replacement-attempt
+isolation. Gate B observed actual live-data wrong-scope/equal-hash
 receipt refusal, duplicate latest ack with newer pending, old receipt refusal and stale
 prepare after progress. The Stage 1 counterexamples
 motivated the mechanism; tests_24/25 now supply scoped implementation evidence.
@@ -218,7 +231,11 @@ INV-05, INV-08, INV-09, INV-10. **Waste if false:** revise state/authority befor
 
 **Premise:** the caller can confirm the previous worker has stopped before recovering
 an uncertain attempt; the library can reject a still-active local attempt.
-**Kind/status:** policy/precondition selected; UNVERIFIED in deployment. No leases provided.
+**Kind/status:** caller ownership policy selected; Stage 5 OBSERVED-LOCAL exact recovery,
+required true assertion, active local-read/admission/publication refusal and owned
+subprocess exit/commit boundaries. Copied actual Gate B unknown records also recover
+without mutating originals. Cross-process caller ownership and live full recovery
+remain UNVERIFIED for Gate C/deployment. No leases are provided.
 **Falsifier:** recovery is admitted while an earlier source worker remains active, or
 elapsed time alone is used as proof of death.
 **Cheapest earlier check:** controlled subprocess kill + wait-for-exit and recovery;
@@ -254,7 +271,8 @@ records completeness and drift. **Coverage:** C40–C42; INV-01, INV-04, INV-11.
 **Premise:** new runtime APIs keep daily/window state and batch v1 unchanged, and local
 status/control/replay/ack do not become Telegram health observations.
 **Kind/status:** OBSERVED-LOCAL for namespace refusal, Stage 3 local prepare/replay/ack
-health isolation and supported regressions through `b1f6495` (255 actual passes).
+health isolation and supported regressions through `a180151` (287 actual passes),
+including local waits/recovery without invented health or account identity.
 Gate B local restart workers blocked sockets while settling live-data receipts;
 public facade/integration remains UNVERIFIED for D.
 **Falsifier:** legacy inputs/state change behavior, wrong-kind state is accepted, local

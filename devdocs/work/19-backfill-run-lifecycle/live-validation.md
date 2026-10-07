@@ -194,6 +194,11 @@ scope completes. **Advance:** permits Stage 5. Reopen A if source interpretation
 
 ## 7. Gate C — timing, recovery and operator intent
 
+**Still pending.** Stage 5 is implemented/offline verified at `a180151`; Stage 6 controls
+must be built before this full gate. Its local clock/budget tests and copied LIVE-origin
+state checks are not a Gate C result. Reuse the existing authorized account/ledger;
+Stage 5 performed no Telegram reads or real policy changes.
+
 **Entry:** Gate B PASS and Stages 5–6; actual pacing/recovery/controls, exclusive test reader.
 
 Required evidence:

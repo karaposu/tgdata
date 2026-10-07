@@ -1,0 +1,127 @@
+{
+  "actual_passes": 287,
+  "compile": "PASS; six changed/new Python files",
+  "corrections": [
+    "Use synchronous rejected(TypeError, lambda: recover(...)) for missing required keyword; expected refusal unchanged. No runtime correction."
+  ],
+  "daily_example": {
+    "acknowledged_through": 104,
+    "messages": 4
+  },
+  "explicit_live_skips": 3,
+  "gate_a_instrument": 10,
+  "gate_b_copy_checks": "2/2 LOCAL, original records and budget unchanged",
+  "gate_c": "PENDING after Stage 6",
+  "initial_new_suite": "31/32; required-argument TypeError occurred before async assertion helper",
+  "product_revision": "a18015169a357c167e40f28c8862d6c48a7d7d4d",
+  "python": "3.10.0",
+  "python37_grammar": "PASS; no Python 3.7 runtime claim",
+  "results": [
+    {
+      "actual_pass": 32,
+      "explicit_live_skips": 0,
+      "log_sha256": "886e0cf0f486b6df1822ece6f3bb1f0ee93e5d399ab598ed3ee792af4e2838c8",
+      "module": "test_27_backfill_pacing",
+      "reported_pass": 32
+    },
+    {
+      "actual_pass": 16,
+      "explicit_live_skips": 0,
+      "log_sha256": "8a472bf238b53b63e2489a5ad72cc17d4d099561a007113c9da33c8185d08de3",
+      "module": "test_26_backfill_completion",
+      "reported_pass": 16
+    },
+    {
+      "actual_pass": 41,
+      "explicit_live_skips": 0,
+      "log_sha256": "48b06ab1078ce7befe4be193386bb9ff7bc57e1f5ff4baa0c14b73129a576426",
+      "module": "test_25_backfill_delivery",
+      "reported_pass": 41
+    },
+    {
+      "actual_pass": 23,
+      "explicit_live_skips": 0,
+      "log_sha256": "eb49d53ed6a7c2ae7a9489895be8c02733768a2a1d85ce0574cc17a7757f2668",
+      "module": "test_24_backfill_state",
+      "reported_pass": 23
+    },
+    {
+      "actual_pass": 22,
+      "explicit_live_skips": 0,
+      "log_sha256": "c1ca789243960d3449decd8a953e6adefd78ac850d37ab6a1dba617d6e3bd177",
+      "module": "test_23_fixed_windows",
+      "reported_pass": 22
+    },
+    {
+      "actual_pass": 25,
+      "explicit_live_skips": 0,
+      "log_sha256": "2e54c5112c8ae6999e54d1a6a7b8a4c2bf455e44afd07ef8bb7d568e32a2f3f4",
+      "module": "test_22_daily_continuation",
+      "reported_pass": 25
+    },
+    {
+      "actual_pass": 33,
+      "explicit_live_skips": 0,
+      "log_sha256": "3f1c9cd1efad955c89ecd1ed99cc46f2c7420a62662007a3a655c65d4f791414",
+      "module": "test_19_message_batches",
+      "reported_pass": 33
+    },
+    {
+      "actual_pass": 28,
+      "explicit_live_skips": 0,
+      "log_sha256": "13076ea53a4f90a0afc074d94a5e73e4737dd75497e9bdb720fb726a63b988f8",
+      "module": "test_18_read_budget",
+      "reported_pass": 28
+    },
+    {
+      "actual_pass": 12,
+      "explicit_live_skips": 0,
+      "log_sha256": "c80f1bfc0235adb118f734ee221d040fd7a18b9994dee33016c34fae4e8a7f3a",
+      "module": "test_17_session_store",
+      "reported_pass": 12
+    },
+    {
+      "actual_pass": 21,
+      "explicit_live_skips": 0,
+      "log_sha256": "8cb583d6538f708c0724ad7a595ee2ace15390f8bf001d6f67a5fc47aff4888e",
+      "module": "test_16_health_events",
+      "reported_pass": 21
+    },
+    {
+      "actual_pass": 11,
+      "explicit_live_skips": 0,
+      "log_sha256": "275cfccea1579da5445227bb8373e5c5e9917170405eb0d189fbe2438d40f8be",
+      "module": "test_15_login_checks",
+      "reported_pass": 11
+    },
+    {
+      "actual_pass": 11,
+      "explicit_live_skips": 0,
+      "log_sha256": "2114cca8eeab226d78294a7085cf8de75ac128c67929a2aefdd78ef5aa0ac413",
+      "module": "test_14_flood_threshold",
+      "reported_pass": 11
+    },
+    {
+      "actual_pass": 5,
+      "explicit_live_skips": 1,
+      "log_sha256": "34f719dda78101749e6f9736fd367503d8390a9da2531818b1dbbef1366f7371",
+      "module": "test_13_device_identity",
+      "reported_pass": 6
+    },
+    {
+      "actual_pass": 5,
+      "explicit_live_skips": 2,
+      "log_sha256": "879d872fe5c75366c41e54745e81f7b120ace982718dfdfb67aea998d2156b1e",
+      "module": "test_12_proxy",
+      "reported_pass": 7
+    },
+    {
+      "actual_pass": 2,
+      "explicit_live_skips": 0,
+      "log_sha256": "8d0c57e6f0d1808a916e0f41ba1895ce631ee7ffb973aa1cc93a97b442e17021",
+      "module": "test11_helpers",
+      "reported_pass": 2
+    }
+  ],
+  "telethon": "1.45.0"
+}

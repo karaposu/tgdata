@@ -1,6 +1,6 @@
 ---
 status: draft
-revision: 7
+revision: 8
 model: gpt-6-astra
 effort: max
 ---
@@ -104,6 +104,23 @@ slots; shared budget usage is 2202/5000, unchanged policy. Two unresolved runs r
 preserved. **Stage 5 is next; Stages 5–8 and Gates C/D remain pending.** Control/recovery
 write reconciliation is tested when those operations exist in their stages, not inferred
 from Stage 4. Earlier handoff sections above describe their historical checkpoints.
+
+## Stage 5 implementation handoff — revision 8
+
+Stage 5 is complete at `a180151`: [implementation](stage-5-pacing-recovery/implementation.md),
+[verification](stage-5-pacing-recovery/verification.md), [folded plan](stage-5-pacing-recovery/step_by_step_impl_plan.md).
+Positive pacing returns an immediate local wait; independent monotonic nanoseconds
+protect known elapsed intervals and UTC remains the portable anchor. Explicit recovery
+validates quiescence/run/attempt/command/control, reconciles retained facts first and
+preserves known ends or establishes one conservative unknown-end interval. Actual
+account/budget admission stays with the current guarded client; hints remain historical.
+
+The new suite passed 32 groups; supported offline sweep passed 287 actual groups with
+three live skips, plus ten guard checks and the daily demo. The sole initial failure
+was a test invocation catching synchronous TypeError with an async helper; expected
+refusal was unchanged and no runtime correction was needed. Actual recover/retry on
+two disposable copies of Gate B unknown records passed without changing originals or
+the real budget. No new Telegram traffic or Gate C claim. **Next: Stage 6, then Gate C.**
 
 ## What is the task
 
@@ -641,6 +658,9 @@ continues to space live reads externally.
 **Failure action:** stop before Stage 5; reopen Gate A too if source assumptions changed.
 
 ## Stage 5 — Persist pacing and recover interrupted attempts
+
+**Built/verified offline at `a180151`.** [Scoped evidence and limits](stage-5-pacing-recovery/verification.md).
+Live timing/recovery/control validation remains Gate C after Stage 6.
 
 ### Proposed changes
 

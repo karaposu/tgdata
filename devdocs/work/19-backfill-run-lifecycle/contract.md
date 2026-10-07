@@ -1,21 +1,23 @@
 ---
 model: gpt-6-astra
 effort: max
-status: contract-with-stage-4-completion
+status: contract-with-stage-5-pacing-recovery
 contract_version: 1
 ---
 # Planned backfill run contract
 
 This specifies the full behavior for [issue #19](https://github.com/karaposu/tgdata/issues/19).
-Stages 2–4 implement internal start/retry/status, prepare/replay/acknowledgment and
-qualified completion, through `b1f6495`; see [available usage](../../../docs/backfill_state.md).
-Stage 4 audits the shared end/terminal closure and adds bounded exact-state read-back
-for ordinary ambiguous create/publication/ack replies. Admission uncertainty and
-cancellation still refuse source permission. A nonidentical/unreadable read-back leaves
-the outcome unconfirmed, not rolled back; existing retained retries/status remain local.
-Further positive timing admission/recovery, controls and the public facade are later
-stages. The sketches below describe the full contract, not current imports/readiness.
-Gates A and [B](validation/gate-b.md) passed; Stage 5 is next.
+Stages 2–5 implement internal start/status, prepare/replay/acknowledgment, qualified
+completion, local pacing and explicit recovery through `a180151`; see
+[available usage](../../../docs/backfill_state.md). Stage 4's exact write confirmation
+and no-send admission uncertainty remain. Stage 5 returns local waits without sleeping,
+uses UTC plus local monotonic evidence, and recovers only an exact quiescent attempt.
+Source observations never replace the actual-send budget/account authority.
+
+Controls and the public facade remain later stages. The sketches below specify the
+full contract, not current imports/readiness. Gates A/B passed; Stage 5 has scoped
+[offline verification](stage-5-pacing-recovery/verification.md). Stage 6 and mandatory
+live Gate C are next. Recoveries of copied Gate B rows are local evidence, not Gate C.
 
 The [source record](stage-1-contract/source-input.md), [assumptions](assumptions.md),
 [acceptance matrix](acceptance-matrix.md) and [live-validation specification](live-validation.md)

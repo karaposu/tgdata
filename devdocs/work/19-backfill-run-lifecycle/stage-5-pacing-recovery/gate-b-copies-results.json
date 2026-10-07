@@ -1,0 +1,34 @@
+{
+  "cases": [
+    {
+      "after_id": "0",
+      "applied": true,
+      "case": "empty_uncommitted",
+      "ended_at": null,
+      "original_sha256": "4d36051567f5329eb1c7379b425d39f884efe404f5c7d0b2d9037d7cccc28f14",
+      "original_unchanged": true,
+      "pause_seconds": 0.0,
+      "retry_applied": false,
+      "source_exhausted": false,
+      "terminal": null
+    },
+    {
+      "after_id": "0",
+      "applied": true,
+      "case": "unknown_source",
+      "ended_at": null,
+      "original_sha256": "86b7f633d006b002c4dcdb9a8cdf433a97f9c8710f2014bb0f127a192c0ca228",
+      "original_unchanged": true,
+      "pause_seconds": 0.0,
+      "retry_applied": false,
+      "source_exhausted": false,
+      "terminal": null
+    }
+  ],
+  "evidence": "LOCAL actual recovery of LIVE-origin copies",
+  "gate_c": "PENDING after Stage 6",
+  "original_budget_unchanged": true,
+  "recorded_at": "2026-10-07T12:13:01.778134+00:00",
+  "result": "PASS",
+  "source_calls": 0
+}
