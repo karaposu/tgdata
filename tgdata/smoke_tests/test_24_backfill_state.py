@@ -148,8 +148,8 @@ async def test_input_and_portable_identity():
     data = ref.to_dict();data['generation'] = 1.0
     raises(BackfillConfigurationError, lambda: BackfillRunRef.from_dict(data))
     import tgdata
-    assert not hasattr(tgdata.TgData, 'start_backfill')
-    # Stages 3–6 add these internal operations; the public facade remains absent.
+    assert callable(tgdata.TgData.start_backfill)
+    # Stages 3–6 add internal operations; Stage 7 exposes their public facade.
     assert callable(BackfillEngine.prepare) and callable(BackfillEngine.acknowledge)
     assert callable(BackfillEngine.control) and callable(BackfillEngine.recover)
 

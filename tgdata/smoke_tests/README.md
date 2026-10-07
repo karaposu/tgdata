@@ -314,3 +314,20 @@ Near-limit revisions preserve owed settlement/ack capacity. Actual SQLite close 
 and process exits exercise lost control replies. Controls preserve pacing/budgets and
 create no Telegram health evidence. Sockets are blocked. Real timing, actual allowance
 exhaustion and owned-worker recovery remain separately measured by mandatory Gate C.
+
+
+### Test 29: public backfill API and receiver example (Stage 7, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_29_backfill_public
+python examples/backfill_runs.py --demo
+```
+
+Exercises all six TgData operations, typed exports, disabled/malformed configuration,
+preserved engine guards/timing, exact retries, local health isolation and source error
+provenance. The SDK transport is synthetic; SQLite and receiver transactions are real.
+The example exits an owned process after receiver acceptance, reopens/replays without
+a source call, deduplicates complete observations, separates daily/history namespaces
+and completes after ack. Completed repeats have zero source reads; missing known state
+and repeated provisioning refuse. Sockets are blocked. Public/live Gate D remains after
+Stage 8; this suite does not claim deployment or Telegram behavior from synthetic inputs.

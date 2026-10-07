@@ -1,7 +1,7 @@
 """Durable historical-run delivery, completion and exact write confirmation.
 
 Pacing, exact-attempt recovery and operator controls share this engine/store.
-The public facade remains a later stage. Source reads require confirmed admission.
+The public TgData facade retains this engine's lifetime. Source reads require confirmed admission.
 """
 
 import asyncio

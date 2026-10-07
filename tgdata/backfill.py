@@ -1,4 +1,4 @@
-"""Typed values for the staged backfill lifecycle (no Telegram operations)."""
+"""Public typed backfill values and local errors (no Telegram operations)."""
 
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta

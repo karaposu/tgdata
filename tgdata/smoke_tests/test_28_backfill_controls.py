@@ -66,7 +66,7 @@ async def test_values_status_projection_and_scope_validation():
     ):
         f.rejected(BackfillConfigurationError, make)
     import tgdata
-    assert not hasattr(tgdata, 'BackfillControlResult') and not hasattr(tgdata.TgData, 'control_backfill')
+    assert tgdata.BackfillControlResult is BackfillControlResult and callable(tgdata.TgData.control_backfill)
     before = await e.store.load(CHAT)
     for key, value in (('command_id','bad id'),('command_id',None),('action','stop'),
                        ('expected_control_revision',True),('expected_control_revision','1'),

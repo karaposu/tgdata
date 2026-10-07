@@ -1,13 +1,14 @@
-# Backfill lifecycle — Stages 2–6
+# Backfill lifecycle — internal state and engine reference
 
 This internal staged interface implements **start, status, prepare/replay,
 acknowledge, explicit recovery and operator controls**, with durable per-run pacing. Preparation retains
 one exact batch before returning it; acknowledgment
 records the caller's durable acceptance. Completion and uncertain-write handling
 are covered through Stage 4; Stage 5 adds positive timing and recovery.
-Stage 6 adds pause/resume/cancel/abandon and safe succession. The public facade remains
-a later stage. No new `TgData` methods or
-package-root exports are introduced.
+Stage 6 adds pause/resume/cancel/abandon and safe succession. Stage 7 exposes these
+operations and their typed values through TgData and package-root imports. Use
+[Backfill runs](backfill_runs.md) for the public contract, configuration and example;
+the internal engine paths below remain implementation/evidence reference.
 
 The internal modules below support this staged delivery. The existing daily
 and fixed-window APIs and MessageBatch v1 remain unchanged. Tests target Telethon 1.45.0.
@@ -357,8 +358,9 @@ settlement, terminal ordering, abandonment, receipt isolation and control commit
 older seeded fixtures remain preservation tests only.
 
 Gates A/B passed the selected real-source foundation and delivery/completion composition
-on the issue branch. Real pacing/budget/recovery/control validation belongs to mandatory
-Gate C after Stage 6; these offline checks do not pass it. No public-API readiness follows.
+on the issue branch. Gate C subsequently passed actual pacing/budget/recovery/control
+composition at Stage 6. Stage 7 adds the public facade; full public/live Gate D remains
+after Stage 8. These offline checks alone pass no live gate.
 
 The issue branch retains the opt-in `devdocs/work/19-backfill-run-lifecycle/live_probe.py`
 instrument and its input specification. This is staged development tooling, not an

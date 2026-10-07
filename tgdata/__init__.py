@@ -13,6 +13,13 @@ from .connection_engine import AuthRequiredError, ProxyConfigError
 from .discovery_engine import DiscoveryInterrupted
 from .message_batch import MessageBatch, BatchFormatError
 from .batch_files import BatchStorageError
+from .backfill import (
+    BackfillRunRef, BackfillStartRequest, BackfillPrepareContext, BackfillDeliveryRef,
+    BackfillStatus, BackfillStartResult, BackfillTurn, BackfillControlResult, BackfillRecoveryResult,
+    BackfillError, BackfillConfigurationError, BackfillConflictError, BackfillUnknownRun,
+    BackfillUnknownCommand, BackfillStateError, BackfillStorageError, BackfillUnknownReceipt,
+    BackfillRecoveryRequired, BackfillMediaError, BackfillClockError,
+)
 from .sync_store import (
     SQLiteSyncStore, SyncStatus, SyncError, SyncConfigurationError,
     SyncNotInitializedError, SyncConflictError, SyncStorageError,
@@ -60,6 +67,26 @@ __all__ = [
     "MessageBatch",
     "BatchFormatError",
     "BatchStorageError",
+    "BackfillRunRef",
+    "BackfillStartRequest",
+    "BackfillPrepareContext",
+    "BackfillDeliveryRef",
+    "BackfillStatus",
+    "BackfillStartResult",
+    "BackfillTurn",
+    "BackfillControlResult",
+    "BackfillRecoveryResult",
+    "BackfillError",
+    "BackfillConfigurationError",
+    "BackfillConflictError",
+    "BackfillUnknownRun",
+    "BackfillUnknownCommand",
+    "BackfillStateError",
+    "BackfillStorageError",
+    "BackfillUnknownReceipt",
+    "BackfillRecoveryRequired",
+    "BackfillMediaError",
+    "BackfillClockError",
     "SQLiteSyncStore",
     "SyncStatus",
     "SyncError",

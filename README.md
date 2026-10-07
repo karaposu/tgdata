@@ -692,6 +692,46 @@ stay independent. See [Fixed historical windows](docs/fixed_windows.md) for date
 limits, restart rules and direct batch reads. Scheduling and pacing remain with
 the caller.
 
+### Durable backfill runs
+
+For historical reads with pause/cancel, restart recovery, pacing and explicit delivery
+acknowledgments, configure a separate backfill progress store:
+
+```python
+from uuid import uuid4
+from tgdata import TgData, SQLiteSyncStore, BackfillStartRequest, BackfillPrepareContext
+
+tg = TgData("config.ini", interactive_login=False,
+            backfill_store=SQLiteSyncStore("backfill-progress.sqlite3"))
+request = BackfillStartRequest(
+    collection_id="archive-history", chat_id=chat_id, run_id=uuid4().hex,
+    destination_id="my-archive", pause_seconds=240, expected_predecessor=None,
+    last_days=30, batch_size=200,
+)
+# Durably retain request.to_dict() in your application before submitting it.
+try:
+    started = await tg.start_backfill(request, submission="new")
+    # Retain started.status.run.to_dict() for reopening and subsequent calls.
+    turn = await tg.prepare_backfill(BackfillPrepareContext.from_status(started.status))
+    if turn.batch is not None:
+        await destination.deliver_and_commit(turn.batch, turn.delivery)
+        await tg.acknowledge_backfill(turn.delivery)
+finally:
+    await tg.close()
+```
+
+`destination.deliver_and_commit` is your application's durable receiver, not a tgdata
+method. The full delivery reference identifies the obligation. Until acknowledged,
+preparation replays the saved batch; a local wait returns without sleeping. The caller
+schedules one source reader per group and keeps daily/backfill namespaces separate.
+Collection identity does not automatically partition a backend; custom stores can use
+separate namespaces in one database.
+
+See [Backfill runs](docs/backfill_runs.md) for all six operations, status/error meanings,
+exact retries, operator controls and recovery. Run the real SQLite receiver/restart
+example without Telegram: `python examples/backfill_runs.py --demo`. The public API's
+offline checks are available; full public/live Gate D remains a later validation gate.
+
 ### Detecting & Downloading Media (photos / videos)
 
 Every fetched message carries media-reference columns, so you can tell whether a

@@ -134,7 +134,7 @@ async def control_fixture(backend,action):
     assert await backend.compare_and_swap(CHAT,raw,_BackfillState(value).to_json())
 
 
-async def test_values_are_exact_owned_and_not_public_facade():
+async def test_values_are_exact_owned_and_public_facade_is_available():
     ref=BackfillRunRef('collection',-9007199254740993,9007199254740993,'run')
     context=BackfillPrepareContext(ref,101,9007199254740993)
     delivery=BackfillDeliveryRef(ref,'destination','a'*64)
@@ -148,7 +148,7 @@ async def test_values_are_exact_owned_and_not_public_facade():
         f.rejected(BackfillConfigurationError,call)
     f.rejected(FrozenInstanceError,lambda:setattr(delivery,'batch_id','b'*64))
     import tgdata
-    assert not hasattr(tgdata,'BackfillTurn') and not hasattr(tgdata.TgData,'prepare_backfill')
+    assert tgdata.BackfillTurn is BackfillTurn and callable(tgdata.TgData.prepare_backfill)
     assert callable(BackfillEngine.control) and callable(BackfillEngine.recover)
 
 
