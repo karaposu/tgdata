@@ -74,7 +74,7 @@ No PR, merge, #7/duncan changes, or unrelated worktree edits.
 
 ## Priority Level
 
-**High (issue P1)** — false completion can silently skip required history. This is
+**Medium (issue P2 retained)** — false completion can silently skip required history. This is
 the next planned prerequisite for durable pacing/recovery, not a separate backlog item.
 
 ## Known Blockers

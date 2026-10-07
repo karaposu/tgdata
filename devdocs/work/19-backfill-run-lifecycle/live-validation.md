@@ -40,8 +40,8 @@ Requalify values at later gates; receiver/ownership requirements remain open.
 | Source allowance and pacing | Total requests/messages/elapsed limit; external spacing before Stage 5 exists | A: bounded per-run caps, 180 seconds, five-second batch spacing |
 | State/artifact paths | Disposable isolated collection data, no existing progress overwritten | A: separate SQLite runs and local media directory, report paths |
 | Budget policy/ledger | Chosen authoritative account allowance plus any stricter test cap | A: persistent 5,000-read ledger, 1,118 charged, never reset |
-| Receiver acceptance point | Actual commit/durability boundary before acknowledgment | Gate B/D: UNSET |
-| Reader ownership | How the caller excludes another source worker and confirms process exit | Gate C/D: UNSET |
+| Receiver acceptance point | Actual commit/durability boundary before acknowledgment | B: SQLite FULL transaction after verified/fsynced blobs, observed PASS; D: operational receiver UNSET |
+| Reader ownership | How the caller excludes another source worker and confirms process exit | B: sequential owned workers, exact exit codes; full recovery/deployment C/D remain pending |
 
 Keep an existing authoritative account budget in force. A separate test cap may
 restrict it further; it must not grant extra allowance or bypass charges on an account
@@ -173,6 +173,9 @@ new lifecycle delivery, completion, pacing or control guarantee is credited yet.
 
 ## 6. Gate B — delivery, acknowledgment and completion
 
+**Recorded PASS — 2026-10-07**, product `b1f6495`: [Gate B report](validation/gate-b.md).
+The requirements below remain the gate specification; later changes can reopen it.
+
 **Entry:** Gate A PASS and Stages 3–4; actual new internal engine and real receiver.
 Harness still enforces external pacing. Source oracle is requalified for drift.
 
@@ -266,4 +269,4 @@ earlier gates. Only independent work may proceed while a gate is blocked.
 At the Stage 1 handoff the executable harness was future Stage 2 work and actual
 resources were unset. Stage 2 has since supplied the harness and Gate A has passed
 the separately recorded live execution. Stage 1 documents and local component probes
-alone did not fulfill that gate. Gates B–D remain pending.
+alone did not fulfill that gate. Gate B subsequently passed at `b1f6495`; Gates C/D remain pending.

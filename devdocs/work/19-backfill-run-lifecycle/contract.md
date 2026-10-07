@@ -1,20 +1,21 @@
 ---
 model: gpt-6-astra
 effort: max
-status: contract-with-stage-3-delivery
+status: contract-with-stage-4-completion
 contract_version: 1
 ---
 # Planned backfill run contract
 
 This specifies the full behavior for [issue #19](https://github.com/karaposu/tgdata/issues/19).
-Stages 2–3 implement internal start/retry/status and prepare/replay/acknowledgment,
-at `1425fd7` and `3140dcd`; see [available usage](../../../docs/backfill_state.md).
-Minimal end/terminal closure is included to preserve this contract's saved-state
-invariants, but Stage 4's dedicated completion/uncertain-write audit remains pending.
+Stages 2–4 implement internal start/retry/status, prepare/replay/acknowledgment and
+qualified completion, through `b1f6495`; see [available usage](../../../docs/backfill_state.md).
+Stage 4 audits the shared end/terminal closure and adds bounded exact-state read-back
+for ordinary ambiguous create/publication/ack replies. Admission uncertainty and
+cancellation still refuse source permission. A nonidentical/unreadable read-back leaves
+the outcome unconfirmed, not rolled back; existing retained retries/status remain local.
 Further positive timing admission/recovery, controls and the public facade are later
-stages; Stage 3 fails closed where their machinery is required. The sketches below
-describe the complete contract, not current imports/readiness. Gate A passed; Gate B
-is still required after Stage 4 for the new delivery composition.
+stages. The sketches below describe the full contract, not current imports/readiness.
+Gates A and [B](validation/gate-b.md) passed; Stage 5 is next.
 
 The [source record](stage-1-contract/source-input.md), [assumptions](assumptions.md),
 [acceptance matrix](acceptance-matrix.md) and [live-validation specification](live-validation.md)

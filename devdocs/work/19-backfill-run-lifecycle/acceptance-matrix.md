@@ -1,7 +1,7 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-3-local-delivery-evidence
+status: stage-4-gate-b-evidence
 ---
 # Backfill acceptance and failure matrix
 
@@ -10,11 +10,31 @@ local evidence at `1425fd7`; Stage 3 adds actual internal delivery checks at `31
 recorded in [its verification](stage-3-delivery/verification.md).
 A case still marked UNRUN has not completed its full listed composition; that does
 not discard its partial observations. Gate A's foundation scope has now passed; later
-operation/composition requirements remain unrun as specified below.
+operation/composition requirements remain scoped below. Stage 4 and Gate B evidence
+now supplement those historical records; they do not credit unbuilt later operations.
 
 C01–C22 preserve the final inquiry's 22 histories in their original order. C23–C44 add operation, storage, live-oracle and selected-critique boundaries. Gate A foundation tests can use the existing reader with the Stage 2 record; they do not claim that Stage 3 preparation already exists. Cases spanning multiple stages are repeated at their first full composition.
 
 LIVE means actual Telegram via Telethon 1.45.0; INJECTED means an identified local interruption/order/fault around real source/store/receiver paths; LOCAL means no server behavior is inferred. No Telegram source writes are allowed.
+
+## Stage 4 and Gate B evidence — 2026-10-07
+
+Product `b1f6495`: 16 new completion groups, 255 actual supported offline passes,
+three explicit legacy live skips. [Verification](stage-4-completion/verification.md).
+[Gate B PASS](validation/gate-b.md) adds actual source/state/receiver composition.
+
+| Cases / boundary | New evidence | Still unverified |
+|---|---|---|
+| C01–C05, C21, C25, C26, C43 | Exact-candidate read-back, old/missing/newer/corrupt/unreadable states, cancellation and source provenance; actual final SQLite boundaries | Unbuilt control/recovery/public operations and other backends |
+| C12, C14, C23, C24 | Live imported completion, actual full-then-empty, full-then-refused, empty/final commit crashes and complete reopen | Other account views; deployed/public composition |
+| C15–C17, C29–C31, C35 | Live-data replay, actual receiver dedup, media custody/removal, equal hashes/wrong scope, duplicate/stale refusal, useful interrupted prefix | C16 later pruning/control composition; C17 actual live quota/wait integration at C |
+| C18, C26 (B portions) | Actual post-answer and pre-empty-commit exits preserve unknown attempts; offline reopening refuses another reader | Explicit recovery, conservative waits and controls at C |
+| C41, C42 | New engine accepts 350 exact independently expected records with real second SDK pages; photo hash and fresh/imported boundaries agree | Public facade at D |
+| C40 | Independent qualification before scans, small-source post-check, unchanged expected sets | Future source drift remains a new qualification requirement |
+
+Gate B deliberately used the staged plan's permitted **controlled-failure** alternative
+for the useful prefix; no live quota exhaustion/expiry or policy reset is claimed.
+C09–C11/C27/C32/C36 controls remain unrun; local seeded preservation is not those APIs.
 
 ## Stage 3 local delivery evidence — 2026-10-07
 
@@ -181,7 +201,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Claiming this run collected the skipped prefix.
 **Operations:** OP-START OP-PREPARE OP-STATUS. **Requirements:** INV-01 INV-04.
 **Evidence / earliest check:** LIVE bounded oracle plus LOCAL origin checks; Gate A foundation; Stage 4 / Gate B completion.
-**Status:** UNRUN.
+**Status:** PASS at Gate B / `b1f6495` for internal imported-tail completion with live oracle; public integration remains D.
 
 ## C13 — Daily progress cannot seed fresh backfill silently
 
@@ -199,7 +219,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Treating full size or latest known ID as proof of end.
 **Operations:** OP-PREPARE OP-ACK. **Requirements:** INV-04 INV-11.
 **Evidence / earliest check:** LIVE plus local budget/failure injection; Stage 4 / Gate B.
-**Status:** UNRUN.
+**Status:** PASS at Gate B / `b1f6495`: live full batch followed by injected local send refusal remains incomplete; actual budget/auth counterparts passed offline.
 
 ## C15 — Missing local artifact after receiver acceptance
 
@@ -208,7 +228,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Replacement download, or refusing acceptance solely because local replay is unavailable.
 **Operations:** OP-PREPARE OP-ACK. **Requirements:** INV-02 INV-03 INV-11.
 **Evidence / earliest check:** LIVE media and real receiver; INJECTED local removal; Stage 3 / Gate B.
-**Status:** UNRUN.
+**Status:** PASS at Gate B / `b1f6495`: real receiver owns the photo; missing replay refuses; final ack succeeds after removal of source copies.
 
 ## C16 — Live pending receipt outlives history policy
 
@@ -226,7 +246,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Advancing without ack or treating a short interrupted prefix as end.
 **Operations:** OP-PREPARE OP-ACK. **Requirements:** INV-02 INV-03 INV-04 INV-06 INV-11.
 **Evidence / earliest check:** LIVE with real budget/store/receiver; Stage 3 / Gate B; timing C.
-**Status:** UNRUN.
+**Status:** PARTIAL: actual budget prefixes pass locally; Gate B LIVE controlled-failure prefix passes with real budget accounting. Specific live quota/wait case remains Gate C.
 
 ## C18 — Crash after possible send
 
@@ -262,7 +282,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Reverting accepted progress or issuing compensating new source work blindly.
 **Operations:** OP-START OP-PREPARE OP-ACK OP-CONTROL OP-RECOVER OP-STATUS. **Requirements:** INV-03 INV-05 INV-09.
 **Evidence / earliest check:** INJECTED at actual store commits; A create; B publish/ack/end; C controls/recovery.
-**Status:** UNRUN.
+**Status:** PARTIAL PASS: actual create/publish/empty/final-ack uncertainty and restart covered through Stage 4/Gate B; controls/recovery remain Gate C.
 
 ## C22 — Paused, pending and rate-limited together
 
@@ -280,7 +300,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Equating arbitrary None/error with end, or reading again after completed status.
 **Operations:** OP-PREPARE OP-ACK OP-STATUS. **Requirements:** INV-03 INV-04 INV-09.
 **Evidence / earliest check:** LIVE oracle with actual storage and crash boundaries; Stage 4 / Gate B.
-**Status:** UNRUN.
+**Status:** PASS at Gate B / `b1f6495`: real empty/final scope and actual before/after completion/ack process exits.
 
 ## C24 — Failure before a usable prefix
 
@@ -289,7 +309,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Returning successful empty completion.
 **Operations:** OP-PREPARE OP-STATUS. **Requirements:** INV-03 INV-04 INV-11.
 **Evidence / earliest check:** LIVE read with INJECTED local failure; LOCAL source categories; Stage 3 / Gate B; recovery C.
-**Status:** UNRUN.
+**Status:** PASS for local/auth/budget cases and Gate B injected failed-follow-up/post-answer uncertainty; no naturally occurring server failure is claimed.
 
 ## C25 — Prefix save also fails
 
@@ -298,7 +318,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Cleanup/storage replacing the original context silently or signaling fake source recovery.
 **Operations:** OP-PREPARE. **Requirements:** INV-02 INV-09 INV-11.
 **Evidence / earliest check:** INJECTED with real backend; existing local health checks; Stage 3 / Gate B.
-**Status:** UNRUN.
+**Status:** LOCAL PASS through tests 25/26 at `b1f6495`; original read failure and local storage provenance stay separate. Live payload custody/restart also passes B.
 
 ## C26 — Admission write failed or uncertain
 
@@ -307,7 +327,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Sending because the write probably worked or probably rolled back.
 **Operations:** OP-PREPARE OP-RECOVER. **Requirements:** INV-06 INV-09 INV-12.
 **Evidence / earliest check:** INJECTED actual backend; count real send boundary; Stage 3 / Gate B.
-**Status:** UNRUN.
+**Status:** LOCAL PASS for failed/ambiguous admission with zero sends; Gate B preserved actual unknown attempts. Explicit recovery remains Stage 5/Gate C.
 
 ## C27 — Late source result after control mutation
 
@@ -334,7 +354,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Accepting changed bytes because filename/path matches.
 **Operations:** OP-PREPARE. **Requirements:** INV-02 INV-11.
 **Evidence / earliest check:** LIVE media plus INJECTED filesystem fault; Stage 3 / Gate B.
-**Status:** UNRUN.
+**Status:** PASS at Gate B / `b1f6495`: corrupt and missing live-photo copies refuse without refetch/state mutation.
 
 ## C30 — Wrong collection, destination or run receipt
 
@@ -343,7 +363,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Treating a payload hash as collection/destination authority.
 **Operations:** OP-ACK. **Requirements:** INV-03 INV-05.
 **Evidence / earliest check:** LOCAL/INJECTED with real stored observations; LIVE where equal observations exist; Stage 3 / Gate B.
-**Status:** UNRUN.
+**Status:** PASS at Gate B / `b1f6495`: real equal hashes across collections and wrong run/destination/collection references refuse unchanged.
 
 ## C31 — Duplicate latest ack with newer pending
 
@@ -352,7 +372,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Clearing another pending batch or advancing twice.
 **Operations:** OP-ACK OP-STATUS. **Requirements:** INV-02 INV-03 INV-05 INV-10.
 **Evidence / earliest check:** Real storage and receiver; LIVE payload; Stage 3 / Gate B.
-**Status:** UNRUN.
+**Status:** PASS at Gate B / `b1f6495`: latest duplicate preserves newer pending; older unrecognized receipt refuses.
 
 ## C32 — Explicit abandonment and successor
 
@@ -388,7 +408,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Turning the old call into fetch-next at the new cursor.
 **Operations:** OP-PREPARE OP-ACK. **Requirements:** INV-05 INV-06.
 **Evidence / earliest check:** LOCAL/INJECTED actual lifecycle state; LIVE request attribution; Stage 3 / Gate B.
-**Status:** UNRUN.
+**Status:** PASS at Gate B / `b1f6495`: stale prepare after ack conflicts before another source request.
 
 ## C36 — Delayed prepare after pause/resume
 
@@ -433,7 +453,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Retrospectively changing expected results, seeding Telegram messages, or passing synthetic-only live coverage.
 **Operations:** VALIDATION. **Requirements:** INV-04 INV-11.
 **Evidence / earliest check:** LIVE independent existing-history evidence; Fixture qualification / Gate A; recheck every gate.
-**Status:** UNRUN.
+**Status:** OBSERVED at Gates A/B: independent complete fixtures, no retrospective expected-set changes, matching post-check; requalify future runs.
 
 ## C41 — Real SDK and caller pagination
 
@@ -442,7 +462,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Counting repeated small first pages as an SDK boundary test or using the same reader as the sole oracle.
 **Operations:** OP-START OP-PREPARE. **Requirements:** INV-01 INV-04 INV-11.
 **Evidence / earliest check:** LIVE, existing group, read-only; Gate A foundation; Gate B/D new API.
-**Status:** UNRUN.
+**Status:** PASS for internal composition at Gate B / `b1f6495`: 350 accepted records, 120/120/110 batches, six real SDK requests and actual second pages. Public D remains.
 
 ## C42 — Exact date selection and media mode
 
@@ -451,7 +471,7 @@ from seeded state, an individual MATCH or raw-reader tests.
 **Forbidden outcome:** Claiming unseen cases passed, downloading excluded media, or creating fixture messages.
 **Operations:** OP-START OP-PREPARE. **Requirements:** INV-01 INV-02 INV-04 INV-11.
 **Evidence / earliest check:** LIVE plus separate LOCAL malformed/bounds cases; Gate A foundation; B/D composition.
-**Status:** UNRUN.
+**Status:** PASS for Gate B internal fresh/imported reference/download composition and independent photo hash; public D remains.
 
 ## C43 — Invalid or incompatible saved state
 

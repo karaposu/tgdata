@@ -1,6 +1,6 @@
 ---
 status: draft
-revision: 6
+revision: 7
 model: gpt-6-astra
 effort: max
 ---
@@ -86,6 +86,24 @@ that shared path now exists. Stage 4 still owns its dedicated completion/uncerta
 review and full fault matrix. Positive timing admission and explicit recovery remain
 Stage 5, with an explicit fail-closed boundary in Stage 3. Controls/facade remain later.
 Next is Stage 4, then mandatory live Gate B. Stages 4–8 and Gates B–D remain pending.
+
+## Stage 4 implementation and Gate B handoff — revision 7
+
+Stage 4 is complete at `b1f6495`: [implementation](stage-4-completion/implementation.md),
+[verification](stage-4-completion/verification.md), [folded plan](stage-4-completion/step_by_step_impl_plan.md).
+The existing shared completion path was audited rather than duplicated. One validated
+exact-state read-back can confirm ambiguous create/publication/ack replies; mismatched
+or unavailable state remains unknown. Admission and cancellation remain fail-closed.
+The supported offline sweep passed 255 actual groups with three live skips, plus ten
+instrument checks and the daily demo. No runtime fix was needed after the first test run.
+
+[Gate B PASS](validation/gate-b.md) adds actual new-engine source/store/receiver evidence:
+20 expected worker exits, 46/350 independently expected records, real SDK pages, photo
+custody and final-commit crashes. Stage 4's prebuild and Gate B together used 1400 requested
+slots; shared budget usage is 2202/5000, unchanged policy. Two unresolved runs remain
+preserved. **Stage 5 is next; Stages 5–8 and Gates C/D remain pending.** Control/recovery
+write reconciliation is tested when those operations exist in their stages, not inferred
+from Stage 4. Earlier handoff sections above describe their historical checkpoints.
 
 ## What is the task
 
@@ -539,11 +557,11 @@ MessageBatch v1, media blobs, partial_result, error provenance, existing health 
 
 ## Stage 4 — Make completion and uncertain storage outcomes truthful
 
-Stage 3 already includes the minimal end/closure predicates required by the strict
-codec while publishing/acknowledging a batch. Treat 4.1–4.2 as audit/refinement of that
-shared implementation and completion-specific edge coverage, not a second competing
-transition path. The expanded uncertain-write/final-commit matrix and Gate B remain
-unimplemented/unrun; Stage 4 must still pass its own pipeline and checks.
+**Built/verified at `b1f6495`; Gate B passed.** Stage 3's shared end/closure path was
+reused and audited by the dedicated Stage 4 completion/final-commit matrix. Exact-state
+read-back handles currently implemented create/publication/ack outcomes; controls and
+explicit recovery retain their later stages. See the Stage 4 handoff and gate report above.
+The proposed changes below remain the original scope record, not a second transition path.
 
 ### Proposed changes
 
@@ -591,6 +609,8 @@ End/limit/interrupted semantics, imported progress, CAS recovery, receiver ackno
 4/5. Small transition surface, strict consequences.
 
 ## Gate B — Validate delivery, completion and restart before Stage 5
+
+**PASS — 2026-10-07**, product `b1f6495`; [actual evidence and limits](validation/gate-b.md).
 
 **Premises under test:** real prepared observations survive delivery uncertainty;
 acknowledgments advance only their own run; completion represents exhausted scope
