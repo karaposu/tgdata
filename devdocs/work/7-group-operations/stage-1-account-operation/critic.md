@@ -117,10 +117,10 @@ closed, even if the scripted account changes back. Cleanup still executes once.
 **why this is robust:** it enforces this context's stop rule using the existing
 active flag, without any global owner state or additional client framework.
 
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* No accepted second owner-handle instance exists on dev. The unmerged #17 pool has a different multi-client lifetime, not the same class requiring one supervisor. The active flag closes this instance in a few lines; a supervisor expands scope and would still need this handle boundary.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -135,7 +135,7 @@ could then enforce credential revocation beyond one internal lexical handle.
 
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* Revisit only if a public arbitrary-client API is requested. It is not a prerequisite for the private operation; the terminal handle rule survives that future work.
 
 ## Other checks
 
