@@ -1,0 +1,144 @@
+running sdist
+running egg_info
+creating tgdata.egg-info
+writing tgdata.egg-info/PKG-INFO
+writing dependency_links to tgdata.egg-info/dependency_links.txt
+writing requirements to tgdata.egg-info/requires.txt
+writing top-level names to tgdata.egg-info/top_level.txt
+writing manifest file 'tgdata.egg-info/SOURCES.txt'
+reading manifest file 'tgdata.egg-info/SOURCES.txt'
+writing manifest file 'tgdata.egg-info/SOURCES.txt'
+running check
+creating tgdata-0.0.8
+creating tgdata-0.0.8/tgdata
+creating tgdata-0.0.8/tgdata.egg-info
+creating tgdata-0.0.8/tgdata/smoke_tests
+copying files to tgdata-0.0.8...
+copying README.md -> tgdata-0.0.8
+copying setup.py -> tgdata-0.0.8
+copying tgdata/__init__.py -> tgdata-0.0.8/tgdata
+copying tgdata/backfill.py -> tgdata-0.0.8/tgdata
+copying tgdata/backfill_engine.py -> tgdata-0.0.8/tgdata
+copying tgdata/backfill_state.py -> tgdata-0.0.8/tgdata
+copying tgdata/batch_engine.py -> tgdata-0.0.8/tgdata
+copying tgdata/batch_files.py -> tgdata-0.0.8/tgdata
+copying tgdata/budget_client.py -> tgdata-0.0.8/tgdata
+copying tgdata/connection_engine.py -> tgdata-0.0.8/tgdata
+copying tgdata/discovery_engine.py -> tgdata-0.0.8/tgdata
+copying tgdata/health.py -> tgdata-0.0.8/tgdata
+copying tgdata/history_window.py -> tgdata-0.0.8/tgdata
+copying tgdata/message_batch.py -> tgdata-0.0.8/tgdata
+copying tgdata/message_engine.py -> tgdata-0.0.8/tgdata
+copying tgdata/models.py -> tgdata-0.0.8/tgdata
+copying tgdata/progress.py -> tgdata-0.0.8/tgdata
+copying tgdata/read_budget.py -> tgdata-0.0.8/tgdata
+copying tgdata/session_store.py -> tgdata-0.0.8/tgdata
+copying tgdata/sync_engine.py -> tgdata-0.0.8/tgdata
+copying tgdata/sync_store.py -> tgdata-0.0.8/tgdata
+copying tgdata/tgdata.py -> tgdata-0.0.8/tgdata
+copying tgdata/utils.py -> tgdata-0.0.8/tgdata
+copying tgdata.egg-info/PKG-INFO -> tgdata-0.0.8/tgdata.egg-info
+copying tgdata.egg-info/SOURCES.txt -> tgdata-0.0.8/tgdata.egg-info
+copying tgdata.egg-info/dependency_links.txt -> tgdata-0.0.8/tgdata.egg-info
+copying tgdata.egg-info/requires.txt -> tgdata-0.0.8/tgdata.egg-info
+copying tgdata.egg-info/top_level.txt -> tgdata-0.0.8/tgdata.egg-info
+copying tgdata/smoke_tests/__init__.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/my_test.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_00_connection.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_01_list_group_chats.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_02_get_message_count.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_03_get_all_messages.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_04_get_all_messages_in_batches.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_05_with_progress_feature.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_06_polling_simple.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_07_on_new_message_simple.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_07_real_time_event_handler.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_08_batch_callback.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_08_polling.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_10_advanced_features.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_11_discover_groups.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_12_proxy.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_13_device_identity.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_14_flood_threshold.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_15_login_checks.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_16_health_events.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_17_session_store.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_18_read_budget.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_19_message_batches.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_22_daily_continuation.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_23_fixed_windows.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_24_backfill_state.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_25_backfill_delivery.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_26_backfill_completion.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_27_backfill_pacing.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_28_backfill_controls.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_29_backfill_public.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_30_backfill_integration.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_debug_min_id.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_polling_debug.py -> tgdata-0.0.8/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_username_support.py -> tgdata-0.0.8/tgdata/smoke_tests
+Writing tgdata-0.0.8/setup.cfg
+Creating tar archive
+removing 'tgdata-0.0.8' (and everything under it)
+running build
+running build_py
+creating <temporary-build-root>/built
+creating <temporary-build-root>/built/tgdata
+copying tgdata/sync_engine.py -> <temporary-build-root>/built/tgdata
+copying tgdata/connection_engine.py -> <temporary-build-root>/built/tgdata
+copying tgdata/history_window.py -> <temporary-build-root>/built/tgdata
+copying tgdata/budget_client.py -> <temporary-build-root>/built/tgdata
+copying tgdata/models.py -> <temporary-build-root>/built/tgdata
+copying tgdata/health.py -> <temporary-build-root>/built/tgdata
+copying tgdata/sync_store.py -> <temporary-build-root>/built/tgdata
+copying tgdata/__init__.py -> <temporary-build-root>/built/tgdata
+copying tgdata/backfill_state.py -> <temporary-build-root>/built/tgdata
+copying tgdata/tgdata.py -> <temporary-build-root>/built/tgdata
+copying tgdata/batch_engine.py -> <temporary-build-root>/built/tgdata
+copying tgdata/backfill_engine.py -> <temporary-build-root>/built/tgdata
+copying tgdata/message_engine.py -> <temporary-build-root>/built/tgdata
+copying tgdata/backfill.py -> <temporary-build-root>/built/tgdata
+copying tgdata/utils.py -> <temporary-build-root>/built/tgdata
+copying tgdata/read_budget.py -> <temporary-build-root>/built/tgdata
+copying tgdata/message_batch.py -> <temporary-build-root>/built/tgdata
+copying tgdata/progress.py -> <temporary-build-root>/built/tgdata
+copying tgdata/session_store.py -> <temporary-build-root>/built/tgdata
+copying tgdata/discovery_engine.py -> <temporary-build-root>/built/tgdata
+copying tgdata/batch_files.py -> <temporary-build-root>/built/tgdata
+creating <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_username_support.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_00_connection.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_07_real_time_event_handler.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_12_proxy.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_05_with_progress_feature.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_30_backfill_integration.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_17_session_store.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_08_polling.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_18_read_budget.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_14_flood_threshold.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/my_test.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_03_get_all_messages.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_29_backfill_public.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_28_backfill_controls.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/__init__.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_04_get_all_messages_in_batches.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_02_get_message_count.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_26_backfill_completion.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_polling_debug.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_16_health_events.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_06_polling_simple.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_debug_min_id.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_13_device_identity.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_19_message_batches.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_08_batch_callback.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_27_backfill_pacing.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_15_login_checks.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_22_daily_continuation.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_01_list_group_chats.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_25_backfill_delivery.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_24_backfill_state.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_11_discover_groups.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_07_on_new_message_simple.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_23_fixed_windows.py -> <temporary-build-root>/built/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_10_advanced_features.py -> <temporary-build-root>/built/tgdata/smoke_tests
+{"result": "PASS", "package_version": "0.0.8", "operations": "public create/retry/status/pause/prepare/close", "source": "actual built sdist package", "source_requests": 0, "repository_test_imports": 0}

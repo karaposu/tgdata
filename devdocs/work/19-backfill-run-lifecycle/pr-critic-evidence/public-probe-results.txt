@@ -1,0 +1,6 @@
+{"case": "publication_reply_after_receiver_and_ack", "observed": {"after_id": 101, "local_health_preserved": true, "source_reads": 1, "terminal": "completed"}, "result": "PASS"}
+{"case": "ack_reply_after_newer_pending", "observed": {"accepted": 101, "duplicate_left_newer_pending": true, "pending_next": 102, "total_source_reads": 2}, "result": "PASS"}
+{"case": "namespace_isolation_both_directions", "observed": {"client_config_loads": 0, "mutations": 0, "wrong_kind_refusals": 3}, "result": "PASS"}
+{"case": "malformed_state_inside_unrelated_rpc_context", "observed": {"local_health_preserved": true, "local_refusals": 3, "source_reads": 0}, "result": "PASS"}
+{"case": "receiver_contracts_and_failed_reply", "observed": {"daily_policy": "explicit first-observation archive; not the full-snapshot backfill receiver", "lost_receiver_reply_recognized": true, "message_index_rows": 1, "scoped_snapshots": 2}, "result": "PASS"}
+Passed: 5/5 fresh public/SQLite/SDK/receiver probes; LOCAL, sockets forbidden

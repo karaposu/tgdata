@@ -1,0 +1,2 @@
+{"result": "PASS", "package_version": "0.0.8", "operations": "public create/retry/status/pause/prepare/close", "source": "actual built sdist package", "source_requests": 0, "repository_test_imports": 0}
+Passed: 1/1 actual sdist/build/import/public-local-API probe; no network or repository work files

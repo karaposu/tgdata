@@ -46,8 +46,9 @@ product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd
   357 supported offline passes and complete feature traceability.
 - [Gate D report](validation/gate-d.md): 250 historical records plus two daily records,
   actual process/commit failures, public controls, pacing and verified photo custody.
-- [Merge check](merge-check.md): formal fidelity review and code-only PR projection;
-  the fresh PR critique remains a separate gate.
+- [Merge check](merge-check.md): formal fidelity review and code-only PR projection, PASS.
+- [Fresh PR critique](pr-critic.md): PR #20 soundness review with six new probes,
+  zero High/Medium/Low findings; merge still needs explicit go-ahead.
 - [Public backfill API](../../../docs/backfill_runs.md) and
   [offline example](../../../examples/backfill_runs.py).
 - [Internal state reference](../../../docs/backfill_state.md) and
@@ -57,7 +58,8 @@ product code/tests/public docs are committed in `1425fd7`; Stage 3 adds `3140dcd
 
 [Issue #19](https://github.com/karaposu/tgdata/issues/19) tracks this lifecycle slice of
 #18. The feature archive preserves these documents; the PR candidate contains the
-27 product files only. Its base is dev `45bab71`. No stage or #18 prerequisite has
+27 product files only in [PR #20](https://github.com/karaposu/tgdata/pull/20), head
+`719f2a9`, base dev `45bab71`. No stage or #18 prerequisite has
 merged into dev; earlier #5/#9/#6 features already have.
 Gate D private records remain under `/private/tmp/tgdata19-gate-d-live-20261007`.
 Original Gate B unknown-state files remain byte-identical. The existing account ledger

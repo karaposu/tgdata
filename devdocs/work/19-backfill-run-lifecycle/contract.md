@@ -1,7 +1,7 @@
 ---
 model: gpt-6-astra
 effort: max
-status: public-stage-7-offline-verified-gate-d-pending
+status: public-stage-8-verified-gates-A-through-D-PASS
 contract_version: 1
 ---
 # Planned backfill run contract
@@ -20,8 +20,11 @@ and [Stage 7 verification](stage-7-public-api/verification.md): 342 actual offli
 passes, three explicit legacy live skips and an actual durable receiver/process-restart
 example. Package methods preserve the internal transition and source-health owners.
 
-Gates A/B and [Gate C](validation/gate-c.md) retain their scoped live evidence. Stage 8
-and mandatory public/live Gate D remain pending, along with whole-feature review.
+Gates A/B and [Gate C](validation/gate-c.md) retain their scoped live evidence.
+Stage 8 and mandatory public/live [Gate D](validation/gate-d.md) passed at `405218e`,
+with 357 actual supported offline checks and the selected complete public/SQLite/
+receiver composition. [Merge check](merge-check.md) and [PR critique](pr-critic.md)
+record the separate formal review; a merge still requires maintainer go-ahead.
 Names below correspond to the implemented public operations; the value/error reference
 is in the public documentation. None of this implies a dev merge or package release.
 

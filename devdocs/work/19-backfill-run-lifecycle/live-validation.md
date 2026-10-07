@@ -1,12 +1,14 @@
 ---
 model: gpt-6-astra
 effort: max
-status: stage-7-offline-verified-gate-d-pending
+status: gates-A-through-D-PASS
 ---
 # Read-only live validation specification
 
 This specifies Gates A–D for the [contract](contract.md) and
-[case matrix](acceptance-matrix.md). **Gates A/B/C passed on 2026-10-07; Gate D remains pending.**
+[case matrix](acceptance-matrix.md). **Gates A/B/C/D passed on 2026-10-07.**
+[Gate D](validation/gate-d.md) records the complete public flow, selected byte/snapshot
+receiver, actual recovery/control/ack boundaries and independent saved-record audit.
 [Gate B](validation/gate-b.md) and [Gate C](validation/gate-c.md) record their actual
 source/store/receiver and timing/control observations. The [Gate A report](validation/gate-a.md) records the actual account/resource
 qualification, seven source comparisons, controlled interruptions, storage evidence
@@ -23,12 +25,12 @@ stores, saved media copies, receiver records and process interruptions are expec
 
 Record these in the gate report before running. `UNSET` is not a default or approval.
 
-The table retains Gate A's fixture provenance and records current evidence through C.
-Requalify values at later gates; operational deployment inputs remain open for D.
+The table retains earlier fixture provenance and records the selected Gate D completion.
+A different future deployment must qualify its own receiver, ownership and clocks.
 
 | Input | Required meaning | Current value |
 |---|---|---|
-| Code revision / package import path | Exact tested code, including #18 foundations for Gate A | A: `1425fd7`; B: `b1f6495`; C: `0d6bb26`, exact drivers/reports linked above |
+| Code revision / package import path | Exact tested code, including #18 foundations for Gate A | A: `1425fd7`; B: `b1f6495`; C: `0d6bb26`; D: `405218e`, exact drivers/reports linked above |
 | SDK | Actual installed Telethon version | Required: 1.45.0 |
 | Account/session/config label | Caller-selected already-authenticated test context; never publish secrets | A: project config/session, restored and freshly verified |
 | Canonical group ID | Specific existing group accessible to that account | A: arenda_stambul1 and programlama_sohbet, IDs in report |
@@ -38,11 +40,11 @@ Requalify values at later gates; operational deployment inputs remain open for D
 | Expected ID/date set | All visible messages within that bounded interval, plus boundary witnesses | A: archived frozen sets and boundary witnesses |
 | Page-crossing fixture | Enough existing records to cross a real SDK history page and multiple caller batches | A: 350-record interval, six SDK pages, three caller batches |
 | Existing media fixture | Expected eligible record IDs, original bytes/hash/size where download mode is advertised | A: independently hashed 173,837-byte selected photo |
-| Source allowance and pacing | Total requests/messages/elapsed limit; external spacing before Stage 5 exists | C: 1,000 total requested-slot ceiling, 790 allocated/442 observed; 180-second cases; real 5/8-second waits |
+| Source allowance and pacing | Total requests/messages/elapsed limit; external spacing before Stage 5 exists | D: 1,500-slot ceiling, 1,330 allocated/1,082 attempted/1,061 sent; 180-second workers; real >=12-second waits |
 | State/artifact paths | Disposable isolated collection data, no existing progress overwritten | A: separate SQLite runs and local media directory, report paths |
-| Budget policy/ledger | Chosen authoritative account allowance plus any stricter test cap | A–C: same persistent 5,000-read ledger, 2,334 charged after C, never reset; separate stricter test cap 3 → 6 |
-| Receiver acceptance point | Actual commit/durability boundary before acknowledgment | B/C: SQLite FULL transaction after verified/fsynced blobs, observed PASS; D: operational receiver UNSET |
-| Reader ownership | How the caller excludes another source worker and confirms process exit | B/C: sequential owned workers, confirmed exits and actual recovery PASS; deployment ownership remains for D |
+| Budget policy/ledger | Chosen authoritative account allowance plus any stricter test cap | A–D: same persistent 5,000-read ledger, after D 3,262 charged/40 reserved; no reset; C used a separate stricter test cap |
+| Receiver acceptance point | Actual commit/durability boundary before acknowledgment | D: full scoped snapshots in SQLite FULL transaction after verified/fsynced byte custody, observed PASS; another operational receiver remains unverified |
+| Reader ownership | How the caller excludes another source worker and confirms process exit | D: 14 sequential owned workers explicitly waited for, actual recovery PASS; another deployment must establish ownership |
 
 Keep an existing authoritative account budget in force. A separate test cap may
 restrict it further; it must not grant extra allowance or bypass charges on an account
