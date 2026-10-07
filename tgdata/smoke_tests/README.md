@@ -172,6 +172,36 @@ Socket connections are blocked. Scripted transport supplies Telegram replies;
 the actual SDK iterator, downloader, budget guard and batch implementation run.
 This does not establish live server behavior or a deployed receiver's guarantees.
 
+### 15. **test_22_daily_continuation.py**
+
+Tests durable daily continuation (`python -m tgdata.smoke_tests.test_22_daily_continuation`),
+offline on Telethon **1.45.0**, with real SQLite, process exits and synthetic transport:
+- explicit enrollment, immutable status, initial-position protection and exact group binding
+- pending batches survive restart, replay without a client, and advance only on acknowledgment
+- repeated/stale acknowledgments, storage conflicts, invalid/corrupt/missing state and schema
+- real read-budget prefixes, original read errors, failed prefix persistence and cancellation
+- enforced request overlap, source/mode mismatch and local operations without false health recovery
+- actual downloaded media replay from another root and missing/corrupt/symlink refusal
+- actual process termination before/after acknowledgment commit, lost receiver replies,
+  SQLite cleanup precedence and an offline destination example
+
+The example receiver demonstrates transactional duplicate handling; it does not verify
+the deployed ScrapeOps destination. No Telegram sockets or real account configs are used.
+
+### 16. **test_23_fixed_windows.py**
+
+Tests fixed historical windows (`python -m tgdata.smoke_tests.test_23_fixed_windows`),
+offline on Telethon **1.45.0** with the actual SDK, budget adapter and SQLite:
+- UTC normalization, inclusive start/exclusive end, date seek and message-ID resume
+- shared timestamps across pages/batches, full excluded pages, fractional boundaries
+- media filtering, empty/end/limit results, real budget prefixes and read failures
+- relative dates frozen across restart, repeat/conflicting initialization, uncertain commits
+- exact pending replay and process exits during acknowledgment, independent daily/history stores
+- unchanged v1 daily records and rejection of corrupt windows or out-of-window pending data
+
+Synthetic transport supplies server replies; sockets are blocked and no real config
+or Telegram account is used. No live server-selection or deployed receiver claim.
+
 ### Custom Test Scripts:
 - **my_test.py** - Custom test script for specific scenarios
 
@@ -207,3 +237,115 @@ Each test will show:
 - Test-specific output (message counts, group names, etc.)
 
 Tests are designed to be informative, showing real data from your Telegram account while validating the library's functionality.
+
+### Test 24: backfill state (Stage 2, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_24_backfill_state
+```
+
+Exercises immutable creation/reference/status values, strict lifecycle snapshots,
+SQLite start/reopen/CAS and actual before/after-commit process exits. Unknown retries,
+stale predecessors, malformed state, uncertain results, local-error privacy and legacy
+state isolation are covered. Existing-only store reopening and conservative sub-microsecond
+pacing representation are included. No Telegram/config/login is used. Snapshot fixtures
+for later lifecycle facts do not test their unimplemented transitions; no live gate passes.
+
+### Test 25: backfill delivery (Stage 3, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_25_backfill_delivery
+```
+
+Exercises durable source admission, exact restart/replay, complete delivery references,
+atomic acknowledgment, preserved failure prefixes and cancellation. Real SQLite
+process exits surround publication/ack commits; a real receiver transaction exercises
+a lost acceptance reply. The actual SDK iterator, budget and artifact paths use
+synthetic transport. Media relocation/corruption/removal, control-state preservation,
+equal hashes across runs, counter/clock edges and local health isolation are covered.
+No account/login/network is used. Future control/recovery snapshots are labeled fixtures;
+positive timing eligibility and the next live gate remain their later stages.
+
+
+### Test 26: backfill completion (Stage 4, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_26_backfill_completion
+```
+
+Exercises empty/final completion, declared fresh/imported scope, failed full-batch
+follow-up and confirmed ambiguous writes. The real SQLite matrix includes exceptions
+and malformed replies before/after commit, absent/old/newer/corrupt/unreadable read-back,
+no-send admission uncertainty, cancellation and original source-prefix exceptions.
+Owned processes exit immediately before/after actual create/publication/empty-completion/
+final-ack commits. Reopen checks owed work, unresolved attempts and durable completion.
+Sockets are blocked; source replies are synthetic through Telethon 1.45.0. Seeded
+operator states test preservation only; live Gate B is a separate required execution.
+
+
+### Test 27: backfill pacing and recovery (Stage 5, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_27_backfill_pacing
+```
+
+Exercises positive/zero/sub-microsecond pacing, independent UTC/monotonic evidence,
+early/late acknowledgment, restart and nonblocking waits. Actual recovery methods
+check quiescence and exact run/attempt/command/control identity, preserve known ends
+or create one conservative unknown-end interval, and recognize lost replies without
+refreshing it. Real SQLite process exits surround recovery commits; concurrent recovery,
+newer attempts, wrong/stale context, clock failures and original error provenance are
+covered. Actual SDK/budget code uses synthetic transport to verify prefixes, indefinite/
+expired hints, account changes and retained cancelled charges. Sockets are blocked.
+A short real elapsed-time case is local evidence; it does not pass live Gate C.
+
+
+### Test 28: backfill operator controls (Stage 6, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_28_backfill_controls
+```
+
+Runs actual pause/resume/cancel/abandon transitions with SQLite and the real SDK over
+synthetic transport. Covers exact command retries, no-change decisions, stale contexts,
+opposing controls and delayed replies; controls during admission/source/publication;
+both final-ack/cancel orders; explicit retirement and equal-hash successor isolation.
+Near-limit revisions preserve owed settlement/ack capacity. Actual SQLite close failures
+and process exits exercise lost control replies. Controls preserve pacing/budgets and
+create no Telegram health evidence. Sockets are blocked. Real timing, actual allowance
+exhaustion and owned-worker recovery remain separately measured by mandatory Gate C.
+
+
+### Test 29: public backfill API and receiver example (Stage 7, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_29_backfill_public
+python examples/backfill_runs.py --demo
+```
+
+Exercises all six TgData operations, typed exports, disabled/malformed configuration,
+preserved engine guards/timing, exact retries, local health isolation and source error
+provenance. The SDK transport is synthetic; SQLite and receiver transactions are real.
+The example exits an owned process after receiver acceptance, reopens/replays without
+a source call, deduplicates complete observations, separates daily/history namespaces
+and completes after ack. Completed repeats have zero source reads; missing known state
+and repeated provisioning refuse. Sockets are blocked. The separate Stage 8 public/live
+Gate D passed; this suite itself does not infer Telegram behavior from synthetic inputs.
+
+### Test 30: combined public backfill failures (Stage 8, offline)
+
+```bash
+python -m tgdata.smoke_tests.test_30_backfill_integration
+```
+
+Fifteen groups combine public operations with real SQLite and Telethon 1.45.0 using
+synthetic transport. Owned processes exit before and after commits for creation,
+admission, publication, empty completion, acknowledgment, control, recovery,
+abandonment and successor creation. Admission uncertainty sends nothing; receiver
+transactions precede acknowledgments. Additional histories cover source errors with
+failed publication, cancelled replies, late final data, opposing controls, identical
+successor batches, missing/corrupt media after acceptance and storage cleanup errors.
+Sockets are forbidden. These process tests do not simulate a disk power failure or
+certify another backend. Mandatory real public Gate D passed on 2026-10-07 with the
+selected SQLite/receiver composition; its feature-branch evidence is recorded in
+`devdocs/work/19-backfill-run-lifecycle/validation/gate-d.md`.
