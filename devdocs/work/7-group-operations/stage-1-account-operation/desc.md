@@ -12,6 +12,10 @@ Telethon1.45 authentication/disconnect sources refreshed. See `triage.md` and
 The contribution guide's feature row names Astra/xhigh; max is the recorded higher
 effort setting. Model verification remains reviewable at the merge gate.
 
+Committed warm-intake evidence: `7b0e89d` (triage/surfacing), an ancestor of this
+stage branch, based on dev `95ed4c7`. This records retained session context and
+refreshed source reads; it does not claim a new architecture-skill invocation.
+
 ## Problem Statement
 
 A session name or cached SDK identity does not establish which account owns a

@@ -1,3 +1,7 @@
+---
+model: gpt-6-astra
+effort: max
+---
 # Triage — #7 Stage 1 account operation
 
 **Weight:** feature-heavy, despite the deliberately small scope.
