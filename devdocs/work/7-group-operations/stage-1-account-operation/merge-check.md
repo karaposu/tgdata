@@ -108,3 +108,13 @@ No repetitive full-suite rerun is needed for these record-only changes.
 Open a Stage1 PR into dev, post this check, then run fresh in-session critic-d
 on its published diff and revision2 plan with additional behavioral probes. Any
 High/Medium rejects under §7.3 and sends the work to re-planning under §7.4.
+
+## Post-publication handoff
+
+PR21 was opened into dev and this check posted as
+https://github.com/karaposu/tgdata/pull/21#issuecomment-6055406437.
+The subsequent fresh pr-critic.md accepts the unchanged product with one Low
+diagnostic finding about unexpected self-response shapes inside SDK bootstrap.
+That finding limits the broad normalization claim; it does not invalidate the
+ownership/refusal/cleanup guarantees. Its probe and acceptance reasoning are in
+the separate PR critique. No runtime change or merge was made in this review.
