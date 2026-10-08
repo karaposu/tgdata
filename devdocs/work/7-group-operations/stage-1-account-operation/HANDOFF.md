@@ -1,6 +1,7 @@
 # #7 Stage 1 handoff
 
-Implementation complete, not merged. Branch: `feat/7-account-operation-foundation`.
+**Stage 1 merged into dev** via PR21 at `53306df` on 2026-10-08.
+Archive branch: `feat/7-account-operation-foundation`.
 Worktree: `/private/tmp/tgdata-7-stage1-account-operation`.
 Product commit: `2fe9aeb`.
 
@@ -18,10 +19,14 @@ raise a Python error before explicit identity normalization. Refusal and cleanup
 still hold; normal auth-error replies are handled. The diagnostic edge case is
 consciously left, with no runtime patch during review.
 
-Next: merge only with the user's go-ahead. Exclude work-folder/archaeology docs
-from integration; retain this branch as archive. This stage does not close #7.
-Stage 2 is health ownership; lookup/access, join allowance and joining follow in
-separate stages. Product remains `2fe9aeb`; no live Telegram work occurred.
+The user gave the merge go-ahead. Work-folder docs were excluded, dev's archaeology
+preserved and this branch retained as the archive. All 383 offline tests passed
+again on the merged code, with three live skips, three offline example passes and
+61-file compile/grammar checks. See `merge-verification.md` for the merge evidence.
+
+Next scope: Stage 2 health ownership; lookup/access, join allowance and joining
+follow in separate stages. This stage does not close #7. Product contents still
+match `2fe9aeb`; no live Telegram work occurred.
 
 Do not resume the broad revision3 plan or merge old draft PR16 as this work. The
 old `feat/7-group-operations` checkout and its progress stay intact as history.
