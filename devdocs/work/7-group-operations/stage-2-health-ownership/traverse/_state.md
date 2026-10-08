@@ -7,7 +7,7 @@ A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
 - [x] Surfacing
-- [ ] Sensemaking
+- [x] Sensemaking
 - [ ] Decomposition
 - [ ] Innovation
 - [ ] Critique
@@ -17,7 +17,8 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Sensemaking
+Decomposition
 ## History
 - 2026-10-08_16-02: Articulation HIGH-PROCEED; one item, three variants. Structural checker absent; manual 9/9 bundle checks and 5/5 branch preservation checks passed. Next: Surfacing.
 - 2026-10-08_16-04: Surfacing PROCEED; 14 items, two cycles, full health/facade refresh and retained named source context. Manual 7/7 structure checks (checker absent); all articulation variants covered. Next: Sensemaking.
+- 2026-10-08_16-24: Sensemaking PROCEED; SV1–SV6, eight ownership/lifetime ambiguities resolved, three actual baseline probes. Manual 8/8 structure checks passed (checker absent). Next: Decomposition.
