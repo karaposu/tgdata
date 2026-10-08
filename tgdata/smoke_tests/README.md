@@ -53,6 +53,22 @@ Tests polling and real-time features:
 
 ## Running Tests
 
+### Account operation foundation (offline)
+
+`python -m tgdata.smoke_tests.test_32_account_operation` runs 28 contract tests
+on Telethon 1.45.0 with sockets forbidden and synthetic credentials/replies:
+
+- expected account versus stale cache and actual authenticated identity;
+- policy before authentication, preserved proxy/device/file/store settings,
+  and unchanged ordinary-client defaults;
+- explicit missing/revoked/banned authentication, with no login prompts or codes;
+- fresh read-budget admission, terminal identity refusal and real task overlap;
+- actual SDK disconnect on success, failure and cancellation, including repeated
+  cancellation and sanitized cleanup errors.
+
+See [the internal operation contract](../../docs/account_operations.md). These
+tests do not contact Telegram or exercise group joining.
+
 ### Run Individual Test:
 ```bash
 # Basic tests
