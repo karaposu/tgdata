@@ -4,7 +4,7 @@ effort: max
 ---
 # #7 Stage 2 handoff
 
-**Implementation complete, not merged.** Product `3d59455` on
+**PR review rejected; revision3 re-plan next. Not merged.** Product `3d59455` on
 `feat/7-account-health-ownership`, based on merged Stage1/dev `53306df`.
 Worktree: `/private/tmp/tgdata-7-stage2-health-ownership`.
 
@@ -36,15 +36,35 @@ Triage `ea988e9`; completed inquiry `f19ca2a`; description `8350f39`; initial pl
 mitigations: caught-handle invalidity veto and real MultiError leaf observation.
 No current planning/execution blocker. No test failure or runtime re-plan occurred.
 
+## Review outcome — 2026-10-09
+
+Merge fidelity PASS `1625e09`; PR22 opened into dev as a draft, merge check posted.
+Fresh same-session critic-d prompt `7711e56`, then five executed offline probes
+using actual SDK sender/result handling and asyncio. Product code remains unchanged.
+The PR critic **REJECTED: 0 High, 3 Medium, 0 Low**:
+
+1. Wrapped SDK error request names differ from success keys; unrelated waits alias.
+2. Repeated identity verification can clear a restriction without retrying its action.
+3. An excluded ancestor in implicit exception context suppresses an independent new RPC.
+
+See `pr-critic.md` for the complete review, output and selected mitigations;
+`pr_probes.py` reproduces the observations without sockets. Its exit0 characterizes
+the defects, not acceptance. Additional probes found expected notification reordering
+after unequal cleanup duration and no deadlock in concurrent callback close.
+
 ## Next
 
-Run merge check → publish PR into dev → fresh PR critique. Review the actual diff,
-description, folded plan and critic together, including the explicit private
-access-assertion and notification contracts. Verify the issue status and §9 model/
-effort evidence. Do not claim this implementation check as a fresh PR critique.
-Merge only after the user's go-ahead and successful gates, excluding devdocs and
-retaining the branch archive. Whole #7 remains open for Stage3 lookup/access,
-Stage4 join allowance and Stage5 joining.
+CONTRIBUTING §7.4 requires revision3 re-planning from `desc.md` plus `pr-critic.md`,
+then a new plan critic/fold and implementation, followed by both gates again on PR22.
+No direct runtime patch was made during review. This is the first rejecting Stage2
+PR critique, not a second copy of old PR16's rejection. The fixed-owner foundation
+remains appropriate; correct the bounded evidence rules rather than importing the
+old broad redesign. Original revision2/original critic stay intact until re-planning.
+
+Merge only after successful renewed gates and the user's go-ahead, excluding devdocs
+and retaining the branch archive. Whole #7 remains open for Stage3 lookup/access,
+Stage4 join allowance and Stage5 joining. §9 evidence remains the retained Astra/max
+session record, with its original timestamp preserved in the merge check.
 
 The original checkout and old PR16/revision3 stay preserved. Do not resume the old
 broad plan or merge unmerged #17 into this prerequisite. Do not commit duncan or
