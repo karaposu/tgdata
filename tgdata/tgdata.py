@@ -9,11 +9,14 @@ import inspect
 import json
 import logging
 import os
+from contextlib import asynccontextmanager
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any, Union, Callable
 import pandas as pd
 
 from . import health
+from .account_operation import _expected_account_id
+from .owned_health import _OwnedHealthMonitor, _retire_notifications
 from .connection_engine import ConnectionEngine, AuthRequiredError, ProxyConfigError
 from .message_engine import MessageEngine
 from .discovery_engine import DiscoveryEngine
@@ -132,7 +135,8 @@ class TgData:
                 it is logged, never raised. Events caused by tgdata calls it
                 makes itself are logged and counted, not delivered back to it.
                 See the README, "Account health events".
-                health_check()["health"] summarises the same events.
+                health_check()["health"] summarises legacy public calls;
+                get_account_health(id) is the separate verified-operation view.
             account_label: A name for this account in those events (default:
                 None; the session name and the account id are always included)
             session_store: Optional object with synchronous load(name) -> str
@@ -187,6 +191,7 @@ class TgData:
         self.current_group: Optional[GroupInfo] = None
         self._metrics: Dict[str, Any] = {}
         self._health = health.HealthMonitor(health_callback, account_label, self._health_identity)
+        self._account_health = {}
         
         logger.info("TgData initialized")
 
@@ -208,6 +213,40 @@ class TgData:
         except Exception:  # noqa: BLE001
             pass
         return session, user_id
+
+    def get_account_health(self, account_id: int) -> Optional[Dict[str, Any]]:
+        """Local health observed through verified operations, or None if unknown.
+
+        No I/O or authentication. Legacy reads/health_check() keep their separate
+        health view; cached session identities never populate this owned ledger.
+        """
+        account_id = _expected_account_id(account_id)
+        monitor = self._account_health.get(account_id)
+        return monitor.snapshot() if monitor is not None else None
+
+    @asynccontextmanager
+    async def _account_health_operation(self, expected_account_id, method, group=None):
+        """Private Stage 1 composition; yield (verified handle, health observation).
+
+        Group code must explicitly confirm proven access on the observation.
+        Caller work stays in the opening task; notifications run after cleanup.
+        """
+        started = next(health._TICKS)
+        monitor = observation = None
+        with health.isolate_call():
+            try:
+                async with self.connection_engine._account_operation(expected_account_id) as operation:
+                    monitor = self._account_health.get(operation.account_id)
+                    if monitor is None:
+                        monitor = _OwnedHealthMonitor(operation.account_id, self._health_identity()[0],
+                                                      self._health.callback, self._health.label)
+                        self._account_health[operation.account_id] = monitor
+                    async with monitor.observe(operation, method, health.normalise_group(group),
+                                               started) as observation:
+                        yield operation, observation
+            finally:
+                if observation is not None:
+                    monitor.dispatch(observation)
 
     # ==================== Group Management ====================
     
@@ -1003,7 +1042,10 @@ class TgData:
         
     async def close(self) -> None:
         """Close all connections."""
-        await self.connection_engine.close()
+        try:
+            await self.connection_engine.close()
+        finally:
+            await _retire_notifications(self._account_health.values())
         logger.info("TgData closed")
         
     # ==================== Polling and Real-time Updates ====================

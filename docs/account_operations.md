@@ -2,8 +2,8 @@
 
 `ConnectionEngine._account_operation(expected_account_id)` is the private
 foundation for account-owned, short-lived tgdata operations. It is not a public
-TgData group API. Group lookup, access checking, joining and health ownership are
-separate work.
+TgData group API. Group lookup, access checking and joining are separate work.
+The facade's owned-health composition is described below.
 
 Internal callers use it in the task that opens the context:
 
@@ -75,3 +75,37 @@ It uses actual SDK connect/dispatch/disconnect, synthetic replies, temporary
 sessions and real SQLite budgets. Socket connections are forbidden. This proves
 local ownership/lifecycle behavior; it does not validate a live account or fix
 the existing health summary's account ownership.
+
+## Owned health composition (Stage 2)
+
+Future group operations use the private facade boundary:
+
+```python
+async with tg._account_health_operation(account_id, "operation_name", group) as (op, observation):
+    result = await op.client(request)
+    # Only if this actual result establishes access to the named group:
+    observation.confirm_group_access()
+```
+
+The source handle, policies and cleanup rules above still apply. Keep those
+policies unchanged and all SDK work in the opening task. The observation is fixed
+to that handle's verified account and client. Self proof is account evidence only.
+`confirm_group_access()` is a trusted internal semantic assertion, not an SDK
+permission classifier: never call it merely because a self or metadata query
+succeeded. It checks active lifetime/task and post-proof source evidence; the
+concrete operation must check the result's access meaning.
+
+The local public `get_account_health(account_id)` returns this owned ledger or
+None when unobserved. Legacy public reads and `health_check()` remain separate.
+Raw RPC failures, including SDK MultiError leaves, record immediately even if
+caught. Partial batch successes provide no recovery evidence. Local exception
+causes and ambient reports do not create owned facts. A caught invalidated handle
+cannot recover state; an older operation cannot clear a newer condition.
+
+Notifications receive plain data in separate tasks after the disconnect attempt
+settles. They may run after the primary outcome reaches the caller. Close after
+ongoing operations finish to cooperatively retire pending notifications; this is
+not a durable delivery or concurrent-producer shutdown contract.
+
+Run `python -m tgdata.smoke_tests.test_33_owned_health` for the offline composition
+regressions, alongside suites16 and32.

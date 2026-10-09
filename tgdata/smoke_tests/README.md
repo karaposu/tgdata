@@ -69,6 +69,17 @@ on Telethon 1.45.0 with sockets forbidden and synthetic credentials/replies:
 See [the internal operation contract](../../docs/account_operations.md). These
 tests do not contact Telegram or exercise group joining.
 
+### Account-owned health foundation (offline)
+
+`python -m tgdata.smoke_tests.test_33_owned_health` runs 41 contract tests on
+Telethon 1.45.0. Sockets are forbidden; only the network sender is synthetic.
+The suite composes the real facade, Stage 1 handle, SDK requests, read-budget
+verification, health ledger and disconnect. It covers fixed owner/query isolation,
+caught RPC and real MultiError failures, pre-proof and local-error exclusion,
+foreign/stale task contexts, explicit group recovery, forced older/newer overlaps,
+caught handle invalidation, and callbacks after cleanup without altering results
+or cancellation. Existing suites16 and32 remain separate regression checks.
+
 ### Run Individual Test:
 ```bash
 # Basic tests
