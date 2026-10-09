@@ -22,6 +22,14 @@ Passing result: source client and raw error identity are observable, the SDK's
 batch container retains its raw failures, contexts reset correctly, and disconnect
 settles before isolated notification cancellation with the original outcome intact.
 
+Result: PASS — `prebuild_probe.py` observed the same raw RPC object at its exact
+client, nested real budget verification and a retained charge, caught identity
+invalidation, actual SDK MultiError leaves, delayed real disconnect completing
+before the callback, callback cancellation containment, primary exception identity
+and ContextVar reset; 2026-10-09. Telethon1.45.0; network sockets forbidden.
+The probe observes local SDK/asyncio composition with synthetic transport, not
+Telegram permission policy or the not-yet-written Stage 2 implementation.
+
 ## High-level summary
 
 The selected small boundary addresses the reproduced mechanisms and avoids the
