@@ -2,7 +2,10 @@
 model: gpt-6-astra
 effort: max
 ---
-# #7 Stage 2 implementation plan — revision 1
+# #7 Stage 2 implementation plan — revision 2
+
+**Critic folded:** 2026-10-09 — 2 mitigations (3 steps changed, 0 added).
+Prebuild experiment PASS in `46866c3`, before any runtime implementation.
 
 ### What is the task
 
@@ -62,6 +65,8 @@ future group semantics and the not-yet-written Stage 2 wiring.
 
 ## Step 1 — Reuse fixed ledgers with owned calls
 
+[folded: Risk 1, robust]
+
 ### Proposed changes
 
 Add `tgdata/owned_health.py`. `_OwnedHealthMonitor(HealthMonitor)` holds a fixed
@@ -77,6 +82,11 @@ and sleep-log attribution: only the client's source hook can record its failures
 No raw RPC inference from local exception causes. Ordinary errors or cancellation
 mark the observation unsuccessful and propagate unchanged; no error classification
 at owned context exit. Health hook failures are contained.
+
+Immediately before recovery, require the handle's existing active opening-task
+check again. Caught verification failures permanently invalidate Stage 1's handle;
+that invalidity vetoes recovery even when the body returned normally. Do not add a
+second invalidation protocol or replace the caller's outcome when vetoing recovery.
 
 Recovery requires a successful operation, same owner, a condition tick older than
 the operation's start, and no same-call report for that scope. Logged-out/banned
@@ -119,10 +129,16 @@ plain event data, per-account/per-group/per-request condition scopes.
 
 ## Step 2 — Attach source evidence and isolate the boundary
 
+[folded: Risk 2, robust]
+
 ### Proposed changes
 
 In `_AnswerEvidence.__call__`, catch a raw `RPCError`, call the safe owned error
-hook with `self`, then re-raise the same object. On success, pass `self` and the
+hook with `self`, then re-raise the same object. Catch the SDK's `MultiError` too
+and observe each raw RPCError leaf at that same bound-client hook; preserve the
+container and existing deduplication. Partial successes do not count as recovery
+evidence. On fully successful lists retain each successful request name, without
+request traces or a new generic outcome layer. On success, pass `self` and the
 request to `health.note_answer`; legacy no-argument use remains valid. Nested
 budget identity verification deduplicates the same exception with the existing
 reported marker. An owned hook accepts only its exact client, active opening task
@@ -195,6 +211,8 @@ local snapshots, existing facade close semantics.
 
 ## Step 4 — Tests and user contract
 
+[folded: Risk 1, robust; Risk 2, robust]
+
 ### Proposed changes
 
 Add `tgdata/smoke_tests/test_33_owned_health.py`, using test32's real-SDK fixture
@@ -210,6 +228,11 @@ and request waits; matching request/method evidence; callbacks starting only aft
 disconnect; sync/async failures and callback cancellation; re-entry, pending task
 retirement/self-close; operation cancellation and broken cleanup preservation.
 Retain the original five failure cases as end-to-end regressions where applicable.
+Add caught post-proof identity/auth loss followed by normal body completion and
+verify that prior conditions remain. Exercise a real SDK mixed request list and
+its actual MultiError container; record its failure leaves and preserve the same
+container, including when the body catches it. Successful list request evidence
+is covered separately. Only the transport fixture supplies list sender futures.
 
 README explains the two views, unknown=None, fixed owner, source `rpc`, conservative
 recovery, callback timing and lifetime. Clarify that Stage 2 is foundation only:
