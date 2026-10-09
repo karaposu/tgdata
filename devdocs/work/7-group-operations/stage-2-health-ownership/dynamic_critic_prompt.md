@@ -57,4 +57,3 @@ generalization. Quick requires named external pressure. Record deferred alternat
 DO NOT IMPLEMENT deprecates the plan and records the blocker in desc.md, then stops.
 REORDER keeps the plan alive and specifies the experiment; fold only selected
 mitigations after it passes. Never critique a later folded plan in this run.
-
