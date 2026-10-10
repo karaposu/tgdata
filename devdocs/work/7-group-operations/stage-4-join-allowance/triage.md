@@ -39,7 +39,7 @@ allowance implementation's correctness from an unrelated prior review outcome.
 Stage4 starts a new task folder with no description, PARKED block or rejecting PR
 critique. Old PR16 and completed Stages1–3 are separate histories, not retry counts.
 No live joins, account login, raw send guard, routing or read-budget redesign belongs
-in immediate allowance preparation. Stage5 was named as follow-on; optional scope
-clarification remains pending while independent Stage4 work proceeds. No blocker to
+in immediate allowance preparation. The user confirmed Stage4 only, with review and merge before Stage5. This run does
+not implement joining or its send guard. No blocker to
 preparation or local component experiments. Preserve all original untracked files,
 duncan and the stray guide; use separate product/work commits and later review gates.

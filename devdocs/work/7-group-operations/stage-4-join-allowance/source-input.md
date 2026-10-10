@@ -11,8 +11,9 @@ $task-impl Next: Stage 4 — join allowance, followed by Stage 5 — joining.
 The user supplied the full task-impl skill and asked execution. This is the new staged
 #7 approach, not a resumption of old PR16. Stages1–3 are merged into dev1ce39d5.
 Definite immediate work: Stage4 join allowance. Stage5 joining is the stated follow-on;
-an optional asynchronous scope question asks whether it belongs in this run or after
-Stage4 review/merge. Preparation of Stage4 proceeds under either reading.
+the user answered the asynchronous scope question: **“Stage 4 only; review and merge
+before Stage 5 (Recommended)”**. This run implements Stage4 only. Stage5 is not authorized
+for this run; its review/merge prerequisites stay later work.
 
 ## Parent issue request
 
