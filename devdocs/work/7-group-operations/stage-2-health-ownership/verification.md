@@ -11,8 +11,8 @@ Telegram action, login or membership change. This is not PR or merge approval.
 
 The first product's verification is preserved byte-for-byte in
 `archive/round-1/verification.md`, checked against b9a8a5d. Its 424 passes describe
-rejected product3d59455, not acceptance of this rework. Root pr-critic.md and its
-probes remain the original rejecting review; there is one distinct Stage2 rejection.
+rejected product3d59455, not acceptance of this rework. The original rejecting PR critique and probes are preserved under archive/round-1;
+there is one distinct Stage2 rejection. A later review owns the root PR filenames.
 
 ## Executed plan and critique
 

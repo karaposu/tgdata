@@ -4,10 +4,11 @@ effort: max
 ---
 # #7 Stage 2 handoff
 
-**Revision4 implemented and verified; renewed merge check and PR critique next.**
+**Revision4 implemented and verified; both renewed gates pass. Awaiting merge go-ahead.**
 Product `c6451bb`, branch `feat/7-account-health-ownership`, base dev/merged Stage1
 `53306df`. Worktree: `/private/tmp/tgdata-7-stage2-health-ownership`.
-[PR22](https://github.com/karaposu/tgdata/pull/22) remains **draft, not merged**.
+[PR22](https://github.com/karaposu/tgdata/pull/22) is **not merged**. The renewed
+review result is ACCEPTED; publication/readiness follows the review checkpoint.
 
 ## Current implementation
 
@@ -44,7 +45,8 @@ Original pipeline: triage `ea988e9`, inquiry `f19ca2a`, desc `8350f39`, initial 
 Round1: merge fidelity PASS `1625e09`, fresh PR prompt `7711e56`, PR critic
 `b9a8a5d` **REJECTED: 0 High, 3 Medium, 0 Low**. The findings were wrapped-request
 key mismatch, identity-only restriction recovery and overbroad exception exclusion.
-That review and its probes remain unchanged at root pr-critic.md / pr_probes.py.
+That review and its probes remain unchanged in archive/round-1/pr-critic.md and
+archive/round-1/pr_probes.py.
 Their probes characterize the old defects, not current acceptance. There is only
 **one distinct Stage2 rejecting PR round**; old whole-issue PR16 is separate.
 
@@ -63,14 +65,21 @@ byte-for-byte under archive/round-1, with checked SHA-256s. Active root plan is
 revision4; active plan critic is the revision3 critique with its completed experiment.
 Do not resume archived plans or mistake initial fidelity PASS for renewed approval.
 
-## Next
+## Renewed review and next step
 
-Renew merge-check.md against the full dev diff, triage, description, revision4,
-selected critics and the actual issue status. Then run a fresh in-session PR critic
-on that diff and plan with independent probes; keep PR22 draft until the gates allow
-it. A second rejecting Stage2 PR gate returns to description/traverse under §7.4,
-not another routine patch loop. §9 review uses the retained same-session Astra/max
-record and its original timestamp, not an invented fresh selector reading.
+Merge fidelity PASS `fd655a5`, posted on PR22 at issuecomment-6097100536. Fresh
+critic prompt `da777fe`; root pr-critic.md records the second review: **ACCEPTED,
+0 High, 0 Medium, 0 Low**. Seven additional offline probe groups passed, including
+nested resolution, namespace restrictions, local/cancelled failure after successful
+requests, crossed account cleanup and forwarded failure followed by fresh legacy RPC.
+The final probe runner exits0. No product code changed during either review gate.
+
+Publish the committed fresh critique on PR22, mark it ready, and record the review
+checkpoint/comment on #7. Both gates then allow the next step: the user's merge
+go-ahead. Do not re-plan or implement another stage before that instruction. §9 uses
+the retained same-session Astra/max record and its original timestamp, not an
+invented fresh selector reading. If a future changed diff is reviewed and rejected,
+apply CONTRIBUTING to that actual review; this accepted round is not a rejection.
 
 Merge only after successful renewed gates and the user's go-ahead, excluding
 work-folder docs and preserving the branch archive. Whole #7 stays open for Stage3
