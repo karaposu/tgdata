@@ -1,0 +1,8 @@
+{"probe": "result_and_cache", "result": {"result": "ChatInviteJoinResultOk", "outer_cached_room": null, "explicit_nested_cache": [-1000000000009, 19], "admission_order": [["verified", 222], ["claimed", 222], ["send", "JoinChannelRequest"]], "owner": 222, "cached_identity": 111, "join_used": 1, "read_used": 0}}
+{"probe": "source_outcomes", "result": [{"outcome": "interaction", "type": "ChatInviteJoinResultWebView", "charged": 1}, {"outcome": "INVITE_REQUEST_SENT", "type": "InviteRequestSentError", "charged": 1}, {"outcome": "USER_ALREADY_PARTICIPANT", "type": "UserAlreadyParticipantError", "charged": 1}, {"outcome": "STARS_PAYMENT_REQUIRED", "type": "BadRequestError", "charged": 1}]}
+{"probe": "identity_change", "result": {"expected": 222, "actual": 333, "join_sends": 0, "charged": 0, "closed": true}}
+Telegram is having internal issues ServerError: RPCError 500: INTERNAL (caused by InvokeWithoutUpdatesRequest(JoinChannelRequest))
+{"probe": "cached_wait_and_retry", "result": {"cached_wait_charged": 0, "probe_retry_sends": 2, "charged": 2, "production_retry_policy": 0}}
+Telegram is having internal issues ServerError: RPCError 500: INTERNAL (caused by InvokeWithoutUpdatesRequest(ImportChatInviteRequest))
+{"probe": "exhausted_rpc", "result": {"error": "ServerError", "original_identity": true, "charged": 1, "closed": true}}
+{"probe": "transport_requeue", "result": {"protocol_correction": "bad_server_salt", "same_request_state": true, "additional_application_send": 0}}
