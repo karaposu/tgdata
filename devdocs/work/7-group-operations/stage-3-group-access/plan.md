@@ -2,7 +2,7 @@
 model: gpt-6-astra
 effort: max
 ---
-# #7 Stage3 implementation plan — revision1
+# #7 Stage3 implementation plan — revision2
 
 ### What is the task
 
@@ -52,6 +52,12 @@ request policy, source evidence and cleanup code remain unchanged.
 | 4 | Wire the public surface and SDK requirement | Two facade methods, exports and consistent dependency metadata |
 | 5 | Complete public-path coverage and documentation | Acceptance cases and exact user-facing contract |
 | 6 | Verify and checkpoint | Measured tests, separate product/work commits and truthful issue status |
+
+## Selected critic fold
+
+M1 robust/elegant selected: require namespace round-trip validation as well as signed64
+representability. Actual SDK/cache probe is recorded in critic.md; no further pre-build
+experiment required. No scope or architectural change; no second critique of this fold.
 
 ## Binding public contract
 
@@ -121,6 +127,13 @@ Numeric routing is local and bounded:
   usable group namespace is required. Ignore user rows as non-group candidates;
   reject zero/multiple group candidates or unusable channel hash. Do not query SQLite
   with a computed marked value outside signed64; an out-of-range candidate is absent.
+
+**[M1]** All typed group identities must round-trip through the SDK marking: positive
+source ID, signed64 marked ID, and utils.resolve_id(marked) equal to the original ID
+and PeerChat/PeerChannel type. Use one local validator for reply projection, matching,
+message peers and numeric candidates. For bare IDs, skip a non-round-trippable basic
+candidate while allowing a valid channel candidate. Invalid source identity raises
+GroupResponseError; no usable numeric candidate raises GroupReferenceError.
 
 Validate row identity/shape before constructing input peers; do not catch arbitrary
 storage exceptions as “missing”. Source exceptions must propagate unchanged. Never
@@ -230,13 +243,13 @@ SQLite/session stores, real asyncio scheduling.
 
 3/5 — the fixture must observe the boundary, not supply its conclusions.
 
-## Step2 — Implement reference, value and resolution behavior
+## Step2 — Implement reference, value and resolution behavior [M1]
 
 ### Proposed changes
 
 Add tgdata/group_operations.py with the private target, pure parser, frozen result
 values, local errors, recursive plain conversion and bounded resolver described above.
-Use ordinary functions receiving the verified operation; do not create GroupEngine.
+Include the shared local typed-peer round-trip validator from M1. Use ordinary functions receiving the verified operation; do not create GroupEngine.
 Group facts come from matching reply entities, with explicit handling for invite forms,
 forbidden/min/Community shapes, unavailable basic groups and source errors.
 
@@ -315,7 +328,7 @@ keyword-only expected account and method-specific restriction recovery.
 
 2/5 — narrow wiring through the already-merged foundation.
 
-## Step5 — Complete public-path acceptance and product docs
+## Step5 — Complete public-path acceptance and product docs [M1]
 
 ### Proposed changes
 
@@ -329,7 +342,8 @@ Complete suite34 against the public methods. Required case families:
    wrong/missing/duplicate typed matches and unavailable/migrated/empty groups.
 4. Marked basic ID without cache; marked channel with exact large/zero hash; unique
    bare IDs, user-only rows, two group namespaces, absent/unusable rows, extreme
-   integer bounds and real local cache failures. No dialog fallback.
+   integer bounds, the 10**12 basic boundary, first non-basic ID and actual cached
+   channel collision [M1], and real local cache failures. No dialog fallback.
 5. Plain/Already/Peek invites: unknown IDs, wrapper membership, UTC expiry and nullable
    request/payment hints; token retained only for the request, never as the output
    or health target label; no join/import request under any response.
