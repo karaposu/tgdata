@@ -1,0 +1,6 @@
+{"cache_vs_current_reply": [{"backend": "file", "fresh_hash": 22, "minimal": "unprobed", "extra_history": 0, "denial_retained": true}, {"backend": "stored", "fresh_hash": 22, "minimal": "unprobed", "extra_history": 0, "denial_retained": true}]}
+{"malformed_nested_invite": [{"nested": "PeerChat", "outcome": "AttributeError", "expected": "GroupResponseError", "health_events": 0, "closed": true}, {"nested": "PeerChannel", "outcome": "AttributeError", "expected": "GroupResponseError", "health_events": 0, "closed": true}, {"nested": "User", "outcome": "GroupResponseError", "expected": "GroupResponseError", "health_events": 0, "closed": true}]}
+{"late_old_failure": {"newer": "readable", "older_completed_later": "denied", "denial_retained": true, "owner": 222, "budget_used": 2, "cached_owner_has_health": false}}
+{"budget_denial_never_changes_group_state": {"events": 1, "denial_retained": true, "history_sends": 1, "second_call": "ReadBudgetExceeded"}}
+{"numeric_rejection_is_qualified_source_reason": {"status": "denied", "reason": "CHANNEL_INVALID", "lookup": null, "events": 1}}
+{"service_message_peer_validation": {"outcome": "GroupResponseError", "wrong_peer": 8, "health_events": 0}}

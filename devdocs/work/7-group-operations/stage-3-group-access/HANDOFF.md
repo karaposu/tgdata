@@ -18,10 +18,14 @@ The old broad feat/7-group-operations worktree is historical, not the branch to 
 - Known SDK cache errors preserve their original meaning; offline evidence is not live
   permission qualification. No foundation runtime or legacy selection changes.
 
-**Next:** merge check → publish a partial-stage PR into dev (Refs #7) → fresh PR critic.
-Then merge only with the user's go-ahead, retaining work docs on this archive branch.
+**Review complete:** PR23 into dev (Refs #7); fidelity PASS1348028. Fresh in-session
+critic in pr-critic.md accepts with0High/0Medium/1Low, backed by six new probe groups.
+The Low is malformed invite error typing; it fails closed and is consciously retained.
+Current session metadata confirms gpt-6-astra/max for §9. No runtime changes in review.
+
+**Next:** merge only with the user's go-ahead, retaining work docs on this archive branch.
 Stage4 join allowance and Stage5 joining remain later work; keep parent issue7 open.
 
 Preserve original checkout untracked HANDOFF.md/todo.md, duncan and the stray guide.
 Do not fold in unmerged #17 or resume historical PR16. This Stage3 task has one plan
-critique with a selected Medium and no PR review/rejection yet.
+critique with a selected Medium and one accepting PR review; no Stage3 rejection.
