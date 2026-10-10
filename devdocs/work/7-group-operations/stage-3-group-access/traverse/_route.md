@@ -6,7 +6,7 @@ This index records concept identities and their own manifestations only.
 
 ## reference-syntax
 - Name: Explicit group reference syntax
-- Manifestations: decomposition.md Q1; innovation.md F1
+- Manifestations: docarchive/decomposition.md Q1; docarchive/innovation.md F1
 - Own-depth pointer: none
 - Depth-signal: concrete criteria and source evidence available in listed manifestations
 - Individuation: same referent/goal-role across these manifestations; distinct from other named observations
@@ -16,7 +16,7 @@ This index records concept identities and their own manifestations only.
 
 ## numeric-peers
 - Name: Numeric group peer identity
-- Manifestations: sensemaking.md A5; critique.md second sweep
+- Manifestations: docarchive/sensemaking.md A5; docarchive/critique.md second sweep
 - Own-depth pointer: none
 - Depth-signal: concrete criteria and source evidence available in listed manifestations
 - Individuation: same referent/goal-role across these manifestations; distinct from other named observations
@@ -26,7 +26,7 @@ This index records concept identities and their own manifestations only.
 
 ## qualified-metadata
 - Name: Qualified group metadata values
-- Manifestations: innovation.md F2; critique.md F2
+- Manifestations: docarchive/innovation.md F2; docarchive/critique.md F2
 - Own-depth pointer: none
 - Depth-signal: concrete criteria and source evidence available in listed manifestations
 - Individuation: same referent/goal-role across these manifestations; distinct from other named observations
@@ -36,7 +36,7 @@ This index records concept identities and their own manifestations only.
 
 ## read-evidence
 - Name: History-read evidence
-- Manifestations: sensemaking.md A1/A2; critique.md F3
+- Manifestations: docarchive/sensemaking.md A1/A2; docarchive/critique.md F3
 - Own-depth pointer: none
 - Depth-signal: concrete criteria and source evidence available in listed manifestations
 - Individuation: same referent/goal-role across these manifestations; distinct from other named observations
@@ -46,7 +46,7 @@ This index records concept identities and their own manifestations only.
 
 ## failure-provenance
 - Name: Operational failure provenance
-- Manifestations: sensemaking.md A6; critique.md D2
+- Manifestations: docarchive/sensemaking.md A6; docarchive/critique.md D2
 - Own-depth pointer: none
 - Depth-signal: concrete criteria and source evidence available in listed manifestations
 - Individuation: same referent/goal-role across these manifestations; distinct from other named observations
@@ -56,7 +56,7 @@ This index records concept identities and their own manifestations only.
 
 ## verified-composition
 - Name: Verified temporary-call composition
-- Manifestations: decomposition.md Q4; innovation.md F4
+- Manifestations: docarchive/decomposition.md Q4; docarchive/innovation.md F4
 - Own-depth pointer: none
 - Depth-signal: concrete criteria and source evidence available in listed manifestations
 - Individuation: same referent/goal-role across these manifestations; distinct from other named observations
@@ -66,7 +66,7 @@ This index records concept identities and their own manifestations only.
 
 ## read-admission
 - Name: Read-budget admission
-- Manifestations: sensemaking.md executed budget_health; decomposition.md Q3
+- Manifestations: docarchive/sensemaking.md executed budget_health; docarchive/decomposition.md Q3
 - Own-depth pointer: none
 - Depth-signal: concrete criteria and source evidence available in listed manifestations
 - Individuation: same referent/goal-role across these manifestations; distinct from other named observations
@@ -76,7 +76,7 @@ This index records concept identities and their own manifestations only.
 
 ## health-recovery
 - Name: Semantic group-health recovery
-- Manifestations: sensemaking.md A7; critique.md assembly A
+- Manifestations: docarchive/sensemaking.md A7; docarchive/critique.md assembly A
 - Own-depth pointer: none
 - Depth-signal: concrete criteria and source evidence available in listed manifestations
 - Individuation: same referent/goal-role across these manifestations; distinct from other named observations
@@ -86,7 +86,7 @@ This index records concept identities and their own manifestations only.
 
 ## sdk-cache-limits
 - Name: SDK session-cache limits
-- Manifestations: critique.md optional_hash_backends; ../contract_probe.py
+- Manifestations: docarchive/critique.md optional_hash_backends; ../contract_probe.py
 - Own-depth pointer: none
 - Depth-signal: concrete criteria and source evidence available in listed manifestations
 - Individuation: same referent/goal-role across these manifestations; distinct from other named observations
@@ -96,7 +96,7 @@ This index records concept identities and their own manifestations only.
 
 ## public-compatibility
 - Name: Public contract compatibility
-- Manifestations: decomposition.md Q4; innovation.md F2/F4
+- Manifestations: docarchive/decomposition.md Q4; docarchive/innovation.md F2/F4
 - Own-depth pointer: none
 - Depth-signal: concrete criteria and source evidence available in listed manifestations
 - Individuation: same referent/goal-role across these manifestations; distinct from other named observations
@@ -106,7 +106,7 @@ This index records concept identities and their own manifestations only.
 
 ## source-tests
 - Name: Deterministic source-composition tests
-- Manifestations: decomposition.md Q5; innovation.md F5
+- Manifestations: docarchive/decomposition.md Q5; docarchive/innovation.md F5
 - Own-depth pointer: none
 - Depth-signal: concrete criteria and source evidence available in listed manifestations
 - Individuation: same referent/goal-role across these manifestations; distinct from other named observations
@@ -116,7 +116,7 @@ This index records concept identities and their own manifestations only.
 
 ## live-qualification
 - Name: Live server qualification
-- Manifestations: critique.md coverage limits
+- Manifestations: docarchive/critique.md coverage limits
 - Own-depth pointer: none
 - Depth-signal: concrete criteria and source evidence available in listed manifestations
 - Individuation: same referent/goal-role across these manifestations; distinct from other named observations

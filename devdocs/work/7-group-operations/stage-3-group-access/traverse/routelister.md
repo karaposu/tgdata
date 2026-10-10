@@ -42,7 +42,7 @@ Attributes describe routes; none is chosen, executed, sequenced or marked done.
 **Priority:** HIGH. **Confidence:** HIGH. **Essentiality:** core.
 **Guidance Mode:** compact.
 - Use explicit link/handle rules (bc SDK entity vocabulary is broader than this public group API).
-**Touches:** decomposition.md Q1; innovation.md F1 (this concept’s substantive evidence and criteria).
+**Touches:** docarchive/decomposition.md Q1; docarchive/innovation.md F1 (this concept’s substantive evidence and criteria).
 **Meaning-gaps:** Exact URL spelling conveniences — low — they are bounded parser choices, not unsettled access meaning.
 **Depth-link:** none; depth-signal: the listed manifestations preserve this identity’s concrete edge cases.
 
@@ -56,7 +56,7 @@ Attributes describe routes; none is chosen, executed, sequenced or marked done.
 **Priority:** HIGH. **Confidence:** HIGH. **Essentiality:** core.
 **Guidance Mode:** compact.
 - Exercise typed collisions and range boundaries (bc a raw number alone may not select one group namespace).
-**Touches:** sensemaking.md A5; critique.md second sweep (this concept’s substantive evidence and criteria).
+**Touches:** docarchive/sensemaking.md A5; docarchive/critique.md second sweep (this concept’s substantive evidence and criteria).
 **Depth-link:** none; depth-signal: the listed manifestations preserve this identity’s concrete edge cases.
 
 ## R3 — Qualified group metadata values
@@ -69,7 +69,7 @@ Attributes describe routes; none is chosen, executed, sequenced or marked done.
 **Priority:** HIGH. **Confidence:** HIGH. **Essentiality:** core.
 **Guidance Mode:** compact.
 - Retain the whole lookup in the access value (bc a successful read must not erase preview qualifications).
-**Touches:** innovation.md F2; critique.md F2 (this concept’s substantive evidence and criteria).
+**Touches:** docarchive/innovation.md F2; docarchive/critique.md F2 (this concept’s substantive evidence and criteria).
 **Meaning-gaps:** Public serialization spellings — low — field semantics are settled while names/formatting remain explicit plan choices.
 **Depth-link:** none; depth-signal: the listed manifestations preserve this identity’s concrete edge cases.
 
@@ -83,7 +83,7 @@ Attributes describe routes; none is chosen, executed, sequenced or marked done.
 **Priority:** HIGH. **Confidence:** HIGH. **Essentiality:** core.
 **Guidance Mode:** compact.
 - Inspect actual SDK result handling (bc a messages wrapper alone can hide a contradictory payload).
-**Touches:** sensemaking.md A1/A2; critique.md F3 (this concept’s substantive evidence and criteria).
+**Touches:** docarchive/sensemaking.md A1/A2; docarchive/critique.md F3 (this concept’s substantive evidence and criteria).
 **Depth-link:** none; depth-signal: the listed manifestations preserve this identity’s concrete edge cases.
 
 ## R5 — Operational failure provenance
@@ -96,7 +96,7 @@ Attributes describe routes; none is chosen, executed, sequenced or marked done.
 **Priority:** HIGH. **Confidence:** HIGH. **Essentiality:** core.
 **Guidance Mode:** compact.
 - Compare exact error objects and health records (bc prior failures were misclassified across boundaries).
-**Touches:** sensemaking.md A6; critique.md D2 (this concept’s substantive evidence and criteria).
+**Touches:** docarchive/sensemaking.md A6; docarchive/critique.md D2 (this concept’s substantive evidence and criteria).
 **Depth-link:** none; depth-signal: the listed manifestations preserve this identity’s concrete edge cases.
 
 ## R6 — Verified temporary-call composition
@@ -109,7 +109,7 @@ Attributes describe routes; none is chosen, executed, sequenced or marked done.
 **Priority:** HIGH. **Confidence:** HIGH. **Essentiality:** core.
 **Guidance Mode:** compact.
 - Keep source work in the opening task (bc the handle and evidence lifetime are already defined there).
-**Touches:** decomposition.md Q4; innovation.md F4 (this concept’s substantive evidence and criteria).
+**Touches:** docarchive/decomposition.md Q4; docarchive/innovation.md F4 (this concept’s substantive evidence and criteria).
 **Meaning-gaps:** No unresolved meaning gap identified; concrete facade signatures remain implementation choices.
 **Depth-link:** none; depth-signal: the listed manifestations preserve this identity’s concrete edge cases.
 
@@ -123,7 +123,7 @@ Attributes describe routes; none is chosen, executed, sequenced or marked done.
 **Priority:** HIGH. **Confidence:** HIGH. **Essentiality:** core.
 **Guidance Mode:** compact.
 - Use a real budget and refused admission (bc fabricated remaining counts do not exercise the send boundary).
-**Touches:** sensemaking.md executed budget_health; decomposition.md Q3 (this concept’s substantive evidence and criteria).
+**Touches:** docarchive/sensemaking.md executed budget_health; docarchive/decomposition.md Q3 (this concept’s substantive evidence and criteria).
 **Depth-link:** none; depth-signal: the listed manifestations preserve this identity’s concrete edge cases.
 
 ## R8 — Semantic group-health recovery
@@ -136,7 +136,7 @@ Attributes describe routes; none is chosen, executed, sequenced or marked done.
 **Priority:** HIGH. **Confidence:** HIGH. **Essentiality:** core.
 **Guidance Mode:** compact.
 - Check failure/cancellation after source success (bc SDK request success alone is not the final domain result).
-**Touches:** sensemaking.md A7; critique.md assembly A (this concept’s substantive evidence and criteria).
+**Touches:** docarchive/sensemaking.md A7; docarchive/critique.md assembly A (this concept’s substantive evidence and criteria).
 **Depth-link:** none; depth-signal: the listed manifestations preserve this identity’s concrete edge cases.
 
 ## R9 — SDK session-cache limits
@@ -149,7 +149,7 @@ Attributes describe routes; none is chosen, executed, sequenced or marked done.
 **Priority:** HIGH. **Confidence:** HIGH. **Essentiality:** supporting.
 **Guidance Mode:** compact.
 - Preserve the actual IntegrityError path (bc masking it would create a false access result).
-**Touches:** critique.md optional_hash_backends; ../contract_probe.py (this concept’s substantive evidence and criteria).
+**Touches:** docarchive/critique.md optional_hash_backends; ../contract_probe.py (this concept’s substantive evidence and criteria).
 **Depth-link:** none; depth-signal: the listed manifestations preserve this identity’s concrete edge cases.
 
 ## R10 — Public contract compatibility
@@ -162,7 +162,7 @@ Attributes describe routes; none is chosen, executed, sequenced or marked done.
 **Priority:** MEDIUM. **Confidence:** HIGH. **Essentiality:** core.
 **Guidance Mode:** compact.
 - Align declared Telethon minimum with used constructors (bc an import contract should match the selected SDK).
-**Touches:** decomposition.md Q4; innovation.md F2/F4 (this concept’s substantive evidence and criteria).
+**Touches:** docarchive/decomposition.md Q4; docarchive/innovation.md F2/F4 (this concept’s substantive evidence and criteria).
 **Meaning-gaps:** Documentation layout — low — presentation can be adjusted without changing the observation contract.
 **Depth-link:** none; depth-signal: the listed manifestations preserve this identity’s concrete edge cases.
 
@@ -176,7 +176,7 @@ Attributes describe routes; none is chosen, executed, sequenced or marked done.
 **Priority:** HIGH. **Confidence:** HIGH. **Essentiality:** core.
 **Guidance Mode:** compact.
 - Supply only remote replies (bc canned owner/status results reproduce the old blind spot).
-**Touches:** decomposition.md Q5; innovation.md F5 (this concept’s substantive evidence and criteria).
+**Touches:** docarchive/decomposition.md Q5; docarchive/innovation.md F5 (this concept’s substantive evidence and criteria).
 **Meaning-gaps:** Fault-injection matrix details — low — the required failure classes and boundaries are already identified.
 **Depth-link:** none; depth-signal: the listed manifestations preserve this identity’s concrete edge cases.
 
@@ -190,7 +190,7 @@ Attributes describe routes; none is chosen, executed, sequenced or marked done.
 **Priority:** LOW. **Confidence:** MEDIUM. **Essentiality:** supporting.
 **Guidance Mode:** compact.
 - Use an authorized read-only setup (bc server observations consume real account resources).
-**Touches:** critique.md coverage limits (this concept’s substantive evidence and criteria).
+**Touches:** docarchive/critique.md coverage limits (this concept’s substantive evidence and criteria).
 **Depth-link:** none; depth-signal: the listed manifestations preserve this identity’s concrete edge cases.
 
 ## Excluded

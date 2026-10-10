@@ -14,9 +14,9 @@ A → Su → S → D → I → C → R (always)
 ## Iteration
 1
 ## Status
-ACTIVE
+COMPLETE
 ## Next Discipline
-CONCLUDE
+—
 ## Location
 Issue-owned inquiry: devdocs/work/7-group-operations/stage-3-group-access/traverse/,
 per CONTRIBUTING §6.4. No parallel root inquiry created.
@@ -32,3 +32,4 @@ per CONTRIBUTING §6.4. No parallel root inquiry created.
 - 2026-10-10_16-38: Innovation complete;7/7 mechanisms,15 core variants,5 selected candidates and one viable unselected architecture. Frame/shape inversions and all five tests recorded. Checker absent;manual8/8 coverage/structure checks passed. Next: Critique.
 - 2026-10-10_16-56: Critique complete;8 dimensions,15 candidates and assembly A;two explicit evaluation sweeps, added real SDK file/store cache edge probe. Selected assembly survives with honest source-error qualification, no source patch. Checker absent;manual8/8 structure/coverage checks passed. Next: Routelister.
 - 2026-10-10_17-00: Routelister complete;12 concept identities,10 core,10 high-priority,5 teleological/7 epistemic;route-map and index written without selection. Checker absent;manual7/7 structure checks passed. Next: CONCLUDE, after loading its protocol.
+- 2026-10-10_17-05: CONCLUDE complete. The paired feature is a bounded account-owned metadata/history observation using existing foundations, with explicit unknowns/errors and the measured SDK cache limit. All three articulation readings answered: metadata/member remain qualifications, history establishes access. Six discipline outputs archived;route-map/index remain at root. Parent task-impl continues with description.

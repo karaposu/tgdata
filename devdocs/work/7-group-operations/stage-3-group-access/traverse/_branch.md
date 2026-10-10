@@ -10,7 +10,7 @@ $task-impl |  |  |  |
 
 ## Articulation Reference
 
-- File: articulate_simple.md, read in full before this derivation.
+- File: docarchive/articulate_simple.md, read in full before this derivation.
 - Itemize count:1; identifier:I1.
 - Verdict: HIGH-PROCEED; flagged conditions:none.
 
