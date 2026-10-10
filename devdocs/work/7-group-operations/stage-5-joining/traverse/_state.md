@@ -5,7 +5,7 @@ articulated-surfacing-routed
 A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
-- [ ] Surfacing
+- [x] Surfacing
 - [ ] Sensemaking
 - [ ] Decomposition
 - [ ] Innovation
@@ -16,9 +16,10 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Surfacing
+Sensemaking
 ## Relationships
 - RELATED: Stage1–4 archived work folders on their retained branches (merged prerequisites).
 - RELATED: original #7 PR16 branch (historical failure evidence, not active implementation).
 ## History
 - 2026-10-10_23-07: Created after Articulate-Simple HIGH-PROCEED;1 item/6 variants; all9 light operational checks clean. Structural checker attempted: unavailable (exit127); manual bundle check PASS (input, count,4 MQs/MQA,tuple,literal/WHY,variants,verdict). Branch preservation check PASS. Next: Surfacing.
+- 2026-10-10_23-11: Surfacing complete:20 items/2 cycles,15 core; prior workspace refined for all6 variants. Checker unavailable (exit127); manual trace/summary/recency/telemetry/frontier checks PASS. Next: Sensemaking.
