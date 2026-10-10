@@ -1,7 +1,7 @@
 # #7 Stage 4 handoff
 
-**State:** implemented, verified and both review gates passed on
-`feat/7-account-join-allowance`. Awaiting the user's merge instruction.
+**State:** merged into dev via PR24 at `f15f1a8` after the user's go-ahead and
+merged-code verification. `feat/7-account-join-allowance` is the retained archive.
 **Product commit:** `de1f758`. **Base dev:** `1ce39d5` (Stage3 merged via PR23).
 **User scope:** Stage4 only; review and merge before Stage5. This is not permission
 to resume the old broad PR16 implementation or include unmerged #17.
@@ -26,17 +26,16 @@ to resume the old broad PR16 implementation or include unmerged #17.
   [Critique posted](https://github.com/karaposu/tgdata/pull/24#issuecomment-6101530562).
   The product is unchanged. No Stage4 rejection or re-plan is triggered.
 
-## Next — merge only after the user's go-ahead
+## Merge complete — next is Stage5
 
-1. Confirm the current dev/PR heads and that the accepted product remains de1f758.
-   Both gate artifacts are committed/pushed and posted; base is still1ce39d5.
-2. Merge into dev with this work folder excluded and dev archaeology preserved.
-   Verify the actual merged code with the supported offline suites/demos/compile.
-3. Push the verified merge, retain this branch as archive, update #7 and keep it
-   open for Stage5. No auto-closing reference belongs on this partial delivery.
-4. Stage5 joining starts after this stage's review and authorized merge.
+PR24 merged at `f15f1a864f07905aee1c8d679f6039fb5c898ae6`, confirmed by GitHub
+2026-10-10T19:56:31Z. Only the six reviewed product paths landed; this folder was
+excluded and dev archaeology preserved. Actual merged code passed529 offline groups,
+3 live skips,3 demos and67-file compile/grammar checks before push. See
+merge-verification.md and its retained count evidence.
 
-No merge has been performed or authorized by the review request.
+The user subsequently requested `$task-impl stage 5`. Start that stage from devf15f1a8
+on its own natively linked issue branch. Keep #7 open, and keep this branch as archive.
 
 ## Consciously retained Low
 
