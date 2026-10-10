@@ -9,6 +9,9 @@ from .tgdata import TgData
 
 # Errors
 from .message_engine import GroupAccessError
+from .group_operations import (
+    GroupMetadata, GroupLookup, GroupAccess, GroupReferenceError, GroupResponseError,
+)
 from .connection_engine import AuthRequiredError, ProxyConfigError
 from .discovery_engine import DiscoveryInterrupted
 from .message_batch import MessageBatch, BatchFormatError
@@ -61,6 +64,11 @@ __all__ = [
 
     # Errors
     "GroupAccessError",
+    "GroupMetadata",
+    "GroupLookup",
+    "GroupAccess",
+    "GroupReferenceError",
+    "GroupResponseError",
     "AuthRequiredError",
     "ProxyConfigError",
     "DiscoveryInterrupted",

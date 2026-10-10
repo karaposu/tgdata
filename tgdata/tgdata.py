@@ -29,6 +29,9 @@ from .backfill import (
     BackfillDeliveryRef, BackfillConfigurationError,
 )
 from .models import GroupInfo
+from .group_operations import (
+    GroupLookup, GroupAccess, _parse_target, _lookup_group, _check_group_access,
+)
 from .read_budget import ReadBudgetError, ReadBudgetExceeded
 from .utils import (
     format_message_for_display,
@@ -249,6 +252,31 @@ class TgData:
                     monitor.dispatch(observation)
 
     # ==================== Group Management ====================
+
+    async def lookup_group(self, target: Union[str, int], *, account_id: int) -> GroupLookup:
+        """Resolve group metadata under a freshly verified expected account.
+
+        Uses one temporary client; never logs in, joins or probes history.
+        See docs/group_operations.md for supported references and source errors.
+        """
+        reference = _parse_target(target)
+        async with self._account_health_operation(
+                account_id, 'lookup_group', reference.label) as (operation, _):
+            return await _lookup_group(operation, reference)
+
+    async def check_group_access(self, target: Union[str, int], *, account_id: int) -> GroupAccess:
+        """Resolve metadata and, when possible, probe one message of history.
+
+        Returns readable, denied or unprobed; operational failures still raise.
+        The existing read budget applies. Readability does not establish membership.
+        """
+        reference = _parse_target(target)
+        async with self._account_health_operation(
+                account_id, 'check_group_access', reference.label) as (operation, observation):
+            result = await _check_group_access(operation, reference)
+            if result.readable is True:
+                observation.confirm_group_access()
+            return result
     
     @_reported()
     async def list_groups(self) -> pd.DataFrame:
