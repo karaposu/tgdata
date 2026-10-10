@@ -1,0 +1,7 @@
+{"probe": "provision_race", "result": {"workers": 6, "admitted": 3, "persisted": 3}}
+{"probe": "reference_model", "result": {"transitions": 600, "accounts": 3, "admitted": 49, "denied": 164, "configurations": 196, "observations": 191}}
+{"probe": "native_busy_commit", "result": {"error": "JoinBudgetStorageError", "native_wait_seconds": 5.215, "after_failure": 0, "after_retry": 1}}
+{"probe": "lost_return_competitor", "result": {"first": "storage_error", "competitor": "denied", "persisted": 1}}
+{"probe": "namespace_coexistence", "result": {"read_used": 2, "join_used": 3, "unrelated_table": "untouched"}}
+{"probe": "corrupted_file_and_callback_context", "result": {"error": "JoinBudgetStorageError(DatabaseError)", "health": null, "file_unchanged": true}}
+{"probe": "fractional_deadline", "result": {"admitted_at": 1000.2, "hint": 87400.2, "observed": 87400.2, "remaining_at_hint": 0, "retry_after": 0, "outcome_at_hint": "denied", "next_float_delta_seconds": 1.4551915228366852e-11, "remaining_after_tick": 1}}
