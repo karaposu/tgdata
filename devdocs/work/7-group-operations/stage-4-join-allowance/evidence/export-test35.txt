@@ -1,0 +1,40 @@
+test_account_policy_and_clock_are_independent (__main__.JoinBudgetTests.test_account_policy_and_clock_are_independent) ... ok
+test_backward_clock_and_denial_horizon_persist (__main__.JoinBudgetTests.test_backward_clock_and_denial_horizon_persist) ... ok
+test_bad_timestamp_is_scoped_to_affected_account (__main__.JoinBudgetTests.test_bad_timestamp_is_scoped_to_affected_account) ... ok
+test_cap_changes_retain_usage_and_wait_for_enough_expiry (__main__.JoinBudgetTests.test_cap_changes_retain_usage_and_wait_for_enough_expiry) ... ok
+test_clock_exception_rolls_back_policy_and_is_local (__main__.JoinBudgetTests.test_clock_exception_rolls_back_policy_and_is_local) ... ok
+test_clock_runs_inside_writer_transaction (__main__.JoinBudgetTests.test_clock_runs_inside_writer_transaction) ... ok
+test_clock_value_bounds (__main__.JoinBudgetTests.test_clock_value_bounds) ... ok
+test_close_only_failure_grants_nothing_retains_charge (__main__.JoinBudgetTests.test_close_only_failure_grants_nothing_retains_charge) ... ok
+test_competing_processes_keep_accounts_separate (__main__.JoinBudgetTests.test_competing_processes_keep_accounts_separate) ... ok
+test_competing_processes_share_one_cap (__main__.JoinBudgetTests.test_competing_processes_share_one_cap) ... ok
+test_error_after_real_commit_retains_charge (__main__.JoinBudgetTests.test_error_after_real_commit_retains_charge) ... ok
+test_exact_expiry_and_fractional_retry (__main__.JoinBudgetTests.test_exact_expiry_and_fractional_retry) ... ok
+test_exception_derived_cancellation_compatibility_fixture (__main__.JoinBudgetTests.test_exception_derived_cancellation_compatibility_fixture) ... ok
+test_explicit_creation_and_reopen (__main__.JoinBudgetTests.test_explicit_creation_and_reopen) ... ok
+test_integer_inputs_and_large_account_id (__main__.JoinBudgetTests.test_integer_inputs_and_large_account_id) ... ok
+test_invalid_attempts_refuse_before_pruning_or_clock_advance (__main__.JoinBudgetTests.test_invalid_attempts_refuse_before_pruning_or_clock_advance) ... ok
+test_invalid_owner_is_detected_globally (__main__.JoinBudgetTests.test_invalid_owner_is_detected_globally) ... ok
+test_invalid_policies_cannot_be_overwritten (__main__.JoinBudgetTests.test_invalid_policies_cannot_be_overwritten) ... ok
+test_local_errors_do_not_inherit_telegram_health (__main__.JoinBudgetTests.test_local_errors_do_not_inherit_telegram_health) ... ok
+test_missing_namespace_needs_explicit_creation (__main__.JoinBudgetTests.test_missing_namespace_needs_explicit_creation) ... ok
+test_missing_policy_and_zero_limit (__main__.JoinBudgetTests.test_missing_policy_and_zero_limit) ... ok
+test_missing_state_after_open_is_not_recreated (__main__.JoinBudgetTests.test_missing_state_after_open_is_not_recreated) ... ok
+test_native_cancellation_boundaries (__main__.JoinBudgetTests.test_native_cancellation_boundaries) ... ok
+test_orphaned_claims_cannot_be_reenrolled (__main__.JoinBudgetTests.test_orphaned_claims_cannot_be_reenrolled) ... ok
+test_partial_schemas_are_not_repaired (__main__.JoinBudgetTests.test_partial_schemas_are_not_repaired) ... ok
+test_paths_and_constructor_options (__main__.JoinBudgetTests.test_paths_and_constructor_options) ... ok
+test_primary_cancellation_survives_cleanup_and_logger_failure (__main__.JoinBudgetTests.test_primary_cancellation_survives_cleanup_and_logger_failure) ... ok
+test_process_exit_brackets_real_commit (__main__.JoinBudgetTests.test_process_exit_brackets_real_commit) ... ok
+test_public_exports (__main__.JoinBudgetTests.test_public_exports) ... ok
+test_real_read_budget_coexistence (__main__.JoinBudgetTests.test_real_read_budget_coexistence) ... ok
+test_schema_damage_refuses (__main__.JoinBudgetTests.test_schema_damage_refuses) ... ok
+test_secondary_cleanup_preserves_primary_and_sanitizes_logs (__main__.JoinBudgetTests.test_secondary_cleanup_preserves_primary_and_sanitizes_logs) ... ok
+test_sql_failures_roll_back_uncommitted_claims (__main__.JoinBudgetTests.test_sql_failures_roll_back_uncommitted_claims) ... ok
+test_status_is_frozen_and_dict_is_fresh (__main__.JoinBudgetTests.test_status_is_frozen_and_dict_is_fresh) ... ok
+test_status_reserves_nothing_and_each_claim_counts (__main__.JoinBudgetTests.test_status_reserves_nothing_and_each_claim_counts) ... ok
+
+----------------------------------------------------------------------
+Ran 35 tests in 3.837s
+
+OK

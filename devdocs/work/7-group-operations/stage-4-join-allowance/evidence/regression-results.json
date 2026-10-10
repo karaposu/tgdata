@@ -1,0 +1,132 @@
+{
+  "passed_groups": 529,
+  "live_skips": 3,
+  "results": [
+    {
+      "suite": "test_12_proxy",
+      "exit": 0,
+      "passed_groups": 5,
+      "live_skips": 2
+    },
+    {
+      "suite": "test_13_device_identity",
+      "exit": 0,
+      "passed_groups": 5,
+      "live_skips": 1
+    },
+    {
+      "suite": "test_14_flood_threshold",
+      "exit": 0,
+      "passed_groups": 11,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_15_login_checks",
+      "exit": 0,
+      "passed_groups": 11,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_16_health_events",
+      "exit": 0,
+      "passed_groups": 21,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_17_session_store",
+      "exit": 0,
+      "passed_groups": 12,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_18_read_budget",
+      "exit": 0,
+      "passed_groups": 28,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_19_message_batches",
+      "exit": 0,
+      "passed_groups": 33,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_22_daily_continuation",
+      "exit": 0,
+      "passed_groups": 25,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_23_fixed_windows",
+      "exit": 0,
+      "passed_groups": 22,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_24_backfill_state",
+      "exit": 0,
+      "passed_groups": 23,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_25_backfill_delivery",
+      "exit": 0,
+      "passed_groups": 41,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_26_backfill_completion",
+      "exit": 0,
+      "passed_groups": 16,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_27_backfill_pacing",
+      "exit": 0,
+      "passed_groups": 32,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_28_backfill_controls",
+      "exit": 0,
+      "passed_groups": 32,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_29_backfill_public",
+      "exit": 0,
+      "passed_groups": 23,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_30_backfill_integration",
+      "exit": 0,
+      "passed_groups": 15,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_32_account_operation",
+      "exit": 0,
+      "passed_groups": 28,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_33_owned_health",
+      "exit": 0,
+      "passed_groups": 62,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_34_group_access",
+      "exit": 0,
+      "passed_groups": 49,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_35_join_budget",
+      "exit": 0,
+      "passed_groups": 35,
+      "live_skips": 0
+    }
+  ]
+}
