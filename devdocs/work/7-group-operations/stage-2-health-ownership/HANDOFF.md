@@ -7,8 +7,8 @@ effort: max
 **Revision4 implemented and verified; both renewed gates pass. Awaiting merge go-ahead.**
 Product `c6451bb`, branch `feat/7-account-health-ownership`, base dev/merged Stage1
 `53306df`. Worktree: `/private/tmp/tgdata-7-stage2-health-ownership`.
-[PR22](https://github.com/karaposu/tgdata/pull/22) is **not merged**. The renewed
-review result is ACCEPTED; publication/readiness follows the review checkpoint.
+[PR22](https://github.com/karaposu/tgdata/pull/22) is **ready for review, not merged**.
+Both renewed gates are committed, pushed and posted. Merge awaits the user's go-ahead.
 
 ## Current implementation
 
@@ -68,15 +68,16 @@ Do not resume archived plans or mistake initial fidelity PASS for renewed approv
 ## Renewed review and next step
 
 Merge fidelity PASS `fd655a5`, posted on PR22 at issuecomment-6097100536. Fresh
-critic prompt `da777fe`; root pr-critic.md records the second review: **ACCEPTED,
-0 High, 0 Medium, 0 Low**. Seven additional offline probe groups passed, including
+critic prompt `da777fe`; fresh review/probes committed and pushed in `9e0b4e5`,
+posted at [issuecomment-6097169418](https://github.com/karaposu/tgdata/pull/22#issuecomment-6097169418).
+Root pr-critic.md records the second review: **ACCEPTED, 0 High, 0 Medium, 0 Low**. Seven additional offline probe groups passed, including
 nested resolution, namespace restrictions, local/cancelled failure after successful
 requests, crossed account cleanup and forwarded failure followed by fresh legacy RPC.
 The final probe runner exits0. No product code changed during either review gate.
 
-Publish the committed fresh critique on PR22, mark it ready, and record the review
-checkpoint/comment on #7. Both gates then allow the next step: the user's merge
-go-ahead. Do not re-plan or implement another stage before that instruction. §9 uses
+PR22 is marked ready for review. Both gates allow the next step: the user's merge
+go-ahead. The matching issue/PR status update records fd655a5 and9e0b4e5 with their
+posted verdicts. Do not re-plan or implement another stage before that instruction. §9 uses
 the retained same-session Astra/max record and its original timestamp, not an
 invented fresh selector reading. If a future changed diff is reviewed and rejected,
 apply CONTRIBUTING to that actual review; this accepted round is not a rejection.

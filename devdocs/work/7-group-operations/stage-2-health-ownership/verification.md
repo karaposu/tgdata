@@ -5,8 +5,9 @@ effort: max
 # Stage 2 revision 4 verification — 2026-10-10
 
 **Result: PASS.** Product `c6451bb`, folded plan `aee7211`, base dev/Stage1
-`53306df`, branch `feat/7-account-health-ownership`. Implementation is complete;
-renewed merge check and fresh PR critique remain pending on draft PR22. No live
+`53306df`, branch `feat/7-account-health-ownership`. Implementation is complete.
+Later review checkpoints: merge fidelity PASS `fd655a5`, fresh PR ACCEPTED `9e0b4e5`;
+see merge-check.md and pr-critic.md. PR22 is ready, not merged. No live
 Telegram action, login or membership change. This is not PR or merge approval.
 
 The first product's verification is preserved byte-for-byte in
@@ -132,9 +133,9 @@ semantic interpretation of an actual result. No durable/FIFO callback contract.
 Tests establish local SDK/asyncio/SQLite composition, not live server permission
 or frozen-account behavior.
 
-Next: renewed merge fidelity check, then fresh same-session PR critic on the final
-product diff and plan. Any Medium/High rejects; a second rejecting Stage2 PR round
-returns to description/traverse under CONTRIBUTING §7.4. Merge needs the user's
-explicit go-ahead after both gates. Keep work docs out of dev and retain the branch.
+At implementation completion, the next gates were renewed merge fidelity and a
+fresh same-session PR critique on the final product diff and plan. They subsequently
+passed at fd655a5 and9e0b4e5, with no runtime changes. Merge now needs the user's
+explicit go-ahead. Any future Medium/High rejects under CONTRIBUTING §7.3–7.4. Keep work docs out of dev and retain the branch.
 Frontmatter retains the previously observed same-session Astra/max provenance;
 the archived merge check records its original timestamp, not a new selector reading.
