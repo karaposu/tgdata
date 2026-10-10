@@ -4,92 +4,79 @@ effort: max
 ---
 # #7 Stage 2 handoff
 
-**Revision3 re-plan complete; fresh plan critic next. Not merged.** Product `3d59455` on
-`feat/7-account-health-ownership`, based on merged Stage1/dev `53306df`.
-Worktree: `/private/tmp/tgdata-7-stage2-health-ownership`.
+**Revision4 implemented and verified; renewed merge check and PR critique next.**
+Product `c6451bb`, branch `feat/7-account-health-ownership`, base dev/merged Stage1
+`53306df`. Worktree: `/private/tmp/tgdata-7-stage2-health-ownership`.
+[PR22](https://github.com/karaposu/tgdata/pull/22) remains **draft, not merged**.
 
-The user requested `$task-impl stage 2`, then continued after the prior automatic
-approval reviewer usage-limit interruption. The blocked inquiry commit succeeded
-on resume. All remaining task-impl stages ran sequentially in this session.
+## Current implementation
 
-## What exists
+The existing fixed-owner monitor, private `_account_health_operation` and local
+`get_account_health(account_id)` are retained. Events/state belong to the verified
+numeric account; legacy health stays separate. The rework defines precise evidence:
 
-- Fixed-owner HealthMonitor reuse for verified temporary operations, preserving
-  legacy health separately. Public local `get_account_health(account_id)` returns
-  an independent snapshot or None, with no I/O.
-- Private `_account_health_operation` combines Stage1 ownership/cleanup with source
-  RPC observations. Caught raw and MultiError failures are recorded before the
-  caller can consume them. No ambient local causes or foreign task/client evidence.
-- Conservative recovery: only conditions older than the operation start, same
-  owner, appropriate request/method/group evidence, no self-recovery, valid handle.
-- Notifications after source cleanup in separate tasks; errors/cancellation and
-  re-entry isolated, pending tasks cooperatively retired by close.
-- Forty-one new real-SDK offline contract tests. Full verification: **424 actual
-  offline passes, three live skips**, three demo paths, 63 compiled/grammar-checked
-  Python files. See `verification.md` for exact evidence and limitations.
+- Owned successes and raw RPC/MultiError failures use one namespaced logical request
+  key through known SDK envelopes; legacy names stay unchanged.
+- Immutable keys are captured before awaiting and bound to the observation/client.
+  Mutable batch containers cannot invent a successful action. Unknown/lazy input
+  supplies no recovery evidence; individual private request objects stay stable.
+- Restriction recovery needs the refused action, along with the existing method,
+  owner, ordering, no-self-recovery and valid-handle guards. Identity-only success
+  cannot clear a history-read restriction.
+- Neutral attribution travels with the originating exception/explicit causes/SDK
+  RPC members across task hops. Independent new RPCs are not hidden by old implicit
+  context. Diagnostic classification and polling remain unchanged.
+- Notifications remain isolated tasks after source cleanup; arrival may reorder
+  when cleanup durations differ. No FIFO/durability expansion.
 
-## Pipeline artifacts
+Rework scope: three runtime files, suite33 and three product documents. No Stage1,
+budget or facade interface changes, no new sender layer or global ownership system.
+Verification: **445 actual offline passes, 3 live skips**, 3 offline demo executions,
+63-file compilation/Python3.7 grammar checks on Telethon1.45.0. Suite33 has62 cases,
+21 added in this rework. No final failing-test runtime correction. See verification.md.
 
-Triage `ea988e9`; completed inquiry `f19ca2a`; description `8350f39`; initial plan
-`587b060`; dynamic prompt `19ab9a1`; critic `f1aa84b`; prebuild experiment PASS
-`46866c3`; folded revision2 `a1accf6`; product `3d59455`. Critic selected two robust
-mitigations: caught-handle invalidity veto and real MultiError leaf observation.
-No external planning/execution blocker. The original implementation verification
-required no runtime correction; the PR review subsequently required the re-plan below.
+## Pipeline and preserved evidence
 
-## Review outcome — 2026-10-09
+Original pipeline: triage `ea988e9`, inquiry `f19ca2a`, desc `8350f39`, initial plan
+`587b060`, prompt `19ab9a1`, critic `f1aa84b`, experiment PASS `46866c3`, revision2
+`a1accf6`, initial product `3d59455`, initial verification `a2b9755`.
 
-Merge fidelity PASS `1625e09`; PR22 opened into dev as a draft, merge check posted.
-Fresh same-session critic-d prompt `7711e56`, then five executed offline probes
-using actual SDK sender/result handling and asyncio. Product code remains unchanged.
-The PR critic **REJECTED: 0 High, 3 Medium, 0 Low**:
+Round1: merge fidelity PASS `1625e09`, fresh PR prompt `7711e56`, PR critic
+`b9a8a5d` **REJECTED: 0 High, 3 Medium, 0 Low**. The findings were wrapped-request
+key mismatch, identity-only restriction recovery and overbroad exception exclusion.
+That review and its probes remain unchanged at root pr-critic.md / pr_probes.py.
+Their probes characterize the old defects, not current acceptance. There is only
+**one distinct Stage2 rejecting PR round**; old whole-issue PR16 is separate.
 
-1. Wrapped SDK error request names differ from success keys; unrelated waits alias.
-2. Repeated identity verification can clear a restriction without retrying its action.
-3. An excluded ancestor in implicit exception context suppresses an independent new RPC.
+Revision3: archive/evidence `2509a1f`, re-plan `530ea36`, additional namespaced SDK
+and child-task/exception evidence in replan-evidence.md and replan_inputs_probe.py.
+The user then authorized fresh plan critic, fold and implementation together.
 
-See `pr-critic.md` for the complete review, output and selected mitigations;
-`pr_probes.py` reproduces the observations without sockets. Its exit0 characterizes
-the defects, not acceptance. Additional probes found expected notification reordering
-after unequal cleanup duration and no deadlock in concurrent callback close.
+Revision4 cycle: fresh prompt `4f562a7`, critic `d9eefbe` (one Medium on mutable
+success evidence; robust snapshot selected), required real-SDK exception-carrier
+experiment PASS `d2dd499`, folded plan `aee7211`, product **`c6451bb`**. No blockers,
+no re-critique of the fold. Eight pre-change regressions failed as expected; the
+final product passes the complete verification set.
 
-## Revision3 re-plan — 2026-10-10
-
-The user requested the formal re-plan only. `task-plan` produced root `plan.md`
-revision3 from the description, PR critique and additional source/exception probes.
-It has six steps and no open external blocker. It has not been critiqued, folded
-or implemented; current product3d59455 remains the rejected code.
-
-The plan unifies owned failures/successes with namespaced logical request keys,
-retains the actual refused request for restriction recovery, and replaces ambient
-exclusion lists with neutral attribution carried by the originating exception.
-The extra probe showed that a child task's unverified auth error currently becomes
-a logout for cached parent111; call-local lists cannot cover that handoff. The
-same evidence also showed two distinct GetMessages namespaces and why prior
-implicit exception context must not be adopted as an isolated source.
-
-See `replan-evidence.md` / `replan_inputs_probe.py` for actual output and limits.
-Archive checkpoint2509a1f preserved the original revision2 plan, original critic/
-prompt and merge check byte-for-byte under `archive/round-1/`. Their checksums were
-compared to b9a8a5d. The original PR critic/probes stay at root as active inputs;
-there is still only one rejecting Stage2 review. Original verification is historical.
+Round1 plan/critic/prompt/merge-check and original verification are preserved
+byte-for-byte under archive/round-1, with checked SHA-256s. Active root plan is
+revision4; active plan critic is the revision3 critique with its completed experiment.
+Do not resume archived plans or mistake initial fidelity PASS for renewed approval.
 
 ## Next
 
-Run `critic-d` on the explicit revision3 plan plus `pr-critic.md` and
-`replan-evidence.md`; fold selected mitigations into revision4, then implement and
-verify. Use the same PR22, with renewed merge check and fresh PR critique after
-rework. Do not resume archived revision2 or treat this plan as code acceptance.
-No direct runtime patch was made during review or re-planning. If a second Stage2
-PR gate rejects, CONTRIBUTING §7.4 returns to description/traverse instead of another
-routine re-plan. The old whole-issue PR16 history remains separate.
+Renew merge-check.md against the full dev diff, triage, description, revision4,
+selected critics and the actual issue status. Then run a fresh in-session PR critic
+on that diff and plan with independent probes; keep PR22 draft until the gates allow
+it. A second rejecting Stage2 PR gate returns to description/traverse under §7.4,
+not another routine patch loop. §9 review uses the retained same-session Astra/max
+record and its original timestamp, not an invented fresh selector reading.
 
-Merge only after successful renewed gates and the user's go-ahead, excluding devdocs
-and retaining the branch archive. Whole #7 remains open for Stage3 lookup/access,
-Stage4 join allowance and Stage5 joining. §9 evidence remains the retained Astra/max
-session record, with its original timestamp preserved in the merge check.
+Merge only after successful renewed gates and the user's go-ahead, excluding
+work-folder docs and preserving the branch archive. Whole #7 stays open for Stage3
+lookup/access, Stage4 join allowance and Stage5 joining.
 
-The original checkout and old PR16/revision3 stay preserved. Do not resume the old
-broad plan or merge unmerged #17 into this prerequisite. Do not commit duncan or
-the original checkout's untracked HANDOFF.md/todo.md. No live Telegram work in this
-stage; no additional accounts, login codes or membership changes were needed.
+The original checkout and old broad PR16/revision3 are preserved. Do not merge
+unmerged #17 into this prerequisite. Do not commit duncan, the stray guide, or the
+original checkout's untracked HANDOFF.md/todo.md. No live Telegram work, additional
+accounts, login codes or membership changes were needed in this stage.
