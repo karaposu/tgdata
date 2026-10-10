@@ -7,11 +7,48 @@ in notifications. Future group code must explicitly assert proven access.
 
 import asyncio
 from contextlib import asynccontextmanager
+from dataclasses import replace
 import inspect
 
 from telethon.errors import MultiError, RPCError
+from telethon.tl import functions
+from telethon.tl.tlobject import TLRequest
 
 from . import health
+
+
+_ENVELOPES = (
+    functions.InvokeAfterMsgRequest, functions.InvokeAfterMsgsRequest,
+    functions.InitConnectionRequest, functions.InvokeWithLayerRequest,
+    functions.InvokeWithoutUpdatesRequest, functions.InvokeWithMessagesRangeRequest,
+    functions.InvokeWithTakeoutRequest,
+)
+
+
+def _request_key(request):
+    """One namespaced action key; never keep arguments or guess through .query."""
+    seen = set()
+    try:
+        for depth in range(9):
+            if not isinstance(request, TLRequest) or id(request) in seen:
+                return None
+            seen.add(id(request))
+            if isinstance(request, _ENVELOPES):
+                if depth == 8:
+                    return None
+                request = request.query
+                continue
+            cls = type(request)
+            namespace = cls.__module__
+            prefix = 'telethon.tl.functions'
+            if namespace == prefix:
+                return cls.__name__
+            if namespace.startswith(prefix + '.'):
+                namespace = namespace[len(prefix) + 1:]
+            return namespace + '.' + cls.__name__
+    except (Exception, asyncio.CancelledError):  # Metadata cannot change the RPC outcome.
+        return None
+    return None
 
 
 class _OwnedCall(health._Call):
@@ -22,7 +59,6 @@ class _OwnedCall(health._Call):
         self.operation = operation
         self.client = operation.client
         self.started = started
-        self.answered = next(health._TICKS)  # Stage 1 already proved this account.
         self.requests = set()
         self.group_confirmed = False
         self.events = []
@@ -36,12 +72,24 @@ class _OwnedCall(health._Call):
         except RuntimeError:  # A caught auth/identity failure invalidates the handle.
             return False
 
-    def note_answer(self, client=None, request=None):
+    def capture_request_evidence(self, client, request):
         if client is not self.client or not self.valid():
+            return None
+        if type(request) in (list, tuple, set, dict):
+            requests = request
+        elif isinstance(request, TLRequest):
+            requests = (request,)
+        else:
+            requests = ()  # Do not consume custom/lazy input for observer evidence.
+        keys = frozenset(key for key in map(_request_key, requests) if key is not None)
+        return self, client, keys
+
+    def note_answer(self, client=None, request=None, evidence=None):
+        if client is not self.client or not self.valid() or evidence is None:
             return
-        self.answered = next(health._TICKS)
-        requests = request if isinstance(request, (list, tuple)) else (request,)
-        self.requests.update(type(item).__name__ for item in requests if item is not None)
+        call, source, keys = evidence
+        if call is self and source is client:
+            self.requests.update(keys)
 
     def note_rpc_error(self, client, exc):
         if client is not self.client or not self.valid():
@@ -54,6 +102,7 @@ class _OwnedCall(health._Call):
             finding = health.classify(error)
             if finding is None:
                 continue
+            finding = replace(finding, request=_request_key(getattr(error, 'request', None)))
             health._mark(error, finding)
             event = self.monitor._record(finding, self, 'rpc')
             if finding.verdict == health.WAITING and finding.request:
@@ -78,9 +127,16 @@ class _OwnedHealthMonitor(health.HealthMonitor):
         super().__init__(callback, label)
         self._owner = (session, account_id)
         self._waiting_tick = {}
+        self._restricted_request = None
 
     def _who(self):
         return self._owner
+
+    def _record(self, finding, call, source, group=None):
+        event = super()._record(finding, call, source, group)
+        if finding.verdict in (health.LOGGED_OUT, health.BANNED, health.RESTRICTED):
+            self._restricted_request = finding.request if finding.verdict == health.RESTRICTED else None
+        return event
 
     @asynccontextmanager
     async def observe(self, operation, method, group, started):
@@ -111,10 +167,11 @@ class _OwnedHealthMonitor(health.HealthMonitor):
                                                None, None, 'recovery', health._iso()))
         if older(self._account_tick, ('account',)) and (
                 self._account in (health.LOGGED_OUT, health.BANNED)
-                or (self._account == health.RESTRICTED and call.requests
+                or (self._account == health.RESTRICTED and self._restricted_request in call.requests
                     and self._restricted_by == call.method)):
             self._account, self._account_since, self._account_error = health.OK, None, None
             self._account_tick, self._restricted_by = 0, None
+            self._restricted_request = None
             call.events.append(self._event(health.OK, 'account', None, call, None,
                                            None, None, 'recovery', health._iso()))
         key = str(call.group)

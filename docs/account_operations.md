@@ -102,10 +102,42 @@ caught. Partial batch successes provide no recovery evidence. Local exception
 causes and ambient reports do not create owned facts. A caught invalidated handle
 cannot recover state; an older operation cannot clear a newer condition.
 
+Owned event `request` and snapshot `waiting` keys use the logical SDK request's
+namespace and class, such as `messages.GetHistoryRequest`. Known transport envelopes
+are unwrapped; `messages.GetMessagesRequest` and `channels.GetMessagesRequest` stay
+distinct. Legacy health names are unchanged. Missing or malformed request identity
+provides no evidence for automatic recovery.
+
+A wait needs a successful answer for its request key. A restriction remembers
+the refused key and needs that request to succeed in a later operation with the
+same outer method. A successful identity check cannot clear a history-read
+restriction. Initial account proof occurs before observation and adds no request
+success; fresh proof still provides the existing logged-out/banned recovery evidence.
+All recovery retains the owner, valid-handle, operation-start and no-self-recovery
+guards. Group access still needs the semantic assertion described above.
+
+The factory captures immutable request keys before awaiting the SDK and binds them
+to the current observation and client. Changing a caller's batch container while
+awaiting cannot invent a different successful request. Internal callers must keep
+individual TLRequest objects and their envelope chains unchanged during the call;
+the hook does not clone requests. It recognizes scalar requests and concrete
+built-in list/tuple/set/dict batches. Unsupported lazy/custom inputs are not consumed
+for health evidence and supply no recovery evidence.
+
+Failures escaping isolated setup or work carry private attribution-neutral metadata
+on the original exception, its explicit causes and SDK MultiError RPC members.
+Forwarding one through another task, wrapping it, or rethrowing an explicit cause
+does not assign it to an enclosing legacy account. Arbitrary implicit context is
+not adopted as part of that source. A fresh RPC error encountered before a neutral
+ancestor still emits its own legacy observation. This controls emission only:
+diagnostic classification and polling decisions retain the original verdict.
+
 Notifications receive plain data in separate tasks after the disconnect attempt
-settles. They may run after the primary outcome reaches the caller. Close after
-ongoing operations finish to cooperatively retire pending notifications; this is
-not a durable delivery or concurrent-producer shutdown contract.
+settles. They may run after the primary outcome reaches the caller, and unequal
+cleanup durations can reorder their arrival. Event times and the local snapshot
+describe the observations; there is no FIFO delivery promise. Close after ongoing
+operations finish to cooperatively retire pending notifications; this is not a
+durable delivery or concurrent-producer shutdown contract.
 
 Run `python -m tgdata.smoke_tests.test_33_owned_health` for the offline composition
 regressions, alongside suites16 and32.

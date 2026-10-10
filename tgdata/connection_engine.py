@@ -118,13 +118,14 @@ class _AnswerEvidence:
     RPC failures here, before a higher-level operation can handle them."""
 
     async def __call__(self, request, ordered=False, flood_sleep_threshold=None):
+        evidence = health.capture_request_evidence(self, request)
         try:
             result = await super().__call__(request, ordered=ordered,
                                             flood_sleep_threshold=flood_sleep_threshold)
         except (RPCError, MultiError) as exc:
             health.note_rpc_error(self, exc)
             raise
-        health.note_answer(self, request)
+        health.note_answer(self, request, evidence)
         return result
 
 

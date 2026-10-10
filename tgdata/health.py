@@ -44,7 +44,7 @@ from datetime import datetime, timezone
 from typing import Any, Callable, Dict, Optional, Tuple
 
 from telethon import errors as tl_errors
-from telethon.errors import RPCError, rpcerrorlist
+from telethon.errors import MultiError, RPCError, rpcerrorlist
 
 logger = logging.getLogger(__name__)
 _mirror = logging.getLogger('tgdata.tgdata.health')     # under the logger log_file= writes to
@@ -103,6 +103,7 @@ def _wire_names() -> Dict[type, str]:
 
 _TELEGRAM_NAMES = _wire_names()
 _REPORTED = '_tgdata_health_reported'
+_LEGACY_NEUTRAL = '_tgdata_health_neutral'
 
 
 def register(exc_class: type, verdict: str, scope: str) -> None:
@@ -219,6 +220,50 @@ def _mark(exc: BaseException, finding: Finding) -> None:
                 pass
 
 
+def _mark_legacy_neutral(exc: BaseException) -> None:
+    """Keep this failure's attribution neutral across wrappers and task hops.
+
+    Explicit causes / SDK RPC leaves belong to the failure. Implicit context may
+    predate the isolated operation, so never adopt it as an originating error.
+    Depth is bounded per lineage; seen objects also stop cycles/shared causes.
+    """
+    pending = [(exc, 0)]
+    seen = set()
+    while pending:
+        error, depth = pending.pop()
+        if depth >= 10 or id(error) in seen:
+            continue
+        seen.add(id(error))
+        try:
+            setattr(error, _LEGACY_NEUTRAL, True)
+        except (Exception, asyncio.CancelledError):  # Metadata cannot replace the primary outcome.
+            pass
+        try:
+            if error.__cause__ is not None:
+                pending.append((error.__cause__, depth + 1))
+            if isinstance(error, MultiError):
+                pending.extend((leaf, depth + 1) for leaf in error.exceptions
+                               if isinstance(leaf, RPCError))
+        except (Exception, asyncio.CancelledError):  # noqa: BLE001
+            pass
+
+
+def _legacy_neutral(exc: BaseException) -> bool:
+    """Emission only: a new RPC takes precedence over an older neutral context.
+
+    Diagnostic classify() deliberately ignores this attribution marker.
+    """
+    try:
+        for error in _chain(exc):
+            if getattr(error, _LEGACY_NEUTRAL, False) is True:
+                return True
+            if isinstance(error, RPCError):
+                return False
+    except (Exception, asyncio.CancelledError):  # noqa: BLE001
+        pass
+    return False
+
+
 # ── the call context ────────────────────────────────────────────────────────
 
 _CURRENT: contextvars.ContextVar = contextvars.ContextVar('tgdata_health_call', default=None)
@@ -242,7 +287,7 @@ class _Call:
     inherit it through the context variable, so a report is attributed to the
     call only from the call's own task while the call is active (owner task)."""
     __slots__ = ('monitor', 'method', 'group', 'task', 'parent', 'active', 'failed', 'waited', 'reported',
-                 'answered', 'excluded_errors')
+                 'answered')
 
     accepts_ambient_reports = True
 
@@ -257,7 +302,6 @@ class _Call:
         self.waited: set = set()       # request types slept or handled during the call
         self.reported: set = set()     # account / group scopes reported during the call
         self.answered = 0              # tick of the last request Telegram answered for this call
-        self.excluded_errors = []      # escaping errors from explicitly isolated operations
 
     def owns_current_task(self) -> bool:
         return self.active and self.task is not None and _current_task() is self.task
@@ -272,7 +316,10 @@ class _Call:
                 call.reported.add(key)
             call = call.parent
 
-    def note_answer(self, client=None, request=None) -> None:
+    def capture_request_evidence(self, client, request):
+        return None  # Legacy evidence is recorded at the existing answer boundary.
+
+    def note_answer(self, client=None, request=None, evidence=None) -> None:
         if self.owns_current_task():
             self.answered = next(_TICKS)
 
@@ -280,31 +327,24 @@ class _Call:
         # Legacy calls report at their public/handled boundary instead.
         pass
 
-    def excludes(self, exc):
-        return any(error is excluded for error in _chain(exc) for excluded in self.excluded_errors)
-
 
 @contextlib.contextmanager
 def isolate_call():
     """Keep verified setup/work/cleanup out of enclosing ambient health calls.
 
-    Exclusions live only as long as those enclosing calls. Independent errors still
-    report, but an outer wrapper cannot claim an isolated operation's exception or
-    use its success to recover a condition.
+    Neutrality follows the originating failure, including through awaited tasks.
+    An outer wrapper cannot claim it or use this nested operation as recovery.
     """
-    enclosing = []
     call = _CURRENT.get()
     while call is not None:
         if call.owns_current_task():
             call.failed = True
-            enclosing.append(call)
         call = call.parent
     token = _CURRENT.set(None)
     try:
         yield
     except BaseException as exc:
-        for call in enclosing:
-            call.excluded_errors.append(exc)
+        _mark_legacy_neutral(exc)
         raise
     finally:
         _CURRENT.reset(token)
@@ -375,7 +415,7 @@ class HealthMonitor:
             self._health_failed()
 
     async def _on_error(self, exc: BaseException, c: _Call) -> None:
-        if c.excludes(exc):
+        if _legacy_neutral(exc):
             return
         finding = classify(exc)
         if finding is not None:
@@ -595,14 +635,29 @@ async def _delivering(awaitable) -> None:
     await awaitable
 
 
-def note_answer(client=None, request=None) -> None:
+def capture_request_evidence(client, request):
+    """Capture owned immutable request keys before dispatch can suspend."""
+    call = _CURRENT.get()
+    try:
+        if call is not None and call.owns_current_task():
+            return call.capture_request_evidence(client, request)
+    except (Exception, asyncio.CancelledError):  # noqa: BLE001
+        call.failed = True
+        try:
+            call.monitor._health_failed()
+        except (Exception, asyncio.CancelledError):  # noqa: BLE001
+            pass
+    return None
+
+
+def note_answer(client=None, request=None, evidence=None) -> None:
     """Telegram answered a request. Called by tgdata's client class for every
     request that succeeds; the call whose own task sent it records when, which
     is the evidence an "ok" for the account or a group needs. Never raises."""
     try:
         call = _CURRENT.get()
         if call is not None and call.owns_current_task():
-            call.note_answer(client, request)
+            call.note_answer(client, request, evidence)
     except Exception:  # noqa: BLE001 — never raise into Telethon's request
         pass
 
@@ -626,7 +681,7 @@ async def report(exc: BaseException, source: str = 'swallowed', group=None) -> O
     public TgData call, for errors that are not health signals, and for an
     error already reported. Never raises."""
     call = _CURRENT.get()
-    if call is None or not call.accepts_ambient_reports or call.excludes(exc):
+    if call is None or not call.accepts_ambient_reports or _legacy_neutral(exc):
         return None
     try:
         finding = classify(exc)

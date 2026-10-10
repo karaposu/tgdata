@@ -5,18 +5,71 @@ import socket
 import sys
 import tempfile
 import traceback
+from types import SimpleNamespace
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 import telethon
 from telethon import errors
-from telethon.tl import functions
+from telethon.network.mtprotosender import MTProtoSender
+from telethon.tl import functions, types
 from tgdata import TgData, AuthRequiredError, health
 from tgdata.account_operation import AccountIdentityError
 from tgdata.smoke_tests import test_32_account_operation as fx
 
 
 FACADES = []
+RPC_TASKS = []
+ORIGINAL_SEND = fx.Wire.send
+
+
+class RPCReply:
+    """A decoded server failure; the actual SDK constructs its Python exception."""
+    def __init__(self, code, message):
+        self.code, self.message = code, message
+        self.error = None
+
+    @classmethod
+    def from_error(cls, error):
+        name = health.telegram_error_name(error)
+        if hasattr(error, 'seconds'):
+            name = name.replace('_X', '_' + str(error.seconds))
+        return cls(error.code, name)
+
+    def send(self, wire, request, ordered=False):
+        sender = MTProtoSender(wire.auth_key, loggers=wire.client._log)
+        sender._user_connected = True
+        sender._send_queue = []
+        future = sender.send(request, ordered=ordered)
+        state = sender._send_queue.pop()
+        state.msg_id = 123
+        sender._pending_state[state.msg_id] = state
+        message = SimpleNamespace(obj=SimpleNamespace(req_msg_id=state.msg_id,
+            error=types.RpcError(self.code, self.message), body=None))
+
+        async def deliver():
+            await sender._handle_rpc_result(message)
+            self.error = future.exception()
+
+        RPC_TASKS.append(asyncio.create_task(deliver()))
+        return future
+
+
+def wire_send(wire, request, ordered=False):
+    if isinstance(request, (list, tuple)):
+        return [wire_send(wire, item, ordered=ordered) for item in request]
+    inner = request
+    while hasattr(inner, 'query'):
+        inner = inner.query
+    name = type(inner).__name__
+    queue = wire.script.get(name)
+    reply = queue[0] if queue else wire.fixture.responses.get(name)
+    if isinstance(reply, RPCReply):
+        if queue:
+            queue.pop(0)
+        wire.calls.append(name)
+        return reply.send(wire, request, ordered=ordered)
+    return ORIGINAL_SEND(wire, request, ordered=ordered)
 
 
 def setup(callback=None, **kwargs):
@@ -41,19 +94,20 @@ async def deliveries(tg):
 async def fail(tg, f, kind=errors.ChannelPrivateError, *, owner=222, group=7,
                method='read', caught=False, seconds=None):
     request = fx.history()
-    error = kind(request, capture=seconds) if seconds is not None else kind(request)
+    descriptor = kind(request, capture=seconds) if seconds is not None else kind(request)
+    reply = RPCReply.from_error(descriptor)
     try:
         async with tg._account_health_operation(owner, method, group) as (op, observation):
-            f.wire.script['GetHistoryRequest'] = [error]
+            f.wire.script['GetHistoryRequest'] = [reply]
             if caught:
-                assert await fx.expect(kind, op.client(request)) is error
+                assert await fx.expect(kind, op.client(request)) is reply.error
             else:
                 await op.client(request)
     except kind as actual:
-        assert not caught and actual is error
+        assert not caught and actual is reply.error
     else:
         assert caught
-    return error
+    return reply.error
 
 
 async def read(tg, f, *, owner=222, group=7, confirm=False, method='read'):
@@ -97,11 +151,11 @@ async def test_snapshot_nested_values_are_independent():
     snap = tg.get_account_health(222)
     snap['account']['user_id'] = 111
     snap['no_access']['7']['error'] = 'changed'
-    snap['waiting']['GetHistoryRequest']['seconds'] = 999
+    snap['waiting']['messages.GetHistoryRequest']['seconds'] = 999
     actual = tg.get_account_health(222)
     assert actual['account']['user_id'] == 222
     assert actual['no_access']['7']['error'] == 'CHANNEL_PRIVATE'
-    assert actual['waiting']['GetHistoryRequest']['seconds'] == 120
+    assert actual['waiting']['messages.GetHistoryRequest']['seconds'] == 120
 
 
 async def test_two_accounts_keep_independent_conditions():
@@ -204,7 +258,7 @@ async def test_caught_rpc_stays_recorded_after_earlier_success():
     assert tg.get_account_health(222)['verdict'] == 'logged out'
     await deliveries(tg)
     assert [e['verdict'] for e in events] == ['logged out']
-    assert events[0]['request'] == 'GetHistoryRequest'
+    assert events[0]['request'] == 'messages.GetHistoryRequest'
 
 
 async def test_nested_budget_verification_reports_once():
@@ -219,7 +273,7 @@ async def test_nested_budget_verification_reports_once():
     assert f.budget.status(222).remaining == 20  # proof refused before reservation
     assert tg.get_account_health(222)['verdict'] == 'logged out'
     await deliveries(tg)
-    assert len(events) == 1 and events[0]['request'] == 'GetUsersRequest'
+    assert len(events) == 1 and events[0]['request'] == 'users.GetUsersRequest'
 
 
 async def test_ambient_report_and_sleep_do_not_create_owned_facts():
@@ -366,7 +420,7 @@ async def test_same_call_cannot_recover_its_own_wait():
         # SDK ignores a cached wait <= 3 seconds; the real second request succeeds.
         await op.client(fx.history())
     assert tg.get_account_health(222)['events'] == 1
-    assert 'GetHistoryRequest' in tg._account_health[222]._waiting
+    assert 'messages.GetHistoryRequest' in tg._account_health[222]._waiting
 
 
 async def test_wait_recovery_requires_matching_request():
@@ -374,7 +428,7 @@ async def test_wait_recovery_requires_matching_request():
     await fail(tg, f, errors.FloodWaitError, seconds=120)
     async with tg._account_health_operation(222, 'read', 7) as (op, observation):
         await op.client(functions.updates.GetStateRequest())
-    assert tg.get_account_health(222)['waiting']['GetHistoryRequest']
+    assert tg.get_account_health(222)['waiting']['messages.GetHistoryRequest']
     await read(tg, f)
     assert not tg.get_account_health(222)['waiting']
 
@@ -408,7 +462,7 @@ async def test_older_work_cannot_clear_newer_group_condition():
 
 async def test_older_work_cannot_clear_newer_request_wait():
     snap = await overlap(errors.FloodWaitError, seconds=120)
-    assert snap['waiting']['GetHistoryRequest']['seconds'] == 120 and snap['events'] == 1
+    assert snap['waiting']['messages.GetHistoryRequest']['seconds'] == 120 and snap['events'] == 1
 
 
 async def test_operation_order_starts_before_authentication():
@@ -584,19 +638,384 @@ async def test_reporting_failure_does_not_replace_rpc():
         assert observation.failed
 
 
+async def test_r4_wrapped_wait_recovers_on_matching_request():
+    events = []
+    tg, f = setup(events.append)
+    error = await fail(tg, f, errors.FloodWaitError, seconds=120)
+    assert isinstance(error.request, functions.InvokeWithoutUpdatesRequest)
+    assert tg.get_account_health(222)['waiting']['messages.GetHistoryRequest']['seconds'] == 120
+    await read(tg, f)
+    assert not tg.get_account_health(222)['waiting']
+    await deliveries(tg)
+    assert [(e['verdict'], e['request']) for e in events] == [
+        ('waiting', 'messages.GetHistoryRequest'), ('ok', 'messages.GetHistoryRequest')]
+
+
+async def test_r4_distinct_waits_and_namespaces():
+    tg, f = setup()
+    cases = [(fx.history(), 'messages.GetHistoryRequest', 120),
+             (functions.updates.GetStateRequest(), 'updates.GetStateRequest', 15),
+             (functions.messages.GetMessagesRequest([]), 'messages.GetMessagesRequest', 20),
+             (functions.channels.GetMessagesRequest(types.InputChannel(7, 7), []),
+              'channels.GetMessagesRequest', 30)]
+    for request, key, seconds in cases:
+        async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+            reply = RPCReply(420, 'FLOOD_WAIT_' + str(seconds))
+            f.wire.script[type(request).__name__] = [reply]
+            assert await fx.expect(errors.FloodWaitError, op.client(request)) is reply.error
+    waiting = tg.get_account_health(222)['waiting']
+    assert {key: item['seconds'] for key, item in waiting.items()} == {
+        key: seconds for _, key, seconds in cases}
+    await read(tg, f)
+    assert set(tg.get_account_health(222)['waiting']) == {key for _, key, _ in cases[1:]}
+
+
+async def test_r4_nested_envelopes_match_leaf():
+    tg, f = setup()
+    async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+        reply = RPCReply(420, 'FLOOD_WAIT_120')
+        f.wire.script['GetHistoryRequest'] = [reply]
+        request = functions.InvokeWithTakeoutRequest(123, fx.history())
+        await fx.expect(errors.FloodWaitError, op.client(request))
+        assert reply.error.request.query is request
+    assert 'messages.GetHistoryRequest' in tg.get_account_health(222)['waiting']
+    await read(tg, f)
+    assert not tg.get_account_health(222)['waiting']
+
+
+async def test_r4_repeated_identity_is_not_refused_action_success():
+    tg, f = setup()
+    await fail(tg, f, errors.PeerFloodError)
+    async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+        await op.verify_account()
+        await op.client(functions.updates.GetStateRequest())
+    assert tg.get_account_health(222)['verdict'] == 'restricted'
+    assert 'GetHistoryRequest' not in f.wire.calls
+    await read(tg, f)
+    assert tg.get_account_health(222)['verdict'] == 'ok'
+
+
+async def test_r4_fresh_legacy_rpc_precedes_old_neutral_context():
+    for handled in (False, True):
+        for wrapped in (False, True):
+            tg, f = setup(accounts=[111, 222], cached=111)
+            legacy = f.engine._new_client()
+            f.engine._primary_client = legacy
+            await legacy.connect()
+            reply = RPCReply(400, 'CHANNEL_PRIVATE')
+            try:
+                async with tg._health.call('legacy_outer', 7):
+                    try:
+                        async with tg._account_health_operation(111, 'read', 7):
+                            raise AssertionError('Must refuse')
+                    except AccountIdentityError:
+                        legacy._sender.script['GetHistoryRequest'] = [reply]
+                        try:
+                            await legacy(fx.history())
+                        except errors.ChannelPrivateError as error:
+                            if handled:
+                                assert (await health.report(error)).verdict == 'no access'
+                            if wrapped:
+                                raise RuntimeError('forwarded new RPC') from error
+                            raise
+            except (errors.ChannelPrivateError, RuntimeError) as error:
+                assert (error.__cause__ if wrapped else error) is reply.error
+            else:
+                raise AssertionError('RPC must propagate')
+            snap = tg._health.snapshot()
+            assert snap['account']['user_id'] == 111
+            assert snap['events'] == 1 and snap['no_access']['7']
+
+
+async def test_r4_unverified_child_error_is_not_parent_health():
+    reply = RPCReply(401, 'AUTH_KEY_UNREGISTERED')
+    tg, f = setup(accounts=[111, 222], cached=111, responses={'GetStateRequest': reply})
+    legacy = f.engine._new_client()
+    f.engine._primary_client = legacy
+    await legacy.connect()
+    async def child():
+        async with tg._account_health_operation(222, 'read', 7):
+            raise AssertionError('Must refuse')
+    try:
+        async with tg._health.call('parent', 7):
+            await asyncio.create_task(child())
+    except AuthRequiredError as error:
+        assert error.__cause__ is reply.error
+        assert health.classify(error, include_reported=True).verdict == 'logged out'
+        from tgdata.tgdata import _polling_cannot_recover
+        assert _polling_cannot_recover(reply.error)
+    else:
+        raise AssertionError('Must propagate')
+    assert tg._health.snapshot()['events'] == 0
+    assert tg.get_account_health(222) is None
+
+
+async def test_r4_unwrapped_explicit_source_stays_neutral():
+    reply = RPCReply(401, 'AUTH_KEY_UNREGISTERED')
+    tg, f = setup(cached=111, responses={'GetStateRequest': reply})
+    try:
+        async with tg._health.call('parent', 7):
+            try:
+                async with tg._account_health_operation(222, 'read', 7):
+                    raise AssertionError('Must refuse')
+            except AuthRequiredError as error:
+                original_source = error.__cause__
+            # Outside the handler: no implicit link back to the excluded wrapper.
+            raise original_source
+    except errors.AuthKeyUnregisteredError as error:
+        assert error is reply.error
+        assert health.classify(error, include_reported=True).verdict == 'logged out'
+    assert tg._health.snapshot()['events'] == 0
+
+
+async def test_r4_changed_batch_input_cannot_invent_recovery():
+    tg, f = setup(cached=111)
+    await fail(tg, f, errors.FloodWaitError, seconds=120)
+    requests = [functions.updates.GetStateRequest()]
+    held = asyncio.get_running_loop().create_future()
+    async def worker():
+        async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+            f.wire.script['GetStateRequest'] = [held]
+            await op.client(requests)
+            assert observation.requests == {'updates.GetStateRequest'}
+    task = asyncio.create_task(worker())
+    while len(f.clients) < 2 or f.wire.calls.count('GetStateRequest') < 2:
+        await asyncio.sleep(0)
+    requests[:] = [fx.history()]
+    held.set_result(types.updates.State(1, 1, fx.DATE, 1, 0))
+    await task
+    assert tg.get_account_health(222)['waiting']['messages.GetHistoryRequest']
+
+
+async def test_r4_request_keys_bound_envelopes_and_keep_unknown_types():
+    from telethon.tl.tlobject import TLRequest
+    from tgdata.owned_health import _request_key
+    leaf = fx.history()
+    envelopes = [functions.InvokeAfterMsgRequest(1, leaf),
+                 functions.InvokeAfterMsgsRequest([1], leaf),
+                 functions.InitConnectionRequest(1, 'test', 'test', '1', 'en', '', 'en', leaf),
+                 functions.InvokeWithLayerRequest(229, leaf),
+                 functions.InvokeWithoutUpdatesRequest(leaf),
+                 functions.InvokeWithMessagesRangeRequest(types.MessageRange(1, 2), leaf),
+                 functions.InvokeWithTakeoutRequest(123, leaf)]
+    assert all(_request_key(item) == 'messages.GetHistoryRequest' for item in envelopes)
+    assert _request_key(functions.PingRequest(1)) == 'PingRequest'
+    class Unknown(TLRequest):
+        query = leaf
+    assert _request_key(Unknown()) == __name__ + '.Unknown'
+    cyclic = functions.InvokeWithoutUpdatesRequest(leaf)
+    cyclic.query = cyclic
+    assert _request_key(cyclic) is None
+    assert _request_key(functions.InvokeWithoutUpdatesRequest(None)) is None
+    for value in (None, True, object(), [leaf]):
+        assert _request_key(value) is None
+    nested = leaf
+    for _ in range(8):
+        nested = functions.InvokeWithoutUpdatesRequest(nested)
+    assert _request_key(nested) == 'messages.GetHistoryRequest'
+    assert _request_key(functions.InvokeWithoutUpdatesRequest(nested)) is None
+
+
+async def test_r4_capture_does_not_consume_lazy_input_or_reuse_old_binding():
+    tg, f = setup()
+    consumed = []
+    def lazy():
+        consumed.append(True)
+        yield fx.history()
+    class CustomList(list):
+        def __iter__(self):
+            raise AssertionError('Observer must not iterate a custom container')
+    async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+        for request in (lazy(), CustomList([fx.history()])):
+            evidence = health.capture_request_evidence(op.client, request)
+            health.note_answer(op.client, request, evidence)
+        assert not consumed and not observation.requests
+        fx.refuses(RuntimeError, observation.confirm_group_access)
+        old_evidence = health.capture_request_evidence(op.client, fx.history())
+    async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+        health.note_answer(op.client, fx.history(), old_evidence)
+        assert not observation.requests
+
+
+async def test_r4_restriction_replacement_uses_the_new_refused_request():
+    tg, f = setup()
+    await fail(tg, f, errors.PeerFloodError)
+    async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+        f.wire.script['GetStateRequest'] = [RPCReply(400, 'PEER_FLOOD')]
+        await fx.expect(errors.PeerFloodError, op.client(functions.updates.GetStateRequest()))
+    await read(tg, f)
+    assert tg.get_account_health(222)['verdict'] == 'restricted'
+    async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+        await op.client(functions.updates.GetStateRequest())
+    assert tg.get_account_health(222)['verdict'] == 'ok'
+
+
+async def test_r4_unknown_refusal_key_never_reuses_an_old_key():
+    tg, f = setup()
+    await fail(tg, f, errors.PeerFloodError)
+    async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+        # Explicit malformed-metadata case, not a claim about sender-built errors.
+        f.wire.script['GetHistoryRequest'] = [errors.PeerFloodError(None)]
+        await fx.expect(errors.PeerFloodError, op.client(fx.history()))
+    await read(tg, f)
+    assert tg.get_account_health(222)['verdict'] == 'restricted'
+
+
+async def test_r4_restriction_does_not_recover_in_its_own_call():
+    tg, f = setup()
+    async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+        f.wire.script['GetHistoryRequest'] = [RPCReply(400, 'PEER_FLOOD')]
+        await fx.expect(errors.PeerFloodError, op.client(fx.history()))
+        await op.client(fx.history())
+    assert tg.get_account_health(222)['verdict'] == 'restricted'
+    await read(tg, f)
+    assert tg.get_account_health(222)['verdict'] == 'ok'
+
+
+async def test_r4_older_action_success_does_not_clear_newer_restriction():
+    snapshot = await overlap(errors.PeerFloodError)
+    assert snapshot['verdict'] == 'restricted' and snapshot['events'] == 1
+
+
+async def test_r4_identity_request_refusal_has_its_own_positive_recovery():
+    tg, f = setup(budget=True)
+    async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+        f.wire.script['GetUsersRequest'] = [RPCReply(400, 'PEER_FLOOD')]
+        await fx.expect(errors.PeerFloodError, op.client(fx.history()))
+    assert tg.get_account_health(222)['verdict'] == 'restricted'
+    assert 'GetHistoryRequest' not in f.wire.calls and f.budget.status(222).used == 0
+    async with tg._account_health_operation(222, 'read', 7):
+        pass  # Initial proof is outside owned request observation.
+    assert tg.get_account_health(222)['verdict'] == 'restricted'
+    async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+        await op.verify_account()
+    assert tg.get_account_health(222)['verdict'] == 'ok'
+
+
+async def test_r4_budget_proof_without_admitted_read_cannot_recover_read():
+    from tgdata import ReadBudgetExceeded
+    tg, f = setup(budget=True)
+    await fail(tg, f, errors.PeerFloodError)
+    assert f.budget.status(222).used == 1
+    f.budget.configure(222, 1)
+    async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+        await fx.expect(ReadBudgetExceeded, op.client(fx.history()))
+        assert observation.requests == {'users.GetUsersRequest'}
+    assert 'GetHistoryRequest' not in f.wire.calls
+    assert tg.get_account_health(222)['verdict'] == 'restricted'
+
+
+async def test_r4_implicit_context_before_isolation_is_not_adopted():
+    tg, f = setup(cached=111)
+    legacy = f.engine._new_client()
+    f.engine._primary_client = legacy
+    await legacy.connect()
+    reply = RPCReply(400, 'CHANNEL_PRIVATE')
+    legacy._sender.script['GetHistoryRequest'] = [reply]
+    async with tg._health.call('legacy', 7):
+        try:
+            await legacy(fx.history())
+        except errors.ChannelPrivateError as prior:
+            with patch.object(f.store, 'load', side_effect=ValueError('local store unavailable')):
+                try:
+                    async with tg._account_health_operation(222, 'read', 7):
+                        raise AssertionError('Must refuse')
+                except ValueError as setup_error:
+                    assert setup_error.__context__ is prior
+            assert (await health.report(prior)).verdict == 'no access'
+    assert tg._health.snapshot()['events'] == 1
+    assert tg.get_account_health(222) is None
+
+
+async def test_r4_forwarded_preproof_wrappers_remain_neutral():
+    for explicit in (False, True):
+        reply = RPCReply(401, 'AUTH_KEY_UNREGISTERED')
+        tg, f = setup(cached=111, responses={'GetStateRequest': reply})
+        async def child():
+            try:
+                async with tg._account_health_operation(222, 'read', 7):
+                    raise AssertionError('Must refuse')
+            except AuthRequiredError as source:
+                if explicit:
+                    raise RuntimeError('forwarded') from source
+                raise RuntimeError('forwarded')
+        try:
+            async with tg._health.call('parent', 7):
+                await asyncio.create_task(child())
+        except RuntimeError as error:
+            assert health.classify(error, include_reported=True).verdict == 'logged out'
+        assert tg._health.snapshot()['events'] == 0
+
+
+async def test_r4_isolated_sdk_multierror_leaves_remain_neutral():
+    tg, f = setup()
+    async with tg._health.call('parent', 7):
+        try:
+            with health.isolate_call():
+                async with f.engine._account_operation(222) as op:
+                    f.wire.script['GetHistoryRequest'] = [RPCReply(400, 'CHANNEL_PRIVATE'),
+                                                        RPCReply(401, 'AUTH_KEY_UNREGISTERED')]
+                    await op.client([fx.history(), fx.history()])
+        except errors.MultiError as error:
+            leaves = error.exceptions
+        else:
+            raise AssertionError('Expected SDK MultiError')
+        for leaf in leaves:
+            assert await health.report(leaf) is None
+        assert [health.classify(leaf, include_reported=True).verdict for leaf in leaves] == [
+            'no access', 'logged out']
+    assert tg._health.snapshot()['events'] == 0
+
+
+async def test_r4_neutral_metadata_failures_and_cycles_preserve_outcomes():
+    for failure in (RuntimeError, asyncio.CancelledError):
+        class RefusingMarker(AuthRequiredError):
+            def __setattr__(self, name, value):
+                if name == health._LEGACY_NEUTRAL:
+                    raise failure('metadata unavailable')
+                super().__setattr__(name, value)
+        tg, f = setup()
+        primary = RefusingMarker('primary', reason='AUTH_KEY_UNREGISTERED')
+        cause = errors.AuthKeyUnregisteredError(functions.updates.GetStateRequest())
+        try:
+            async with tg._health.call('parent'):
+                with health.isolate_call():
+                    raise primary from cause
+        except RefusingMarker as error:
+            assert error is primary and error.__cause__ is cause
+        assert tg._health.snapshot()['events'] == 0
+    left, right = RuntimeError('left'), RuntimeError('right')
+    left.__cause__, right.__cause__ = right, left
+    try:
+        with health.isolate_call():
+            raise left
+    except RuntimeError as error:
+        assert error is left
+    assert health._legacy_neutral(left) and health._legacy_neutral(right)
+
+
+async def test_r4_real_multierror_partial_success_is_not_recovery_evidence():
+    tg, f = setup()
+    async with tg._account_health_operation(222, 'read', 7) as (op, observation):
+        reply = RPCReply(400, 'CHANNEL_PRIVATE')
+        f.wire.script['GetHistoryRequest'] = [reply]
+        result = await fx.expect(errors.MultiError, op.client([fx.history(), fx.history()]))
+        assert result.exceptions == [reply.error, None]
+        assert not observation.requests
+        fx.refuses(RuntimeError, observation.confirm_group_access)
+    assert tg.get_account_health(222)['no_access']['7']
+
+
 async def main():
     assert telethon.__version__ == '1.45.0'
     tests = [v for k, v in globals().items() if k.startswith('test_')]
-    original_send = fx.Wire.send
-    def send(wire, request, **kwargs):
-        if isinstance(request, (list, tuple)):
-            return [original_send(wire, item, **kwargs) for item in request]
-        return original_send(wire, request, **kwargs)
+    if '--revision4' in sys.argv:
+        tests = [test for test in tests if test.__name__.startswith('test_r4_')]
     passed = 0
     with tempfile.TemporaryDirectory(prefix='tgdata_owned_health_') as tmp, \
          patch.object(socket.socket, 'connect', side_effect=AssertionError('network forbidden')), \
          patch.object(socket.socket, 'connect_ex', side_effect=AssertionError('network forbidden')), \
-         patch.object(fx.Wire, 'send', send):
+         patch.object(fx.Wire, 'send', wire_send):
         fx.TMP = Path(tmp)
         for test in tests:
             print('TEST:', test.__name__, flush=True)
@@ -607,6 +1026,8 @@ async def main():
             else:
                 passed += 1
             finally:
+                await asyncio.gather(*RPC_TASKS)
+                RPC_TASKS.clear()
                 for client in fx.CLIENTS:
                     client._sender.close_error = None
                     if client._sender.close_release is not None:
