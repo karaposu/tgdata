@@ -74,6 +74,35 @@ classification/evidence contracts and their acceptance matrix belong in the new
 plan and must be challenged by its next critic. No external decision, account,
 credential, live server access or other unmerged feature is required to plan them.
 
+### An awaited child task loses the call-local exclusion
+
+The planning probe was extended with a new unresolved boundary and rerun. An
+ordinary client has owner111; an awaited child opens its own temporary operation
+and fails authentication before owner222 is verified. Its real SDK refusal crosses
+back into a parent legacy health call. The current product reports:
+
+```json
+{"unverified_owned_snapshot":null,"legacy_owner":111,"legacy_verdict":"logged out","legacy_events":1,"exception_can_carry_neutral_attribution":true}
+```
+
+`isolate_call` currently registers exclusions only in same-task enclosing calls,
+so its list does not protect the parent when the exception returns through await.
+This extends Medium3's provenance problem and changes the chosen implementation
+shape: do not retain a growing list of exception references on each ambient call.
+Give the exact escaping failure/explicit causes a small neutral-attribution marker
+that travels with that failure. The existing reported-error mechanism already
+uses exception metadata; the probe confirms actual SDK/tgdata error instances
+retain such a field without changing their text/cause/object identity.
+
+An ordered attribution check can then stop at that marker, or allow a fresh raw
+RPC encountered first, regardless of task hops. Marking must not traverse arbitrary
+implicit context, which the prior example shows can belong to earlier legacy work.
+Diagnostic `classify(..., include_reported=True)` and polling still need to read
+the actual verdict; the marker controls emission under a legacy owner, not the
+meaning of the exception. This adds no global registry, owner history or persistent
+request record. These are available primitives and a planned contract, not an
+implemented or reviewed solution.
+
 ## Scope and preservation
 
 The main corrective runtime targets are `owned_health.py` and `health.py`.

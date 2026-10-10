@@ -113,6 +113,42 @@ def chain_shapes():
         prior_rpc_is_not_explicit_cause=local_failure.__cause__ is None)
 
 
+async def child_task_failure():
+    tg, f = stage2.setup(accounts=[111, 222], cached=111)
+    legacy = f.engine._new_client()
+    f.engine._primary_client = legacy
+    await legacy.connect()
+    original_factory = f.engine._new_client
+
+    def new_client(*args, **kwargs):
+        client = original_factory(*args, **kwargs)
+        client._sender.review_errors = {'GetStateRequest': [(401, 'AUTH_KEY_UNREGISTERED')]}
+        return client
+
+    async def child():
+        async with tg._account_health_operation(222, 'read', 7):
+            raise AssertionError('Unverified client must not yield')
+
+    with patch.object(f.engine, '_new_client', new_client):
+        try:
+            async with tg._health.call('legacy_parent', 7):
+                await asyncio.create_task(child())
+        except AuthRequiredError as error:
+            # Actual SDK / tgdata exception instances retain private attributes
+            # without changing identity, text, cause or cancellation semantics.
+            before = (str(error), error.__cause__)
+            error._planning_probe_neutral = True
+            assert (str(error), error.__cause__) == before
+        else:
+            raise AssertionError('Expected authentication refusal')
+    snapshot = tg._health.snapshot()
+    assert tg.get_account_health(222) is None
+    assert snapshot['account']['user_id'] == 111 and snapshot['verdict'] == 'logged out'
+    return dict(unverified_owned_snapshot=None, legacy_owner=snapshot['account']['user_id'],
+                legacy_verdict=snapshot['verdict'], legacy_events=snapshot['events'],
+                exception_can_carry_neutral_attribution=True)
+
+
 async def main():
     assert telethon.__version__ == '1.45.0'
     with tempfile.TemporaryDirectory(prefix='tgdata_stage2_replan_') as tmp, \
@@ -123,6 +159,7 @@ async def main():
         try:
             print(json.dumps(dict(sdk=telethon.__version__, request_shapes=await sdk_shapes())), flush=True)
             print(json.dumps(dict(exception_shapes=chain_shapes())), flush=True)
+            print(json.dumps(dict(child_task=await child_task_failure())), flush=True)
         finally:
             await asyncio.gather(*pr_probes.WIRE_TASKS)
             for client in fx.CLIENTS:
