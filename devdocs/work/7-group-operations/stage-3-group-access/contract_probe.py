@@ -126,6 +126,23 @@ async def direct_numeric_failure():
             'closed': True, 'false_health_events': 0}
 
 
+async def optional_hash_backends():
+    outcomes = {}
+    for name, store in (('file', None), ('stored', fx.fx.Store())):
+        tg, fixture = fx.setup(store=store)
+        fixture.responses['GetChannelsRequest'] = decoded(types.messages.Chats([
+            types.CommunityForbidden(10, 'Synthetic unavailable community')]))
+        try:
+            async with tg._account_health_operation(222, 'lookup_group', -1000000000010) as (op, _):
+                await op.client(functions.channels.GetChannelsRequest([types.InputChannel(10, 12)]))
+        except Exception as exc:
+            outcomes[name] = type(exc).__name__
+        else:
+            outcomes[name] = 'reply returned'
+        assert fixture.wire.closed and tg.get_account_health(222)['events'] == 0
+    return outcomes
+
+
 async def main():
     assert telethon.__version__ == '1.45.0'
     with tempfile.TemporaryDirectory(prefix='tgdata7-stage3-contract-') as temp, \
@@ -137,6 +154,7 @@ async def main():
             print(json.dumps({'schema_cache': schema_and_cache()}), flush=True)
             print(json.dumps({'budget_health': await budget_and_owned_evidence()}), flush=True)
             print(json.dumps({'numeric_failure': await direct_numeric_failure()}), flush=True)
+            print(json.dumps({'optional_hash_backends': await optional_hash_backends()}), flush=True)
         finally:
             await asyncio.gather(*fx.RPC_TASKS)
             for client in fx.fx.CLIENTS:
