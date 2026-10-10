@@ -363,6 +363,19 @@ The budget suite exercises real Telethon request/iterator code with scripted
 replies on 1.45.0. It does not test live Telegram response bounds or
 whether any chosen limit prevents account restrictions.
 
+### Join allowance (standalone foundation)
+
+`JoinBudget` provides persistent per-account policy and status for admitted join
+attempts in a rolling 24-hour window. Provision explicitly with
+`JoinBudget("allowances.sqlite3", create=True)`, then reopen without `create=True`
+in later jobs. `configure(account_id, daily_limit)` retains spent allowance;
+zero pauses admission. `status(account_id).to_dict()` returns a local snapshot.
+
+This foundation does not yet guard Telegram joins or add a `TgData` option.
+The later joining stage will consume one atomic claim before each source attempt;
+failed or interrupted attempts are not refunded. See [the allowance contract](docs/join_budget.md)
+for storage, clock, errors and the integration boundary.
+
 ## Quick Start
 
 ### List All Group Chats 
