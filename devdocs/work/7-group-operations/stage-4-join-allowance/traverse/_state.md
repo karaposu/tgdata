@@ -5,7 +5,7 @@ articulated-surfacing-routed
 A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
-- [ ] Surfacing
+- [x] Surfacing
 - [ ] Sensemaking
 - [ ] Decomposition
 - [ ] Innovation
@@ -16,9 +16,10 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Surfacing
+Sensemaking
 ## Relationships
 - RELATED: original #7 traverse on feat/7-group-operations (historical allowance evidence).
 - RELATED: merged Stages1–3 at dev1ce39d5 (verified ownership and read-only group operations).
 ## History
 - 2026-10-10_21-54: Created from the user's Stage4-only clarification. Articulation HIGH-PROCEED;1 item/6 variants. Attempted tools/structural_check.sh; unavailable (exit127). Manual structure6/6: raw input/item, four Q+2-shape axes, MQ2's3 kinds, MQA/tuple, literal/WHY, variants/verdict. Derivation5/5: item, all axes, exclusions, WHY and variants preserved. Next: Surfacing.
+- 2026-10-10_21-56: Surfacing complete:23 tagged items/3 cycles; all6 articulation variants retained in frontier. Structural script unavailable (exit127); manual5/5 (input, trace tags/recency, coverage/absence, concept provenance/recency aggregates, frontier/telemetry/verdict). Next: Sensemaking.
