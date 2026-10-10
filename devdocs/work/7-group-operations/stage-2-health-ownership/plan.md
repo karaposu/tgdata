@@ -2,10 +2,12 @@
 model: gpt-6-astra
 effort: max
 ---
-# #7 Stage 2 implementation plan — revision 3
+# #7 Stage 2 implementation plan — revision 4
 
-**Status:** re-planned, not yet critiqued, folded or implemented. Product3d59455
-remains the rejected code on draft PR22. This revision is planning only.
+**Critic folded:** 2026-10-10 — 1 selected robust mitigation (3 steps changed, 0 added).
+**Status:** plan critique and required prebuild experiment passed; implementation
+follows this folded revision. Product3d59455 remains the rejected baseline on draft
+PR22 until the new implementation is verified. This is not PR approval.
 **Inputs:** `desc.md`, rejecting `pr-critic.md` atb9a8a5d (Medium1–3), its executed
 probes, `replan-evidence.md` and the additional planning probes. Original revision2,
 original plan critic/prompt and merge check are preserved under `archive/round-1/`.
@@ -35,8 +37,8 @@ not unresolved questions disguised as assumptions.
 
 None external. Stage1 is merged at53306df; Python3.11.10 / Telethon1.45.0 and offline
 fixtures are available. No account, login, live Telegram group, second machine or
-unmerged #17 dependency is required. The next plan critic and fold to revision4 are
-required process gates before implementing any step; they have not run in this pass.
+unmerged #17 dependency is required. The fresh critic, prebuild carrier experiment
+and selected fold are complete; `critic.md` records the PASS before any plan step.
 
 ### How this implementation moves toward desired state
 
@@ -54,8 +56,10 @@ Re-plan the evidence feeding that architecture around two concrete identities:
 This replaces the broad nonempty-success test and the ambient call's exclusion
 list. It does not add global ownership storage, a request history, a permission
 engine, new credentials/persistence, account routing or legacy health migration.
-The expected runtime changes are confined to `owned_health.py` and `health.py`;
-the factory, Stage1, budget admission and facade interfaces can remain in place.
+The runtime changes are confined to `owned_health.py`, `health.py` and the existing
+`_AnswerEvidence` wrapper in `connection_engine.py`. The wrapper snapshots request
+evidence before awaiting [folded: Risk 1, robust]. Stage1, budget admission and facade
+interfaces remain in place; no new sender layer is introduced.
 
 ### High-Level Summary
 
@@ -106,11 +110,16 @@ namespaced spelling. They are a correction to this unmerged stage's contract.
 Legacy event/request strings and `health._request_name()` stay as before. No query
 arguments, peer hashes, credentials or serialized requests enter the key.
 
-For successful lists/tuples or other SDK-recognized list-like inputs, collect
-usable keys from concrete items available after success. Never treat a container's
-Python type as an RPC. Do not consume/transform caller input before SDK dispatch
-to repair general SDK iterable behavior; an exhausted/unknown input supplies no
-request evidence. Partial MultiError successes supply none, as in revision2.
+Capture immutable keys before the wrapper's first await, for a scalar TLRequest
+or concrete built-in list/tuple/set/dict batch. Bind that snapshot to the current
+owned observation and client, then consume it only on full success in the same
+active task/lifetime. Never reread mutable caller containers after success or
+treat their Python type as an RPC. Do not consume lazy/custom iterators for health
+evidence or transform SDK input to repair iterable behavior; unknown input supplies
+no request evidence. Partial MultiError successes supply none, as in revision2.
+Internal callers keep individual TLRequest/envelope objects unchanged during the
+call; this is a trusted private source contract, with no deep request cloning.
+[folded: Risk 1, robust]
 
 ### C. Evidence by condition
 
@@ -171,6 +180,8 @@ the error automatically. There is no global registry or persistent provenance lo
 
 ## Step 1 — Establish realistic contract regressions
 
+[folded: Risk 1, robust]
+
 ### Proposed changes
 
 Extend `tgdata/smoke_tests/test_33_owned_health.py` with a small sender-reply adapter
@@ -185,6 +196,9 @@ pre-proof failure. Capture the known red baseline against3d59455 before producti
 edits; this intentional pre-change run is not final verification. Do not weaken
 the required outcomes to match the defects or hand the SDK convenient prebuilt
 error request names. Preserve the original review/probe files as historical evidence.
+Add a real SDK case that sends GetState from a list, changes the caller's list to
+GetHistory while awaiting its result, and checks that no GetHistory success/wait
+recovery is manufactured. The critic's executed probe establishes this baseline.
 
 ### Output
 
@@ -206,6 +220,8 @@ ContextVar/task propagation, red baseline versus final acceptance.
 
 ## Step 2 — Normalize owned request evidence at both source hooks
 
+[folded: Risk 1, robust]
+
 Addresses **PR Medium1** and establishes the key consumed by Medium2's solution.
 
 ### Proposed changes
@@ -219,8 +235,12 @@ checks ahead of recording, and retain source-time recording of caught failures.
 
 The owned ledger, event, waiting tick, reported-scope key and successful-request
 set all use the same canonical string. No parallel alias map or request argument
-history. The existing `_AnswerEvidence` factory hook already supplies the needed
-client/request/error; no factory or budget seam change is required by this plan.
+history. Add a small safe capture hook at entry to `_AnswerEvidence.__call__`,
+before awaiting the SDK. Capture only immutable keys and their observation/client
+binding, not request objects/arguments. Pass the captured evidence to the answer
+hook on full success and recheck the binding/task/handle there. Legacy calls keep
+their old answer path. Unsupported lazy/custom inputs provide no owned success
+evidence. The request/error source hook and budget admission otherwise remain as-is.
 
 Test: matching success clears only the matching older wait; GetState cannot replace
 or clear GetHistory's wait; namespaces do not collide; known nested envelopes match
@@ -239,11 +259,11 @@ False — changes the unmerged owned event/snapshot values and recovery keys.
 ### Peripheral concepts
 
 Finding copy, generated TL classes, batch outcomes, wait generations, legacy naming,
-exception identity and source deduplication.
+exception identity, source deduplication, mutable caller input and in-flight evidence lifetime.
 
 ### Hardness Lvl
 
-3/5 — deterministic normalization, but both observation paths must use it identically.
+4/5 — normalization and capture timing must both describe the actual request.
 
 ## Step 3 — Record the refused action and narrow restriction recovery
 
@@ -339,6 +359,8 @@ task propagation, diagnostic classification, cancellation and failure containmen
 
 ## Step 5 — Validate the combined boundary and document it
 
+[folded: Risk 1, robust]
+
 ### Proposed changes
 
 Exercise the real facade with combinations, not only helpers: namespace-separated
@@ -354,6 +376,8 @@ legacy health remains separate. Clarify the already-observed notification contra
 arrival can differ from observation order when cleanup durations differ; event
 time and the local snapshot describe the observations. Add no FIFO worker or
 durable delivery promise. Group assertions still require semantic access results.
+Document stable individual request objects during a private call, immutable key
+capture, and conservative lack of evidence for unsupported lazy/custom inputs.
 
 ### Output
 
@@ -424,9 +448,9 @@ Telethon1.45.0, original archived evidence and explicit review scope.
 | PR Medium2 | Step3 retains the refused key and requires matching action evidence |
 | PR Medium3 | Step4 distinguishes a marked originating failure from a new raw RPC, including task hops |
 | Original critic1/2 | Validity veto and MultiError source observation retained and re-tested |
-| No overengineering | Reuse the fixed ledger/factory; two corrective runtime targets, one key rule, one refusal key and one failure marker; remove the ambient error list |
+| No overengineering | Reuse the fixed ledger and existing wrapper; three runtime targets, one key rule with immutable capture, one refusal key and one failure marker; remove the ambient error list |
 | Test assumptions before relying on them | Existing failures and additional source facts already executed; step1 uses the real error-construction seam before corrective code |
 
-Next formal step is **critic-d on this revision3 plan and its evidence**, followed
-by the selected fold to revision4. No critic, fold, runtime implementation or PR
-approval is claimed by this planning pass.
+The fresh revision3 critic selected one robust mitigation and its required carrier
+experiment passed before implementation. Execute this revision4 without re-critiquing
+the fold. Renewed merge check and fresh PR critique remain required after verification.
