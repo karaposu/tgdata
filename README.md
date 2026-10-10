@@ -360,7 +360,7 @@ until the policy changes; it does not automatically rise to `daily_limit`.
   direct use of private transport internals are outside this guard.
 
 The budget suite exercises real Telethon request/iterator code with scripted
-replies on 1.45.0 and 1.33.1. It does not test live Telegram response bounds or
+replies on 1.45.0. It does not test live Telegram response bounds or
 whether any chosen limit prevents account restrictions.
 
 ## Quick Start
@@ -389,6 +389,29 @@ Outputs:
 ```
 Python Devs 10012312313
 ```
+
+### Look up a group and check access
+
+Use an expected numeric Telegram account ID for a short-lived, read-only observation:
+
+```python
+async with TgData("config.ini", interactive_login=False) as tg:
+    access = await tg.check_group_access("@example_group", account_id=123456789)
+    print(access.status)  # readable, denied, or unprobed
+    if access.lookup is not None:
+        print(access.group.title, access.member)
+```
+
+`check_group_access` includes lookup details and probes at most one message of history
+through the existing read budget. `lookup_group(target, account_id=...)` returns only
+metadata and membership hints, without reading history. Both verify the actual account,
+close their temporary client, and never log in or join. Operational failures still raise;
+`unprobed` means there was no usable peer, and `denied` means a classified Telegram refusal.
+
+Handles, supported Telegram links and deterministic numeric references are accepted.
+Numeric channel IDs need a cached access hash. Readability is distinct from membership
+and does not promise future access. See [the group-operations contract](docs/group_operations.md)
+for input rules, result fields, errors, budget costs and the known SDK cache limitation.
 
 ### Group discovery — finding groups you are not in
 
@@ -1001,10 +1024,9 @@ The ID must be a positive integer, not a string or boolean. The call is synchron
 it does no connection, authentication or recovery. The returned dictionaries are
 independent copies, with the same fields as the health summary above.
 
-This is the foundation for the staged group-operations work. Existing public reads
-and `health_check()` still use their existing health view; they do not populate or
-select the new account view. The two views are not combined. Group lookup, access
-checks and joining are not added by this stage.
+`lookup_group` and `check_group_access` populate this account-owned view. Existing
+message reads and `health_check()` still use their existing health view; the views
+are not combined. Joining remains later work.
 
 Internally, an observation begins after a temporary client proves the expected
 account. Its event and retained state keep that numeric owner even if a cached

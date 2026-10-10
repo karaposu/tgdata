@@ -85,6 +85,19 @@ forwarding across tasks without hiding independent RPC failures. Malformed metad
 and observer-failure cases also use direct unit fixtures. Existing suites16 and32
 remain separate regression checks.
 
+### Group lookup and access (offline)
+
+`python -m tgdata.smoke_tests.test_34_group_access` runs 49 public lookup/access test
+groups on Telethon 1.45.0 through actual SDK dispatch, TL reply decoding and sender-built
+RPC errors. It covers expected/cached/actual identity, bounded reference grammar and
+numeric namespaces, invite/minimal/forbidden/community forms, qualified immutable values,
+one-message history evidence, real file/store sessions and SQLite read budgets.
+Forced overlaps, cancelled reads, delayed/failed cleanup and callback failures check
+source-owned health and conservative recovery. Socket, login-code, join/import and dialog
+requests are forbidden. Malformed replies/local faults include explicitly injected cases.
+No live Telegram permission claim is made; suites32/33 remain foundation regressions.
+See [the public contract](../../docs/group_operations.md).
+
 ### Run Individual Test:
 ```bash
 # Basic tests

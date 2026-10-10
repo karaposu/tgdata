@@ -1,8 +1,8 @@
 # Internal account operations
 
 `ConnectionEngine._account_operation(expected_account_id)` is the private
-foundation for account-owned, short-lived tgdata operations. It is not a public
-TgData group API. Group lookup, access checking and joining are separate work.
+foundation for account-owned, short-lived tgdata operations. Public consumers use
+[`lookup_group` and `check_group_access`](group_operations.md); joining is later work.
 The facade's owned-health composition is described below.
 
 Internal callers use it in the task that opens the context:
@@ -78,7 +78,7 @@ the existing health summary's account ownership.
 
 ## Owned health composition (Stage 2)
 
-Future group operations use the private facade boundary:
+Group operations use the private facade boundary:
 
 ```python
 async with tg._account_health_operation(account_id, "operation_name", group) as (op, observation):

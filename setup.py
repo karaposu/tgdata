@@ -33,9 +33,8 @@ setup(
     install_requires=[
         # min_id is exclusive in Telethon 1.x (the off-by-one fix relies on it);
         # 2.0 is a breaking API rewrite, so cap below it. Verified on 1.40.
-        # 1.33 is the first release carrying channels.GetChannelRecommendationsRequest
-        # (group discovery, scoped/10) — verified against the 1.33.1 sdist.
-        'Telethon>=1.33,<2.0',
+        # Group observations use the 1.45 schema (including Community entities).
+        'Telethon>=1.45,<2.0',
         # Required by the existing message/discovery DataFrame APIs. Nullable Int64
         # (used for GroupedId album ids > 2^53) needs pandas >= 1.0.
         'pandas>=1.0',
