@@ -2,7 +2,9 @@
 model: gpt-6-astra
 effort: max
 ---
-# #7 Stage 4 — Join allowance, revision 1
+# #7 Stage 4 — Join allowance, revision 2
+
+**Critic folded:** 2026-10-10 — 1 mitigation (3 steps changed, 0 added). Risk1 robust selected; required shared-file experiment PASS before any implementation step.
 
 ### What is the task
 
@@ -70,7 +72,9 @@ Validation: use `operator.index` for account ID [1,2**63-1] and daily_limit
 finite and in [0,253402214399] (one day of ISO expiry headroom). Values are copied
 to built-in int/float. A clock must be callable; callback Exception becomes a
 sanitized ConfigError naming only its type. BaseException, including cancellation,
-propagates. Bad argument conversion raises ConfigError from None. Stored values
+propagates. Bad argument conversion raises ConfigError from None. [folded: Risk 1, robust]
+Explicitly re-raise asyncio.CancelledError before generic argument/clock conversion
+catches; its Python3.7 Exception inheritance must not change the cancellation result. Stored values
 use strict SQLite result types and become StorageError, not caller errors.
 
 ### Output
@@ -133,7 +137,9 @@ BaseException so primary cancellation/errors survive cleanup. SQLite errors map
 to type-only StorageError from None. On primary failure, attempt rollback and
 close independently, catching secondary BaseExceptions and logging only operation
 and error type; logging itself cannot replace the primary. On a sole close
-Exception raise StorageError; sole close cancellation propagates. Commit or close
+Exception raise StorageError; sole close cancellation propagates. [folded: Risk 1, robust]
+Check asyncio.CancelledError explicitly before generic close-error conversion, including
+its Python3.7 hierarchy. Secondary cleanup cancellation still preserves the primary. Commit or close
 errors grant no claim even if a durable charge already exists. No retries/refunds.
 
 ### Output
@@ -215,6 +221,9 @@ network. Tests use synthetic positive IDs and no credentials. Test groups cover:
 - Explicit create/reopen/missing-file/missing-namespace, same-file ReadBudget
   coexistence, refused partial/version/column/PK/FK/index/metadata damage, wrong
   object types, and loss after a live object was opened. Refusal never repairs.
+- [folded: Risk 1, robust] Native current-runtime cancellation plus a clearly labeled
+  Exception-derived compatibility fixture at conversion and sole-close boundaries.
+  No native Python3.7 execution claim.
 - Input types/ranges, clock callback failures/cancellation, max ISO headroom,
   policy absence/zero, frozen status/fresh JSON dict and public exports.
 - Exact rolling boundary, fractional retry rounding, same-time claims, reduced
