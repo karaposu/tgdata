@@ -21,6 +21,8 @@ cleanup and propagate caller cancellation.
 Passing result: before proof:0 join sends/0 charge; after enqueue:1 send/1 retained
 charge; in both cases caller receives CancelledError and actual owned disconnect settles.
 
+Result: PASS — 2026-10-11. Actual SDK/ledger/owned cleanup: cancellation before proof completed sent0/charged0; after enqueue sent1/retained1. Both propagated CancelledError and settled one disconnect. See prebuild_probe.py and evidence/prebuild-probe.txt. No Stage5 runtime file had been edited.
+
 ## High-level summary
 
 Revision1's bounded consumer fits the staged #7 scope. The plan explicitly addresses

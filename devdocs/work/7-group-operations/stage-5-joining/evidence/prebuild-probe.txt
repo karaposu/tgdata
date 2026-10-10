@@ -1,0 +1,2 @@
+{"result": "PASS", "observation": {"phase": "before", "join_sends": 0, "persisted_charge": 0, "caller": "CancelledError", "disconnect_settled": true, "disconnect_attempts": 1}}
+{"result": "PASS", "observation": {"phase": "after", "join_sends": 1, "persisted_charge": 1, "caller": "CancelledError", "disconnect_settled": true, "disconnect_attempts": 1}}
