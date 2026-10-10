@@ -110,6 +110,20 @@ it is not a native Python3.7 run. These tests need no git history, credentials o
 Process exits do not establish physical power-loss durability or live Telegram behavior.
 See [the allowance contract](../../docs/join_budget.md).
 
+### Group joining (offline)
+
+`python -m tgdata.smoke_tests.test_36_group_join` runs 44 test groups on Telethon
+1.45.0 and actual SQLite. It exercises the public facade, temporary owner proof,
+real SDK dispatch/TL decoding/RPC construction, and file/store sessions with a
+synthetic network boundary. Coverage includes join/import outcomes and exact error
+origins, preflight metadata, conservative admission/retry accounting, missing or
+corrupt state, identity changes, unsupported envelopes, cancellation, cleanup,
+callbacks and forced shared-cap/different-owner overlaps. Membership never substitutes
+for history-access evidence. Explicit malformed/local fixtures are labeled, including
+the older cancellation hierarchy; no native Python3.7 run is claimed. Sockets, login
+and bot web-view requests are blocked. No live joining or safe-rate claim is made.
+See [joining groups](../../docs/group_joining.md).
+
 ### Run Individual Test:
 ```bash
 # Basic tests

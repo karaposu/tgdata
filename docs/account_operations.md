@@ -2,7 +2,8 @@
 
 `ConnectionEngine._account_operation(expected_account_id)` is the private
 foundation for account-owned, short-lived tgdata operations. Public consumers use
-[`lookup_group` and `check_group_access`](group_operations.md); joining is later work.
+[`lookup_group` and `check_group_access`](group_operations.md), or
+[`join_group`](group_joining.md) with explicit join allowance.
 The facade's owned-health composition is described below.
 
 Internal callers use it in the task that opens the context:

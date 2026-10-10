@@ -30,9 +30,11 @@ from .backfill import (
 )
 from .models import GroupInfo
 from .group_operations import (
-    GroupLookup, GroupAccess, _parse_target, _lookup_group, _check_group_access,
+    GroupLookup, GroupAccess, GroupJoin, _parse_target, _lookup_group, _check_group_access, _join_group,
 )
 from .read_budget import ReadBudgetError, ReadBudgetExceeded
+from .join_budget import JoinBudget, JoinBudgetConfigError
+from .join_client import _join_policy
 from .utils import (
     format_message_for_display,
     export_to_json,
@@ -116,7 +118,8 @@ class TgData:
                  session_store=None,
                  read_budget=None,
                  sync_store=None,
-                 backfill_store=None):
+                 backfill_store=None,
+                 join_budget=None):
         """
         Initialize Telegram group handler.
 
@@ -158,6 +161,9 @@ class TgData:
                 that namespace; collection_id does not route to another backend.
                 Progress advances only on acknowledge_backfill. None disables
                 the backfill facade. See docs/backfill_runs.md.
+            join_budget: Optional JoinBudget used only by join_group's verified
+                temporary operation. None disables that method; raw SDK clients
+                are outside this guard. Provision/configure the ledger separately.
         """
         # Set up logging
         if log_file:
@@ -186,6 +192,7 @@ class TgData:
         self.batch_engine = BatchEngine(self.connection_engine)
         self.sync_engine = SyncEngine(self.get_message_batch, sync_store)
         self._backfill_store = backfill_store
+        self._join_budget = join_budget
         # Keep local activity, known ends and monotonic minima across operations.
         # A collection cache key is identity, not automatic backend namespacing.
         self._backfill_engines = {}
@@ -277,6 +284,27 @@ class TgData:
             if result.readable is True:
                 observation.confirm_group_access()
             return result
+
+    async def join_group(self, target: Union[str, int], *, account_id: int) -> GroupJoin:
+        """Join through an expected authenticated account and explicit allowance.
+
+        Returns a qualified source outcome with preflight metadata; it does not
+        prove read access or refresh unknown invite IDs. See docs/group_joining.md.
+        """
+        reference = _parse_target(target)
+        account_id = _expected_account_id(account_id)
+        budget = self._join_budget
+        if not isinstance(budget, JoinBudget):
+            raise JoinBudgetConfigError('join_group requires a configured JoinBudget instance')
+        async with self._account_health_operation(
+                account_id, 'join_group', reference.label) as (operation, _):
+            _join_policy(budget, operation.account_id)
+            client = operation.client
+            client._tgdata_join_budget = budget
+            try:
+                return await _join_group(operation, reference)
+            finally:
+                client._tgdata_join_budget = None
     
     @_reported()
     async def list_groups(self) -> pd.DataFrame:

@@ -33,6 +33,7 @@ from .health import telegram_error_name as _telegram_error_name
 from .models import ConnectionConfig, RateLimitInfo
 from .session_store import StoredSession
 from .budget_client import BudgetClientMixin
+from .join_client import JoinClientMixin
 from .account_operation import _AccountOperation, _disconnect_owned, _expected_account_id
 
 logger = logging.getLogger(__name__)
@@ -133,9 +134,10 @@ class _AnswerEvidence:
 def _client_class(base):
     """The client class _new_client() builds: `base` (Telethon's
     TelegramClient, or whatever stands in for it in a test) with
-    answer evidence, optional read budgets and per-call flood thresholds
+    answer evidence, owned join admission, optional read budgets and per-call flood thresholds
     in front of it. Cached per base."""
-    return type(f"Tgdata{base.__name__}", (_AnswerEvidence, BudgetClientMixin, _PerCallFloodThreshold, base), {})
+    return type(f"Tgdata{base.__name__}",
+                (_AnswerEvidence, JoinClientMixin, BudgetClientMixin, _PerCallFloodThreshold, base), {})
 
 
 class ProxyConfigError(ValueError):
@@ -590,6 +592,7 @@ class ConnectionEngine:
             **client_options
         )
         client._tgdata_read_budget = self.read_budget
+        client._tgdata_join_budget = None  # Activated only by the public owned join operation.
         return client
         
     async def get_client(self) -> TelegramClient:
