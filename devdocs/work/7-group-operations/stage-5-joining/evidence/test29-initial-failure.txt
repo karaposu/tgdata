@@ -1,0 +1,21 @@
+Public Backfill Tests — Telethon 1.45.0; LOCAL actual SQLite/SDK, synthetic transport
+
+TEST: test_exports_and_immutable_portable_values
+✓ Passed
+
+TEST: test_constructor_is_additive_and_disabled_calls_are_local
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-7-stage5-joining/tgdata/smoke_tests/test_29_backfill_public.py", line 476, in main
+    try:await asyncio.wait_for(test(),90)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-7-stage5-joining/tgdata/smoke_tests/test_29_backfill_public.py", line 97, in test_constructor_is_additive_and_disabled_calls_are_local
+    assert names==['self','config_path','connection_pool_size','log_file','interactive_login',
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+✗ Failed
+
+
+Final initial-run count:22/23. Corrected rerun:23/23.

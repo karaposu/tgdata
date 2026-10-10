@@ -1,0 +1,195 @@
+{
+  "date": "2026-10-11",
+  "product_commit": "4b4ae21",
+  "base": "f15f1a8",
+  "python": "3.11.10",
+  "telethon": "1.45.0",
+  "sqlite": "3.45.3",
+  "actual_offline_passed": 573,
+  "live_skipped": 3,
+  "compiled": 69,
+  "python37_grammar": 69,
+  "suites": [
+    {
+      "suite": "test_12_proxy",
+      "groups": 5,
+      "live_skips": 2,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_13_device_identity",
+      "groups": 5,
+      "live_skips": 1,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_14_flood_threshold",
+      "groups": 11,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_15_login_checks",
+      "groups": 11,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_16_health_events",
+      "groups": 21,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_17_session_store",
+      "groups": 12,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_18_read_budget",
+      "groups": 28,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_19_message_batches",
+      "groups": 33,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_22_daily_continuation",
+      "groups": 25,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_23_fixed_windows",
+      "groups": 22,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_24_backfill_state",
+      "groups": 23,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_25_backfill_delivery",
+      "groups": 41,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_26_backfill_completion",
+      "groups": 16,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_27_backfill_pacing",
+      "groups": 32,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_28_backfill_controls",
+      "groups": 32,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_29_backfill_public",
+      "groups": 23,
+      "live_skips": 0,
+      "initial_exit": 1,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_30_backfill_integration",
+      "groups": 15,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_32_account_operation",
+      "groups": 28,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_33_owned_health",
+      "groups": 62,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_34_group_access",
+      "groups": 49,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_35_join_budget",
+      "groups": 35,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    },
+    {
+      "suite": "test_36_group_join",
+      "groups": 44,
+      "live_skips": 0,
+      "initial_exit": 0,
+      "final_exit": 0
+    }
+  ],
+  "extras": {
+    "compiled": 69,
+    "python37_grammar": 69,
+    "daily-demo": {
+      "exit": 0,
+      "tail": "Destination accepted the batch; acknowledgment was lost.\nReplay used the same batch without reading Telegram.\nStored messages: 4\nAcknowledged through: 104\n"
+    },
+    "backfill-new": {
+      "exit": 0,
+      "tail": "Receiver committed the first batch; simulating exit before acknowledgment.\n{\"backfill\": \"completed\", \"cancelled_successor\": \"cancelled\", \"daily_after_id\": 105, \"historical_after_id\": 104, \"receipts\": 3, \"replay_source_reads\": 0, \"source_reads\": 3, \"unique_messages\": 5}\n"
+    },
+    "backfill-restart": {
+      "exit": 0,
+      "tail": "{\"backfill\": \"completed\", \"cancelled_successor\": \"cancelled\", \"daily_after_id\": 105, \"historical_after_id\": 104, \"receipts\": 3, \"replay_source_reads\": 0, \"source_reads\": 0, \"unique_messages\": 5}\n"
+    },
+    "export-import": {
+      "exit": 0,
+      "tail": "/private/tmp/tgdata7-stage5-export-r4tfzwxx/tgdata/__init__.py\n"
+    },
+    "export-test36": {
+      "exit": 0,
+      "tail": "_processing_failure_after_reply_is_preserved_and_charged\nPASS test_sessions_proxy_and_device_settings_survive_composition\nPASS test_source_outcomes_require_the_exact_mutation_on_both_paths\nhealth: logged out [account] AUTH_KEY_UNREGISTERED \u2014 call=join_group account=joining account\nPASS test_source_request_and_account_recovery_keep_existing_rules\nPASS test_stale_cached_identity_does_not_own_claim_or_result\nPASS test_unusable_and_malformed_lookup_never_mutates\nPASS test_webview_is_portable_incomplete_data\nPASS test_wrong_expected_account_prevents_all_group_requests\nPASS test_zero_cap_observes_membership_but_refuses_mutation\n44 passed; 0 failed\n"
+    },
+    "export": "/private/tmp/tgdata7-stage5-export-r4tfzwxx",
+    "demo_directory": "/private/tmp/tgdata7-stage5-backfill-9n8zcb20"
+  },
+  "correction": "test29 exact constructor assertion updated for the planned trailing join_budget argument; original positional check preserved; rerun23/23"
+}
