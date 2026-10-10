@@ -254,6 +254,24 @@ async def malformed_ok_payload():
                 decoded_by_actual_sdk=True, charged=budget.status(222).used)
 
 
+async def exact_rpc_request_identity():
+    tg, fixture, budget = setup()
+    descriptor = h.RPCReply(400, 'INVITE_REQUEST_SENT')
+    async with tg._account_health_operation(222, 'join_probe', 'synthetic') as (op, _):
+        op.client._stage5_probe_budget = budget
+        fixture.wire.script['ImportChatInviteRequest'] = [descriptor]
+        request = functions.messages.ImportChatInviteRequest('synthetic_token')
+        error = await fx.expect(errors.InviteRequestSentError, op.client(request))
+        leaf = error.request
+        envelopes = []
+        while isinstance(leaf, functions.InvokeWithoutUpdatesRequest):
+            envelopes.append(type(leaf).__name__)
+            leaf = leaf.query
+        assert leaf is request and error is descriptor.error
+    return dict(exact_request_identity=True, envelopes=envelopes,
+                charged=budget.status(222).used)
+
+
 async def main():
     assert telethon.__version__ == '1.45.0'
     with tempfile.TemporaryDirectory(prefix='tgdata-stage5-contract-') as temp, \
@@ -265,7 +283,8 @@ async def main():
          patch.object(connection, '_client_class', lambda base: type('ProbeClient', (ProbeMixin, ORIGINAL_CLASS(base)), {})):
         fx.TMP = Path(temp)
         try:
-            probes = ((numeric_route, proof_rpc_origin, malformed_ok_payload) if '--extra' in sys.argv
+            probes = ((exact_rpc_request_identity,) if '--identity' in sys.argv else
+                      (numeric_route, proof_rpc_origin, malformed_ok_payload) if '--extra' in sys.argv
                       else (result_and_cache, source_outcomes, identity_change,
                             cached_wait_and_retry, exhausted_rpc, transport_requeue))
             for function in probes:
