@@ -11,7 +11,7 @@ Stage 4 only; review and merge before Stage 5 (Recommended)
 
 ## Articulation Reference
 
-- File: articulate_simple.md, read before this derivative was written.
+- File: docarchive/articulate_simple.md, read before this derivative was written.
 - Itemize count:1; identifiers:I1; verdict:HIGH-PROCEED; flagged conditions:none.
 - Inquiry path is this task's traverse/ folder under CONTRIBUTING §5; it is not a
   new independent issue or an implementation of the historical broad branch.

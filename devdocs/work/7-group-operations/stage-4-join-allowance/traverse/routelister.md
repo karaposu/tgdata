@@ -45,7 +45,7 @@ These are attributive descriptions, not a selected sequence or control-flow plan
 
 **Guidance Mode:** compact.
 - Use the claim transaction boundary (bc separate observation and insertion cannot coordinate competing callers).
-- Pointers: sensemaking.md A1/A2; decomposition.md Q3; critique.md 3F/A (bc these are the concept’s own manifestations).
+- Pointers: docarchive/sensemaking.md A1/A2; docarchive/decomposition.md Q3; docarchive/critique.md 3F/A (bc these are the concept’s own manifestations).
 Meaning-gaps: none at the settled contract level; concrete API/schema precision belongs to implementation planning. This is a first-pass readiness signal, not a gate.
 
 **Depth-link:** none; no separate depth run.
@@ -66,7 +66,7 @@ Meaning-gaps: none at the settled contract level; concrete API/schema precision 
 
 **Guidance Mode:** compact.
 - Use the existing-state URI and schema predicate (bc the old constructor repaired away usage).
-- Pointers: sensemaking.md A4; innovation.md 2F; critique.md 2F-R (bc these are the concept’s own manifestations).
+- Pointers: docarchive/sensemaking.md A4; docarchive/innovation.md 2F; docarchive/critique.md 2F-R (bc these are the concept’s own manifestations).
 Meaning-gaps: none at the settled contract level; concrete API/schema precision belongs to implementation planning. This is a first-pass readiness signal, not a gate.
 
 **Depth-link:** none; no separate depth run.
@@ -87,7 +87,7 @@ Meaning-gaps: none at the settled contract level; concrete API/schema precision 
 
 **Guidance Mode:** compact.
 - Validate stored times before advancing or pruning (bc normalization can conceal bad history).
-- Pointers: sensemaking.md A3/A6; decomposition.md Q3; critique.md D3 (bc these are the concept’s own manifestations).
+- Pointers: docarchive/sensemaking.md A3/A6; docarchive/decomposition.md Q3; docarchive/critique.md D3 (bc these are the concept’s own manifestations).
 Meaning-gaps: none at the settled contract level; concrete API/schema precision belongs to implementation planning. This is a first-pass readiness signal, not a gate.
 
 **Depth-link:** none; no separate depth run.
@@ -108,7 +108,7 @@ Meaning-gaps: none at the settled contract level; concrete API/schema precision 
 
 **Guidance Mode:** compact.
 - Retain the lowered-cap expiry rule (bc the first expiry may still leave no slot).
-- Pointers: sensemaking.md A7; decomposition.md Q1/Q3; innovation.md 1F (bc these are the concept’s own manifestations).
+- Pointers: docarchive/sensemaking.md A7; docarchive/decomposition.md Q1/Q3; docarchive/innovation.md 1F (bc these are the concept’s own manifestations).
 Meaning-gaps: none at the settled contract level; concrete API/schema precision belongs to implementation planning. This is a first-pass readiness signal, not a gate.
 
 **Depth-link:** none; no separate depth run.
@@ -129,7 +129,7 @@ Meaning-gaps: none at the settled contract level; concrete API/schema precision 
 
 **Guidance Mode:** compact.
 - Separate status from claim success (bc concurrent writers can make observations stale).
-- Pointers: decomposition.md Q1; innovation.md 1F; critique.md 1F (bc these are the concept’s own manifestations).
+- Pointers: docarchive/decomposition.md Q1; docarchive/innovation.md 1F; docarchive/critique.md 1F (bc these are the concept’s own manifestations).
 Meaning-gaps: none at the settled contract level; concrete API/schema precision belongs to implementation planning. This is a first-pass readiness signal, not a gate.
 
 **Depth-link:** none; no separate depth run.
@@ -150,7 +150,7 @@ Meaning-gaps: none at the settled contract level; concrete API/schema precision 
 
 **Guidance Mode:** compact.
 - Use actual commit and owned-process boundaries (bc supplied success flags do not establish durability).
-- Pointers: sensemaking.md A5/A8; innovation.md 3F; critique.md 3F (bc these are the concept’s own manifestations).
+- Pointers: docarchive/sensemaking.md A5/A8; docarchive/innovation.md 3F; docarchive/critique.md 3F (bc these are the concept’s own manifestations).
 
 **Depth-link:** none; no separate depth run.
 
@@ -170,7 +170,7 @@ Meaning-gaps: none at the settled contract level; concrete API/schema precision 
 
 **Guidance Mode:** compact.
 - Exercise primary-plus-cleanup and ambient RPC context (bc exception chains can carry unrelated classifications).
-- Pointers: decomposition.md Q1/Q5; sensemaking.md A8/A9; critique.md D4 (bc these are the concept’s own manifestations).
+- Pointers: docarchive/decomposition.md Q1/Q5; docarchive/sensemaking.md A8/A9; docarchive/critique.md D4 (bc these are the concept’s own manifestations).
 
 **Depth-link:** none; no separate depth run.
 
@@ -190,7 +190,7 @@ Meaning-gaps: none at the settled contract level; concrete API/schema precision 
 
 **Guidance Mode:** compact.
 - Retain raw outcomes and deliberate fault labels (bc process crashes are not disk power-loss certification).
-- Pointers: decomposition.md Q5; innovation.md 5F; critique.md evidence/5F (bc these are the concept’s own manifestations).
+- Pointers: docarchive/decomposition.md Q5; docarchive/innovation.md 5F; docarchive/critique.md evidence/5F (bc these are the concept’s own manifestations).
 
 **Depth-link:** none; no separate depth run.
 
@@ -210,7 +210,7 @@ Meaning-gaps: none at the settled contract level; concrete API/schema precision 
 
 **Guidance Mode:** compact.
 - Point to the merged verified operation (bc a caller-supplied ledger key alone does not authenticate anyone).
-- Pointers: sensemaking.md A9; decomposition.md Q4; innovation.md 4F (bc these are the concept’s own manifestations).
+- Pointers: docarchive/sensemaking.md A9; docarchive/decomposition.md Q4; docarchive/innovation.md 4F (bc these are the concept’s own manifestations).
 
 **Depth-link:** none; no separate depth run.
 
@@ -230,7 +230,7 @@ Meaning-gaps: none at the settled contract level; concrete API/schema precision 
 
 **Guidance Mode:** compact.
 - Identify an actual second backend and its failure semantics (bc generic quota similarity alone is insufficient).
-- Pointers: innovation.md 2C/1G; critique.md 2C (bc these are the concept’s own manifestations).
+- Pointers: docarchive/innovation.md 2C/1G; docarchive/critique.md 2C (bc these are the concept’s own manifestations).
 
 **Depth-link:** none; no separate depth run.
 

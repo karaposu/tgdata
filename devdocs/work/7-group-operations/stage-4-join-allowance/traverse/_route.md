@@ -7,7 +7,7 @@ Goal: A coherent Stage4 library join allowance with an honest local admission co
 
 - Identity: Atomic unit admission
 - State: live
-- Manifestations: sensemaking.md A1/A2; decomposition.md Q3; critique.md 3F/A
+- Manifestations: docarchive/sensemaking.md A1/A2; docarchive/decomposition.md Q3; docarchive/critique.md 3F/A
 - Own-depth pointer: none
 - Depth signal: A successful claim return represents exactly one consumed admission.
 - Individuation history: first observed as one goal-relative concept across these manifestations.
@@ -18,7 +18,7 @@ Goal: A coherent Stage4 library join allowance with an honest local admission co
 
 - Identity: Persistent-state provisioning and reopening
 - State: live
-- Manifestations: sensemaking.md A4; innovation.md 2F; critique.md 2F-R
+- Manifestations: docarchive/sensemaking.md A4; docarchive/innovation.md 2F; docarchive/critique.md 2F-R
 - Own-depth pointer: none
 - Depth signal: Missing or incoherent known state refuses instead of becoming fresh capacity.
 - Individuation history: first observed as one goal-relative concept across these manifestations.
@@ -29,7 +29,7 @@ Goal: A coherent Stage4 library join allowance with an honest local admission co
 
 - Identity: Rolling window and observed clock
 - State: live
-- Manifestations: sensemaking.md A3/A6; decomposition.md Q3; critique.md D3
+- Manifestations: docarchive/sensemaking.md A3/A6; docarchive/decomposition.md Q3; docarchive/critique.md D3
 - Own-depth pointer: none
 - Depth signal: Time and retry hints describe the same rolling24-hour state.
 - Individuation history: first observed as one goal-relative concept across these manifestations.
@@ -40,7 +40,7 @@ Goal: A coherent Stage4 library join allowance with an honest local admission co
 
 - Identity: History-preserving policy changes
 - State: live
-- Manifestations: sensemaking.md A7; decomposition.md Q1/Q3; innovation.md 1F
+- Manifestations: docarchive/sensemaking.md A7; docarchive/decomposition.md Q1/Q3; docarchive/innovation.md 1F
 - Own-depth pointer: none
 - Depth signal: Zero blocks, absent policy errors, and lower caps retain prior usage.
 - Individuation history: first observed as one goal-relative concept across these manifestations.
@@ -51,7 +51,7 @@ Goal: A coherent Stage4 library join allowance with an honest local admission co
 
 - Identity: Portable allowance observations
 - State: live
-- Manifestations: decomposition.md Q1; innovation.md 1F; critique.md 1F
+- Manifestations: docarchive/decomposition.md Q1; docarchive/innovation.md 1F; docarchive/critique.md 1F
 - Own-depth pointer: none
 - Depth signal: Callers can inspect local capacity and advisory times without a client.
 - Individuation history: first observed as one goal-relative concept across these manifestations.
@@ -62,7 +62,7 @@ Goal: A coherent Stage4 library join allowance with an honest local admission co
 
 - Identity: Uncertain commit and lost-return meaning
 - State: live
-- Manifestations: sensemaking.md A5/A8; innovation.md 3F; critique.md 3F
+- Manifestations: docarchive/sensemaking.md A5/A8; docarchive/innovation.md 3F; docarchive/critique.md 3F
 - Own-depth pointer: none
 - Depth signal: Errors grant no permission even when usage remains durable.
 - Individuation history: first observed as one goal-relative concept across these manifestations.
@@ -73,7 +73,7 @@ Goal: A coherent Stage4 library join allowance with an honest local admission co
 
 - Identity: Local failures and health neutrality
 - State: live
-- Manifestations: decomposition.md Q1/Q5; sensemaking.md A8/A9; critique.md D4
+- Manifestations: docarchive/decomposition.md Q1/Q5; docarchive/sensemaking.md A8/A9; docarchive/critique.md D4
 - Own-depth pointer: none
 - Depth signal: Configuration/storage/exhaustion failures retain their local meaning.
 - Individuation history: first observed as one goal-relative concept across these manifestations.
@@ -84,7 +84,7 @@ Goal: A coherent Stage4 library join allowance with an honest local admission co
 
 - Identity: Storage and contention qualification
 - State: live
-- Manifestations: decomposition.md Q5; innovation.md 5F; critique.md evidence/5F
+- Manifestations: docarchive/decomposition.md Q5; docarchive/innovation.md 5F; docarchive/critique.md evidence/5F
 - Own-depth pointer: none
 - Depth signal: Evidence covers the actual implementation and states its limits.
 - Individuation history: first observed as one goal-relative concept across these manifestations.
@@ -95,7 +95,7 @@ Goal: A coherent Stage4 library join allowance with an honest local admission co
 
 - Identity: Verified source-consumer obligations
 - State: live
-- Manifestations: sensemaking.md A9; decomposition.md Q4; innovation.md 4F
+- Manifestations: docarchive/sensemaking.md A9; docarchive/decomposition.md Q4; docarchive/innovation.md 4F
 - Own-depth pointer: none
 - Depth signal: The future consumer has explicit identity, retry and enqueue obligations.
 - Individuation history: first observed as one goal-relative concept across these manifestations.
@@ -106,7 +106,7 @@ Goal: A coherent Stage4 library join allowance with an honest local admission co
 
 - Identity: Additional allowance storage backends
 - State: live
-- Manifestations: innovation.md 2C/1G; critique.md 2C
+- Manifestations: docarchive/innovation.md 2C/1G; docarchive/critique.md 2C
 - Own-depth pointer: none
 - Depth signal: Backend requirements could be qualified from a real consumer.
 - Individuation history: first observed as one goal-relative concept across these manifestations.
