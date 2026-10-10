@@ -19,6 +19,8 @@ file cannot support independent accounting/required schema primitives.
 Passing result: read settlement yields its actual usage while join usage remains
 one; reopening preserves both; descriptor/FK behavior matches the proposed schema.
 
+Result: PASS — actual ReadBudget configure/reserve/settle/reopen retained read usage2 and join usage1 in the same SQLite file; actual descriptors and FK enforcement matched. 2026-10-10. See `prebuild_probe.py` and `evidence/prebuild-probe.txt`. No Stage4 runtime existed when run.
+
 ## High-level summary
 
 The standalone admitted-attempt contract fits the staged boundary. No receipt,
