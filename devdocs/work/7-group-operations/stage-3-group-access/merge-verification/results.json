@@ -1,0 +1,153 @@
+{
+  "merge": "1ce39d5c90df399d57b4935cef353762c77cc537",
+  "actual_passes": 494,
+  "live_skips": 3,
+  "suites": [
+    {
+      "suite": "test_12_proxy",
+      "exit": 0,
+      "passed": 5,
+      "skipped": 2,
+      "sha256": "e4aecbf1eed536ad3db37b760fc4dc3d89da25103d8f647c991a61d3278f288f"
+    },
+    {
+      "suite": "test_13_device_identity",
+      "exit": 0,
+      "passed": 5,
+      "skipped": 1,
+      "sha256": "5fd3767fe841b1962711c2a3096451e9eb80ba4dec76a0e4241443c396114c4b"
+    },
+    {
+      "suite": "test_14_flood_threshold",
+      "exit": 0,
+      "passed": 11,
+      "skipped": 0,
+      "sha256": "e5edfc74277962b01944d184b62fed06f35d7eb6a358096e3b9b9f94486eed54"
+    },
+    {
+      "suite": "test_15_login_checks",
+      "exit": 0,
+      "passed": 11,
+      "skipped": 0,
+      "sha256": "52979f06f2ed5e5b03cba20407761ba405687cc59bca6418dbf7b65aa2cd6a9b"
+    },
+    {
+      "suite": "test_16_health_events",
+      "exit": 0,
+      "passed": 21,
+      "skipped": 0,
+      "sha256": "d3ea1e185a747412cce3dd4a307ba38f49742caed84dedd79cb4a49111750be8"
+    },
+    {
+      "suite": "test_17_session_store",
+      "exit": 0,
+      "passed": 12,
+      "skipped": 0,
+      "sha256": "2977c2e8d6abbbb55424ba43bf9e754417ec09ff2f258a725618bc0ef845f4dd"
+    },
+    {
+      "suite": "test_18_read_budget",
+      "exit": 0,
+      "passed": 28,
+      "skipped": 0,
+      "sha256": "bca71b5df85219dd74f83e347d4a27ccd09a85b8fe5d58553010b001ef3cb6a7"
+    },
+    {
+      "suite": "test_19_message_batches",
+      "exit": 0,
+      "passed": 33,
+      "skipped": 0,
+      "sha256": "3f1c9cd1efad955c89ecd1ed99cc46f2c7420a62662007a3a655c65d4f791414"
+    },
+    {
+      "suite": "test_22_daily_continuation",
+      "exit": 0,
+      "passed": 25,
+      "skipped": 0,
+      "sha256": "2e54c5112c8ae6999e54d1a6a7b8a4c2bf455e44afd07ef8bb7d568e32a2f3f4"
+    },
+    {
+      "suite": "test_23_fixed_windows",
+      "exit": 0,
+      "passed": 22,
+      "skipped": 0,
+      "sha256": "c1ca789243960d3449decd8a953e6adefd78ac850d37ab6a1dba617d6e3bd177"
+    },
+    {
+      "suite": "test_24_backfill_state",
+      "exit": 0,
+      "passed": 23,
+      "skipped": 0,
+      "sha256": "eb49d53ed6a7c2ae7a9489895be8c02733768a2a1d85ce0574cc17a7757f2668"
+    },
+    {
+      "suite": "test_25_backfill_delivery",
+      "exit": 0,
+      "passed": 41,
+      "skipped": 0,
+      "sha256": "f05766082c1fc93c50975c394aab0b4bc1dc58e49ebf9e2321cee18ecb21808e"
+    },
+    {
+      "suite": "test_26_backfill_completion",
+      "exit": 0,
+      "passed": 16,
+      "skipped": 0,
+      "sha256": "8a472bf238b53b63e2489a5ad72cc17d4d099561a007113c9da33c8185d08de3"
+    },
+    {
+      "suite": "test_27_backfill_pacing",
+      "exit": 0,
+      "passed": 32,
+      "skipped": 0,
+      "sha256": "886e0cf0f486b6df1822ece6f3bb1f0ee93e5d399ab598ed3ee792af4e2838c8"
+    },
+    {
+      "suite": "test_28_backfill_controls",
+      "exit": 0,
+      "passed": 32,
+      "skipped": 0,
+      "sha256": "7be1e503dd762aaa95be16a3afeb708dcac4caa8cc61ad942e4db5bf6bac9aa4"
+    },
+    {
+      "suite": "test_29_backfill_public",
+      "exit": 0,
+      "passed": 23,
+      "skipped": 0,
+      "sha256": "5ecc29ff79271ce9f381405d5061ad8419635d7c88554ca49eafeb13943926c0"
+    },
+    {
+      "suite": "test_30_backfill_integration",
+      "exit": 0,
+      "passed": 15,
+      "skipped": 0,
+      "sha256": "56bf3bfe035bc3156f43d87cb1b0645cdf7a460ddfe132c4464b4cf5a320c3e7"
+    },
+    {
+      "suite": "test_32_account_operation",
+      "exit": 0,
+      "passed": 28,
+      "skipped": 0,
+      "sha256": "2e2d1bcbc3b3b863a5533257dbd933b57137fb32062b33a85c46d03bea8e0131"
+    },
+    {
+      "suite": "test_33_owned_health",
+      "exit": 0,
+      "passed": 62,
+      "skipped": 0,
+      "sha256": "82564950e07ea7cdebe1327c055d06dedcecce918744d34efc72564854051a34"
+    },
+    {
+      "suite": "test_34_group_access",
+      "exit": 0,
+      "passed": 49,
+      "skipped": 0,
+      "sha256": "1865d8722b0acd42f561b705d6746e54235b5da290f9d88a30e7686161a1b27c"
+    }
+  ],
+  "environment": {
+    "python": "3.11.10",
+    "telethon": "1.45.0",
+    "module": "/private/tmp/tgdata-23-merge-verification/tgdata/__init__.py",
+    "compiled_and_37_grammar": 65
+  }
+}

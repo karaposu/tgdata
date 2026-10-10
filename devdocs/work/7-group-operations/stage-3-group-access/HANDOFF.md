@@ -4,7 +4,8 @@ effort: max
 ---
 # #7 Stage 3 handoff
 
-Implementation is complete on **feat/7-group-lookup-access**, product **a2afc05**.
+**Stage3 is merged into dev through PR23 at1ce39d5** (2026-10-10T16:50:52Z).
+Archive: **feat/7-group-lookup-access**, reviewed product **a2afc05**.
 Base dev30ba706 already contains Stages1/2. Active task folder is this directory.
 The old broad feat/7-group-operations worktree is historical, not the branch to resume.
 
@@ -23,8 +24,13 @@ critic in pr-critic.md accepts with0High/0Medium/1Low, backed by six new probe g
 The Low is malformed invite error typing; it fails closed and is consciously retained.
 Current session metadata confirms gpt-6-astra/max for §9. No runtime changes in review.
 
-**Next:** merge only with the user's go-ahead, retaining work docs on this archive branch.
-Stage4 join allowance and Stage5 joining remain later work; keep parent issue7 open.
+**Merge verified:** the user gave the go-ahead; all494 offline groups passed again on
+the merged code,3 live checks skipped,3 demos passed and65 Python files compiled/grammar
+checked. Work docs excluded; dev archaeology preserved; feature branch retained.
+See merge-verification.md and its durable evidence.
+
+**Next:** Stage4 join allowance, then Stage5 joining. Parent issue7 stays open.
+Those later stages have not been started by this merge task.
 
 Preserve original checkout untracked HANDOFF.md/todo.md, duncan and the stray guide.
 Do not fold in unmerged #17 or resume historical PR16. This Stage3 task has one plan
