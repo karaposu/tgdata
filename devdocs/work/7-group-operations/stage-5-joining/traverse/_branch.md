@@ -8,7 +8,7 @@ after this start $task-impl stage 5
 
 ## Articulation Reference
 
-- File: articulate_simple.md
+- File: docarchive/articulate_simple.md
 - Itemize count:1; identifier:I1.
 - Verdict: HIGH-PROCEED; no operational flags.
 - Frame derived after the articulation file existed and was read in full.
