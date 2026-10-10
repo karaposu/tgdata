@@ -1,6 +1,7 @@
 # #7 Stage 4 handoff
 
-**State:** implemented and verified on `feat/7-account-join-allowance`.
+**State:** implemented, verified and both review gates passed on
+`feat/7-account-join-allowance`. Awaiting the user's merge instruction.
 **Product commit:** `de1f758`. **Base dev:** `1ce39d5` (Stage3 merged via PR23).
 **User scope:** Stage4 only; review and merge before Stage5. This is not permission
 to resume the old broad PR16 implementation or include unmerged #17.
@@ -17,19 +18,34 @@ to resume the old broad PR16 implementation or include unmerged #17.
 - Full verification: **529 actual offline passes,3 live skips**,3 demo executions,
   67-file compile/Python3.7 grammar checks. New suite also passed without .git.
   Read verification.md for actual coverage, provenance, commands and limitations.
+- Merge fidelity **PASS `9861573`**, current session Astra/max verified for §9.
+  [PR24](https://github.com/karaposu/tgdata/pull/24) targets dev and uses Refs #7;
+  [merge check posted](https://github.com/karaposu/tgdata/pull/24#issuecomment-6101488254).
+- Fresh in-session critic-d **ACCEPTED `d7709ef`:0 High/0 Medium/1 Low**, with seven
+  additional real SQLite/process probe groups (one reproduces the Low).
+  [Critique posted](https://github.com/karaposu/tgdata/pull/24#issuecomment-6101530562).
+  The product is unchanged. No Stage4 rejection or re-plan is triggered.
 
-## Next, after requested review work
+## Next — merge only after the user's go-ahead
 
-1. Run CONTRIBUTING §7.1 merge check against triage, description, revision2 plan,
-   selected critic finding, whole product diff and current issue status. Verify §9
-   model/effort provenance again; this run's session metadata was gpt-6-astra/max.
-2. Publish a Stage4 PR into dev using **Refs #7**, then post the merge check.
-3. Run a genuinely fresh in-session critic-d of diff+plan with probes; commit and
-   post pr-critic.md. High/Medium rejects under §7.3; apply §7.4 if rejected.
-4. Merge only with the user's go-ahead, exclude work docs, verify merged code,
-   preserve the branch as archive and leave #7 open for Stage5.
+1. Confirm the current dev/PR heads and that the accepted product remains de1f758.
+   Both gate artifacts are committed/pushed and posted; base is still1ce39d5.
+2. Merge into dev with this work folder excluded and dev archaeology preserved.
+   Verify the actual merged code with the supported offline suites/demos/compile.
+3. Push the verified merge, retain this branch as archive, update #7 and keep it
+   open for Stage5. No auto-closing reference belongs on this partial delivery.
+4. Stage5 joining starts after this stage's review and authorized merge.
 
-No Stage4 PR, merge check, PR critique or merge has been performed yet.
+No merge has been performed or authorized by the review request.
+
+## Consciously retained Low
+
+At an accepted nonbinary fractional clock boundary (1000.2 →87400.2), the expiry
+hint can say retry_after0 while pruning still retains the claim for one representable
+float step (about14ps in the probe). This is a conservative refusal, not lost usage
+or excess admission. §7.3 permits this Low; see pr-critic.md for exact evidence and
+limits. Do not silently patch it during merge or inherit a claim of perfect numerical
+deadline identity. No Medium/High findings remain.
 
 ## Boundary to preserve
 
