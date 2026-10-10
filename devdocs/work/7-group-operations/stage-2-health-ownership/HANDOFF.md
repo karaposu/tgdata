@@ -4,11 +4,11 @@ effort: max
 ---
 # #7 Stage 2 handoff
 
-**Revision4 implemented and verified; both renewed gates pass. Awaiting merge go-ahead.**
+**Stage2 merged into dev via PR22 at `30ba706`; merged-code verification passed.**
 Product `c6451bb`, branch `feat/7-account-health-ownership`, base dev/merged Stage1
 `53306df`. Worktree: `/private/tmp/tgdata-7-stage2-health-ownership`.
-[PR22](https://github.com/karaposu/tgdata/pull/22) is **ready for review, not merged**.
-Both renewed gates are committed, pushed and posted. Merge awaits the user's go-ahead.
+[PR22](https://github.com/karaposu/tgdata/pull/22) is **merged**, confirmed by GitHub
+at `2026-10-10T12:23:14Z`. The feature branch is retained as the archive.
 
 ## Current implementation
 
@@ -75,16 +75,18 @@ nested resolution, namespace restrictions, local/cancelled failure after success
 requests, crossed account cleanup and forwarded failure followed by fresh legacy RPC.
 The final probe runner exits0. No product code changed during either review gate.
 
-PR22 is marked ready for review. Both gates allow the next step: the user's merge
-go-ahead. The matching issue/PR status update records fd655a5 and9e0b4e5 with their
-posted verdicts. Do not re-plan or implement another stage before that instruction. §9 uses
-the retained same-session Astra/max record and its original timestamp, not an
-invented fresh selector reading. If a future changed diff is reviewed and rejected,
-apply CONTRIBUTING to that actual review; this accepted round is not a rejection.
+The user authorized the merge with “go”. It was prepared from dev53306df and
+approved headb74e9b3, with work documents excluded and dev archaeology preserved.
+The exact merge commit30ba706 passed **445 actual offline tests, 3 live skips,
+3 demos and63-file syntax/grammar checks** before its normal push to dev. One
+verification-launcher issue in test18 was corrected by using its normal python -m
+entry point; no product/test changes. See merge-verification.md for the full record.
 
-Merge only after successful renewed gates and the user's go-ahead, excluding
-work-folder docs and preserving the branch archive. Whole #7 stays open for Stage3
-lookup/access, Stage4 join allowance and Stage5 joining.
+Next scope is **Stage3: group lookup and access checks**. Stage4 join allowance and
+Stage5 joining follow later. Whole #7 remains open; no next-stage work has started.
+The merged prerequisites and accepted review now supersede the old broad attempt.
+§9 provenance remains the retained same-session Astra/max record, with its original
+timestamp preserved rather than presented as a new selector reading.
 
 The original checkout and old broad PR16/revision3 are preserved. Do not merge
 unmerged #17 into this prerequisite. Do not commit duncan, the stray guide, or the

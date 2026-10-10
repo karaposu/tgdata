@@ -7,7 +7,8 @@ effort: max
 **Result: PASS.** Product `c6451bb`, folded plan `aee7211`, base dev/Stage1
 `53306df`, branch `feat/7-account-health-ownership`. Implementation is complete.
 Later review checkpoints: merge fidelity PASS `fd655a5`, fresh PR ACCEPTED `9e0b4e5`;
-see merge-check.md and pr-critic.md. PR22 is ready, not merged. No live
+see merge-check.md and pr-critic.md. PR22 subsequently merged at30ba706;
+merge-verification.md records the separate merged-code checks. No live
 Telegram action, login or membership change. This is not PR or merge approval.
 
 The first product's verification is preserved byte-for-byte in
@@ -135,7 +136,8 @@ or frozen-account behavior.
 
 At implementation completion, the next gates were renewed merge fidelity and a
 fresh same-session PR critique on the final product diff and plan. They subsequently
-passed at fd655a5 and9e0b4e5, with no runtime changes. Merge now needs the user's
-explicit go-ahead. Any future Medium/High rejects under CONTRIBUTING §7.3–7.4. Keep work docs out of dev and retain the branch.
+passed at fd655a5 and9e0b4e5, with no runtime changes. The user then authorized
+merge30ba706; see merge-verification.md. Any future Medium/High rejects under
+CONTRIBUTING §7.3–7.4. Keep work docs out of dev and retain the branch.
 Frontmatter retains the previously observed same-session Astra/max provenance;
 the archived merge check records its original timestamp, not a new selector reading.
