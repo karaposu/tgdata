@@ -1,0 +1,4 @@
+Destination accepted the batch; acknowledgment was lost.
+Replay used the same batch without reading Telegram.
+Stored messages: 4
+Acknowledged through: 104

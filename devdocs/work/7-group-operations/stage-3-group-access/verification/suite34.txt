@@ -1,0 +1,90 @@
+PASS test_access_is_one_bounded_read_and_keeps_lookup
+PASS test_already_and_peek_invites_keep_membership_and_expiry
+PASS test_bad_history_never_confirms_or_recovers
+PASS test_bad_references_never_open_config_or_client
+PASS test_bare_numeric_ids_require_one_group_namespace
+PASS test_budget_reverifies_owner_before_claim_or_send
+health: logged out [account] AUTH_KEY_UNREGISTERED — call=check_group_access account=test account
+health_callback raised — events keep flowing; further failures are logged at DEBUG
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-7-stage3-group-access/tgdata/owned_health.py", line 206, in _notify
+    result = self.callback(event)
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-7-stage3-group-access/tgdata/smoke_tests/test_34_group_access.py", line 765, in callback
+    raise error_type('synthetic callback')
+ValueError: synthetic callback
+health_callback raised — events keep flowing; further failures are logged at DEBUG
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-7-stage3-group-access/tgdata/owned_health.py", line 206, in _notify
+    result = self.callback(event)
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-7-stage3-group-access/tgdata/smoke_tests/test_34_group_access.py", line 765, in callback
+    raise error_type('synthetic callback')
+asyncio.exceptions.CancelledError: synthetic callback
+health_callback raised — events keep flowing; further failures are logged at DEBUG
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-7-stage3-group-access/tgdata/owned_health.py", line 208, in _notify
+    await result
+  File "/private/tmp/tgdata-7-stage3-group-access/tgdata/smoke_tests/test_34_group_access.py", line 767, in async_callback
+    callback(event)
+  File "/private/tmp/tgdata-7-stage3-group-access/tgdata/smoke_tests/test_34_group_access.py", line 765, in callback
+    raise error_type('synthetic callback')
+ValueError: synthetic callback
+health_callback raised — events keep flowing; further failures are logged at DEBUG
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-7-stage3-group-access/tgdata/owned_health.py", line 208, in _notify
+    await result
+  File "/private/tmp/tgdata-7-stage3-group-access/tgdata/smoke_tests/test_34_group_access.py", line 767, in async_callback
+    callback(event)
+  File "/private/tmp/tgdata-7-stage3-group-access/tgdata/smoke_tests/test_34_group_access.py", line 765, in callback
+    raise error_type('synthetic callback')
+asyncio.exceptions.CancelledError: synthetic callback
+PASS test_callback_errors_and_callback_cancellation_preserve_result
+PASS test_cancelled_read_keeps_denial_and_reserved_budget
+PASS test_cleanup_cancellation_preserves_completed_read_evidence
+PASS test_closed_handle_cannot_confirm_access
+PASS test_empty_deactivated_and_migrated_groups_are_unavailable
+PASS test_empty_history_and_supported_vectors_prove_access
+PASS test_expected_account_is_required_and_validated_before_client
+PASS test_failed_and_malformed_reads_keep_budget_error_semantics
+Account operation cleanup failed (RuntimeError)
+Account operation cleanup failed (RuntimeError)
+PASS test_failed_cleanup_never_replaces_success_or_source_exception
+PASS test_forbidden_min_and_missing_hash_are_qualified
+PASS test_full_group_families_and_membership_hints
+PASS test_history_denial_keeps_complete_invite_lookup_and_safe_health_label
+PASS test_incomplete_and_wrong_metadata_never_recover
+PASS test_invite_preview_is_not_a_peer_or_access_verdict
+PASS test_literal_self_names_are_not_sdk_aliases
+PASS test_local_cache_exception_is_preserved_without_health
+PASS test_local_transport_and_native_errors_never_become_denials
+PASS test_lookup_source_denial_raises_original_and_records
+PASS test_marked_basic_needs_no_cached_entity
+PASS test_missing_authentication_never_logs_in
+PASS test_missing_hash_and_malformed_cache_rows_do_not_send
+PASS test_namespace_boundary_cannot_borrow_another_channel_row
+PASS test_nested_legacy_health_does_not_borrow_owned_errors_or_context
+PASS test_notifications_wait_until_delayed_cleanup_settles
+PASS test_numeric_channels_preserve_large_and_zero_hashes
+Telegram is having internal issues RpcCallFailError: Telegram is having internal issues, please try again later. (caused by InvokeWithoutUpdatesRequest(GetChannelsRequest))
+PASS test_numeric_server_failure_preserves_sdk_error_and_policy
+PASS test_older_read_cannot_clear_a_newer_denial
+PASS test_only_valid_history_recovers_prior_group_denial
+PASS test_overlapping_accounts_keep_independent_source_health
+PASS test_persistent_selection_and_legacy_health_are_unchanged
+PASS test_plain_invite_absent_flags_are_actual_negative_hints
+PASS test_real_budget_metadata_cost_read_refund_and_pre_send_refusal
+PASS test_real_file_cache_hashless_community_error_stays_local
+PASS test_reference_spellings_use_one_explicit_resolve
+PASS test_resolved_user_wrong_missing_and_duplicate_entities
+PASS test_result_values_are_frozen_independent_and_json_ready
+PASS test_signed_extremes_are_bounded_and_bad_source_identity_refuses
+PASS test_source_cache_self_sentinel_collision_preserves_setup_error
+PASS test_source_denial_during_resolution_has_no_invented_metadata
+PASS test_typed_match_ignores_other_group_namespace
+health: logged out [account] AUTH_KEY_UNREGISTERED — call=check_group_access account=test account
+PASS test_unclassified_wait_and_auth_rpcs_still_raise_original
+health: unclassified [-] CHAT_WRITE_FORBIDDEN — call=check_group_access account=test account
+PASS test_verified_owner_and_existing_factory_policy
+PASS test_wrong_owner_prevents_every_group_request
+49 passed; 0 failed
