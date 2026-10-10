@@ -98,6 +98,18 @@ requests are forbidden. Malformed replies/local faults include explicitly inject
 No live Telegram permission claim is made; suites32/33 remain foundation regressions.
 See [the public contract](../../docs/group_operations.md).
 
+### Join allowance (offline)
+
+`python -m tgdata.smoke_tests.test_35_join_budget` runs 35 test groups on actual
+SQLite, including forced competing processes and process exits before/after commit.
+It covers explicit provisioning/reopening, shared ReadBudget storage, rolling expiry,
+policy changes, backward clocks, malformed state refusal, commit/cleanup uncertainty,
+sanitized local errors, cancellation and public status/exports. Fault wrappers delegate
+to real storage. An Exception-derived cancellation fixture covers the older hierarchy;
+it is not a native Python3.7 run. These tests need no git history, credentials or network.
+Process exits do not establish physical power-loss durability or live Telegram behavior.
+See [the allowance contract](../../docs/join_budget.md).
+
 ### Run Individual Test:
 ```bash
 # Basic tests
