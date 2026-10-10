@@ -14,9 +14,17 @@ folder's root. The archived merge fidelity PASS is not current merge approval.
 | verification.md | cf566f7a06b3188ba884b6bbe8b42e1f92856d46f096b68bebfd82dff87035d6 |
 
 The archive was compared with each original Git blob before this checkpoint.
-The original PR review and its probes remain at `../../pr-critic.md` and
-`../../pr_probes.py` because they are active inputs to revision3. There is one
-unique rejected Stage2 PR critique; this archive creates no duplicate rejection.
+At the renewed revision4 gate, the original PR review, prompt and probes were
+moved here unchanged before generating the second review. Their source is b9a8a5d;
+Git history and these byte copies preserve the re-plan inputs. This archive holds
+one distinct rejected Stage2 PR round, not an extra rejection. The historical
+probe file is evidence for the original product, not a current acceptance suite.
 The original verification was added here at the revision4 implementation checkpoint,
 checked byte-for-byte against b9a8a5d and explicitly scoped to product3d59455. Root
 `../../verification.md` now records the revision4 product and current test results.
+
+| Original PR artifact | SHA-256 of preserved bytes |
+|---|---|
+| pr-critic.md | ff0dde3c96ce853782e85fb98828ed78f7c94cc1e07539f02e315bc05b9aeff1 |
+| pr_dynamic_critic_prompt.md | 1df30fef78a48cf0f7425e8eded5c8a08a35d7f447074f56e1d09d4f83e48d3a |
+| pr_probes.py | 13f344b6fe7f5c172f5c7c146b09be5b6e04b0029ef9f91e26ccd79738cc0e8b |
