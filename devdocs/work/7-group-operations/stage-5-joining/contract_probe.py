@@ -19,6 +19,7 @@ from telethon.tl import functions, types
 from tgdata import JoinBudget
 from tgdata import connection_engine as connection
 from tgdata.account_operation import AccountIdentityError
+from tgdata.group_operations import _parse_target, _resolve
 from tgdata.smoke_tests import test_34_group_access as g
 
 h, fx = g.h, g.fx
@@ -202,6 +203,57 @@ async def transport_requeue():
                 additional_application_send=0)
 
 
+async def numeric_route():
+    tg, fixture, budget = setup()
+    async with tg._account_health_operation(222, 'join_probe', -1000000000009) as (op, _):
+        op.client._stage5_probe_budget = budget
+        op.client.session.process_entities([g.channel(9, access_hash=19, left=True)])
+        fixture.wire.script['GetChannelsRequest'] = [g.Reply(types.messages.Chats(
+            [g.channel(9, access_hash=0, left=True)]))]
+        lookup, peer = await _resolve(op, _parse_target(-1000000000009))
+        assert lookup.group.peer_id == -1000000000009 and lookup.member is False
+        assert (peer.channel_id, peer.access_hash) == (9, 0)
+        fixture.wire.script['JoinChannelRequest'] = [ok_reply()]
+        reply = await op.client(functions.channels.JoinChannelRequest(
+            types.InputChannel(peer.channel_id, peer.access_hash)))
+        assert isinstance(reply, types.messages.ChatInviteJoinResultOk)
+    return dict(peer=-1000000000009, source_hash=0, charged=budget.status(222).used)
+
+
+async def proof_rpc_origin():
+    tg, fixture, budget = setup()
+    descriptor = h.RPCReply(400, 'INVITE_REQUEST_SENT')
+    async with tg._account_health_operation(222, 'join_probe', 'synthetic') as (op, _):
+        op.client._stage5_probe_budget = budget
+        fixture.wire.script['GetUsersRequest'] = [descriptor]
+        TRACE.clear()
+        # Deliberately unexpected source code for self proof: the SDK constructs
+        # its class from the error name, without asserting which method emitted it.
+        error = await fx.expect(errors.InviteRequestSentError, op.client(
+            functions.messages.ImportChatInviteRequest('synthetic_token')))
+        leaf = error.request
+        while hasattr(leaf, 'query'):
+            leaf = leaf.query
+        assert isinstance(leaf, functions.users.GetUsersRequest)
+        assert ('send', 'ImportChatInviteRequest') not in TRACE
+    assert budget.status(222).used == 0
+    return dict(error=type(error).__name__, actual_origin=type(leaf).__name__,
+                join_sends=0, charged=0, synthetic_unexpected_code=True)
+
+
+async def malformed_ok_payload():
+    tg, fixture, budget = setup()
+    async with tg._account_health_operation(222, 'join_probe', 'synthetic') as (op, _):
+        op.client._stage5_probe_budget = budget
+        fixture.wire.script['JoinChannelRequest'] = [g.Reply(
+            types.messages.ChatInviteJoinResultOk(types.User(999)))]
+        reply = await op.client(functions.channels.JoinChannelRequest(types.InputChannel(9, 19)))
+        assert isinstance(reply, types.messages.ChatInviteJoinResultOk)
+        assert isinstance(reply.updates, types.User)
+    return dict(outer=type(reply).__name__, nested=type(reply.updates).__name__,
+                decoded_by_actual_sdk=True, charged=budget.status(222).used)
+
+
 async def main():
     assert telethon.__version__ == '1.45.0'
     with tempfile.TemporaryDirectory(prefix='tgdata-stage5-contract-') as temp, \
@@ -213,8 +265,10 @@ async def main():
          patch.object(connection, '_client_class', lambda base: type('ProbeClient', (ProbeMixin, ORIGINAL_CLASS(base)), {})):
         fx.TMP = Path(temp)
         try:
-            for function in (result_and_cache, source_outcomes, identity_change,
-                             cached_wait_and_retry, exhausted_rpc, transport_requeue):
+            probes = ((numeric_route, proof_rpc_origin, malformed_ok_payload) if '--extra' in sys.argv
+                      else (result_and_cache, source_outcomes, identity_change,
+                            cached_wait_and_retry, exhausted_rpc, transport_requeue))
+            for function in probes:
                 print(json.dumps(dict(probe=function.__name__, result=await function())), flush=True)
         finally:
             for client in fx.CLIENTS:
