@@ -887,6 +887,9 @@ await tg.run_with_event_loop()
 
 ### Account health events
 
+This section describes the existing public read methods and `health_check()`.
+Verified temporary operations have the separate local view described below.
+
 Every time Telegram says no to an account, tgdata tells you:
 - which verdict;
 - about what — the account, one kind of request, or one group;
@@ -989,6 +992,57 @@ error, so both now confirm with Telegram whether the session is logged in.
   record: `logging.disable(logging.INFO)` or higher turns the capture off, and
   a level set on `telethon.client.users` during a call applies from the next
   call.
+
+### Health for verified account operations
+
+`tg.get_account_health(account_id)` returns this instance's local health snapshot
+for a **verified numeric account ID**, or `None` if it has not observed that account.
+The ID must be a positive integer, not a string or boolean. The call is synchronous:
+it does no connection, authentication or recovery. The returned dictionaries are
+independent copies, with the same fields as the health summary above.
+
+This is the foundation for the staged group-operations work. Existing public reads
+and `health_check()` still use their existing health view; they do not populate or
+select the new account view. The two views are not combined. Group lookup, access
+checks and joining are not added by this stage.
+
+Internally, an observation begins after a temporary client proves the expected
+account. Its event and retained state keep that numeric owner even if a cached
+identity changes later. The session name and account label are descriptive. Setup
+failures before proof remain errors to the caller, without inventing a condition
+for an unverified account. Forwarding those failures through another task or an
+exception wrapper preserves that neutral attribution. A separate Telegram error
+raised while handling one still reports normally; diagnostic classification of
+the original failure remains available.
+
+Owned events use **`source: "rpc"`** for an actual health-related Telegram request
+failure, including one the operation subsequently handles. Local errors and their
+causes do not create these events. Recovery is conservative: successful work from
+an operation started before a condition was recorded cannot clear it; neither can
+the call that reported it. Owned event `request` and snapshot `waiting` keys name
+the logical request with its SDK namespace, such as `messages.GetHistoryRequest`
+or `channels.GetMessagesRequest`. Transport envelopes do not change that key;
+legacy health keeps its existing request names.
+
+Waits require the matching request to succeed. A restriction requires that the
+previously refused request succeeds in a later operation with the same method.
+Another identity check cannot clear a history-read restriction. Group access
+requires explicit confirmation by the internal operation after an actual access
+result; self verification and metadata alone never imply access. The private
+[operation contract](docs/account_operations.md#owned-health-composition-stage-2)
+describes how request evidence is captured.
+
+Owned state is updated before the operation returns. Both synchronous and async
+health callbacks run in separate tasks **after the source's disconnect attempt
+finishes**. A callback may run after the result or error reaches its caller. Its
+ordinary errors or cancellation cannot change that outcome; callback re-entry is
+suppressed as above. Unequal cleanup durations can make callbacks arrive in a
+different order from the observations; use event times and the local snapshot to
+interpret state. Notification delivery is not durable or guaranteed at process
+exit. Finish ongoing operations before `await tg.close()`, which cooperatively
+cancels and awaits pending owned notifications. A callback may itself call close.
+These timing rules apply to the new owned path; the existing public health callback
+timing remains as documented above.
 
 ### Performance Tips
 

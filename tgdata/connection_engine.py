@@ -23,7 +23,9 @@ from typing import Optional, List, Dict, Any, Tuple, Union
 from urllib.parse import urlsplit, unquote
 from telethon import TelegramClient, functions
 from telethon.client.telegrambaseclient import TelegramBaseClient
-from telethon.errors import FloodWaitError, AuthKeyUnregisteredError, UnauthorizedError, AuthKeyError
+from telethon.errors import (
+    FloodWaitError, AuthKeyUnregisteredError, UnauthorizedError, AuthKeyError, RPCError, MultiError,
+)
 from telethon.sessions import StringSession
 
 from . import health
@@ -112,12 +114,18 @@ class _AnswerEvidence:
     tgdata sends passes through the client's __call__, so this is where an
     answer is observed. Requests Telethon sends past __call__ (an exported
     sender for media on another data centre) count as no evidence, which can
-    only delay an "ok", never fake one."""
+    only delay an "ok", never fake one. Verified owned calls also observe raw
+    RPC failures here, before a higher-level operation can handle them."""
 
     async def __call__(self, request, ordered=False, flood_sleep_threshold=None):
-        result = await super().__call__(request, ordered=ordered,
-                                        flood_sleep_threshold=flood_sleep_threshold)
-        health.note_answer()
+        evidence = health.capture_request_evidence(self, request)
+        try:
+            result = await super().__call__(request, ordered=ordered,
+                                            flood_sleep_threshold=flood_sleep_threshold)
+        except (RPCError, MultiError) as exc:
+            health.note_rpc_error(self, exc)
+            raise
+        health.note_answer(self, request, evidence)
         return result
 
 
