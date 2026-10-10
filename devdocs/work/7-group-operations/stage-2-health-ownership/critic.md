@@ -22,6 +22,17 @@ cleanup no longer completes before propagation.
 Passing result: exact error/cause metadata survives task/wrapper forwarding, the
 same original failure and diagnostic verdict remain, and source cleanup completes.
 
+Result: PASS — 2026-10-10. The actual error and explicit SDK cause kept metadata
+through the awaited child and wrapper; the original object/text/cause and diagnostic
+`logged out` verdict were preserved, and the source was closed before delivery.
+
+```json
+{"same_error":true,"root_and_cause_metadata_survive":true,"explicit_wrapper_retains_marker":true,"diagnostic_verdict":"logged out","source_closed_before_delivery":true}
+```
+
+This proves the carrier composition, not the new attribution predicate. The
+predicate's acceptance cases remain required during implementation.
+
 ## High-level summary
 
 The six-step plan addresses the three rejected PR findings and the new task-hop
