@@ -2,13 +2,14 @@
 
 No proposed Stage4 implementation, no Telegram source calls or project database.
 """
-import importlib.util
 import json
 import multiprocessing
 import os
 from pathlib import Path
 import sqlite3
 import sys
+import subprocess
+import types
 import tempfile
 
 
@@ -114,12 +115,18 @@ def missing_and_uncertain(root):
                 error_is_injected=True)
 
 
+def historical_ledger():
+    source = subprocess.check_output(
+        ['git', 'show', '8a43d23:tgdata/join_budget.py'],
+        cwd=str(Path(__file__).resolve().parents[4]), text=True)
+    module = types.ModuleType('historical_join_budget')
+    sys.modules[module.__name__] = module
+    exec(compile(source, '8a43d23/tgdata/join_budget.py', 'exec'), module.__dict__)
+    return module
+
+
 def old_ledger_evidence(root):
-    source = Path('/Users/ns/Desktop/projects/telegram-group-scraper/tgdata/join_budget.py')
-    spec = importlib.util.spec_from_file_location('historical_join_budget', source)
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
+    module = historical_ledger()
     clock = [1000.0]
     path = root / 'old-window.sqlite3'
     ledger = module.JoinBudget(path, clock=lambda: clock[0])
@@ -153,12 +160,33 @@ def old_ledger_evidence(root):
                     before=before, after_reopen=after, another_claim_admitted=True))
 
 
+def malformed_time_evidence(root):
+    module = historical_ledger()
+    observed = []
+    for stamp in (-100000.0, 2000.0):
+        path = root / ('bad-past.sqlite3' if stamp < 0 else 'bad-future.sqlite3')
+        ledger = module.JoinBudget(path, clock=lambda: 1000.0)
+        ledger.configure(222, 1)
+        ledger._claim(222)
+        db = sqlite3.connect(path)
+        db.execute('UPDATE tgdata_join_attempts SET admitted_at=?', (stamp,))
+        db.commit()
+        db.close()
+        status = ledger.status(222)
+        observed.append(dict(stored_admitted_at=stamp, stored_clock=1000.0,
+                             status_used=status.used, remaining=status.remaining,
+                             next_available_at=status.next_available_at))
+    assert observed[0]['remaining'] == 1 and observed[1]['next_available_at'] == 88400.0
+    return observed
+
+
 def main():
     with tempfile.TemporaryDirectory(prefix='tgdata-stage4-contract-') as temp:
         root = Path(temp)
         print(json.dumps({'sqlite_processes': process_evidence(root)}), flush=True)
         print(json.dumps({'open_commit_boundaries': missing_and_uncertain(root)}), flush=True)
         print(json.dumps({'historical_ledger': old_ledger_evidence(root)}), flush=True)
+        print(json.dumps({'historical_corrupt_time': malformed_time_evidence(root)}), flush=True)
 
 
 if __name__ == '__main__':
