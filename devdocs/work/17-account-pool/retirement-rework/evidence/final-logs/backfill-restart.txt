@@ -1,0 +1,1 @@
+{"backfill": "completed", "cancelled_successor": "cancelled", "daily_after_id": 105, "historical_after_id": 104, "receipts": 3, "replay_source_reads": 0, "source_reads": 0, "unique_messages": 5}

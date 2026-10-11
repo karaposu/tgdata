@@ -1,0 +1,323 @@
+{
+  "actual_passed": 619,
+  "live_skips": 3,
+  "suites": [
+    {
+      "suite": "test_12_proxy",
+      "exit": 0,
+      "log": "final-logs/test_12_proxy.txt",
+      "tail": "pped \u2014 /private/tmp/tgdata17-rework-verification/intentionally-missing-config.ini not found (only its api_id / api_hash are read)\n\nTEST 7: a real proxy from the config...\n! skipped \u2014 /private/tmp/tgdata17-rework-verification/intentionally-missing-config.ini not found\n\nSummary\n============================================================\nPassed: 7/7\n",
+      "actual_passed": 5,
+      "live_skips": 2
+    },
+    {
+      "suite": "test_13_device_identity",
+      "exit": 0,
+      "log": "final-logs/test_13_device_identity.txt",
+      "tail": "vice_identity'] matches the pinned values\n\nTEST 6: Telegram accepts a connection presenting a pinned identity (throwaway session)...\n! skipped \u2014 /private/tmp/tgdata17-rework-verification/intentionally-missing-config.ini not found (only its api_id / api_hash are read)\n\nSummary\n============================================================\nPassed: 6/6\n",
+      "actual_passed": 5,
+      "live_skips": 1
+    },
+    {
+      "suite": "test_14_flood_threshold",
+      "exit": 0,
+      "log": "final-logs/test_14_flood_threshold.txt",
+      "tail": "ps: DiscoveryInterrupted(retry_after=5) after 0.00s\n\nTEST 11: premium flood waits are handled as waits...\n\u2713 search_groups: the premium wait was slept with ticks and the search retried\n\u2713 linked_groups: a premium lookup wait raised DiscoveryInterrupted(retry_after=5)\n\nSummary\n============================================================\nPassed: 11/11\n",
+      "actual_passed": 11,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_15_login_checks",
+      "exit": 0,
+      "log": "final-logs/test_15_login_checks.txt",
+      "tail": " 11: AuthRequiredError keeps its old type and gains the persistent path's...\n\u2713 Both a RuntimeError and a ConnectionError\n\nTEST 12: a logged-out pool connection fails start-up and leaves nothing open...\n\u2713 AuthRequiredError; both clients closed; nothing kept; no code\n\nSummary\n============================================================\nPassed: 11/11\n",
+      "actual_passed": 11,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_16_health_events",
+      "exit": 0,
+      "log": "final-logs/test_16_health_events.txt",
+      "tail": "T 21: a callback that calls tgdata is not called back for its own calls' events...\n\u2713 one nested call and one callback run; the nested event recorded, not delivered back\n\u2713 the scheduled path too: the callback's own call slept, was counted, and was not delivered back\n\nSummary\n============================================================\nPassed: 21/21\n",
+      "actual_passed": 21,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_17_session_store",
+      "exit": 0,
+      "log": "final-logs/test_17_session_store.txt",
+      "tail": "\n\nTEST 2: every_connection_path\n\u2713 Passed\n\nTEST 3: round_trip\n\u2713 Passed\n\nTEST 4: bounded_cache\n\u2713 Passed\n\nTEST 5: save_points\n\u2713 Passed\n\nTEST 6: failures\n\u2713 Passed\n\nTEST 7: login_rules\n\u2713 Passed\n\nTEST 8: log_out\n\u2713 Passed\n\nTEST 9: two_clients\n\u2713 Passed\n\nTEST 10: mixed_rows\n\u2713 Passed\n\nTEST 11: clone\n\u2713 Passed\n\nTEST 12: health_identity\n\u2713 Passed\n\nPassed: 12/12\n",
+      "actual_passed": 12,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_18_read_budget",
+      "exit": 0,
+      "log": "final-logs/test_18_read_budget.txt",
+      "tail": "\nTEST 21: fetch_partial_and_filtered_rows\n\u2713 Passed\n\nTEST 22: search_and_count\n\u2713 Passed\n\nTEST 23: polling_partial_stop\n\u2713 Passed\n\nTEST 24: media_partial_and_default\n\u2713 Passed\n\nTEST 25: discovery_partial\n\u2713 Passed\n\nTEST 26: conversion_and_callback_errors\n\u2713 Passed\n\nTEST 27: budget_errors_are_local\n\u2713 Passed\n\nTEST 28: factory_paths\n\u2713 Passed\n\nPassed: 28/28\n",
+      "actual_passed": 28,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_19_message_batches",
+      "exit": 0,
+      "log": "final-logs/test_19_message_batches.txt",
+      "tail": "t_cause_is_preserved\n\u2713 Passed\n\nTEST 29: primary_rpc_survives_real_cleanup_denial\n\u2713 Passed\n\nTEST 30: secondary_failures_and_logging_cannot_mask_primary\n\u2713 Passed\n\nTEST 31: cancellation_survives_cleanup_denial\n\u2713 Passed\n\nTEST 32: cleanup_only_media_and_manifest_errors\n\u2713 Passed\n\nTEST 33: verification_error_and_cleanup_precedence\n\u2713 Passed\n\nPassed: 33/33\n",
+      "actual_passed": 33,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_22_daily_continuation",
+      "exit": 0,
+      "log": "final-logs/test_22_daily_continuation.txt",
+      "tail": "_and_mode_validation\n\u2713 Passed\n\nTEST: offline_operations_do_not_recover_health\n\u2713 Passed\n\nTEST: process_exit_at_actual_ack_commit\n\u2713 Passed\n\nTEST: real_receiver_lost_acknowledgment\n\u2713 Passed\n\nTEST: sqlite_cleanup_precedence_and_safe_logs\n\u2713 Passed\n\nTEST: backend_return_and_empty_pending_validation\n\u2713 Passed\n\nTEST: offline_example\n\u2713 Passed\n\nPassed: 25/25\n",
+      "actual_passed": 25,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_23_fixed_windows",
+      "exit": 0,
+      "log": "final-logs/test_23_fixed_windows.txt",
+      "tail": "t_window_state_and_pending_refused\n\u2713 Passed\n\nTEST: reader_output_must_match_window\n\u2713 Passed\n\nTEST: daily_and_history_collections_stay_independent\n\u2713 Passed\n\nTEST: uncertain_initialization_reuses_committed_window\n\u2713 Passed\n\nTEST: process_exit_at_window_ack_commit\n\u2713 Passed\n\nTEST: cancelled_read_retains_window_and_releases_guard\n\u2713 Passed\n\nPassed: 22/22\n",
+      "actual_passed": 22,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_24_backfill_state",
+      "exit": 0,
+      "log": "final-logs/test_24_backfill_state.txt",
+      "tail": "on_and_ownership\n\u2713 Passed\n\nTEST: test_exhaustion_and_attempt_cross_invariants\n\u2713 Passed\n\nTEST: test_control_recovery_and_failure_snapshot_validation\n\u2713 Passed\n\nTEST: test_abandonment_and_pending_predecessor_refused\n\u2713 Passed\n\nTEST: test_counter_limits_and_stale_reference\n\u2713 Passed\n\nTEST: test_window_and_clock_failures_are_local\n\u2713 Passed\n\nPassed: 23/23\n",
+      "actual_passed": 23,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_25_backfill_delivery",
+      "exit": 0,
+      "log": "final-logs/test_25_backfill_delivery.txt",
+      "tail": "ations_never_recover_source_health\n\u2713 Passed\n\nTEST: test_future_unknown_timing_blocks_source_but_not_pending_ack\n\u2713 Passed\n\nTEST: test_real_receiver_commit_with_lost_reply_replays_without_duplication\n\u2713 Passed\n\nTEST: test_process_exit_before_and_after_pending_commit\n\u2713 Passed\n\nTEST: test_process_exit_before_and_after_ack_commit\n\u2713 Passed\n\nPassed: 41/41\n",
+      "actual_passed": 41,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_26_backfill_completion",
+      "exit": 0,
+      "log": "final-logs/test_26_backfill_completion.txt",
+      "tail": "ED \u2014 call=get_message_batch account=account_47\n\u2713 Passed\n\nTEST: test_empty_end_preserves_pause_or_cancel_fixture\n\u2713 Passed\n\nTEST: test_abandoned_final_fixture_never_accepts_or_completes\n\u2713 Passed\n\nTEST: test_actual_final_sqlite_close_errors_confirm_immediately\n\u2713 Passed\n\nTEST: test_subprocess_exit_at_all_final_commit_boundaries\n\u2713 Passed\n\nPassed: 16/16\n",
+      "actual_passed": 16,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_27_backfill_pacing",
+      "exit": 0,
+      "log": "final-logs/test_27_backfill_pacing.txt",
+      "tail": "ines_leave_attempt_unknown\n\u2713 Passed\n\nTEST: test_real_elapsed_wait_does_not_sleep_inside_engine\n\u2713 Passed\n\nTEST: test_generation_change_does_not_reuse_an_old_wait_anchor\n\u2713 Passed\n\nTEST: test_recovery_cas_race_cannot_clear_a_replacement_attempt\n\u2713 Passed\n\nTEST: test_process_exit_recovery_before_after_commit_keeps_exact_deadline\n\u2713 Passed\n\nPassed: 32/32\n",
+      "actual_passed": 32,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_28_backfill_controls",
+      "exit": 0,
+      "log": "final-logs/test_28_backfill_controls.txt",
+      "tail": "dback_never_overwrites_later_control\n\u2713 Passed\n\nTEST: test_cancelled_control_reply_reconciles_without_resetting_wait\n\u2713 Passed\n\nTEST: test_real_post_commit_close_failure_confirms_control\n\u2713 Passed\n\nTEST: test_corrupt_missing_or_foreign_state_is_not_repaired\n\u2713 Passed\n\nTEST: test_process_exit_before_and_after_real_control_commit\n\u2713 Passed\n\nPassed: 32/32\n",
+      "actual_passed": 32,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_29_backfill_public",
+      "exit": 0,
+      "log": "final-logs/test_29_backfill_public.txt",
+      "tail": "test_example_missing_known_state_and_repeated_new_do_not_reset\n\u2713 Passed\n\nTEST: test_example_receiver_keeps_full_snapshots_and_refuses_wrong_scope\n\u2713 Passed\n\nTEST: test_example_namespace_adapter_uses_actual_atomic_conditional_storage\n\u2713 Passed\n\nTEST: test_example_receiver_commit_failure_is_atomic_and_lost_reply_retries_exactly\n\u2713 Passed\n\nPassed: 23/23\n",
+      "actual_passed": 23,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_30_backfill_integration",
+      "exit": 0,
+      "log": "final-logs/test_30_backfill_integration.txt",
+      "tail": "ontrols_and_delayed_resume_are_revision_ordered\n\u2713 Passed\n\nTEST: test_media_receipt_custody_ack_without_source_bytes_and_health\n\u2713 Passed\n\nTEST: test_missing_malformed_known_state_and_cleanup_preserve_uncertainty\nSync storage cleanup failed during rollback (RuntimeError)\nSync storage cleanup failed during close (RuntimeError)\n\u2713 Passed\n\nPassed: 15/15\n",
+      "actual_passed": 15,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_31_account_pool",
+      "exit": 0,
+      "log": "final-logs/test_31_account_pool.txt",
+      "tail": "e_child\nPASS test_context_exit_preserves_caller_cancellation_after_cleanup\nPASS test_actual_cleanup_failure_keeps_body_error_and_can_be_retried\nPASS test_cleanup_helper_preserves_internal_error_and_older_cancel_hierarchy\nPASS test_owned_factory_policy_uses_current_options_seam\nPASS test_process_exit_at_actual_admission_and_settlement\nPassed: 46/46\n",
+      "actual_passed": 46,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_32_account_operation",
+      "exit": 0,
+      "log": "final-logs/test_32_account_operation.txt",
+      "tail": "st_cleanup_internal_cancel_and_broken_logger_preserve_success\nTEST: test_cancelled_body_waits_for_actual_sdk_disconnect\nTEST: test_cancellation_during_authentication_closes_client\nTEST: test_cancellation_during_successful_cleanup_is_preserved\nTEST: test_cancelled_body_survives_failed_cleanup\nAccount operation cleanup failed (OSError)\nPassed: 28/28\n",
+      "actual_passed": 28,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_33_owned_health",
+      "exit": 0,
+      "log": "final-logs/test_33_owned_health.txt",
+      "tail": "nt=test account\nTEST: test_r4_implicit_context_before_isolation_is_not_adopted\nTEST: test_r4_forwarded_preproof_wrappers_remain_neutral\nTEST: test_r4_isolated_sdk_multierror_leaves_remain_neutral\nTEST: test_r4_neutral_metadata_failures_and_cycles_preserve_outcomes\nTEST: test_r4_real_multierror_partial_success_is_not_recovery_evidence\nPassed: 62/62\n",
+      "actual_passed": 62,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_34_group_access",
+      "exit": 0,
+      "log": "final-logs/test_34_group_access.txt",
+      "tail": " AUTH_KEY_UNREGISTERED \u2014 call=check_group_access account=test account\nPASS test_unclassified_wait_and_auth_rpcs_still_raise_original\nhealth: unclassified [-] CHAT_WRITE_FORBIDDEN \u2014 call=check_group_access account=test account\nPASS test_verified_owner_and_existing_factory_policy\nPASS test_wrong_owner_prevents_every_group_request\n49 passed; 0 failed\n",
+      "actual_passed": 49,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_35_join_budget",
+      "exit": 0,
+      "log": "final-logs/test_35_join_budget.txt",
+      "tail": "\ntest_status_is_frozen_and_dict_is_fresh (__main__.JoinBudgetTests.test_status_is_frozen_and_dict_is_fresh) ... ok\ntest_status_reserves_nothing_and_each_claim_counts (__main__.JoinBudgetTests.test_status_reserves_nothing_and_each_claim_counts) ... ok\n\n----------------------------------------------------------------------\nRan 35 tests in 3.286s\n\nOK\n",
+      "actual_passed": 35,
+      "live_skips": 0
+    },
+    {
+      "suite": "test_36_group_join",
+      "exit": 0,
+      "log": "final-logs/test_36_group_join.txt",
+      "tail": "equest_and_account_recovery_keep_existing_rules\nPASS test_stale_cached_identity_does_not_own_claim_or_result\nPASS test_unusable_and_malformed_lookup_never_mutates\nPASS test_webview_is_portable_incomplete_data\nPASS test_wrong_expected_account_prevents_all_group_requests\nPASS test_zero_cap_observes_membership_but_refuses_mutation\n44 passed; 0 failed\n",
+      "actual_passed": 44,
+      "live_skips": 0
+    }
+  ],
+  "extras": {
+    "compiled": 76,
+    "python37_grammar": 76,
+    "includes_setup_py": true,
+    "account-pool-demo": {
+      "exit": 0,
+      "tail": "Selected account: 222\nAttempts: waiting, ok\nReplay source reads: 0\nStored messages: 4\nAcknowledged through: 104\nAllowance charged: {111: 2, 222: 4}\n",
+      "log": "final-logs/account-pool-demo.txt"
+    },
+    "daily-demo": {
+      "exit": 0,
+      "tail": "Destination accepted the batch; acknowledgment was lost.\nReplay used the same batch without reading Telegram.\nStored messages: 4\nAcknowledged through: 104\n",
+      "log": "final-logs/daily-demo.txt"
+    },
+    "backfill-new": {
+      "exit": 0,
+      "tail": "Receiver committed the first batch; simulating exit before acknowledgment.\n{\"backfill\": \"completed\", \"cancelled_successor\": \"cancelled\", \"daily_after_id\": 105, \"historical_after_id\": 104, \"receipts\": 3, \"replay_source_reads\": 0, \"source_reads\": 3, \"unique_messages\": 5}\n",
+      "log": "final-logs/backfill-new.txt"
+    },
+    "backfill-restart": {
+      "exit": 0,
+      "tail": "{\"backfill\": \"completed\", \"cancelled_successor\": \"cancelled\", \"daily_after_id\": 105, \"historical_after_id\": 104, \"receipts\": 3, \"replay_source_reads\": 0, \"source_reads\": 0, \"unique_messages\": 5}\n",
+      "log": "final-logs/backfill-restart.txt"
+    },
+    "export-import": {
+      "exit": 0,
+      "tail": "/private/tmp/tgdata17-rework-export-jivjsops/tgdata/__init__.py\n",
+      "log": "final-logs/export-import.txt"
+    },
+    "export-test31": {
+      "exit": 0,
+      "tail": "y_exception\nPASS test_recheck_cancellation_holds_ownership_until_sdk_disconnect\nPASS test_retirement_failure_refuses_reuse_until_explicit_recheck\nPASS test_cancelled_retirement_cannot_overwrite_repaired_credential_later\nPASS test_close_cancellation_settles_all_sdk_cleanup_and_stays_closed\nPASS test_repeated_read_cancellation_retains_the_actual_child\nPASS test_cancelled_close_waits_for_actual_source_child\nPASS test_context_exit_preserves_caller_cancellation_after_cleanup\nPASS test_actual_cleanup_failure_keeps_body_error_and_can_be_retried\nPASS test_cleanup_helper_preserves_internal_error_and_older_cancel_hierarchy\nPASS test_owned_factory_policy_uses_current_options_seam\nPASS test_process_exit_at_actual_admission_and_settlement\nPassed: 46/46\n",
+      "log": "final-logs/export-test31.txt"
+    },
+    "export-pool-demo": {
+      "exit": 0,
+      "tail": "Selected account: 222\nAttempts: waiting, ok\nReplay source reads: 0\nStored messages: 4\nAcknowledged through: 104\nAllowance charged: {111: 2, 222: 4}\n",
+      "log": "final-logs/export-pool-demo.txt"
+    },
+    "export": "/private/tmp/tgdata17-rework-export-jivjsops",
+    "demo_directory": "/private/tmp/tgdata17-rework-backfill-0ogu6_iw"
+  },
+  "python": "3.11.10",
+  "telethon": "1.45.0",
+  "sqlite": "3.45.3",
+  "product_commit": "485446419122a13f871bd07fb145bbf072465543",
+  "original_17": "8d3db76a6278aad0371bf982f42b733730644512",
+  "integrated_dev": "68f6bbda33aeb1963b96b3c719d8f23938fa4449",
+  "preservation": {
+    "unchanged_pool_modules": [
+      "pool_state.py",
+      "progress_facade.py",
+      "batch_engine.py"
+    ],
+    "unchanged_pool_methods": [
+      "__init__",
+      "_operation",
+      "_now",
+      "_backend",
+      "_load",
+      "_write",
+      "_account",
+      "_group",
+      "_require_row",
+      "_status",
+      "initialize",
+      "get_pool_status",
+      "_preflight",
+      "_admit",
+      "_failure",
+      "_prefix",
+      "_settle",
+      "read",
+      "get_message_batch",
+      "recover_account",
+      "recheck_account"
+    ],
+    "dev_foundations_unchanged": true
+  },
+  "live_two_account_gate": "PENDING",
+  "model_provenance": {
+    "model": "gpt-6-astra",
+    "effort": "max",
+    "turn_timestamp": "2026-10-11T08:17:10.885Z"
+  },
+  "log_sha256": {
+    "account-pool-demo.txt": "fa7f9ce7b692284687830c6aa7da5ca4ce4c62c70c71dd172a569c1f01c8ecaf",
+    "backfill-new.txt": "b12a89125709c151635d674e0dcbbcca8b7498d0e8f712e8d45655da44c82a79",
+    "backfill-restart.txt": "34a8572663e9e12423d9408c8c3abc21bb75ea9fe84f550f37892433d72cbd2a",
+    "daily-demo.txt": "ecd36f3703efe3e6b4be97bf02356e2a1abd23d7dd60db4548c20fcbf574ac77",
+    "export-import.txt": "99598ceaeb9b18a3e21de9f1a22f70e347f7f73a40cc22e066d0ee7bf22aaf21",
+    "export-pool-demo.txt": "fa7f9ce7b692284687830c6aa7da5ca4ce4c62c70c71dd172a569c1f01c8ecaf",
+    "export-test31.txt": "3f1b90c093b33d68cc6aa13dffbfdec03cb5079cbcb67588761ef2e71653b28f",
+    "test_12_proxy.txt": "fad0f2e839a3a6307c9b83a37088cb1c72cc60f20580843aad51f320c6406d19",
+    "test_13_device_identity.txt": "2d4121c0d970259aeb741472cdeed22f2cab65e3782f89f820ef7f55c877584a",
+    "test_14_flood_threshold.txt": "e5edfc74277962b01944d184b62fed06f35d7eb6a358096e3b9b9f94486eed54",
+    "test_15_login_checks.txt": "71fa89ee15cbe5bafdb0ae2bad6c876ddaf397122ea2b24207b4d8431e5bad03",
+    "test_16_health_events.txt": "0b8553ab2684f8d38a2df35aa509e5f562f06f9e118b83f22fe943935c82007a",
+    "test_17_session_store.txt": "530efcb7182f33f5716dd6a9947e2c8c9dbe800fedc2b02d97fcf3a0a6c4adf4",
+    "test_18_read_budget.txt": "bca71b5df85219dd74f83e347d4a27ccd09a85b8fe5d58553010b001ef3cb6a7",
+    "test_19_message_batches.txt": "3f1c9cd1efad955c89ecd1ed99cc46f2c7420a62662007a3a655c65d4f791414",
+    "test_22_daily_continuation.txt": "2e54c5112c8ae6999e54d1a6a7b8a4c2bf455e44afd07ef8bb7d568e32a2f3f4",
+    "test_23_fixed_windows.txt": "c1ca789243960d3449decd8a953e6adefd78ac850d37ab6a1dba617d6e3bd177",
+    "test_24_backfill_state.txt": "eb49d53ed6a7c2ae7a9489895be8c02733768a2a1d85ce0574cc17a7757f2668",
+    "test_25_backfill_delivery.txt": "f05766082c1fc93c50975c394aab0b4bc1dc58e49ebf9e2321cee18ecb21808e",
+    "test_26_backfill_completion.txt": "8a472bf238b53b63e2489a5ad72cc17d4d099561a007113c9da33c8185d08de3",
+    "test_27_backfill_pacing.txt": "886e0cf0f486b6df1822ece6f3bb1f0ee93e5d399ab598ed3ee792af4e2838c8",
+    "test_28_backfill_controls.txt": "7be1e503dd762aaa95be16a3afeb708dcac4caa8cc61ad942e4db5bf6bac9aa4",
+    "test_29_backfill_public.txt": "5ecc29ff79271ce9f381405d5061ad8419635d7c88554ca49eafeb13943926c0",
+    "test_30_backfill_integration.txt": "56bf3bfe035bc3156f43d87cb1b0645cdf7a460ddfe132c4464b4cf5a320c3e7",
+    "test_31_account_pool.txt": "3f1b90c093b33d68cc6aa13dffbfdec03cb5079cbcb67588761ef2e71653b28f",
+    "test_32_account_operation.txt": "2e2d1bcbc3b3b863a5533257dbd933b57137fb32062b33a85c46d03bea8e0131",
+    "test_33_owned_health.txt": "e991715d64d2bd083816b66ea07e8582df2b6e3fd70210f077e7642b000386d8",
+    "test_34_group_access.txt": "20811c0544f78479cd523d44525ab7db3f114afa05c5150b468bef6dc8273d77",
+    "test_35_join_budget.txt": "60e969dc8a32a44385ab6d429c76495829491a5b6d8f2910ef73ea7c3bd39694",
+    "test_36_group_join.txt": "26f926beaea3d232085144909c7ad2dc35e131ceeebc06c57bd1613cceedb7f2"
+  },
+  "product_paths_vs_dev": [
+    "README.md",
+    "docs/account_pool.md",
+    "docs/backfill_runs.md",
+    "docs/daily_continuation.md",
+    "examples/account_pool.py",
+    "tgdata/__init__.py",
+    "tgdata/account_pool.py",
+    "tgdata/batch_engine.py",
+    "tgdata/pool_source.py",
+    "tgdata/pool_state.py",
+    "tgdata/progress_facade.py",
+    "tgdata/smoke_tests/README.md",
+    "tgdata/smoke_tests/test_31_account_pool.py",
+    "tgdata/tgdata.py"
+  ]
+}
