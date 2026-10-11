@@ -1,0 +1,19 @@
+{"case": "source_handle", "error": null, "history_requests": 1, "dialog_scan": false, "account222_charge": 2, "actual_cleanup": true}
+{"case": "source_cached_id", "error": null, "history_requests": 1, "dialog_scan": false, "account222_charge": 2, "actual_cleanup": true}
+{"case": "source_uncached_id", "error": "GroupReferenceError", "history_requests": 0, "dialog_scan": false, "account222_charge": 0, "actual_cleanup": true}
+{"case": "source_invite_preview", "error": "GroupReferenceError", "history_requests": 0, "dialog_scan": false, "account222_charge": 0, "actual_cleanup": true}
+{"case": "source_partial_wait", "error": "FloodWaitError", "history_requests": 2, "dialog_scan": false, "account222_charge": 200, "actual_cleanup": true}
+{"case": "source_wrong_owner", "error": "AccountIdentityError", "history_requests": 0, "dialog_scan": false, "account222_charge": 0, "actual_cleanup": true}
+{"case": "source_legacy_default", "error": "GroupAccessError", "history_requests": 0, "dialog_scan": true, "account222_charge": 0, "actual_cleanup": true}
+{"case": "success", "original_outcome_preserved": true, "cleanup_failure": null, "candidate_admission_predicate": true}
+{"case": "body_failure", "original_outcome_preserved": true, "cleanup_failure": "OSError", "candidate_admission_predicate": false}
+{"case": "setup_failure", "original_outcome_preserved": true, "cleanup_failure": "OSError", "candidate_admission_predicate": false}
+{"case": "sdk_cancel", "original_outcome_preserved": true, "cleanup_failure": "CancelledError", "candidate_admission_predicate": false}
+{"case": "caller_cancel", "original_outcome_preserved": true, "cleanup_failure": "OSError", "candidate_admission_predicate": false}
+{"case": "logger_failure", "original_outcome_preserved": true, "cleanup_failure": "OSError", "candidate_admission_predicate": false}
+PASS: six actual-composition cleanup-feedback cases; product files untouched.
+{"case": "stdout_broken", "mode": "buffered", "exit": 120, "stuck_until_drain": false, "shutdown_warning": true, "bytes": 0}
+{"case": "stdout_broken", "mode": "raw", "exit": 3, "stuck_until_drain": false, "shutdown_warning": false, "bytes": 0}
+{"case": "stdout_pressure", "mode": "buffered", "exit": 143, "stuck_until_drain": true, "shutdown_warning": false, "bytes": 81920}
+{"case": "stdout_pressure", "mode": "raw", "exit": 143, "stuck_until_drain": false, "shutdown_warning": false, "bytes": 65536}
+PASS: 7 source histories + 6 cleanup cases + 4 real pipe controls; no product edits.

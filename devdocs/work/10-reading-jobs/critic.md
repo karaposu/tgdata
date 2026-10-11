@@ -24,6 +24,13 @@ Passing result: only bounded intended source calls, correct ownership/charges an
 prefixes, default path retained, raw output exits3/143 as specified without drain,
 and every cleanup candidate preserves its original outcome/failure fact.
 
+Result: PASS — 2026-10-11, before any product edit. Seven actual bounded-source
+histories preserved valid reads, refusals, expected ownership, a100-record prefix/
+FloodWait7200 and the unchanged legacy default; six cleanup-feedback cases passed;
+four real pipe controls confirmed raw exit3/143 without waiting for drain. Evidence:
+`probes/prebuild.py` and `probes/prebuild.txt`. No test expectation or product code
+was changed during this formal experiment.
+
 ## High-level summary
 
 The worker's shape is sound. Two Medium details in revision1 are insufficient:
@@ -146,10 +153,10 @@ lookup before iteration. No dialog/contact sweep, join or arbitrary raw string
 resolver fallback. Keep original read/partial/date/media-reference behavior.
 **Why this is robust:** it constrains only the new consumer and reuses the accepted
 reference/ownership logic while retaining existing raw-reader compatibility.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* The worker is the new bounded consumer; ordinary MessageEngine/BatchEngine reads intentionally retain their discovery convenience. One optional resolver closes the demonstrated boundary without changing those policies. #17 has a related unmerged hook, but it is neither a prerequisite nor a reason to redesign all discovery paths.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -161,7 +168,7 @@ resolver policy and explicit cache-discovery operations.
 
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* Revisit a shared resolver policy when ordinary reads or discovery explicitly need configurable bounded resolution. Existing consumers have different discovery contracts; the optional seam remains useful if that later work occurs.
 
 ## Risk 2 — Buffered stdout can outlive the requested stop
 
@@ -208,10 +215,10 @@ closed-reader and SIGTERM/SIGINT-under-pressure cases with real subprocesses and
 the read end still open/not drained.
 **Why this is robust:** removes the second hidden writer at interpreter teardown
 without adding threads, queues or a second process architecture.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* The CLI and trusted-bootstrap writer are the same process-output boundary, and raw write-all serves both without per-transport policy. No second actual network worker consumer exists to justify a transport framework; the real pipe controls establish this narrower remedy.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -224,7 +231,7 @@ with one fully specified output lifetime.
 
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* A shared transport lifetime abstraction needs a selected second transport and its actual backpressure/shutdown contract. Do not add it merely because HTTP remains a possible future interface.
 
 ## Evidence and limits
 
