@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-10-reading-jobs/devdocs/work/10-reading-jobs/probes/plan_falsifiers.py", line 105, in <module>
+    asyncio.run(resolution())
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-10-reading-jobs/devdocs/work/10-reading-jobs/probes/plan_falsifiers.py", line 42, in resolution
+    assert 'GetDialogsRequest' in fx.wire.calls
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

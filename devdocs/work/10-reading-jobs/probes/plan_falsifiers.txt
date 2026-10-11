@@ -1,0 +1,5 @@
+{"case": "legacy_raw_resolution", "error": "GroupAccessError", "attempted_dialog_scan": true, "history_requests": 0, "actual_requests": ["GetConfigRequest", "GetStateRequest", "GetUsersRequest", "GetChannelsRequest", "GetDialogsRequest", "GetChannelsRequest"]}
+{"case": "stdout_broken", "mode": "buffered", "exit": 120, "stuck_until_drain": false, "shutdown_warning": true, "bytes": 0}
+{"case": "stdout_broken", "mode": "raw", "exit": 3, "stuck_until_drain": false, "shutdown_warning": false, "bytes": 0}
+{"case": "stdout_pressure", "mode": "buffered", "exit": 143, "stuck_until_drain": true, "shutdown_warning": false, "bytes": 81920}
+{"case": "stdout_pressure", "mode": "raw", "exit": 143, "stuck_until_drain": false, "shutdown_warning": false, "bytes": 65536}
