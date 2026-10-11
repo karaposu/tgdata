@@ -180,7 +180,7 @@ Workspace-populated: {"populated": true, "populated-at": "2026-10-11T11:38:31.00
 
 ## Telemetry
 
-Three cycles; 19 items; tags {'core': 14, 'sub': 2, 'side': 1, 'umbrella': 2}; 14 filesystem mtimes, five without. 
+Three cycles; 19 items; tags {'core': 14, 'sub': 2, 'side': 1, 'umbrella': 2}; 14 filesystem mtimes, five without.
 Boundary discovery not fired. Current-resolution traversal complete; behavioral
 frontiers explicit, no overload/filtering. Checked territory/purpose binding,
 missed relevance, irrelevant overcoverage, artifact/workspace desync, underspecification,
