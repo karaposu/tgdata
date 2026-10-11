@@ -1,0 +1,27 @@
+{"case": "identity_after_page", "charges": [100, 0], "history_requests": 1, "prefix": 100, "wrong_owner_requests": 0}
+{"case": "preproof_logout", "health_user_id": null, "selected": 222, "stale_cached_id": 999, "wrong_account_reads": 0}
+{"case": "cancelled_admission_response", "commit_happened": false, "source_requests": 0, "unresolved": false}
+{"case": "cancelled_admission_response", "commit_happened": true, "source_requests": 0, "unresolved": true}
+{"case": "cancelled_settlement_response", "next_source_reads": 0, "stored_wait": 7200, "unresolved": false}
+{"all_clients_cleared": true, "case": "close_during_recheck", "charges": 0, "repeated_cancel_preserved": true, "sdk_retirements_first_client": 1}
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-17-account-pool/devdocs/work/17-account-pool/pr-critic-probes.py", line 275, in <module>
+    asyncio.run(main(Path(directory)))
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-17-account-pool/devdocs/work/17-account-pool/pr-critic-probes.py", line 256, in main
+    await asyncio.wait_for(test(), 25)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-17-account-pool/devdocs/work/17-account-pool/pr-critic-probes.py", line 145, in local_transport_shaped_media_error
+    assert error is original and not events and not e.senders[222].calls
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

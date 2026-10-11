@@ -1,0 +1,12 @@
+{"case": "identity_after_page", "charges": [100, 0], "history_requests": 1, "prefix": 100, "wrong_owner_requests": 0}
+{"case": "preproof_logout", "health_user_id": null, "selected": 222, "stale_cached_id": 999, "wrong_account_reads": 0}
+{"case": "cancelled_admission_response", "commit_happened": false, "source_requests": 0, "unresolved": false}
+{"case": "cancelled_admission_response", "commit_happened": true, "source_requests": 0, "unresolved": true}
+{"case": "cancelled_settlement_response", "next_source_reads": 0, "stored_wait": 7200, "unresolved": false}
+{"all_clients_cleared": true, "case": "close_during_recheck", "charges": 0, "repeated_cancel_preserved": true, "sdk_retirements_first_client": 1}
+{"case": "local_transport_shaped_media_error", "health_events": 0, "invented_restrictions": 0, "next_source_requests": 0, "original_error": true}
+{"budget_forbidden": true, "case": "pending_progress_without_source_resources", "closed_pool": true, "configs_removed": true, "daily_ack": 101, "historical_ack": 102, "pool_state_unavailable": true}
+{"actual_source_error": "FloodWaitError", "actual_wait": 7200, "caller_cancel_requests": 0, "case": "REPRODUCED_observer_cancel_masks_source", "completed_prefix": 100, "daily_pending": false, "mode": "raw", "returned_error": "CancelledError", "returned_prefix": 0, "stored_wait": 0, "unresolved": true}
+{"actual_source_error": "FloodWaitError", "actual_wait": 7200, "caller_cancel_requests": 0, "case": "REPRODUCED_observer_cancel_masks_source", "completed_prefix": 100, "daily_pending": false, "mode": "daily", "returned_error": "CancelledError", "returned_prefix": 0, "stored_wait": 0, "unresolved": true}
+{"case": "REPRODUCED_callback_close_wait_cycle", "child_waits_for_close": true, "cleanup_waits_for_reader": true, "close_cancel_requests": 1, "close_done": false, "reader_cancel_requests": 1, "reader_done": false, "sdk_disconnects_started": 0, "source_child_done": false}
+Completed 8 fresh probe groups: 6 held; 2 defects reproduced.
