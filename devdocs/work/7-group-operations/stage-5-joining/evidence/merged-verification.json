@@ -1,0 +1,199 @@
+{
+  "merge_commit": "68f6bbda33aeb1963b96b3c719d8f23938fa4449",
+  "reviewed_head": "cc6f18f0cbd5a77411bd481009b00a12d019742e",
+  "base": "f15f1a864f07905aee1c8d679f6039fb5c898ae6",
+  "product": "4b4ae21",
+  "actual_passed": 573,
+  "live_skipped": 3,
+  "python": "3.11.10",
+  "telethon": "1.45.0",
+  "sqlite": "3.45.3",
+  "suites": [
+    {
+      "suite": "test_12_proxy",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_12_proxy.log",
+      "actual_passed": 5,
+      "live_skipped": 2
+    },
+    {
+      "suite": "test_13_device_identity",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_13_device_identity.log",
+      "actual_passed": 5,
+      "live_skipped": 1
+    },
+    {
+      "suite": "test_14_flood_threshold",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_14_flood_threshold.log",
+      "actual_passed": 11,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_15_login_checks",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_15_login_checks.log",
+      "actual_passed": 11,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_16_health_events",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_16_health_events.log",
+      "actual_passed": 21,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_17_session_store",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_17_session_store.log",
+      "actual_passed": 12,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_18_read_budget",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_18_read_budget.log",
+      "actual_passed": 28,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_19_message_batches",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_19_message_batches.log",
+      "actual_passed": 33,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_22_daily_continuation",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_22_daily_continuation.log",
+      "actual_passed": 25,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_23_fixed_windows",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_23_fixed_windows.log",
+      "actual_passed": 22,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_24_backfill_state",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_24_backfill_state.log",
+      "actual_passed": 23,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_25_backfill_delivery",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_25_backfill_delivery.log",
+      "actual_passed": 41,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_26_backfill_completion",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_26_backfill_completion.log",
+      "actual_passed": 16,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_27_backfill_pacing",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_27_backfill_pacing.log",
+      "actual_passed": 32,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_28_backfill_controls",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_28_backfill_controls.log",
+      "actual_passed": 32,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_29_backfill_public",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_29_backfill_public.log",
+      "actual_passed": 23,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_30_backfill_integration",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_30_backfill_integration.log",
+      "actual_passed": 15,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_32_account_operation",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_32_account_operation.log",
+      "actual_passed": 28,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_33_owned_health",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_33_owned_health.log",
+      "actual_passed": 62,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_34_group_access",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_34_group_access.log",
+      "actual_passed": 49,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_35_join_budget",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_35_join_budget.log",
+      "actual_passed": 35,
+      "live_skipped": 0
+    },
+    {
+      "suite": "test_36_group_join",
+      "exit": 0,
+      "log": "/private/tmp/tgdata25-merged-verification/test_36_group_join.log",
+      "actual_passed": 44,
+      "live_skipped": 0
+    }
+  ],
+  "extras": {
+    "merge_commit": "68f6bbda33aeb1963b96b3c719d8f23938fa4449",
+    "compiled": 69,
+    "python37_grammar": 69,
+    "daily-demo": {
+      "exit": 0,
+      "tail": "Destination accepted the batch; acknowledgment was lost.\nReplay used the same batch without reading Telegram.\nStored messages: 4\nAcknowledged through: 104\n"
+    },
+    "backfill-new": {
+      "exit": 0,
+      "tail": "Receiver committed the first batch; simulating exit before acknowledgment.\n{\"backfill\": \"completed\", \"cancelled_successor\": \"cancelled\", \"daily_after_id\": 105, \"historical_after_id\": 104, \"receipts\": 3, \"replay_source_reads\": 0, \"source_reads\": 3, \"unique_messages\": 5}\n"
+    },
+    "backfill-restart": {
+      "exit": 0,
+      "tail": "{\"backfill\": \"completed\", \"cancelled_successor\": \"cancelled\", \"daily_after_id\": 105, \"historical_after_id\": 104, \"receipts\": 3, \"replay_source_reads\": 0, \"source_reads\": 0, \"unique_messages\": 5}\n"
+    },
+    "export-import": {
+      "exit": 0,
+      "tail": "/private/tmp/tgdata25-merged-export-noxl9cx6/tgdata/__init__.py\n"
+    },
+    "export-test36": {
+      "exit": 0,
+      "tail": "harged\nPASS test_sessions_proxy_and_device_settings_survive_composition\nPASS test_source_outcomes_require_the_exact_mutation_on_both_paths\nhealth: logged out [account] AUTH_KEY_UNREGISTERED \u2014 call=join_group account=joining account\nPASS test_source_request_and_account_recovery_keep_existing_rules\nPASS test_stale_cached_identity_does_not_own_claim_or_result\nPASS test_unusable_and_malformed_lookup_never_mutates\nPASS test_webview_is_portable_incomplete_data\nPASS test_wrong_expected_account_prevents_all_group_requests\nPASS test_zero_cap_observes_membership_but_refuses_mutation\n44 passed; 0 failed\n"
+    },
+    "export": "/private/tmp/tgdata25-merged-export-noxl9cx6",
+    "demo_directory": "/private/tmp/tgdata25-backfill-k8xkz7op"
+  },
+  "github": {
+    "state": "MERGED",
+    "mergedAt": "2026-10-11T04:58:02Z",
+    "url": "https://github.com/karaposu/tgdata/pull/25"
+  }
+}

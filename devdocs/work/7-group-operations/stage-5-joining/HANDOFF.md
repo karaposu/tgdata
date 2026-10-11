@@ -1,13 +1,14 @@
-# #7 Stage 5 — reviews accepted, merge pending
+# #7 Stage 5 — merged into dev
 
-Updated2026-10-11. User authorized Stage4 merge and then `$task-impl stage 5`.
-Stage4 PR24 is merged into dev at `f15f1a8`; the parent issue remains open for Stage5.
+Updated2026-10-11. User authorized Stage4 merge, `$task-impl stage 5`, its two review
+gates, and finally Stage5 merge. **All five stages are now on dev.**
 
 Stage5 branch: `feat/7-account-group-joining`, native issue-linked from that dev base.
 Worktree: `/private/tmp/tgdata-7-stage5-joining`.
 Product commit: **`4b4ae21`**. Work artifacts are separate commits.
 PR: [#25](https://github.com/karaposu/tgdata/pull/25), into dev, `Closes #7`.
-Stage5 is not merged; wait for the user's merge go-ahead.
+Stage5 merged at **`68f6bbd`**; GitHub confirmed2026-10-11T04:58:02Z.
+See [merged-code verification](merge-verification.md). Keep this branch as the archive.
 
 The full preparation → task-desc → task-plan → fresh critic-d → required experiment
 → fold → implementation/verification chain is complete. Plan revision2 is `aee1a70`.
@@ -34,12 +35,14 @@ eight new probe groups passed, including actual process exits, native commit ref
 policy revocation during proof, shared-cap competition and protocol repair. No runtime
 change or failed fresh probe. Model/effort verified Astra/max for both review gates.
 
-**Next on the user's go-ahead:** merge PR25 into dev with work/archaeology documents
-excluded; run the merged-code checks and push; retain this branch; close#7 manually
-after verifying the final stage merged (dev does not trigger default-branch closure).
-The review request itself did not authorize that merge.
+**Merge completed on the user's go-ahead:** isolated merge with work documents
+excluded and dev archaeology preserved; all13 product blobs match the reviewed code.
+The actual merge passed573 offline groups/3 live skips,3 demos (restart0 source reads),
+69-file compile/Python3.7 grammar and exported-tree44/44 before push. No conflict,
+failed test or runtime correction. The final GitHub bookkeeping updates/closes#7 and
+posts the separate archive evidence; no feature work remains in this stage.
 
-Keep the archive work docs off dev during any later merge and retain the feature branch.
+Keep the archive work docs off dev and retain the feature branch.
 Do not resume old broad PR16 or combine its old rejections with this fresh stage. Leave
 the original checkout's untracked HANDOFF.md/todo.md, duncan, the stray guide and the
 unmerged#17 branch alone. The original checkout stays at8a43d23 on feat/7-group-operations.
