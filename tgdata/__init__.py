@@ -10,7 +10,7 @@ from .tgdata import TgData
 # Errors
 from .message_engine import GroupAccessError
 from .group_operations import (
-    GroupMetadata, GroupLookup, GroupAccess, GroupReferenceError, GroupResponseError,
+    GroupMetadata, GroupLookup, GroupAccess, GroupJoin, GroupReferenceError, GroupResponseError,
 )
 from .connection_engine import AuthRequiredError, ProxyConfigError
 from .discovery_engine import DiscoveryInterrupted
@@ -35,6 +35,7 @@ from .join_budget import (
     JoinBudget, JoinBudgetStatus, JoinBudgetError, JoinBudgetExceeded,
     JoinBudgetConfigError, JoinBudgetStorageError,
 )
+from .join_client import UnsupportedJoinRequest
 
 # Models
 from .models import (
@@ -71,6 +72,7 @@ __all__ = [
     "GroupMetadata",
     "GroupLookup",
     "GroupAccess",
+    "GroupJoin",
     "GroupReferenceError",
     "GroupResponseError",
     "AuthRequiredError",
@@ -119,6 +121,7 @@ __all__ = [
     "JoinBudgetExceeded",
     "JoinBudgetConfigError",
     "JoinBudgetStorageError",
+    "UnsupportedJoinRequest",
 
     # Models
     "MessageData",

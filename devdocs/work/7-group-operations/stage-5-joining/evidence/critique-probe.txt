@@ -1,0 +1,3 @@
+{"probe": "numeric_route", "result": {"peer": -1000000000009, "source_hash": 0, "charged": 1}}
+{"probe": "proof_rpc_origin", "result": {"error": "InviteRequestSentError", "actual_origin": "GetUsersRequest", "join_sends": 0, "charged": 0, "synthetic_unexpected_code": true}}
+{"probe": "malformed_ok_payload", "result": {"outer": "ChatInviteJoinResultOk", "nested": "User", "decoded_by_actual_sdk": true, "charged": 1}}

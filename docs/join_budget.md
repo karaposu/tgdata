@@ -2,8 +2,9 @@
 
 `JoinBudget` stores a per-account rolling 24-hour allowance in local SQLite.
 It counts **admitted attempts**, including attempts whose later outcome is unknown.
-This is the standalone allowance foundation. It does not yet connect to `TgData`
-or guard Telegram join requests; joining integration is a separate stage.
+Pass it as `TgData(..., join_budget=budget)` to guard the public
+[`join_group(target, account_id=...)` operation](group_joining.md). It does not
+guard ordinary raw clients or authenticate account IDs by itself.
 
 ## Provision and reopen
 
@@ -90,17 +91,22 @@ Calls perform synchronous local I/O and may block the event loop for SQLite's
 five-second busy timeout under contention. Durability relies on SQLite and its
 underlying filesystem/hardware. Offline process-exit tests are not power-loss tests.
 
-## Internal consumption contract for the later joining stage
+## Internal consumption contract
 
 `_claim(account_id)` is an internal synchronous one-unit admission operation.
 The capacity check and charge share one writer transaction. Only successful return
 permits its consumer to use that claim for one actual attempt. No transaction is
 held over network I/O.
 
-The later joining consumer must supply freshly verified identity and claim
+The public joining operation supplies freshly verified identity and claims
 immediately before enqueueing, without an intervening await or caching permission.
-Every actual retry needs another claim. Exhaustion, a failed commit, failed cleanup
+Each new application-level SDK retry needs another claim. MTProto protocol repair
+that requeues the same pending request is part of that attempt. Exhaustion, a failed commit, failed cleanup
 or cancellation does not authorize a send. A committed charge can survive any of
 those failures, or a crash before returning; this can waste allowance but cannot
 create a free retry. No refund, settlement or reusable claim-token API exists.
 Successful remote replies do not release allowance either.
+
+An explicit account policy is required even when joining returns an observation
+without a mutation. A zero cap permits those observations, but refuses a needed join.
+See [joining](group_joining.md) for exact outcome and uncertainty semantics.
