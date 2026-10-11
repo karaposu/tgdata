@@ -1,0 +1,41 @@
+PASS compile and Python3.7 grammar: 76
+Runtime: 3.11.10 Telethon 1.45.0 SQLite 3.45.3
+Processing /private/tmp/tgdata10_package_o8qb3zee/export
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'error'
+
+WARNING: The directory '/Users/ns/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+  error: subprocess-exited-with-error
+
+  × Preparing metadata (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [12 lines of output]
+      running dist_info
+      creating /private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/pip-modern-metadata-eyrsugyv/tgdata.egg-info
+      writing /private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/pip-modern-metadata-eyrsugyv/tgdata.egg-info/PKG-INFO
+      writing dependency_links to /private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/pip-modern-metadata-eyrsugyv/tgdata.egg-info/dependency_links.txt
+      writing entry points to /private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/pip-modern-metadata-eyrsugyv/tgdata.egg-info/entry_points.txt
+      writing requirements to /private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/pip-modern-metadata-eyrsugyv/tgdata.egg-info/requires.txt
+      writing top-level names to /private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/pip-modern-metadata-eyrsugyv/tgdata.egg-info/top_level.txt
+      writing manifest file '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/pip-modern-metadata-eyrsugyv/tgdata.egg-info/SOURCES.txt'
+      reading manifest file '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/pip-modern-metadata-eyrsugyv/tgdata.egg-info/SOURCES.txt'
+      writing manifest file '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/pip-modern-metadata-eyrsugyv/tgdata.egg-info/SOURCES.txt'
+      creating '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/pip-modern-metadata-eyrsugyv/tgdata-0.0.8.dist-info'
+      error: invalid command 'bdist_wheel'
+      [end of output]
+
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+error: metadata-generation-failed
+
+× Encountered error while generating package metadata.
+╰─> See above for output.
+
+note: This is an issue with the package mentioned above, not pip.
+hint: See above for details.
+
+Traceback (most recent call last):
+  File "/private/tmp/tgdata10-package-verify.py", line 38, in <module>
+    run([sys.executable, '-m', 'pip', 'wheel', '--no-deps', '--no-build-isolation',
+  File "/private/tmp/tgdata10-package-verify.py", line 35, in run
+    raise AssertionError(command)
+AssertionError: ['/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python', '-m', 'pip', 'wheel', '--no-deps', '--no-build-isolation', '--wheel-dir', '/private/tmp/tgdata10_package_o8qb3zee/wheel', '/private/tmp/tgdata10_package_o8qb3zee/export']

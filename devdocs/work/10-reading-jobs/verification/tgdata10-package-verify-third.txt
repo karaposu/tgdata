@@ -1,0 +1,9 @@
+PASS compile and Python3.7 grammar: 76
+Runtime: 3.11.10 Telethon 1.45.0 SQLite 3.45.3
+PASS installed entrypoint: ['/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python', '-m', 'tgdata.worker']
+PASS installed entrypoint: ['/private/tmp/tgdata10_package_hgbgykwn/installed/bin/tgdata-worker']
+PASS isolated example: reading_worker.py Offline demo complete: ready, local refusal, EOF. No account was opened.
+PASS isolated example: daily_continuation.py Acknowledged through: 104
+PASS isolated backfill: new {"backfill": "completed", "cancelled_successor": "cancelled", "daily_after_id": 105, "historical_after_id": 104, "receipts": 3, "replay_source_reads": 0, "source_reads": 3, "unique_messages": 5}
+PASS isolated backfill: restart {"backfill": "completed", "cancelled_successor": "cancelled", "daily_after_id": 105, "historical_after_id": 104, "receipts": 3, "replay_source_reads": 0, "source_reads": 0, "unique_messages": 5}
+Export/install evidence retained: /private/tmp/tgdata10_package_hgbgykwn

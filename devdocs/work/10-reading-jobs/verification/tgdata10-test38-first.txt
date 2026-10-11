@@ -1,0 +1,40 @@
+PASS test_stock_empty_inventory_ready_eof_and_module_help
+PASS test_all_four_operations_two_accounts_and_eof
+PASS test_partial_batch_health_correlation_and_charge_survive_json
+PASS test_webview_identifiers_survive_javascript_exactly
+PASS test_wrong_identity_and_missing_auth_never_read_or_login
+PASS test_bad_complete_frames_and_reused_ids_are_local
+PASS test_truncated_and_oversized_frames_never_execute
+PASS test_invalid_startup_is_safe_and_source_free
+PASS test_session_store_bootstrap_does_not_create_session_files
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-10-reading-jobs/tgdata/smoke_tests/test_38_worker_process.py", line 412, in main
+    test()
+  File "/private/tmp/tgdata-10-reading-jobs/tgdata/smoke_tests/test_38_worker_process.py", line 345, in test_cleanup_failure_keeps_result_then_exits_without_successor
+    p.wait(3)
+  File "/private/tmp/tgdata-10-reading-jobs/tgdata/smoke_tests/test_38_worker_process.py", line 142, in wait
+    assert not self.stderr, self.stderr.decode(errors='replace')
+           ^^^^^^^^^^^^^^^
+AssertionError: Task was destroyed but it is pending!
+task: <Task pending name='Task-2' coro=<UpdateMethods._update_loop() done, defined at /Users/ns/Desktop/projects/telegram-group-scraper/.venv/lib/python3.11/site-packages/telethon/client/updates.py:267> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+Task was destroyed but it is pending!
+task: <Task pending name='Task-3' coro=<UpdateMethods._keepalive_loop() done, defined at /Users/ns/Desktop/projects/telegram-group-scraper/.venv/lib/python3.11/site-packages/telethon/client/updates.py:516> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+Exception ignored in: <coroutine object Queue.get at 0x1065afe60>
+Traceback (most recent call last):
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/queues.py", line 160, in get
+    getter.cancel()  # Just in case getter is not done yet.
+    ^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+Task was destroyed but it is pending!
+task: <Task pending name='Task-5' coro=<Queue.get() done, defined at /Users/ns/miniconda3/lib/python3.11/asyncio/queues.py:149> wait_for=<Future cancelled> cb=[_release_waiter(<Future pendi...ask_wakeup()]>)() at /Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py:431]>
+
+FAIL test_cleanup_failure_keeps_result_then_exits_without_successor
+PASS test_broken_stdout_stops_without_retry_flush_or_next_job
+PASS test_signals_while_idle_do_not_need_stdin_eof
+PASS test_signal_under_output_pressure_does_not_need_reader_drain
+PASS test_repeated_active_signals_wait_for_native_cleanup
+Passed: 13/14

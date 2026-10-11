@@ -1,0 +1,16 @@
+PASS compile and Python3.7 grammar: 76
+Runtime: 3.11.10 Telethon 1.45.0 SQLite 3.45.3
+PASS installed entrypoint: ['/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python', '-m', 'tgdata.worker']
+PASS installed entrypoint: ['/private/tmp/tgdata10_package_rwsnqjeq/installed/bin/tgdata-worker']
+PASS isolated example: reading_worker.py Offline demo complete: ready, local refusal, EOF. No account was opened.
+PASS isolated example: daily_continuation.py Acknowledged through: 104
+
+Stopped (ExampleStateError); retained state was not reset.
+
+Traceback (most recent call last):
+  File "/private/tmp/tgdata10-package-verify.py", line 69, in <module>
+    result = run(backfill, cwd=runroot, env=env)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata10-package-verify.py", line 35, in run
+    raise AssertionError(command)
+AssertionError: ['/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python', '/private/tmp/tgdata10_package_rwsnqjeq/run/examples/backfill_runs.py', '--demo', '--directory', '/private/tmp/tgdata10_package_rwsnqjeq/run/backfill']

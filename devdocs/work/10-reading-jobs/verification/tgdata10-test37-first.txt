@@ -1,0 +1,40 @@
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-10-reading-jobs/tgdata/smoke_tests/test_37_worker.py", line 455, in main
+    await asyncio.wait_for(test(), 30)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-10-reading-jobs/tgdata/smoke_tests/test_37_worker.py", line 246, in test_join_outcomes_and_real_allowance_claims
+    assert requested['data']['status'] == 'requested' and requested['data']['member'] is None
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-10-reading-jobs/tgdata/smoke_tests/test_37_worker.py", line 455, in main
+    await asyncio.wait_for(test(), 30)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-10-reading-jobs/tgdata/smoke_tests/test_37_worker.py", line 253, in test_join_webview_ids_and_refusal_preserve_meaning
+    s.items[111].join_result = types.messages.ChatInviteJoinResultWebView(123, (1 << 63) - 1)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: ChatInviteJoinResultWebView.__init__() missing 1 required positional argument: 'users'
+PASS test_ready_is_local_and_inventory_is_exclusive
+PASS test_strict_decoder_and_consumed_request_ids
+PASS test_two_accounts_real_pagination_and_exact_batch
+PASS test_group_lookup_access_and_invite_qualification
+FAIL test_join_outcomes_and_real_allowance_claims
+FAIL test_join_webview_ids_and_refusal_preserve_meaning
+PASS test_missing_join_policy_is_local
+PASS test_original_wait_partial_batch_and_health_survive
+PASS test_unknown_rpc_text_and_metadata_fault_do_not_escape
+PASS test_missing_authentication_never_requests_code
+PASS test_wrong_owner_and_changed_admission_send_nothing
+PASS test_bounded_resolution_and_secret_invite
+PASS test_dates_and_max_cursor_do_not_invent_access_recovery
+PASS test_cleanup_failure_preserves_outcome_and_refuses_next_job
+PASS test_repeated_cancellation_waits_for_actual_cleanup
+PASS test_overlap_and_callback_child_close_refuse_without_cycle
+PASS test_observer_owned_cancellation_does_not_cancel_source
+PASS test_delivery_limit_is_explicit_and_keeps_source_metadata
+PASS test_budget_refusal_and_factory_policy_are_preserved
+Passed: 17/19
