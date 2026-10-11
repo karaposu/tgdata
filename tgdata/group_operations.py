@@ -1,4 +1,4 @@
-"""Read-only group observations on an already verified account operation."""
+"""Group observations and joining on an already verified account operation."""
 
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
@@ -12,6 +12,7 @@ from telethon.errors import RPCError
 from telethon.tl import functions, types
 
 from . import health
+from .join_client import _join_error_matches
 
 
 class GroupReferenceError(ValueError):
@@ -82,6 +83,25 @@ class GroupAccess:
         return dict(account_id=self.account_id, target=self.target, status=self.status,
                     lookup=self.lookup.to_dict() if self.lookup is not None else None,
                     reason=self.reason, readable=self.readable)
+
+
+@dataclass(frozen=True)
+class GroupJoin:
+    account_id: int
+    target: Union[str, int]
+    group: GroupMetadata
+    status: str
+    bot_id: Optional[int] = None
+    query_id: Optional[int] = None
+
+    @property
+    def member(self):
+        return True if self.status in ('joined', 'already_joined') else None
+
+    def to_dict(self):
+        return dict(account_id=self.account_id, target=self.target,
+                    group=self.group.to_dict(), status=self.status, member=self.member,
+                    bot_id=self.bot_id, query_id=self.query_id)
 
 
 @dataclass(frozen=True)
@@ -352,3 +372,52 @@ async def _check_group_access(operation, target):
         if finding is not None and finding.verdict == health.NO_ACCESS and finding.scope == 'group':
             return GroupAccess(operation.account_id, target.label, 'denied', lookup, finding.error)
         raise
+
+
+_UPDATES = (types.UpdateShort, types.UpdateShortChatMessage, types.UpdateShortMessage,
+            types.UpdateShortSentMessage, types.Updates, types.UpdatesCombined,
+            types.UpdatesTooLong)
+
+
+async def _join_group(operation, target):
+    """One logical join; admission is at the SDK send boundary, not here."""
+    lookup, peer = await _resolve(operation, target)
+
+    def outcome(status, bot_id=None, query_id=None):
+        # Metadata is explicitly the preflight observation, not post-join enrichment.
+        return GroupJoin(operation.account_id, target.label, lookup.group, status, bot_id, query_id)
+
+    if lookup.member is True:
+        return outcome('already_joined')
+    if lookup.requires_payment is True:
+        return outcome('payment_required')
+    if target.kind == 'invite':
+        request = functions.messages.ImportChatInviteRequest(target.value)
+    else:
+        if not isinstance(peer, types.InputPeerChannel) or lookup.group.kind == 'community':
+            raise GroupReferenceError('This group has no supported direct join peer; use an invite link')
+        request = functions.channels.JoinChannelRequest(types.InputChannel(peer.channel_id, peer.access_hash))
+    try:
+        reply = await operation.client(request)
+    except RPCError as exc:
+        # Fresh self proof and SDK resolution can also fail inside this await.
+        # A name such as INVITE_REQUEST_SENT is meaningful only for this mutation.
+        if not _join_error_matches(exc, request):
+            raise
+        name = health.telegram_error_name(exc)
+        if name == 'USER_ALREADY_PARTICIPANT':
+            return outcome('already_joined')
+        if name == 'INVITE_REQUEST_SENT':
+            return outcome('requested')
+        if name == 'STARS_PAYMENT_REQUIRED':
+            return outcome('payment_required')
+        raise
+    if isinstance(reply, types.messages.ChatInviteJoinResultOk):
+        if not isinstance(getattr(reply, 'updates', None), _UPDATES):
+            raise GroupResponseError('Invalid Telegram join acknowledgment payload')
+        return outcome('joined')
+    if isinstance(reply, types.messages.ChatInviteJoinResultWebView):
+        if not _integer(getattr(reply, 'bot_id', None), 1) or not _integer(getattr(reply, 'query_id', None)):
+            raise GroupResponseError('Invalid Telegram join interaction fields')
+        return outcome('interaction_required', reply.bot_id, reply.query_id)
+    raise GroupResponseError('Unexpected Telegram join response; the attempt remains charged')

@@ -149,4 +149,5 @@ See [the internal lifetime/health contract](account_operations.md) for detailed 
 Run `python -m tgdata.smoke_tests.test_34_group_access` for the offline public contract
 suite. It uses actual SDK dispatch/TL decoding/error construction, session backends and
 SQLite budgets with synthetic source replies and blocked sockets. It does not qualify
-live Telegram permissions. Joining and join limits are later work.
+live Telegram permissions. For the separate mutation operation with explicit allowance,
+see [joining groups](group_joining.md) and [join limits](join_budget.md).

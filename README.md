@@ -363,7 +363,7 @@ The budget suite exercises real Telethon request/iterator code with scripted
 replies on 1.45.0. It does not test live Telegram response bounds or
 whether any chosen limit prevents account restrictions.
 
-### Join allowance (standalone foundation)
+### Joining with an account allowance
 
 `JoinBudget` provides persistent per-account policy and status for admitted join
 attempts in a rolling 24-hour window. Provision explicitly with
@@ -371,10 +371,19 @@ attempts in a rolling 24-hour window. Provision explicitly with
 in later jobs. `configure(account_id, daily_limit)` retains spent allowance;
 zero pauses admission. `status(account_id).to_dict()` returns a local snapshot.
 
-This foundation does not yet guard Telegram joins or add a `TgData` option.
-The later joining stage will consume one atomic claim before each source attempt;
-failed or interrupted attempts are not refunded. See [the allowance contract](docs/join_budget.md)
-for storage, clock, errors and the integration boundary.
+Pass that ledger to `TgData(config_path, join_budget=budget)` and call
+`await tg.join_group(target, account_id=expected_numeric_id)`. A temporary client
+verifies the account, resolves the target, and claims one attempt immediately before
+each new SDK join/import send. Known membership or a known payment requirement
+returns without a mutation or charge. Failed or interrupted admitted attempts are
+not refunded.
+
+The portable result distinguishes `joined`, `already_joined`, `requested`,
+`payment_required` and `interaction_required`. Its group metadata is from preflight;
+joining does not prove history access. Payments and bot interactions are left to the
+caller. The join guard applies to this operation; raw clients remain outside it.
+See [joining and outcomes](docs/group_joining.md) and
+[the allowance contract](docs/join_budget.md) for configuration and failure behavior.
 
 ## Quick Start
 
@@ -1037,9 +1046,9 @@ The ID must be a positive integer, not a string or boolean. The call is synchron
 it does no connection, authentication or recovery. The returned dictionaries are
 independent copies, with the same fields as the health summary above.
 
-`lookup_group` and `check_group_access` populate this account-owned view. Existing
+`lookup_group`, `check_group_access` and `join_group` populate this account-owned view. Existing
 message reads and `health_check()` still use their existing health view; the views
-are not combined. Joining remains later work.
+are not combined. A join result does not clear an earlier history-access failure.
 
 Internally, an observation begins after a temporary client proves the expected
 account. Its event and retained state keep that numeric owner even if a cached

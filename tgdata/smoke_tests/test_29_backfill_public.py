@@ -95,8 +95,9 @@ async def test_exports_and_immutable_portable_values():
 async def test_constructor_is_additive_and_disabled_calls_are_local():
     names=list(inspect.signature(TgData.__init__).parameters)
     assert names==['self','config_path','connection_pool_size','log_file','interactive_login',
-        'health_callback','account_label','session_store','read_budget','sync_store','backfill_store']
+        'health_callback','account_label','session_store','read_budget','sync_store','backfill_store','join_budget']
     assert inspect.signature(TgData.__init__).parameters['backfill_store'].default is None
+    assert inspect.signature(TgData.__init__).parameters['join_budget'].default is None
     backend=d.store();tg=TgData('/unused.ini',1,None,False,None,None,f.Store(),None,None,backend)
     assert tg._backfill_store is backend and tg.connection_engine._config is None
     local,_,_=instance(offline=True);req=d.request();ref=BackfillRunRef(req.collection_id,CHAT,1,req.run_id)
