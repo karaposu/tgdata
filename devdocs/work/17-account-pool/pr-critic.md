@@ -169,10 +169,10 @@ daily, successful-source recovery callback, and simultaneous caller cancellation
 cases on the actual composition before implementation.
 **Why this is robust:** uses the existing source outcome holder at the missing
 boundary; it neither changes routing nor suppresses genuine caller cancellation.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* The pool's existing holder closes this instance with local outcome rules. TgData reporting and scheduled HealthMonitor callbacks are real adjacent instances, but their different lifetime policies do not justify a shared dispatch redesign inside this repair; the local remedy survives such later work.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -185,7 +185,7 @@ explicit delivery outcomes independent of source completion.
 
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* Revisit shared observer delivery only with separately specified caller/observer cancellation policies for TgData, listeners and the pool. It would touch unchanged consumers and add coupling beyond this instance.
 
 ## Risk 2 — Callback shutdown in a child task deadlocks the pool
 
@@ -234,10 +234,10 @@ operation ends. Test direct/create_task/wait_for callback calls, another pool's
 callback, stale descendant context and repeated external cancellation.
 **Why this is robust:** prevents the cycle at shutdown admission while retaining
 the actual source/SDK settlement guarantees; it does not release live children.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* Operation provenance at this pool's admission boundary closes the demonstrated descendant case while preserving settled cleanup. The proposed generic supervisor has no second consumer with the same ownership/close policy: temporary account operations do not expose this callback-to-pool close cycle, so the wider class is unestablished.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -250,7 +250,7 @@ owners if a common policy is established by separate design work.
 
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* Consider a shared supervisor only after another concrete owner needs the same reentrancy and lifetime policy. Do not turn these two local findings into a cross-library cleanup framework.
 
 ## Executed evidence and limits
 

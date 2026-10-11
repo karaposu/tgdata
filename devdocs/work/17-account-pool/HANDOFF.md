@@ -1,15 +1,29 @@
 ---
 model: gpt-6-astra
 effort: max
-status: OFFLINE_PASS_REVIEW_AND_LIVE_PENDING
+status: PR_REJECTED_REVISION_3_REQUIRED
 ---
 # #17 account pool — current handoff
 
-**The existing-access delivery is integrated with current dev and ready for its
-merge check.** Product commit `4854464` combines dev `68f6bbd` (all five #7 stages)
+**PR #26 is rejected: two Medium observer/ownership defects; revision-3 re-planning
+is required.** Product commit `4854464` combines dev `68f6bbd` (all five #7 stages)
 with the retained #17 router and the focused cancellation/retirement repair.
 The working branch is `feat/17-account-pool` at
-`/private/tmp/tgdata-17-account-pool`. No #17 PR or merge into dev has happened.
+`/private/tmp/tgdata-17-account-pool`. [PR #26](https://github.com/karaposu/tgdata/pull/26)
+is open as a draft after review; no merge into dev has happened.
+
+The [merge check](merge-check.md) passed at `cdcfd63` and was posted on the PR.
+The [fresh PR critique](pr-critic.md), initially committed at `4464021`, reproduced:
+
+- A callback awaiting its own cancelled future makes completed source work look
+  like caller cancellation: prefix100 and FloodWait7200 miss normal settlement.
+- Callback-created/awaited close bypasses exact-task reentry checks and forms a
+  retained wait cycle, hanging the read/close before SDK disconnect begins.
+
+Eight fresh probe groups ran; six boundaries held and these two defects reproduced.
+No runtime patch followed the rejection. The selected robust directions are inputs
+to re-planning, not approval to patch the existing blueprint. The user queued #10
+after this review; preserve #17 here while that separate task begins.
 
 Current evidence: [retirement-rework/verification.md](retirement-rework/verification.md).
 There are 619 actual offline passes across 23 suites, with three live skips
@@ -48,11 +62,12 @@ status; its original offline-delivery block is retained as history.
 
 ## Remaining work
 
-1. Formal merge check of the full diff against dev, the original and scoped plans,
-   both selected critiques, #17 status and CONTRIBUTING's model requirement.
-2. PR into dev and a fresh in-session PR critique with probes. Neither the plan
-   critic nor this implementation verification substitutes for that gate.
-3. Merge only after those gates and the user's go-ahead, excluding work documents
+1. Revision-3 re-plan taking `pr-critic.md` and both original/scoped plans as input,
+   required by CONTRIBUTING §7.4. Preserve this first rejected round's evidence.
+2. Fresh plan critic, fold into revision 4, run the required candidate experiment,
+   implement, verify and renew both review gates on the same PR. If a second PR
+   round is rejected, return upstream to description/traverse under §7.4.
+3. Merge only after accepted gates and the user's go-ahead, excluding work documents
    and preserving the feature branch as the archive.
 4. Parent Step 9/E1 live qualification remains pending: two distinct approved,
    logged-in accounts with shared readable-group access and a bounded allowance.
