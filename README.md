@@ -31,6 +31,7 @@ A production-grade Python library for extracting and processing Telegram group a
 - **Per-account read budgets**: An optional shared SQLite ledger limits message pulls over a rolling 24 hours, with persistent warm-up steps and recoverable partial results
 - **Versioned message batches**: Read bounded raw snapshots with canonical JSON, replayable batch IDs, safe continuation cursors and optional content-addressed media
 - **Durable daily continuation**: Keep per-group progress and pending batches in a pluggable store, replay after restart, and advance only after explicit acknowledgment
+- **Reading worker**: Run a serial process that accepts explicit-account JSON jobs for batches, group lookup, access checks and joining, with correlated health replies
 
 ## Installation
 
@@ -38,6 +39,18 @@ A production-grade Python library for extracting and processing Telegram group a
 pip install tgdata
 ```
 
+## Reading worker
+
+Run `python -m tgdata.worker --config worker.json` to accept serial JSON-line
+jobs for an explicitly selected account: read a message batch, look up a group,
+check access or join. The worker reuses existing sessions, proxy/device settings
+and provisioned budgets, verifies the account for each job, and returns correlated
+results and health events. It never requests a login code or retries a lost job.
+
+See [the worker protocol and setup](docs/worker.md) for Telethon 1.45.0, inventory,
+reply/exit semantics and session-store bootstrap. Try
+`python examples/reading_worker.py --demo` for an offline process demonstration.
+Scheduling, result storage and continuation acknowledgments stay with the caller.
 
 ## Authentication
 

@@ -53,6 +53,25 @@ Tests polling and real-time features:
 
 ## Running Tests
 
+### Reading worker (offline)
+
+`python -m tgdata.smoke_tests.test_37_worker` exercises strict framing and
+explicit-account execution on actual Telethon 1.45.0 and SQLite, with sockets
+blocked. It covers four operations, bounded resolution, source ownership, retained
+charges and partial batches, exact IDs, health isolation/capacity, and cleanup
+failure/cancellation without changing the source result. Direct serialization
+faults and collector-capacity faults are explicitly injected.
+
+`python -m tgdata.smoke_tests.test_38_worker_process` runs 14 test groups using
+actual subprocesses and pipes. Its test-only bootstrap replaces the SDK transport,
+not the worker executor. Cases include stock CLI startup, EOF and malformed input,
+all four jobs across two synthetic accounts, partial reply correlation, JavaScript
+ID precision (when Node is available), custom session stores, failed native cleanup,
+broken stdout, idle/active signals, held cleanup under repeated signals and output
+backpressure without draining the pipe. Process watchdogs own the test children.
+These are offline process/SDK qualifications, not live Telegram tests or deployment.
+See [worker setup and protocol](../../docs/worker.md).
+
 ### Account operation foundation (offline)
 
 `python -m tgdata.smoke_tests.test_32_account_operation` runs 28 contract tests

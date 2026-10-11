@@ -379,6 +379,9 @@ class ConnectionEngine:
         self._health_check_interval = 300  # 5 minutes
         self._last_health_check = 0
         self._route_logged = False         # "via proxy …" / "direct" is logged once per engine
+        # A process consumer may stop admission after uncertain owned cleanup.
+        # Ordinary callers retain their existing outcome/continuation behavior.
+        self._account_cleanup_failure = None
         
     def _load_config(self) -> ConnectionConfig:
         """Load configuration from file"""
@@ -677,7 +680,12 @@ class ConnectionEngine:
             yield operation
         finally:
             operation._close()
-            await _disconnect_owned(client)
+            failures = []
+            try:
+                await _disconnect_owned(client, failures=failures)
+            finally:
+                if failures:
+                    self._account_cleanup_failure = failures[0]
 
     @asynccontextmanager
     async def ephemeral_client(self):
