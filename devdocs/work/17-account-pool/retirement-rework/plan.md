@@ -2,7 +2,11 @@
 model: gpt-6-astra
 effort: max
 ---
-# #17 retirement rework — revision 1
+# #17 retirement rework — revision 2
+
+**Critic folded:** 2026-10-11 — 1 robust mitigation (steps2/3 changed,0 added).
+Required six-group real-component prebuild experiment PASS at6bb40f2 before
+implementation. The original pool structure and five-step shape remain.
 
 ### What is the task
 
@@ -86,7 +90,7 @@ Current#7 temporary operations, long-lived pool sources, ProgressFacade, constru
 ### Hardness Lvl
 3
 
-## Step 2 — Settle cleanup before releasing ownership
+## Step 2 — Settle cleanup before releasing ownership [folded: Risk1, robust]
 
 ### Proposed changes
 
@@ -127,8 +131,22 @@ to their original caller. A failed/cancelled close never reopens the pool.
 In AccountPool.__aexit__, explicitly re-raise caller CancelledError from close.
 Retain the original body exception when ordinary cleanup fails, with the existing
 type-only warning. SDK-internal disconnect cancellation is converted by retire and
-does not pretend the caller cancelled. No change to read selection, source outcome
-retention, budget accounting, CAS settlement, recovery or progress delegation.
+does not pretend the caller cancelled. No change to read selection, budget accounting,
+CAS settlement, recovery or progress delegation.
+
+In `_OwnedSource.run`, retain a local reference to the actual source child until it
+ends. Replace wait_for's interruptible cancellation-wait sequence with a non-cancelling
+`asyncio.wait((child,), timeout=...)` observation. A separately retained stop-and-join
+action cancels a pending child once, waits for it and retrieves its outcome; await
+that action with `_await_cleanup` on internal timeout or caller cancellation. Clear
+`self.task` only after settlement. An external cancellation remains cancellation even
+when repeated; no next source starts while the child remains active. Preserve the
+existing body outcome holder before health observers: completed original errors/
+prefixes or batches survive an internal observer timeout; unfinished body cancellation
+still becomes PoolTimeoutError with its existing partial_result. Keep error raising
+outside incidental timeout-handler context as before. Do not let the stop action's
+exception retrieval replace the captured source result. The prebuild candidate proves
+this composition with real SDK/SQLite/health and a labeled cooperative finalizer fault.
 
 ### Output
 
@@ -141,7 +159,7 @@ Telethon shielded disconnect, repeated cancellation, retained tasks, credentials
 ### Hardness Lvl
 4
 
-## Step 3 — Qualification on actual SDK cleanup
+## Step 3 — Qualification on actual SDK cleanup [folded: Risk1, robust]
 
 ### Proposed changes
 
@@ -165,6 +183,10 @@ Cover at least:
 - Close while a real source read is suspended, including delayed cooperative source
   finalization: outer close cancellation must not cause premature reader release.
   Label any fault-only finalizer injection; do not call it live SDK behavior.
+- Independently repeat cancellation of a pool read during a held cooperative source
+  finalizer: the public call and operation guard stay pending, self.task retains the
+  live child, no next account starts, and cancellation escapes only after that child
+  ends. Re-run existing timeout-prefix and completed outcome/observer tests unchanged.
 - Async context exit: original body error survives ordinary cleanup failure, caller
   cancellation during cleanup survives after settlement, and SDK-internal cancellation
   remains a local failure rather than caller cancellation.
