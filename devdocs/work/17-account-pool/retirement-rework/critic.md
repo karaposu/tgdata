@@ -25,6 +25,15 @@ completed wait/prefix is lost. This would require replacing the lifetime premise
 Passing result: guards remain held until settlement; cancellation/failure and
 reuse rules hold; source outcome/prefix remain identical; no extra read or charge.
 
+Result: PASS — 2026-10-11. Six candidate composition groups passed before any
+product edit: repeated retirement/read/close cancellation retained ownership;
+ordinary/internal-cancel failure refused reuse until successful retry; actual
+completed FloodWait100-record prefix and successful batch survived observer timeout.
+See probes/prebuild.py and evidence/prebuild.txt. The first run also passed; its
+test-finalizer restoration was then corrected to target the old sender rather
+than the replacement sender, and all six cases passed again. No expectation or
+runtime code was changed by that fixture hygiene correction.
+
 ## High-level summary
 
 The focused repair fits the existing pool structure and current-dev integration.
@@ -146,10 +155,10 @@ Clear self.task only afterward. Reuse the planned private wait helper; add direc
 repeated-read and cancelled-close-with-held-child tests.
 **Why this is robust:** closes the additional escape at its actual task owner and
 retains existing timer/outcome contracts without touching routing or stored formats.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* The planned private wait primitive already has real pool retirement/shutdown callers. Source-child settlement is the same cancellation-safe waiting instance within the same module; the owner-specific stop/outcome logic stays local. This closes the reproduced escape without new stored state or changing #7.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -162,7 +171,7 @@ independent owners/credential rotation later require one.
 
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* Revisit a cross-owner supervisor only for explicitly requested shared credential rotation or independent owners. Temporary #7 calls and persistent pool clients have different failure/reuse policies, so a universal supervisor adds special cases and extent without needed reach here. The selected wait/settlement fix remains useful then.
 
 ## Reconnaissance evidence and limits
 

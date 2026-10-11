@@ -1,0 +1,6 @@
+{"case": "retirement", "result": "PASS", "observation": {"caller": "CancelledError", "disconnects": 1, "busy_until_finished": true, "fresh_read": true}}
+{"case": "failure_retry", "result": "PASS", "observation": [{"internal": "OSError", "caller_cancel": false, "outcome": "PoolStateError", "blocked_until_retry": true}, {"internal": "CancelledError", "caller_cancel": false, "outcome": "PoolStateError", "blocked_until_retry": true}, {"internal": "OSError", "caller_cancel": true, "outcome": "CancelledError", "blocked_until_retry": true}]}
+{"case": "read_child", "result": "PASS", "observation": {"case": "read", "caller": "CancelledError", "child_awaited": true, "no_next_source_before_settlement": true}}
+{"case": "close_child", "result": "PASS", "observation": {"case": "close", "caller": "CancelledError", "child_awaited": true, "no_next_source_before_settlement": true}}
+{"case": "completed_flood_prefix", "result": "PASS", "observation": null}
+{"case": "completed_success", "result": "PASS", "observation": null}
