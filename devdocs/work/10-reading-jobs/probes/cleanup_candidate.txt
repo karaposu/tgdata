@@ -1,0 +1,7 @@
+{"case": "success", "original_outcome_preserved": true, "cleanup_failure": null, "candidate_admission_predicate": true}
+{"case": "body_failure", "original_outcome_preserved": true, "cleanup_failure": "OSError", "candidate_admission_predicate": false}
+{"case": "setup_failure", "original_outcome_preserved": true, "cleanup_failure": "OSError", "candidate_admission_predicate": false}
+{"case": "sdk_cancel", "original_outcome_preserved": true, "cleanup_failure": "CancelledError", "candidate_admission_predicate": false}
+{"case": "caller_cancel", "original_outcome_preserved": true, "cleanup_failure": "OSError", "candidate_admission_predicate": false}
+{"case": "logger_failure", "original_outcome_preserved": true, "cleanup_failure": "OSError", "candidate_admission_predicate": false}
+PASS: six actual-composition cleanup-feedback cases; product files untouched.

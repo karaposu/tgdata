@@ -1,0 +1,3 @@
+{"case": "query_id_precision", "original": "9223372036854775807", "numeric_json_received": "9223372036854776000", "string_json_received": "9223372036854775807"}
+{"case": "query_id_precision", "original": "-9223372036854775807", "numeric_json_received": "-9223372036854776000", "string_json_received": "-9223372036854775807"}
+PASS: worker wire needs decimal-string identifier projection; source Python values stay unchanged.
