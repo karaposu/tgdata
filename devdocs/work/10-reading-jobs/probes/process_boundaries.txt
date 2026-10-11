@@ -1,0 +1,3 @@
+{"case": "executor_stdin_cancellation", "await_cancelled": true, "process_waits_for_stdin": true, "exits_after_eof": true}
+{"case": "stdout_backpressure", "bytes": 2097152, "producer_waited_for_reader": true, "completed_after_drain": true}
+{"case": "read_pipe_regular_file", "rejected": "ValueError"}

@@ -1,0 +1,3 @@
+{"case": "verified_batch_composition", "cached": 111, "verified": 222, "records": 2, "charges": [0, 2], "actual_disconnect_completed": true}
+{"case": "post_cleanup_notification", "queued_tasks": 1, "account_id": 222, "wait": 7200, "native_disconnect_completed": true}
+{"case": "cleanup_attempt_is_not_closure", "body_completed": true, "context_raised": false, "transport_still_connected": true}
