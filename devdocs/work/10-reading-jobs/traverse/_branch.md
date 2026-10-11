@@ -11,7 +11,7 @@ follows CONTRIBUTING §5 rather than the generic timestamped inquiry directory.
 
 ## Articulation Reference
 
-File: `articulate_simple.md`; Itemize count1; identifierW1; verdictHIGH-PROCEED;
+File: `docarchive/articulate_simple.md`; Itemize count1; identifierW1; verdictHIGH-PROCEED;
 flagged structural conditions:none. All sections below derive from its W1 bundle.
 
 ## Question
