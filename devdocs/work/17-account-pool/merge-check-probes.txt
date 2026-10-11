@@ -1,0 +1,9 @@
+{"case": "static_fidelity", "artifact_ancestors": 19, "unchanged_dev_foundations": 10, "identical_public_progress_methods": 10, "retained_TgData_methods": 36, "factory_seam": "only permitted substitution"}
+{"case": "original_critic_completed_outcomes", "passed": 2}
+{"case": "original_critic_credential_reload", "passed": 2}
+{"case": "rework_retirement", "passed": 2}
+{"case": "rework_source_and_shutdown", "passed": 3}
+{"case": "identity_at_admission", "passed": 1}
+{"case": "restriction_and_recovery", "passed": 2}
+{"case": "source_free_progress", "passed": 2}
+PASS: static fidelity plus 7 behavioral groups (14 existing composition cases).
