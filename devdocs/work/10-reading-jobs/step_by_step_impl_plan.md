@@ -4,7 +4,11 @@ effort: max
 ---
 # Implementation plan — #10 reading-job worker
 
-Revision1. Input: `desc.md` at `faa2f18`; design finding at `e8bf7f0`.
+**Critic folded:** 2026-10-11 — 2 robust mitigations (5 steps changed,0 added).
+Mandatory prebuild PASS before product edits:7 actual source histories,6 cleanup
+cases and4 real pipe controls; see `critic.md` and `probes/prebuild.txt`.
+
+Revision2. Input: `desc.md` at `faa2f18`; design finding at `e8bf7f0`.
 Base: dev `68f6bbd`. #17 is neither merged nor a runtime dependency.
 
 ### What is the task
@@ -110,6 +114,8 @@ account_id is a canonical positive decimal string identifying inventory. Operati
   optional `after_id` (canonical decimal string0..MAX_MESSAGE_ID, default"0"),
   `limit` (integer1..1000, default200), and paired aware ISO `start_date`/`end_date`.
   Validate the existing date-window/batch argument rules before a source context.
+  Use the accepted group reference parser for the target and the bounded worker
+  resolver below; no arbitrary SDK string/phone resolver or dialog/contact scan.
   This first worker protocol returns reference-mode media; file downloads remain
   available through the library and are not an extra worker verb or arbitrary path.
 - `lookup_group`, `check_group_access`, `join_group`: params exactly `target` as a
@@ -167,7 +173,7 @@ exit the worker unless cleanup/transport is unsafe. Restore signal handlers and
 close the owned loop; bootstrap callers must exit the dedicated process with the
 returned code. Never imply failed SDK cleanup guarantees successful connection close.
 
-## Step 1 — Protocol and trusted values
+## Step 1 — Protocol and trusted values [folded: Risk1, robust]
 
 ### Proposed changes
 
@@ -176,7 +182,8 @@ decoding, exact request parsing, canonical identifier conversion and JSON-ready
 frame projection. Use a small immutable parsed-job value; no global registry or
 mutable raw payload retained across admission. Explicit operation allowlist and
 parameter schema; no getattr dispatch from untrusted names. Validate all local
-arguments before a source task. Preserve errors' real categories without exposing
+arguments before a source task. Read targets use the same accepted `_parse_target`
+rules as group jobs, rather than arbitrary nonempty SDK strings. Preserve errors' real categories without exposing
 their text; recursively project only known identifier fields and leave batch dicts
 as their existing schema. Bound diagnostics and serialization; optional error metadata
 must not replace an original source outcome if inspection itself fails.
@@ -191,14 +198,22 @@ MessageBatch v1, GroupAccess/GroupJoin values, auth/budget errors, JSON integer 
 ### Hardness Lvl
 4
 
-## Step 2 — Owned source execution and cleanup evidence
+## Step 2 — Owned source execution and cleanup evidence [folded: Risk1, robust]
 
 ### Proposed changes
 
 Add `tgdata/worker_engine.py` with WorkerAccount, Worker and a private bound-session
 adapter whose async session yields the current verified operation.client in its
 opening task. Build a BatchEngine over that adapter inside `_account_health_operation`
-for read jobs. Successful actual history answers may confirm group access; do not
+for read jobs. Add an optional private `_resolve_entity` hook to BatchEngine's
+constructor; when absent, retain the exact current get_entity/dialog-sync fallback.
+The worker hook calls the merged group `_resolve` on its parsed target and verified
+operation, refuses missing peers/unsupported community reads, retrieves the resulting
+InputPeer entity with the SDK and verifies its canonical ID equals the lookup's.
+Never enumerate dialogs/contacts or join to resolve a worker read. A private channel
+ID needs its account-specific cache or a usable public/invite reference; uncertainty
+is an explicit GroupReferenceError. The prebuild exercises this actual composition,
+including the unchanged default branch. Successful actual history answers may confirm group access; do not
 claim access recovery for the MAX_MESSAGE_ID shortcut or metadata-only work.
 Dispatch the three group jobs to existing public methods with the configured account.
 
@@ -230,7 +245,7 @@ AccountOperation lifetime, same-owner quota claims, deferred health, partial bat
 ### Hardness Lvl
 5
 
-## Step 3 — Process driver and package entry point
+## Step 3 — Process driver and package entry point [folded: Risk2, robust]
 
 ### Proposed changes
 
@@ -242,7 +257,14 @@ Add the console script in setup.py; `python -m tgdata.worker` shares the exact p
 Own one loop and signal state on the main thread; reject running inside another
 active event loop. Ready before request input; binary bounded readline, single job
 task and one complete-frame writer. Write-all handles short writes; failed/closed
-output stops immediately and never admits another job. CLI disables library/SDK
+output stops immediately and never admits another job. The CLI uses unbuffered
+output (raw descriptor/raw binary stream), leaving no worker bytes in Python's
+stdout buffer for interpreter-finalization retries. Normalize a standard buffered
+bootstrap stream to its raw stream or require a genuinely unbuffered supplied one;
+do not flush/retry protocol output during teardown after a failed/interrupted write.
+Retain pre-encoding, size bounds and write-all semantics. Real pipe controls showed
+buffered exit120 and a final-flush wait, versus raw exit3/143 without drain.
+CLI disables library/SDK
 diagnostic logging to avoid contaminating stdout or exposing failure text; own
 startup/fatal diagnostics contain types/codes only. Restore the embedding process's
 logging/signal state before returning its exit code. The documented bootstrap is a
@@ -266,7 +288,7 @@ Binary pipes/files, event-loop ownership, signal cancellation, backpressure, con
 ### Hardness Lvl
 5
 
-## Step 4 — Source and process tests
+## Step 4 — Source and process tests [folded: Risk1, robust; Risk2, robust]
 
 ### Proposed changes
 
@@ -284,6 +306,9 @@ malformed/unknown/duplicate fields, IDs and operations; argument validation with
 source; missing/bad manifest/config/ledger and known session alias; custom session
 store bootstrap; exact MessageBatch hash round trip; source-free ready/empty inventory;
 fixed-window read and maximum-cursor no false recovery; bounded health/drop disclosure.
+Include valid handle/cached ID, uncached private ID and invite-preview read refusal;
+assert no GetDialogs/GetContacts/Join/Import requests in worker resolution, and
+retain a control proving ordinary BatchEngine default fallback remains unchanged.
 
 Lifetime histories: successful/body-failed/setup-failed operation plus native cleanup
 failure; SDK-internal cancellation; repeated caller cancellation; broken diagnostics;
@@ -291,6 +316,8 @@ sticky refusal of the next job; observer/source separation and stable job correl
 actual EOF after a job, truncated/oversized line, multiple requests and old IDs;
 SIGINT/SIGTERM idle and active with a held native disconnect; repeated signals;
 broken/slow stdout after a source result; no second source while output is blocked;
+raw-output broken-reader exit3 with no shutdown warning; SIGINT/SIGTERM under
+backpressure exits without first draining the still-open pipe, with no final flush;
 response size/encoding failure with explicit omission and no false empty success;
 unrelated ordinary library semantics. Prove actual charges, requests, outcomes and
 task/client settlement, not just a mocked method call count.
@@ -305,7 +332,7 @@ Existing tests19/32–36 fixtures, real pipes, lost replies, SQLite policies, SD
 ### Hardness Lvl
 5
 
-## Step 5 — Public docs and example
+## Step 5 — Public docs and example [folded: Risk1, robust; Risk2, robust]
 
 ### Proposed changes
 
@@ -314,6 +341,9 @@ for four operations, allowance provisioning outside startup, absolute session pa
 trusted Python bootstrap/session stores, output draining, partial results, exact IDs,
 lost reply/uncertain join handling, cleanup-stop policy, platform/runtime qualification
 and no live claims. README and smoke-test README link it and record measured suites.
+Explain bounded read resolution and the cached-ID/reference requirement; an uncached
+private group does not trigger global discovery. Document raw/unbuffered bootstrap
+output and the rule that interrupted output is not retried during teardown.
 Add examples/reading_worker.py as a caller that reads ready/health/result correctly;
 provide an explicitly offline demo and normal supplied-config mode. Example defaults
 never read project credentials, request login, join or reset an existing allowance.
