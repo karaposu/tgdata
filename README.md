@@ -362,8 +362,30 @@ until the policy changes; it does not automatically rise to `daily_limit`.
   direct use of private transport internals are outside this guard.
 
 The budget suite exercises real Telethon request/iterator code with scripted
-replies on 1.45.0 and 1.33.1. It does not test live Telegram response bounds or
+replies on 1.45.0. It does not test live Telegram response bounds or
 whether any chosen limit prevents account restrictions.
+
+### Joining with an account allowance
+
+`JoinBudget` provides persistent per-account policy and status for admitted join
+attempts in a rolling 24-hour window. Provision explicitly with
+`JoinBudget("allowances.sqlite3", create=True)`, then reopen without `create=True`
+in later jobs. `configure(account_id, daily_limit)` retains spent allowance;
+zero pauses admission. `status(account_id).to_dict()` returns a local snapshot.
+
+Pass that ledger to `TgData(config_path, join_budget=budget)` and call
+`await tg.join_group(target, account_id=expected_numeric_id)`. A temporary client
+verifies the account, resolves the target, and claims one attempt immediately before
+each new SDK join/import send. Known membership or a known payment requirement
+returns without a mutation or charge. Failed or interrupted admitted attempts are
+not refunded.
+
+The portable result distinguishes `joined`, `already_joined`, `requested`,
+`payment_required` and `interaction_required`. Its group metadata is from preflight;
+joining does not prove history access. Payments and bot interactions are left to the
+caller. The join guard applies to this operation; raw clients remain outside it.
+See [joining and outcomes](docs/group_joining.md) and
+[the allowance contract](docs/join_budget.md) for configuration and failure behavior.
 
 ## Account routing and failover
 
@@ -395,6 +417,8 @@ No eligible account raises structured `PoolUnavailable`, not empty history.
 
 The adapter requires Telethon **1.45.0**, one owning process and exclusive sessions.
 It never joins or prompts. Results describe the selected account's visible history.
+Cancellation waits for owned source work and client cleanup to settle. Failed
+client retirement blocks reuse until an explicit recheck or close succeeds.
 Offline tests pass; two-account live qualification remains pending. See
 [Account pools](docs/account_pool.md) for selection, recovery and delivery contracts.
 Run the offline example with `python examples/account_pool.py --demo`.
@@ -425,6 +449,29 @@ Outputs:
 ```
 Python Devs 10012312313
 ```
+
+### Look up a group and check access
+
+Use an expected numeric Telegram account ID for a short-lived, read-only observation:
+
+```python
+async with TgData("config.ini", interactive_login=False) as tg:
+    access = await tg.check_group_access("@example_group", account_id=123456789)
+    print(access.status)  # readable, denied, or unprobed
+    if access.lookup is not None:
+        print(access.group.title, access.member)
+```
+
+`check_group_access` includes lookup details and probes at most one message of history
+through the existing read budget. `lookup_group(target, account_id=...)` returns only
+metadata and membership hints, without reading history. Both verify the actual account,
+close their temporary client, and never log in or join. Operational failures still raise;
+`unprobed` means there was no usable peer, and `denied` means a classified Telegram refusal.
+
+Handles, supported Telegram links and deterministic numeric references are accepted.
+Numeric channel IDs need a cached access hash. Readability is distinct from membership
+and does not promise future access. See [the group-operations contract](docs/group_operations.md)
+for input rules, result fields, errors, budget costs and the known SDK cache limitation.
 
 ### Group discovery — finding groups you are not in
 
@@ -923,6 +970,9 @@ await tg.run_with_event_loop()
 
 ### Account health events
 
+This section describes the existing public read methods and `health_check()`.
+Verified temporary operations have the separate local view described below.
+
 Every time Telegram says no to an account, tgdata tells you:
 - which verdict;
 - about what — the account, one kind of request, or one group;
@@ -1025,6 +1075,56 @@ error, so both now confirm with Telegram whether the session is logged in.
   record: `logging.disable(logging.INFO)` or higher turns the capture off, and
   a level set on `telethon.client.users` during a call applies from the next
   call.
+
+### Health for verified account operations
+
+`tg.get_account_health(account_id)` returns this instance's local health snapshot
+for a **verified numeric account ID**, or `None` if it has not observed that account.
+The ID must be a positive integer, not a string or boolean. The call is synchronous:
+it does no connection, authentication or recovery. The returned dictionaries are
+independent copies, with the same fields as the health summary above.
+
+`lookup_group`, `check_group_access` and `join_group` populate this account-owned view. Existing
+message reads and `health_check()` still use their existing health view; the views
+are not combined. A join result does not clear an earlier history-access failure.
+
+Internally, an observation begins after a temporary client proves the expected
+account. Its event and retained state keep that numeric owner even if a cached
+identity changes later. The session name and account label are descriptive. Setup
+failures before proof remain errors to the caller, without inventing a condition
+for an unverified account. Forwarding those failures through another task or an
+exception wrapper preserves that neutral attribution. A separate Telegram error
+raised while handling one still reports normally; diagnostic classification of
+the original failure remains available.
+
+Owned events use **`source: "rpc"`** for an actual health-related Telegram request
+failure, including one the operation subsequently handles. Local errors and their
+causes do not create these events. Recovery is conservative: successful work from
+an operation started before a condition was recorded cannot clear it; neither can
+the call that reported it. Owned event `request` and snapshot `waiting` keys name
+the logical request with its SDK namespace, such as `messages.GetHistoryRequest`
+or `channels.GetMessagesRequest`. Transport envelopes do not change that key;
+legacy health keeps its existing request names.
+
+Waits require the matching request to succeed. A restriction requires that the
+previously refused request succeeds in a later operation with the same method.
+Another identity check cannot clear a history-read restriction. Group access
+requires explicit confirmation by the internal operation after an actual access
+result; self verification and metadata alone never imply access. The private
+[operation contract](docs/account_operations.md#owned-health-composition-stage-2)
+describes how request evidence is captured.
+
+Owned state is updated before the operation returns. Both synchronous and async
+health callbacks run in separate tasks **after the source's disconnect attempt
+finishes**. A callback may run after the result or error reaches its caller. Its
+ordinary errors or cancellation cannot change that outcome; callback re-entry is
+suppressed as above. Unequal cleanup durations can make callbacks arrive in a
+different order from the observations; use event times and the local snapshot to
+interpret state. Notification delivery is not durable or guaranteed at process
+exit. Finish ongoing operations before `await tg.close()`, which cooperatively
+cancels and awaits pending owned notifications. A callback may itself call close.
+These timing rules apply to the new owned path; the existing public health callback
+timing remains as documented above.
 
 ### Performance Tips
 

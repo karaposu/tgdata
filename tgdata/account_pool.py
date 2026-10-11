@@ -24,7 +24,7 @@ from .message_batch import MessageBatch, BatchFormatError, MAX_BATCH_MESSAGES, M
 from .read_budget import ReadBudget, ReadBudgetError, ReadBudgetExceeded
 from .sync_engine import SyncEngine
 from .progress_facade import ProgressFacade
-from .pool_source import _OwnedSource
+from .pool_source import _OwnedSource, _await_cleanup
 from . import pool_state as state
 from .pool_state import (
     PoolError, PoolConfigurationError, PoolStateError, PoolStorageError,
@@ -576,15 +576,15 @@ class AccountPool(ProgressFacade):
             raise PoolBusyError('Pool close is already in progress')
         self._closed = True
         self._closing = True
-        try:
+
+        async def finish():
             active = self._active_task
             if active is not None and not active.done():
                 active.cancel()
                 try:
                     await active
                 except asyncio.CancelledError:
-                    if not active.done():
-                        raise
+                    pass  # Expected reader cancellation; this worker is retained.
                 except Exception:
                     pass  # the source caller retains its own exception
             first = None
@@ -597,6 +597,9 @@ class AccountPool(ProgressFacade):
                     first = first or error
             if first is not None:
                 raise first
+
+        try:
+            await _await_cleanup(finish())
         finally:
             self._closing = False
 
@@ -608,6 +611,8 @@ class AccountPool(ProgressFacade):
     async def __aexit__(self, kind, error, traceback):
         try:
             await self.close()
+        except asyncio.CancelledError:
+            raise  # A caller cancellation is not a secondary cleanup failure.
         except BaseException as cleanup:
             if error is None:
                 raise

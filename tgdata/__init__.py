@@ -17,6 +17,9 @@ from .account_pool import (
 
 # Errors
 from .message_engine import GroupAccessError
+from .group_operations import (
+    GroupMetadata, GroupLookup, GroupAccess, GroupJoin, GroupReferenceError, GroupResponseError,
+)
 from .connection_engine import AuthRequiredError, ProxyConfigError
 from .discovery_engine import DiscoveryInterrupted
 from .message_batch import MessageBatch, BatchFormatError
@@ -36,6 +39,11 @@ from .read_budget import (
     ReadBudget, ReadBudgetStatus, ReadBudgetError, ReadBudgetExceeded,
     ReadBudgetConfigError, ReadBudgetStorageError, UnsupportedBudgetRequest,
 )
+from .join_budget import (
+    JoinBudget, JoinBudgetStatus, JoinBudgetError, JoinBudgetExceeded,
+    JoinBudgetConfigError, JoinBudgetStorageError,
+)
+from .join_client import UnsupportedJoinRequest
 
 # Models
 from .models import (
@@ -91,6 +99,12 @@ __all__ = [
 
     # Errors
     "GroupAccessError",
+    "GroupMetadata",
+    "GroupLookup",
+    "GroupAccess",
+    "GroupJoin",
+    "GroupReferenceError",
+    "GroupResponseError",
     "AuthRequiredError",
     "ProxyConfigError",
     "DiscoveryInterrupted",
@@ -131,6 +145,13 @@ __all__ = [
     "ReadBudgetConfigError",
     "ReadBudgetStorageError",
     "UnsupportedBudgetRequest",
+    "JoinBudget",
+    "JoinBudgetStatus",
+    "JoinBudgetError",
+    "JoinBudgetExceeded",
+    "JoinBudgetConfigError",
+    "JoinBudgetStorageError",
+    "UnsupportedJoinRequest",
 
     # Models
     "MessageData",

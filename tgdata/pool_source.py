@@ -19,6 +19,34 @@ from .pool_state import (
 )
 
 
+async def _await_cleanup(work):
+    """Settle owned work before delivering cancellation of its caller.
+
+    Capture internal cancellation as an outcome so it cannot be confused with
+    cancellation of this waiter, including on Python3.7. No timeout can establish
+    that still-running cleanup has finished.
+    """
+    async def finish():
+        try:
+            return await work, None
+        except (Exception, asyncio.CancelledError) as error:
+            return None, error
+
+    completion = asyncio.ensure_future(finish())
+    cancelled = None
+    while not completion.done():
+        try:
+            await asyncio.shield(completion)
+        except asyncio.CancelledError as error:
+            cancelled = error
+    value, error = completion.result()
+    if cancelled is not None:
+        raise cancelled
+    if error is not None:
+        raise error
+    return value
+
+
 class _BoundBudget:
     def __init__(self, source, ledger, minimum_age):
         self.source, self.ledger, self.minimum_age = source, ledger, minimum_age
@@ -49,14 +77,23 @@ class _OwnedSource(ConnectionEngine):
         self.groups = groups
         self.verified_id = None
         self.task = None
+        self._retirement_blocked = False
         self.read_budget = _BoundBudget(self, ledger, policy.min_warmup_days)
         self.monitor = HealthMonitor(callback, account.label, self._identity)
         self.batch_reader = BatchEngine(self, _resolve_entity=self._resolve,
                                         _retain_cancelled_prefix=True)
 
-    def _client_options(self):
-        return dict(request_retries=0, raise_last_call_error=True, flood_sleep_threshold=0,
-                    connection_retries=0, auto_reconnect=False, receive_updates=False)
+    def _new_client(self, session_file=None, **client_options):
+        # Use the common factory's existing policy seam. This owned source never
+        # permits an internal caller to relax its wait/retry policy.
+        client_options.update(request_retries=0, raise_last_call_error=True,
+                              flood_sleep_threshold=0, connection_retries=0,
+                              retry_delay=0, auto_reconnect=False, receive_updates=False)
+        return super()._new_client(session_file, **client_options)
+
+    def _require_usable(self):
+        if self._retirement_blocked:
+            raise PoolStateError('Account client retirement has not completed; retry recheck or close')
 
     def _identity(self):
         name = self._config.session_file if self._config is not None else None
@@ -68,6 +105,7 @@ class _OwnedSource(ConnectionEngine):
 
     def preflight(self):
         """Load configuration/session locally. Never connects or asks for a code."""
+        self._require_usable()
         try:
             config = self._load_config()
             if self._primary_client is None:
@@ -95,6 +133,7 @@ class _OwnedSource(ConnectionEngine):
         self.verified_id = actual
 
     async def _verify(self):
+        self._require_usable()
         client = self._primary_client
         if client is None:
             raise PoolStateError('Account source was not preflighted')
@@ -147,13 +186,27 @@ class _OwnedSource(ConnectionEngine):
                     outcome['value'], outcome['done'] = value, True
                     return value
 
-        cancelled = None
-        self.task = asyncio.ensure_future(observed())
+        child = self.task = asyncio.ensure_future(observed())
+
+        async def stop():
+            if not child.done():
+                child.cancel()
+            try:
+                await child
+            except (Exception, asyncio.CancelledError):
+                pass  # The outcome holder keeps the original source result.
+
         try:
             try:
-                return await asyncio.wait_for(self.task, self.policy.attempt_timeout)
-            except asyncio.TimeoutError as error:
-                cancelled = error.__cause__
+                # Observing the timeout must not transfer ownership of child
+                # cancellation to an interruptible wait_for cancellation waiter.
+                done, _ = await asyncio.wait((child,), timeout=self.policy.attempt_timeout)
+                if done:
+                    return child.result()
+                await _await_cleanup(stop())
+            except asyncio.CancelledError:
+                await _await_cleanup(stop())
+                raise
         finally:
             self.task = None
         # Outside the except block: preserve the actual source exception's
@@ -163,7 +216,7 @@ class _OwnedSource(ConnectionEngine):
                 raise outcome['error']
             return outcome['value']
         error = PoolTimeoutError('The account source attempt timed out')
-        prefix = getattr(outcome.get('error', cancelled), 'partial_result', None)
+        prefix = getattr(outcome.get('error'), 'partial_result', None)
         error.partial_result = prefix
         raise error from None
 
@@ -171,12 +224,19 @@ class _OwnedSource(ConnectionEngine):
         client = self._primary_client
         if client is None:
             return
-        try:
-            await client.disconnect()
-        except asyncio.CancelledError:
-            raise
-        except Exception as error:
-            raise PoolStateError('Account client could not be retired ({})'.format(type(error).__name__)) from None
-        self._primary_client = None
-        self.verified_id = None
-        self._config = None
+        self._retirement_blocked = True
+
+        async def finish():
+            try:
+                await client.disconnect()
+            except (Exception, asyncio.CancelledError) as error:
+                # Unlike a one-off lookup, this source could otherwise be reused
+                # after failed cleanup. Retain the block until an explicit retry.
+                raise PoolStateError('Account client could not be retired ({})'.format(
+                    type(error).__name__)) from None
+            self._primary_client = None
+            self.verified_id = None
+            self._config = None
+            self._retirement_blocked = False
+
+        await _await_cleanup(finish())

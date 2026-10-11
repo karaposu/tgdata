@@ -53,6 +53,77 @@ Tests polling and real-time features:
 
 ## Running Tests
 
+### Account operation foundation (offline)
+
+`python -m tgdata.smoke_tests.test_32_account_operation` runs 28 contract tests
+on Telethon 1.45.0 with sockets forbidden and synthetic credentials/replies:
+
+- expected account versus stale cache and actual authenticated identity;
+- policy before authentication, preserved proxy/device/file/store settings,
+  and unchanged ordinary-client defaults;
+- explicit missing/revoked/banned authentication, with no login prompts or codes;
+- fresh read-budget admission, terminal identity refusal and real task overlap;
+- actual SDK disconnect on success, failure and cancellation, including repeated
+  cancellation and sanitized cleanup errors.
+
+See [the internal operation contract](../../docs/account_operations.md). These
+tests do not contact Telegram or exercise group joining.
+
+### Account-owned health foundation (offline)
+
+`python -m tgdata.smoke_tests.test_33_owned_health` runs 62 contract tests on
+Telethon 1.45.0. Sockets are forbidden; only the network sender is synthetic.
+The suite composes the real facade, Stage 1 handle, SDK requests, read-budget
+verification, health ledger and disconnect. It covers fixed owner/query isolation,
+caught RPC and real MultiError failures, pre-proof and local-error exclusion,
+foreign/stale task contexts, explicit group recovery, forced older/newer overlaps,
+caught handle invalidation, and callbacks after cleanup without altering results
+or cancellation. Revision 4 adds sender-built RPC errors through Telethon's real
+RequestState/result handling, namespaced and wrapped request matching, immutable
+evidence during batch mutation, refused-action recovery, and neutral exception
+forwarding across tasks without hiding independent RPC failures. Malformed metadata
+and observer-failure cases also use direct unit fixtures. Existing suites16 and32
+remain separate regression checks.
+
+### Group lookup and access (offline)
+
+`python -m tgdata.smoke_tests.test_34_group_access` runs 49 public lookup/access test
+groups on Telethon 1.45.0 through actual SDK dispatch, TL reply decoding and sender-built
+RPC errors. It covers expected/cached/actual identity, bounded reference grammar and
+numeric namespaces, invite/minimal/forbidden/community forms, qualified immutable values,
+one-message history evidence, real file/store sessions and SQLite read budgets.
+Forced overlaps, cancelled reads, delayed/failed cleanup and callback failures check
+source-owned health and conservative recovery. Socket, login-code, join/import and dialog
+requests are forbidden. Malformed replies/local faults include explicitly injected cases.
+No live Telegram permission claim is made; suites32/33 remain foundation regressions.
+See [the public contract](../../docs/group_operations.md).
+
+### Join allowance (offline)
+
+`python -m tgdata.smoke_tests.test_35_join_budget` runs 35 test groups on actual
+SQLite, including forced competing processes and process exits before/after commit.
+It covers explicit provisioning/reopening, shared ReadBudget storage, rolling expiry,
+policy changes, backward clocks, malformed state refusal, commit/cleanup uncertainty,
+sanitized local errors, cancellation and public status/exports. Fault wrappers delegate
+to real storage. An Exception-derived cancellation fixture covers the older hierarchy;
+it is not a native Python3.7 run. These tests need no git history, credentials or network.
+Process exits do not establish physical power-loss durability or live Telegram behavior.
+See [the allowance contract](../../docs/join_budget.md).
+
+### Group joining (offline)
+
+`python -m tgdata.smoke_tests.test_36_group_join` runs 44 test groups on Telethon
+1.45.0 and actual SQLite. It exercises the public facade, temporary owner proof,
+real SDK dispatch/TL decoding/RPC construction, and file/store sessions with a
+synthetic network boundary. Coverage includes join/import outcomes and exact error
+origins, preflight metadata, conservative admission/retry accounting, missing or
+corrupt state, identity changes, unsupported envelopes, cancellation, cleanup,
+callbacks and forced shared-cap/different-owner overlaps. Membership never substitutes
+for history-access evidence. Explicit malformed/local fixtures are labeled, including
+the older cancellation hierarchy; no native Python3.7 run is claimed. Sockets, login
+and bot web-view requests are blocked. No live joining or safe-rate claim is made.
+See [joining groups](../../docs/group_joining.md).
+
 ### Run Individual Test:
 ```bash
 # Basic tests
@@ -357,11 +428,16 @@ python -m tgdata.smoke_tests.test_31_account_pool
 python examples/account_pool.py --demo
 ```
 
-Thirty-six groups exercise the actual Telethon 1.45 factory/request path, budget
+Forty-six groups exercise the actual Telethon 1.45 factory/request path, budget
 ledger, SQLite pool state and daily/backfill facades over synthetic wire replies.
 They cover drain/spread, scoped failure/restart, stale identity and changed identity
 at admission, duplicate credentials, quota races, canonical groups, timeout prefixes,
 blocked health observers, real overlap/cancellation, uncertain writes, owned process
 exits around admission/settlement, exact recovery retries, login reload and source-free
-delivery. Sockets are blocked. Three legacy live skips elsewhere are not evidence
+delivery. Native SDK teardown is held to verify repeated cancellation, failed/internal-
+cancelled retirement, blocked reuse, successful retry and credential preservation.
+Controlled reader-finalizer faults check actual child settlement before another
+source or shutdown; context-exit tests distinguish caller cancellation from cleanup
+errors. An older cancellation-hierarchy fixture is not a native Python3.7 run.
+Sockets are blocked. Three legacy live skips elsewhere are not evidence
 for this suite; #17's two-account live gate remains pending.

@@ -91,6 +91,9 @@ class _BudgetSender:
 
 class BudgetClientMixin:
     async def _read_budget_account(self):
+        operation = getattr(self, '_tgdata_account_operation', None)
+        if operation is not None:
+            return await operation.verify_account()
         # Never use _self_id as billing authority: restored cache rows may be
         # stale, and get_me itself leaves a nonempty cached id untouched.
         me = await self.get_me(input_peer=False)

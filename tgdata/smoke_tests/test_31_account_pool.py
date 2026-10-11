@@ -149,7 +149,8 @@ async def test_values_and_constructor_are_local():
                read_budget=e.budget, state_store=e.store))
     names = list(inspect.signature(TgData.__init__).parameters)
     assert names == ['self', 'config_path', 'connection_pool_size', 'log_file', 'interactive_login',
-                     'health_callback', 'account_label', 'session_store', 'read_budget', 'sync_store', 'backfill_store']
+                     'health_callback', 'account_label', 'session_store', 'read_budget', 'sync_store', 'backfill_store', 'join_budget']
+    assert inspect.signature(TgData.__init__).parameters['join_budget'].default is None
 
 
 async def test_actual_factory_policy_and_proxy_identity():
@@ -642,6 +643,309 @@ async def test_context_cleanup_keeps_primary_exception():
         assert e.pool._closed and e.pool._sources[222]._primary_client is None
     finally:
         source.retire = original
+
+
+class CleanupGate:
+    """Delay the transport boundary inside Telethon's actual disconnect task."""
+    def __init__(self, sender, error=None):
+        self.sender, self.original, self.error = sender, sender.disconnect, error
+        self.entered, self.release = asyncio.Event(), asyncio.Event()
+        self.tasks = []
+        sender.disconnect = self.disconnect
+
+    async def disconnect(self):
+        self.tasks.append(asyncio.current_task())
+        self.entered.set()
+        await self.release.wait()
+        if self.error is not None:
+            raise self.error
+        await self.original()
+
+    async def restore(self):
+        self.release.set()
+        await asyncio.gather(*self.tasks, return_exceptions=True)
+        # Restore the original sender even if the source now has a fresh client.
+        self.sender.disconnect = self.original
+
+
+async def turns(count=8):
+    for _ in range(count):
+        await asyncio.sleep(0)
+
+
+async def test_recheck_cancellation_holds_ownership_until_sdk_disconnect():
+    for repeated in (False, True):
+        e = await setup()
+        source = e.pool._sources[111]
+        gate = CleanupGate(e.senders[111])
+        old = source._primary_client
+        task = asyncio.create_task(e.pool.recheck_account(111))
+        try:
+            await gate.entered.wait()
+            task.cancel()
+            await turns()
+            if repeated:
+                task.cancel()
+                await turns()
+            assert not task.done() and e.pool._active_task is task
+            assert source._primary_client is old and source._retirement_blocked
+            await f.expect(PoolBusyError, read(e))
+            await f.expect(PoolBusyError, e.pool.recheck_account(111))
+            assert not any(sender.reads for sender in e.senders.values())
+            assert e.budget.status(111).used == e.budget.status(222).used == 0
+            gate.release.set()
+            await f.expect(asyncio.CancelledError, task)
+            assert len(gate.tasks) == 1 and gate.tasks[0].done()
+            assert source._primary_client is source._config is source.verified_id is None
+            assert not source._retirement_blocked and e.pool._active_task is None
+            e.clients[111], e.senders[111] = wire(source)
+            assert e.clients[111] is not old and (await read(e)).account_id == 111
+        finally:
+            await gate.restore()
+            await asyncio.gather(task, return_exceptions=True)
+
+
+async def test_retirement_failure_refuses_reuse_until_explicit_recheck():
+    for internal, cancelled in [('error', False), ('cancel', False), ('error', True), ('cancel', True)]:
+        events = []
+        e = await setup(callback=events.append)
+        source = e.pool._sources[111]
+        old = source._primary_client
+        initial = await e.store.load()
+        failure = asyncio.CancelledError(SECRET) if internal == 'cancel' else OSError(SECRET)
+        gate = CleanupGate(e.senders[111], failure)
+        task = asyncio.create_task(e.pool.recheck_account(111))
+        try:
+            await gate.entered.wait()
+            if cancelled:
+                task.cancel()
+                await turns()
+                assert not task.done()
+            gate.release.set()
+            error = await f.expect(asyncio.CancelledError if cancelled else PoolStateError, task)
+            assert SECRET not in str(error) and task.cancelled() is cancelled
+            assert source._primary_client is old and source._retirement_blocked
+            assert all(work.done() for work in gate.tasks)
+            await f.expect(PoolStateError, read(e))
+            await f.expect(PoolStateError, source._verify())
+            assert await e.store.load() == initial
+            assert not events and not any(sender.calls for sender in e.senders.values())
+            assert e.budget.status(111).used == e.budget.status(222).used == 0
+            await gate.restore()
+            factory = source._new_client
+            def rebuilt(*args, **kwargs):
+                client = factory(*args, **kwargs)
+                client._sender = b.Sender()
+                client._sender.account = 111
+                return client
+            with patch.object(source, '_new_client', side_effect=rebuilt):
+                await e.pool.recheck_account(111)
+            assert source._primary_client is not old and not source._retirement_blocked
+            assert source.verified_id == 111 and e.budget.status(111).used == 0
+        finally:
+            await gate.restore()
+            await asyncio.gather(task, return_exceptions=True)
+
+
+async def test_cancelled_retirement_cannot_overwrite_repaired_credential_later():
+    e = await setup()
+    source = e.pool._sources[111]
+    name = source._config.session_file
+    replacement = StoredSession(source.session_store, name)
+    key = b'\xad' * 256
+    replacement.auth_key = AuthKey(key)
+    replacement.save()  # Repair before the public recheck, outside active work.
+    gate = CleanupGate(e.senders[111])
+    task = asyncio.create_task(e.pool.recheck_account(111))
+    try:
+        await gate.entered.wait()
+        task.cancel()
+        await turns()
+        assert not task.done()
+        gate.release.set()
+        await f.expect(asyncio.CancelledError, task)
+        assert all(work.done() for work in gate.tasks)
+        e.clients[111], e.senders[111] = wire(source)
+        assert source._primary_client.session.auth_key.key == key
+        assert (await read(e)).account_id == 111
+        assert StoredSession(source.session_store, name).auth_key.key == key
+    finally:
+        await gate.restore()
+        await asyncio.gather(task, return_exceptions=True)
+
+
+async def test_close_cancellation_settles_all_sdk_cleanup_and_stays_closed():
+    e = await setup()
+    gate = CleanupGate(e.senders[111])
+    old_second = e.senders[222].disconnect
+    second_calls = []
+    async def second():
+        second_calls.append(True)
+        await old_second()
+    e.senders[222].disconnect = second
+    task = asyncio.create_task(e.pool.close())
+    try:
+        await gate.entered.wait()
+        task.cancel()
+        await turns()
+        task.cancel()
+        await turns()
+        assert not task.done() and e.pool._closed and e.pool._closing
+        await f.expect(PoolClosedError, read(e))
+        await f.expect(PoolBusyError, e.pool.close())
+        gate.release.set()
+        await f.expect(asyncio.CancelledError, task)
+        assert len(gate.tasks) == len(second_calls) == 1 and gate.tasks[0].done()
+        assert all(source._primary_client is None for source in e.pool._sources.values())
+        assert not e.pool._closing and e.pool._closed
+        await e.pool.close()
+        assert len(gate.tasks) == len(second_calls) == 1
+        assert e.budget.status(111).used == e.budget.status(222).used == 0
+    finally:
+        await gate.restore()
+        await asyncio.gather(task, return_exceptions=True)
+        e.senders[222].disconnect = old_second
+
+
+async def held_source_lifetime(closing):
+    e = await setup()
+    source = e.pool._sources[111]
+    original = source.batch_reader.fetch_batch
+    entered, release = asyncio.Event(), asyncio.Event()
+    async def with_finalizer(*args, **kwargs):
+        try:
+            return await original(*args, **kwargs)
+        finally:
+            # Explicit fault-only cooperative finalizer after the real reader.
+            entered.set()
+            await release.wait()
+    source.batch_reader.fetch_batch = with_finalizer
+    e.senders[111].script = [f.PENDING]
+    reader = asyncio.create_task(read(e))
+    closer = child = None
+    try:
+        await d.until(lambda: bool(e.senders[111].pending))
+        child = source.task
+        if closing:
+            closer = asyncio.create_task(e.pool.close())
+        else:
+            reader.cancel()
+        await entered.wait()
+        caller = closer if closing else reader
+        caller.cancel()
+        await turns()
+        caller.cancel()
+        await turns()
+        assert not caller.done() and not reader.done() and not child.done()
+        assert source.task is child and e.pool._active_task is reader
+        await f.expect(PoolClosedError if closing else PoolBusyError, read(e))
+        assert not e.senders[222].reads
+        release.set()
+        await f.expect(asyncio.CancelledError, caller)
+        await f.expect(asyncio.CancelledError, reader)
+        assert child.done() and source.task is None and e.pool._active_task is None
+        assert e.budget.status(111).used == 1 and e.budget.status(222).used == 0
+        assert (await e.pool.get_pool_status(CHAT)).accounts[0].attempt_id is not None
+        if closing:
+            assert all(item._primary_client is None for item in e.pool._sources.values())
+        else:
+            assert (await read(e)).account_id == 222
+    finally:
+        release.set()
+        await asyncio.gather(reader, *([child] if child is not None else []),
+                             *([closer] if closer is not None else []), return_exceptions=True)
+        source.batch_reader.fetch_batch = original
+
+
+async def test_repeated_read_cancellation_retains_the_actual_child():
+    await held_source_lifetime(False)
+
+
+async def test_cancelled_close_waits_for_actual_source_child():
+    await held_source_lifetime(True)
+
+
+async def test_context_exit_preserves_caller_cancellation_after_cleanup():
+    for body_error in (None, LookupError('body failed')):
+        e = await setup()
+        gate = CleanupGate(e.senders[111])
+        async def work():
+            async with e.pool:
+                if body_error is not None:
+                    raise body_error
+        task = asyncio.create_task(work())
+        try:
+            await gate.entered.wait()
+            task.cancel()
+            await turns()
+            assert not task.done()
+            gate.release.set()
+            await f.expect(asyncio.CancelledError, task)
+            assert gate.tasks[0].done()
+            assert all(source._primary_client is None for source in e.pool._sources.values())
+        finally:
+            await gate.restore()
+            await asyncio.gather(task, return_exceptions=True)
+
+
+async def test_actual_cleanup_failure_keeps_body_error_and_can_be_retried():
+    for failure in (OSError(SECRET), asyncio.CancelledError(SECRET)):
+        e = await setup()
+        source = e.pool._sources[111]
+        gate = CleanupGate(e.senders[111], failure)
+        primary = LookupError('body error')
+        async def work():
+            async with e.pool:
+                raise primary
+        task = asyncio.create_task(work())
+        try:
+            await gate.entered.wait()
+            gate.release.set()
+            with patch('tgdata.account_pool.logger.warning') as warning:
+                assert await f.expect(LookupError, task) is primary
+            assert warning.call_count == 1 and SECRET not in str(warning.call_args)
+            assert source._retirement_blocked and e.pool._closed
+            assert e.pool._sources[222]._primary_client is None
+            await f.expect(PoolClosedError, read(e))
+            await gate.restore()
+            await e.pool.close()
+            assert source._primary_client is None and not source._retirement_blocked
+        finally:
+            await gate.restore()
+            await asyncio.gather(task, return_exceptions=True)
+
+
+async def test_cleanup_helper_preserves_internal_error_and_older_cancel_hierarchy():
+    from tgdata.pool_source import _await_cleanup
+    value = object()
+    async def success(): return value
+    assert await _await_cleanup(success()) is value
+    for error in (OSError(SECRET), asyncio.CancelledError('internal')):
+        async def fail(): raise error
+        assert await f.expect(type(error), _await_cleanup(fail())) is error
+    class OlderCancellation(Exception):
+        pass
+    error = OlderCancellation('older hierarchy fixture')
+    async def fail_old(): raise error
+    # Compatibility fixture, not a native Python3.7 runtime claim.
+    with patch('tgdata.pool_source.asyncio.CancelledError', OlderCancellation):
+        assert await f.expect(OlderCancellation, _await_cleanup(fail_old())) is error
+
+
+async def test_owned_factory_policy_uses_current_options_seam():
+    e = await setup(attach=False)
+    source = e.pool._sources[111]
+    client = source._new_client(request_retries=9, connection_retries=9, retry_delay=9,
+        flood_sleep_threshold=999, auto_reconnect=True, receive_updates=True,
+        raise_last_call_error=False, sequential_updates=True)
+    try:
+        assert client._request_retries == client._connection_retries == client._retry_delay == 0
+        assert client.flood_sleep_threshold == 0 and not client._auto_reconnect
+        assert client._no_updates and client._raise_last_call_error and client._sequential_updates
+        assert client._tgdata_read_budget is source.read_budget and client._tgdata_join_budget is None
+        assert not e.clients and e.budget.status(111).used == 0
+    finally:
+        await client.disconnect()
 
 
 def save_json(file, value):

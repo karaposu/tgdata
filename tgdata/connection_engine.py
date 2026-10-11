@@ -23,7 +23,9 @@ from typing import Optional, List, Dict, Any, Tuple, Union
 from urllib.parse import urlsplit, unquote
 from telethon import TelegramClient, functions
 from telethon.client.telegrambaseclient import TelegramBaseClient
-from telethon.errors import FloodWaitError, AuthKeyUnregisteredError, UnauthorizedError, AuthKeyError
+from telethon.errors import (
+    FloodWaitError, AuthKeyUnregisteredError, UnauthorizedError, AuthKeyError, RPCError, MultiError,
+)
 from telethon.sessions import StringSession
 
 from . import health
@@ -31,6 +33,8 @@ from .health import telegram_error_name as _telegram_error_name
 from .models import ConnectionConfig, RateLimitInfo
 from .session_store import StoredSession
 from .budget_client import BudgetClientMixin
+from .join_client import JoinClientMixin
+from .account_operation import _AccountOperation, _disconnect_owned, _expected_account_id
 
 logger = logging.getLogger(__name__)
 
@@ -111,12 +115,18 @@ class _AnswerEvidence:
     tgdata sends passes through the client's __call__, so this is where an
     answer is observed. Requests Telethon sends past __call__ (an exported
     sender for media on another data centre) count as no evidence, which can
-    only delay an "ok", never fake one."""
+    only delay an "ok", never fake one. Verified owned calls also observe raw
+    RPC failures here, before a higher-level operation can handle them."""
 
     async def __call__(self, request, ordered=False, flood_sleep_threshold=None):
-        result = await super().__call__(request, ordered=ordered,
-                                        flood_sleep_threshold=flood_sleep_threshold)
-        health.note_answer()
+        evidence = health.capture_request_evidence(self, request)
+        try:
+            result = await super().__call__(request, ordered=ordered,
+                                            flood_sleep_threshold=flood_sleep_threshold)
+        except (RPCError, MultiError) as exc:
+            health.note_rpc_error(self, exc)
+            raise
+        health.note_answer(self, request, evidence)
         return result
 
 
@@ -124,9 +134,10 @@ class _AnswerEvidence:
 def _client_class(base):
     """The client class _new_client() builds: `base` (Telethon's
     TelegramClient, or whatever stands in for it in a test) with
-    answer evidence, optional read budgets and per-call flood thresholds
+    answer evidence, owned join admission, optional read budgets and per-call flood thresholds
     in front of it. Cached per base."""
-    return type(f"Tgdata{base.__name__}", (_AnswerEvidence, BudgetClientMixin, _PerCallFloodThreshold, base), {})
+    return type(f"Tgdata{base.__name__}",
+                (_AnswerEvidence, JoinClientMixin, BudgetClientMixin, _PerCallFloodThreshold, base), {})
 
 
 class ProxyConfigError(ValueError):
@@ -524,11 +535,7 @@ class ConnectionEngine:
                                       if presented[key] is not None),
         }
 
-    def _client_options(self):
-        """Private policy seam; ordinary clients retain the SDK's defaults."""
-        return {}
-
-    def _new_client(self, session_file: Optional[str] = None) -> TelegramClient:
+    def _new_client(self, session_file: Optional[str] = None, **client_options) -> TelegramClient:
         """
         THE door to Telegram: every client tgdata opens — the persistent one,
         each pool connection, and every use-and-close lookup — is built here.
@@ -556,6 +563,8 @@ class ConnectionEngine:
 
         Args:
             session_file: Session name for this client (default: the config's)
+            client_options: Internal constructor policy for an owned operation.
+                Omitted on ordinary clients, preserving Telethon's defaults.
         """
         config = self._load_config()
         identity = self._identity_kwargs(config)
@@ -579,10 +588,11 @@ class ConnectionEngine:
             config.api_id,
             config.api_hash,
             proxy=dict(config.proxy) if config.proxy else None,
-            **self._client_options(),
-            **identity
+            **identity,
+            **client_options
         )
         client._tgdata_read_budget = self.read_budget
+        client._tgdata_join_budget = None  # Activated only by the public owned join operation.
         return client
         
     async def get_client(self) -> TelegramClient:
@@ -622,6 +632,52 @@ class ConnectionEngine:
         client = await self.get_client()
         yield client
         # Intentionally NO disconnect here — the connection is persistent.
+
+    @asynccontextmanager
+    async def _account_operation(self, expected_account_id):
+        """Private, creator-task-scoped client for an explicitly expected account.
+
+        The policy is in place before connect's own authenticated requests.
+        This never performs login, even when interactive_login=True. Later
+        admissions must use the yielded handle's verify_account(). Health
+        ownership and public group operations are separate consumers.
+        """
+        expected_account_id = _expected_account_id(expected_account_id)
+        config = self._load_config()
+        client = self._new_client(
+            flood_sleep_threshold=0, request_retries=0, connection_retries=0,
+            retry_delay=0, auto_reconnect=False, raise_last_call_error=True,
+            receive_updates=False)
+        first_login = client.session.auth_key is None
+
+        def auth_required(problem):
+            if problem is None:
+                return AuthRequiredError(
+                    f"session {config.session_file!r}: Telegram provided no authenticated "
+                    "account; log in separately before starting an account operation",
+                    first_login=first_login)
+            error = self._auth_required(config.session_file, problem, first_login)
+            if error.first_login:
+                error.args = (
+                    f"session {config.session_file!r}: account operations require an "
+                    f"existing login ({error.reason}); log in separately before retrying",)
+            return error
+
+        operation = _AccountOperation(client, expected_account_id, auth_required)
+        try:
+            try:
+                await client.connect()
+                problem = await self._authorization_problem(client)
+                if problem is not None:
+                    raise auth_required(problem) from problem
+                await operation.verify_account()
+            except (UnauthorizedError, AuthKeyError) as exc:
+                raise auth_required(exc) from exc
+            client._tgdata_account_operation = operation
+            yield operation
+        finally:
+            operation._close()
+            await _disconnect_owned(client)
 
     @asynccontextmanager
     async def ephemeral_client(self):

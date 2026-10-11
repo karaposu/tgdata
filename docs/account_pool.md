@@ -125,8 +125,9 @@ finished, the actual result/error survives instead. A long flood wait cannot bec
 a short transport cooldown. Keep callbacks quick and avoid pool reentry.
 
 Timeout is cooperative, not hard preemption of blocking code. No next account starts
-while its predecessor's source task runs. Caller cancellation propagates, leaves an
-unresolved account attempt and does not promise a saved prefix. Uncertain quota charges
+while its predecessor's source task runs. Caller cancellation, including repeated
+cancellation, waits for that task to end before propagating. It leaves an unresolved
+account attempt and does not promise a saved prefix. Uncertain quota charges
 remain. Local input/configuration/media/format and unknown errors stop without failover.
 
 Permission is saved before source work. Token-specific settlement records the outcome
@@ -177,6 +178,16 @@ It retires the old client, reloads credentials, repeats duplicate checks, durabl
 admits an identity-only check and verifies the expected account. Successful settlement
 clears account repair flags, never group denials or quota. Failed retirement refuses reuse.
 
+Recheck keeps the operation busy until the actual SDK disconnect attempt settles,
+even if the caller is cancelled repeatedly. Successful retirement clears the old
+client before cancellation reaches the caller, so a later operation loads a fresh
+one. Ordinary disconnect failure or SDK-internal cancellation raises a local
+`PoolStateError` with the failure type; it does not masquerade as caller cancellation.
+That client remains unavailable until an explicit `recheck_account` or `close`
+successfully retries cleanup. No read, authentication or replacement client is
+allowed through the failed retirement. Pool status describes stored restrictions
+and allowance; it does not certify the state of local client cleanup.
+
 For an unknown attempt, actually stop and await the prior reader, then retain and submit:
 
 ```python
@@ -200,9 +211,14 @@ is not a distributed lease. A process disappearing does not establish another wo
 quiescence automatically.
 
 `close()` blocks new pool work, cancels/awaits active work and retires every client.
-Calling it from a source callback refuses to prevent a parent/child deadlock. A failed
-or cancelled close is not proof all clients retired; resolve it and retry cleanup.
-Async context exit preserves the original exception. State-only progress methods
+Calling it from a source callback refuses to prevent a parent/child deadlock.
+Cancellation waits for the active reader and cleanup attempts to settle, then
+propagates; another close while this is pending refuses busy. A failed or cancelled
+close is not proof every retirement succeeded; retry cleanup as needed. The pool
+stays closed to new source work. There is no shutdown deadline for SDK work that
+does not finish. Async context exit preserves an existing body exception when
+ordinary cleanup fails; caller cancellation during cleanup takes precedence after
+settlement. State-only progress methods
 remain usable; source reads on a closed pool refuse.
 
 ## Offline demonstration
@@ -212,6 +228,8 @@ python examples/account_pool.py --demo
 python -m tgdata.smoke_tests.test_31_account_pool
 ```
 
-The demo opens no Telegram sockets and reads no real config. The 36 test groups
+The demo opens no Telegram sockets and reads no real config. The 46 test groups
 exercise actual SDK/SQLite behavior with synthetic replies, including real overlapping
-tasks and process exits around commits. These are not disk power-loss or live-account tests.
+tasks, native SDK teardown, repeated cancellation, failed-retirement refusal/retry
+and process exits around commits. Delayed reader finalizers are labeled fault
+injections. These are not disk power-loss or live-account tests.

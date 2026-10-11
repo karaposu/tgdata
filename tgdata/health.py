@@ -9,7 +9,8 @@ long, and when it ended. It reports and never acts.
   classify()       Telegram's own error name -> verdict. Follows tgdata's
                    wrappers through the cause chain; never guesses from a
                    category.
-  HealthMonitor    one per TgData: the ledger, "ok" on Telegram's evidence that
+  HealthMonitor    the legacy ledger per TgData (also reused by fixed-owner
+                   monitors in owned_health): "ok" on Telegram's evidence that
                    a condition ended, exception-safe delivery to the callback
                    (never back into a callback for its own calls' events), a
                    log line per event, a snapshot.
@@ -43,7 +44,7 @@ from datetime import datetime, timezone
 from typing import Any, Callable, Dict, Optional, Tuple
 
 from telethon import errors as tl_errors
-from telethon.errors import RPCError, rpcerrorlist
+from telethon.errors import MultiError, RPCError, rpcerrorlist
 
 logger = logging.getLogger(__name__)
 _mirror = logging.getLogger('tgdata.tgdata.health')     # under the logger log_file= writes to
@@ -102,6 +103,7 @@ def _wire_names() -> Dict[type, str]:
 
 _TELEGRAM_NAMES = _wire_names()
 _REPORTED = '_tgdata_health_reported'
+_LEGACY_NEUTRAL = '_tgdata_health_neutral'
 
 
 def register(exc_class: type, verdict: str, scope: str) -> None:
@@ -218,6 +220,50 @@ def _mark(exc: BaseException, finding: Finding) -> None:
                 pass
 
 
+def _mark_legacy_neutral(exc: BaseException) -> None:
+    """Keep this failure's attribution neutral across wrappers and task hops.
+
+    Explicit causes / SDK RPC leaves belong to the failure. Implicit context may
+    predate the isolated operation, so never adopt it as an originating error.
+    Depth is bounded per lineage; seen objects also stop cycles/shared causes.
+    """
+    pending = [(exc, 0)]
+    seen = set()
+    while pending:
+        error, depth = pending.pop()
+        if depth >= 10 or id(error) in seen:
+            continue
+        seen.add(id(error))
+        try:
+            setattr(error, _LEGACY_NEUTRAL, True)
+        except (Exception, asyncio.CancelledError):  # Metadata cannot replace the primary outcome.
+            pass
+        try:
+            if error.__cause__ is not None:
+                pending.append((error.__cause__, depth + 1))
+            if isinstance(error, MultiError):
+                pending.extend((leaf, depth + 1) for leaf in error.exceptions
+                               if isinstance(leaf, RPCError))
+        except (Exception, asyncio.CancelledError):  # noqa: BLE001
+            pass
+
+
+def _legacy_neutral(exc: BaseException) -> bool:
+    """Emission only: a new RPC takes precedence over an older neutral context.
+
+    Diagnostic classify() deliberately ignores this attribution marker.
+    """
+    try:
+        for error in _chain(exc):
+            if getattr(error, _LEGACY_NEUTRAL, False) is True:
+                return True
+            if isinstance(error, RPCError):
+                return False
+    except (Exception, asyncio.CancelledError):  # noqa: BLE001
+        pass
+    return False
+
+
 # ── the call context ────────────────────────────────────────────────────────
 
 _CURRENT: contextvars.ContextVar = contextvars.ContextVar('tgdata_health_call', default=None)
@@ -243,6 +289,8 @@ class _Call:
     __slots__ = ('monitor', 'method', 'group', 'task', 'parent', 'active', 'failed', 'waited', 'reported',
                  'answered')
 
+    accepts_ambient_reports = True
+
     def __init__(self, monitor: 'HealthMonitor', method: str, group):
         self.monitor = monitor
         self.method = method
@@ -259,13 +307,47 @@ class _Call:
         return self.active and self.task is not None and _current_task() is self.task
 
     def note_reported(self, key: tuple) -> None:
-        """This call — and every call still running around it — reported this
-        scope, so none of them may claim to have recovered it."""
+        """Active enclosing calls in this monitor/task also reported this scope,
+        so none of them may claim to have recovered it."""
         call: Optional[_Call] = self
         while call is not None:
-            if call.active:
+            if (call.owns_current_task() and call.monitor is self.monitor
+                    and call.task is self.task):
                 call.reported.add(key)
             call = call.parent
+
+    def capture_request_evidence(self, client, request):
+        return None  # Legacy evidence is recorded at the existing answer boundary.
+
+    def note_answer(self, client=None, request=None, evidence=None) -> None:
+        if self.owns_current_task():
+            self.answered = next(_TICKS)
+
+    def note_rpc_error(self, client, exc) -> None:
+        # Legacy calls report at their public/handled boundary instead.
+        pass
+
+
+@contextlib.contextmanager
+def isolate_call():
+    """Keep verified setup/work/cleanup out of enclosing ambient health calls.
+
+    Neutrality follows the originating failure, including through awaited tasks.
+    An outer wrapper cannot claim it or use this nested operation as recovery.
+    """
+    call = _CURRENT.get()
+    while call is not None:
+        if call.owns_current_task():
+            call.failed = True
+        call = call.parent
+    token = _CURRENT.set(None)
+    try:
+        yield
+    except BaseException as exc:
+        _mark_legacy_neutral(exc)
+        raise
+    finally:
+        _CURRENT.reset(token)
 
 
 def _iso(epoch: Optional[float] = None) -> str:
@@ -276,7 +358,7 @@ def _iso(epoch: Optional[float] = None) -> str:
 # ── the monitor ─────────────────────────────────────────────────────────────
 
 class HealthMonitor:
-    """One per TgData: turns findings into plain-data events, keeps the
+    """Turns findings into plain-data events, keeps the
     per-instance ledger that "ok" recoveries and health_check()["health"]
     read, delivers to the callback without ever letting it break the caller,
     and mirrors each event to the 'tgdata.tgdata.health' logger."""
@@ -333,6 +415,8 @@ class HealthMonitor:
             self._health_failed()
 
     async def _on_error(self, exc: BaseException, c: _Call) -> None:
+        if _legacy_neutral(exc):
+            return
         finding = classify(exc)
         if finding is not None:
             _mark(exc, finding)
@@ -551,16 +635,45 @@ async def _delivering(awaitable) -> None:
     await awaitable
 
 
-def note_answer() -> None:
+def capture_request_evidence(client, request):
+    """Capture owned immutable request keys before dispatch can suspend."""
+    call = _CURRENT.get()
+    try:
+        if call is not None and call.owns_current_task():
+            return call.capture_request_evidence(client, request)
+    except (Exception, asyncio.CancelledError):  # noqa: BLE001
+        call.failed = True
+        try:
+            call.monitor._health_failed()
+        except (Exception, asyncio.CancelledError):  # noqa: BLE001
+            pass
+    return None
+
+
+def note_answer(client=None, request=None, evidence=None) -> None:
     """Telegram answered a request. Called by tgdata's client class for every
     request that succeeds; the call whose own task sent it records when, which
     is the evidence an "ok" for the account or a group needs. Never raises."""
     try:
         call = _CURRENT.get()
         if call is not None and call.owns_current_task():
-            call.answered = next(_TICKS)
+            call.note_answer(client, request, evidence)
     except Exception:  # noqa: BLE001 — never raise into Telethon's request
         pass
+
+
+def note_rpc_error(client, exc) -> None:
+    """Owned calls observe actual SDK failures at the exact client boundary."""
+    call = _CURRENT.get()
+    try:
+        if call is not None and call.owns_current_task():
+            call.note_rpc_error(client, exc)
+    except Exception:  # noqa: BLE001 — reporting must not replace the RPC error
+        call.failed = True
+        try:
+            call.monitor._health_failed()
+        except Exception:  # noqa: BLE001
+            pass
 
 
 async def report(exc: BaseException, source: str = 'swallowed', group=None) -> Optional[Finding]:
@@ -568,7 +681,7 @@ async def report(exc: BaseException, source: str = 'swallowed', group=None) -> O
     public TgData call, for errors that are not health signals, and for an
     error already reported. Never raises."""
     call = _CURRENT.get()
-    if call is None:
+    if call is None or not call.accepts_ambient_reports or _legacy_neutral(exc):
         return None
     try:
         finding = classify(exc)
@@ -614,7 +727,7 @@ class _SleepCapture(logging.Filter):
         try:
             if record.msg == _SLEEP_MSG and isinstance(record.args, tuple) and len(record.args) == 4:
                 call = _CURRENT.get()
-                if call is not None:
+                if call is not None and call.accepts_ambient_reports:
                     _early, seconds, _delta, request = record.args
                     # Telethon logs this inside its `except <wait error> as e:`, so the
                     # wait being slept is the exception in flight (not for an early sleep)
