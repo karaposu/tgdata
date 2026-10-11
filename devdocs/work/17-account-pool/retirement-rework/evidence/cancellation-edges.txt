@@ -1,0 +1,2 @@
+{"case": "repeated_read_cancel", "reader_ended": true, "source_child_ended": false, "source_reference_cleared": true, "next_read_account": 222, "child_pending_after_next_read": true}
+{"case": "close_cancel", "reader_ended": true, "source_child_ended": false, "source_reference_cleared": true, "close_cancelled": false, "child_pending_after_close": true}
