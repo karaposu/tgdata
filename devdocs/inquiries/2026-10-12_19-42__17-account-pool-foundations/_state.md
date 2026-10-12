@@ -5,7 +5,7 @@ articulated-surfacing-routed
 A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
-- [ ] Surfacing
+- [x] Surfacing
 - [ ] Sensemaking
 - [ ] Decomposition
 - [ ] Innovation
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Surfacing
+Sensemaking
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -55,6 +55,10 @@ Surfacing
   a complete recommendation. Narrow continuation, no re-articulation or new scope.
   Prior six outputs retained as *_iter1.md at root; _route.md retained for extension.
   Next: Surfacing2.
+
+- 2026-10-12_20-30: Surfacing2 complete. Eight anchors, core7/sub1, three cycles; narrow
+  observation/provider frontier covered. Manual10/10 PASS; checker unavailable.
+  Next: Sensemaking2.
 
 ## Iteration 2 focus
 
