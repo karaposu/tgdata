@@ -2,21 +2,31 @@
 model: gpt-6-astra
 effort: max
 ---
-# Implementation plan — #10 reading worker, revision 3
+# Implementation plan — #10 reading worker, revision 4
 
-2026-10-12. **Review state: awaiting fresh plan critique; not folded or implemented.**
-Re-planned under CONTRIBUTING7.4 from desc.md and the full PR critique at837d06f,
-with its selected robust remedies at8322827. This replaces the active revision2
-plan; its exact text is retained in `step_by_step_impl_plan_r2.md`. Its planning
-critic/prompt are `critic_r1.md` / `dynamic_critic_prompt_r1.md`. `pr-critic.md`
-remains the rejected first PR review. A fresh `critic.md` must judge this plan;
-the archived planning critic must not be folded into revision3 by a resume command.
+**Critic folded:** 2026-10-12 — 0 additional mitigations (0 implementation steps
+changed, 0 added). The two robust PR remedies already encoded in revision3 remain.
+**Review state: critique and fold complete; combined Step1 prebuild PENDING;
+product implementation not started.** The REORDER experiment in critic.md must
+pass before any runtime edit; this fold marker does not discharge that gate.
+
+Revision3 at9ce9ae3 was reviewed under the new dynamic prompt at1d6cac7, with
+Phase2 at08ee0f2 and Phase3 selection atd49f8a0 in critic.md. No additional
+High/Medium/Low plan risks were found. The22 targeted review histories passed,
+but are explicitly narrower than the full combined matrix required by Step1.
+The six implementation steps and their contracts below are unchanged by this fold.
+
+Revision3 is retained exactly in `step_by_step_impl_plan_r3.md`; revision2 in
+`step_by_step_impl_plan_r2.md`. The first planning critic/prompt are `critic_r1.md`
+and `dynamic_critic_prompt_r1.md`. `pr-critic.md` remains the rejected first PR
+review (837d06f, selections8322827), whose two robust remedies drove the re-plan.
+The current critic.md belongs to revision3, not to the first planning cycle.
 
 Base dev remains68f6bbd. Existing product is6ee146c; PR27 remains draft/rejected.
 This is the first rejected PR round, so re-planning is permitted. A second rejected
 round requires returning to description/traverse under7.4, not another patch cycle.
-Current turn metadata at2026-10-12T07:08:25.710Z verifies GPT-6 Astra/max. Same warmed
-session; no delegation. The original feature-heavy scope remains appropriate.
+Current review/fold metadata at2026-10-12T07:38:03.247Z verifies GPT-6 Astra/max.
+Same warmed session; no delegation. The original feature-heavy scope remains appropriate.
 
 ### What is the task
 

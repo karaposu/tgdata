@@ -2,17 +2,30 @@
 model: gpt-6-astra
 effort: max
 ---
-# #10 handoff — revision3 written; fresh plan critique next
+# #10 handoff — revision4 folded; combined prebuild next
 
 2026-10-12. Branch `feat/10-reading-jobs`, worktree
 `/private/tmp/tgdata-10-reading-jobs`, unchanged current dev `68f6bbd`.
 **Product remains `6ee146c`; no product edits during review.**
 
-Revision3 re-planning is now complete in `step_by_step_impl_plan.md`, using the
-full rejected PR review and its selected remedies. The next action is a fresh
-critic-d review of this plan, then fold into revision4. The combined candidate
-prebuild is the first implementation step, before any runtime edit. No new plan
-critique, fold or product implementation was performed during this planning run.
+Revision3 at9ce9ae3 has received a fresh in-session critic-d review and is folded
+into revision4 in `step_by_step_impl_plan.md`. Prompt1d6cac7, Phase2 08ee0f2,
+then a separate completed selection pass d49f8a0. No additional High/Medium/Low plan risks
+were found; zero new remedies were folded. The two original robust PR remedies
+were already present in revision3. Exact revision3 is archived in
+`step_by_step_impl_plan_r3.md`.
+
+**Next: the complete combined Step1 prebuild**, as required by critic.md's REORDER
+verdict. It has NOT passed yet. Only after it passes may implementation begin.
+The fold marker must not bypass the pending experiment in a task-impl resume.
+No runtime changes, live actions, PR approval or merge occurred in this review/fold.
+
+Fresh review evidence: `probes/revision3_critic.py/.txt`,8 actual process histories
+(quiet, held disconnect, creation/publication and held finalization, both signals)
+and14 diagnostic histories (all four verbs, delivery-error and fatal projections).
+All22 passed with real Worker/SDK/SQLite and OS signals, candidates compiled in
+memory, no child polling helper and no live network. These targeted observations
+do not replace the full startup/EOF/raw-pipe/cleanup-fault composition in Step1.
 
 The plan has six steps: qualify the complete boundary; implement one process stop
 policy; restrict authentication diagnostic vocabulary; add permanent regressions;
@@ -28,10 +41,10 @@ ready Task step first. Known authentication metadata survives without raw text.
 The full creation/held-cleanup/finalization/pipe matrix remains Step1's mandatory
 prebuild, not a claimed PASS from these narrower experiments.
 
-Archived without altering their contents: `step_by_step_impl_plan_r2.md`,
-`critic_r1.md`, `dynamic_critic_prompt_r1.md`. The live `critic.md` is absent so a
-task-impl resume invokes a new plan critique instead of folding the old verdict.
-`pr-critic.md` remains the first rejected PR review; it has not been overwritten.
+Archived without altering their contents: plans r2/r3, `critic_r1.md`,
+`dynamic_critic_prompt_r1.md`. The live `critic.md` now holds the new revision3
+review; read its pending experiment before resuming implementation. `pr-critic.md`
+remains the first rejected PR review and has not been overwritten.
 
 The user-requested merge check → PR → fresh critique is complete:
 
@@ -58,11 +71,11 @@ All25 existing core and14 process groups passed again. Prior24-suite612-pass/3-l
 skip and packaging records remain accurate for their coverage; neither is evidence
 that these new findings are safe. No live Telegram or real credential was used.
 
-**Next under CONTRIBUTING7.4:** fresh plan critic for revision3; fold into revision4;
-required combined prebuild; implementation; renew merge check and fresh PR critique
-on the same PR. The old plan is archived as history, not marked as a meaning-gap
-deprecation. This is the first rejected PR round; a second rejection goes back to
-description/traverse under7.4. Do not merge or close #10.
+**Next under CONTRIBUTING7.4:** required combined prebuild; implementation; renew
+merge check and fresh PR critique on the same PR. Do not re-critique the folded
+plan just because it is revision4. Old plans are archived as history, not marked
+as meaning-gap deprecations. This is the first rejected PR round; a second PR
+rejection goes back to description/traverse under7.4. Do not merge or close #10.
 
 The worker remains explicit-account, serial JSON lines over caller-owned pipes,
 with temporary verified clients and existing budgets. These findings do not justify
