@@ -5,18 +5,18 @@ articulated-surfacing-routed
 A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
-- [x] Surfacing
-- [x] Sensemaking
-- [x] Decomposition
-- [x] Innovation
-- [x] Critique
-- [x] Routelister
+- [ ] Surfacing
+- [ ] Sensemaking
+- [ ] Decomposition
+- [ ] Innovation
+- [ ] Critique
+- [ ] Routelister
 ## Iteration
-1
+2
 ## Status
 ACTIVE
 ## Next Discipline
-Iteration evaluation
+Surfacing
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -50,3 +50,18 @@ Iteration evaluation
 - 2026-10-12_20-24: Routelister complete;14 identities, high6/core7, both canonical
   outputs written; no selected move or inter-concept dependency graph. Manual12/12
   PASS. Next: iteration evaluation from saved critique (focused continuation required).
+- 2026-10-12_20-24: Iteration1 evaluated. Diagnosis/retained core survive; original
+  variant3 (simplifying contract) needs explicit observation/control roles before
+  a complete recommendation. Narrow continuation, no re-articulation or new scope.
+  Prior six outputs retained as *_iter1.md at root; _route.md retained for extension.
+  Next: Surfacing2.
+
+## Iteration 2 focus
+
+What is the smallest complete observation/control contract that removes the measured
+wait dependency, preserves useful health reporting and ordinary external close, and
+avoids an event framework? Settle source/error observation access, finite retention
+and loss semantics, application observer ownership and storage-only provider roles.
+Retain original causal history, identity, durable permission, quota, progress and
+persistent-client findings. This refines considered articulation3 while maintaining
+coverage of all five; it does not ask for production implementation.
