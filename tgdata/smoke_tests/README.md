@@ -53,6 +53,33 @@ Tests polling and real-time features:
 
 ## Running Tests
 
+### Reading worker (offline)
+
+`python -m tgdata.smoke_tests.test_37_worker` runs 33 test groups for strict framing and
+explicit-account execution on actual Telethon 1.45.0 and SQLite, with sockets
+blocked. It covers four operations, bounded resolution, source ownership, retained
+charges and partial batches, exact IDs, health isolation/capacity, and cleanup
+failure/cancellation without changing the source result. Real SDK decoding tests
+unknown 401/406/403 text and known authentication reasons for all four verbs,
+including delivery-failure and fatal projections. An ordinary-library control
+preserves the original reason. Direct serialization faults, faulty metadata and
+collector-capacity faults are explicitly injected.
+
+`python -m tgdata.smoke_tests.test_38_worker_process` runs 25 test groups using
+actual subprocesses and pipes. Its test-only bootstrap replaces the SDK transport,
+not the worker executor. Cases include stock CLI startup, EOF and malformed input,
+all four jobs across two synthetic accounts, partial reply correlation, JavaScript
+ID precision (when Node is available), custom session stores, failed native cleanup,
+broken stdout, idle signals, a quiet selector waiting on a real SDK request,
+stops before task creation/publication, repeated signals during native/final cleanup,
+repeated direct cancellation and output backpressure without draining the pipe.
+Authentication cases cover all verbs and secondary diagnostic paths. The parent
+explicitly releases held cleanup; there is no child polling helper to mask a
+missing event-loop wake-up. Test instrumentation observes actual loop settlement
+and restoration of signal/logging state. Process watchdogs own the test children.
+These are offline process/SDK qualifications, not live Telegram tests or deployment.
+See [worker setup and protocol](../../docs/worker.md).
+
 ### Account operation foundation (offline)
 
 `python -m tgdata.smoke_tests.test_32_account_operation` runs 28 contract tests

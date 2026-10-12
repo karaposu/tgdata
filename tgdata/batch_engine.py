@@ -144,8 +144,9 @@ def _record(message, client):
 
 
 class BatchEngine:
-    def __init__(self, connection_engine):
+    def __init__(self, connection_engine, *, _resolve_entity=None):
         self.connection_engine = connection_engine
+        self._resolve_entity = _resolve_entity
 
     async def fetch_batch(self, group_id, *, after_id=0, limit=200, download_media_to=None,
                           start_date=None, end_date=None):
@@ -164,10 +165,13 @@ class BatchEngine:
         scan_id = after_id
         try:
             async with self.connection_engine.session() as client:
-                try:
-                    entity = await client.get_entity(group_id)
-                except ValueError:
-                    entity = await MessageEngine._entity_after_dialog_sync(client, group_id)
+                if self._resolve_entity is not None:
+                    entity = await self._resolve_entity(client, group_id)
+                else:
+                    try:
+                        entity = await client.get_entity(group_id)
+                    except ValueError:
+                        entity = await MessageEngine._entity_after_dialog_sync(client, group_id)
                 if isinstance(entity, (types.ChatForbidden, types.ChannelForbidden)):
                     raise GroupAccessError('account has no access to the requested group')
                 if not isinstance(entity, (types.Chat, types.Channel)):
