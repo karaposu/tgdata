@@ -1,0 +1,15 @@
+{"caller_cancel_requests": 0, "case": "candidate_observer_cancel", "mode": "raw", "pending": false, "preserved": true}
+{"caller_cancel_requests": 0, "case": "candidate_observer_cancel", "mode": "daily", "pending": true, "preserved": true}
+{"caller_cancel_requests": 0, "case": "candidate_observer_cancel", "mode": "success", "pending": false, "preserved": true}
+{"case": "candidate_descendant", "kind": "create_task", "refused": true, "selected": 222}
+{"case": "candidate_descendant", "kind": "wait_for", "refused": true, "selected": 222}
+{"case": "candidate_descendant", "kind": "backend", "refused": true, "selected": 111}
+{"case": "candidate_stale_scope", "no_permanent_false_refusal": true}
+{"case": "candidate_foreign_pool", "unrelated_close_permitted": true}
+{"case": "candidate_control", "passed": true, "test": "test_external_cancel_remains_unresolved_and_no_failover"}
+{"case": "candidate_control", "passed": true, "test": "test_repeated_read_cancellation_retains_the_actual_child"}
+{"case": "candidate_control", "passed": true, "test": "test_close_cancellation_settles_all_sdk_cleanup_and_stays_closed"}
+{"case": "candidate_control", "passed": true, "test": "test_observer_timeout_preserves_original_flood_and_prefix"}
+{"actor_inherits_scope": false, "actual_cycle": true, "case": "LIMIT_scope_only_predating_actor", "reader_done": false, "sdk_disconnects_started": 0}
+{"case": "passive_events_predating_actor", "close_completed": true, "source_settled_before_observer": true}
+PASS14 concept histories:12 narrow controls,1 scope limitation,1 passive-observer alternative.

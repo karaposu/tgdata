@@ -8,7 +8,7 @@ A → Su → S → D → I → C → R (always)
 - [x] Surfacing
 - [x] Sensemaking
 - [x] Decomposition
-- [ ] Innovation
+- [x] Innovation
 - [ ] Critique
 - [ ] Routelister
 ## Iteration
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Innovation
+Critique
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -37,3 +37,8 @@ Innovation
   nine explicit interfaces/assumptions; runtime determination assigned. Manual
   structure7/7 and quality7/7 PASS. Contract-first dependency order; no coding plan.
   Next: Innovation.
+- 2026-10-12_20-14: Innovation complete. Seven mechanisms/18 variants/all six shape
+  inversions;14 actual-component concept histories. Scope-only awaited-observer
+  assembly fails a pre-existing-task dependency; passive-event alternative survives
+  that case. Preferred conceptual assemblyA plus explicit alternatives/limits.
+  Manual12/12 PASS; no product edits. Next: Critique.

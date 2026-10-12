@@ -1,0 +1,13 @@
+{
+  "subject": "71502e5993315354ca3d97afe607d5f4be776af3",
+  "current_dev": "2ddb852d917998d003f9db863fce09a92e9c5712",
+  "runtime_unchanged": true,
+  "sha256": {
+    "tgdata/account_pool.py": "020cf97ab334832b58307af66bcd35c29685c8731505e8d3032d69d6d1b9b59d",
+    "tgdata/pool_source.py": "2273fbea1c2982267f951374956e81905842f199824fbe91d1a9df40f53364ec",
+    "tgdata/pool_state.py": "bd19dfe23f2bd17fdc7de75a6015f0df311a3ba86dbb13273fe6886eb2da88a0",
+    "tgdata/progress_facade.py": "ac94ec7eccf64cdefacf3e8d1f92615d0d0382dfeb906418842c38140878511d",
+    "tgdata/health.py": "a2a645cfc72f3fc6e65f8163c25873926acca15dc49d74df9627db4b8c8ccfe6",
+    "tgdata/batch_engine.py": "6471d274c6b43a9f04a3eb935616ec9d476f77e394e4a76c51911f1ce42e3546"
+  }
+}
