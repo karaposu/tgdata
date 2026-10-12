@@ -1,83 +1,119 @@
-# Dynamic critic prompt — #17 account routing
+---
+model: gpt-6-astra
+effort: max
+subject_plan: 17ead79
+---
+# Fresh critic-d prompt — #17 revision-3 operation contract
 
-Evaluate `step_by_step_impl_plan.md` revision1 against `desc.md`, triage, the
-completed traverse, and actual dev95 code. This is the task-impl plan critic,
-in the same warmed session; do not delegate. The user authorizes existing-access
-routing/failover only. #7 remains paused. E1 live resources is an execution
-precondition at step9, not a finding to rediscover.
+Run in this warmed session, without a subagent. Subject: the complete revision3
+`step_by_step_impl_plan.md` at17ead79 and revised `desc.md` at79ecce7, not a renewed
+PR review. Read CONTRIBUTING, triage/surfacing_r3, the new foundation finding, both
+original/scoped plans and critics, and first rejected pr-critic. Read relevant source
+and consumer implementations in full; use search only for navigation.
 
-First build a premise inventory ranked by wasted downstream work: premise, first
-dependent step, waste if false, scheduled test, cheapest earlier real-component
-test and current coverage. Distinguish a scripted wire response from a fake
-client supplying the behavior being tested. Factory/SDK/SQLite behavior must be
-observed through real implementations. Existing live gates prove one-account
-reads, not new multi-account deployment or equal account visibility.
+## Goal and burden of proof
 
-Question the plan's ownership shape before its code details:
+Ultrathink: test whether this plan addresses the observed ownership failures with
+less coupling and preserves real account protection/delivery. Attack the plan's
+premises and composition; do not merely confirm that the two old lines changed.
+Check API compatibility, loss of completed data/waits, source uncertainty, real quota,
+SQLite compare/write ambiguity, native disconnect, event retention, imports/package
+and current-dev worker coexistence. Do not invent a general supervisor as a default.
+Known live E1 and the user's preparation-only endpoint are preconditions, not findings.
 
-- Does expected identity remain distinct from verified identity through cached
-  rows, reconnects, second-page budget admission and repair? Can two aliases turn
-  the same account into separate allowance or waiting authorities?
-- Does source permission exist durably before any source work? Prosecute lost
-  admission replies, stale settlement, changed inventory, deleted known state,
-  duplicate JSON keys and exact recovery retries after a newer attempt.
-- Is a wait or repair flag ever shortened by success, initialization, status,
-  repair, recovery, a backward/forward clock observation, or another group?
-- What happens when source work completes but health reporting/callbacks are
-  still awaited as the timer fires? Who retains the actual batch/error/prefix?
-  Does a callback timeout become a fabricated transport failure or lose a flood wait?
-- Does credential repair actually reload the session? A fresh get_me on an old
-  in-memory auth key is not proof that a newly repaired stored login was loaded.
-- Classify exact exception provenance: local media/state/format failures never
-  trigger another account or inherit Telegram health from incidental context.
-- Follow a100-message prefix through timeout, restriction-store failure, actual
-  daily/backfill publication, replay, destination acceptance and acknowledgment.
-  No second source may replace an already-complete observation.
-- Verify concurrency and cleanup: real overlapping tasks, cancellation while
-  committing/observing, close from a callback, blocked disconnect, no background
-  source continuing after failover. A cooperative timeout is not hard preemption.
-- Check canonical group resolution before reads; SDK exhaustion must not become
-  invalid-reference or an unbounded dialog sweep. Respect account-specific hashes.
-- Verify per-send budget authority, minimum-age gate and finite retry policy;
-  known waits can block metadata too. No new accounting or automatic login/join.
-- Does extracting progress methods preserve all public signatures, clock-injection
-  seams, cache ownership and source-free replay/ack? Look for circular imports,
-  package omissions and examples importing private work artifacts.
+## Read the blockers first
 
-Inspect `tgdata/connection_engine.py`, `budget_client.py`, `read_budget.py`,
-`health.py`, `batch_engine.py`, `batch_files.py`, `sync_engine.py`, `sync_store.py`,
-`backfill_engine.py`, `tgdata.py`, actual Telethon1.45 and relevant test helpers.
-Assess latency/storage/CPU cost of the bounded inventory and whole-document CAS.
-Flag under-specified steps as Medium where their missing semantics could change code.
-Do not pad with hypothetical risks unrelated to this contract.
+An OPEN planning blocker triggers DO NOT IMPLEMENT immediately. A documentary
+assumption is checked against code; behavioral claims require actual behavior.
+Carry execution-only live E1 unchanged. Affordable unknown composition must run in
+the real SDK/store/progress composition before dependent production steps. A transport
+fixture may supply wire replies; a helper supplying the desired source result,
+permission, charge or receipt does not count as evidence.
 
-Create `critic.md` in the same directory as the implementation plan, with a high
-level summary on top. First emit model/effort YAML frontmatter from current session
-(unknown if unavailable). Immediately follow it with exactly one verdict:
+## Premise inventory before risk analysis
+
+For each unproven or behavioral premise give: premise; first dependent step; work
+wasted if false; scheduled test; cheapest earlier test and cost; current covering
+and non-covering evidence. Rank by waste if false, not by how clearly it is disclosed.
+Explicitly examine:
+- The source holder captures the actual body and is authoritative across ordinary
+  completion, timeout and secondary failure without swallowing actual caller stop.
+- Unexpected source-internal cancellation leaves the exact token unresolved while
+  a real completed prefix can reach current daily/backfill publication.
+- Private monitor delivery never awaits a consumer, invokes an application hook or
+  suppresses capture due to an enclosing legacy delivery flag.
+- Capture bounds are real before serialization, own their nested data, and do not
+  convert malformed/oversized/lost diagnostics into source or settlement failure.
+- Live scope ends at the actual ownership boundary; expired or foreign scopes do
+  not falsely refuse valid close. Provider-only status paths are covered too.
+- Direct and descendant provider close refuses before shutdown flags mutate, while
+  independent external close and repeated cancellation retain native cleanup.
+- The pre-existing-actor cycle is removed by application-owned observations, not
+  claimed solved by ancestry. Unsupported provider dependencies are stated honestly.
+- The merge-tree union retains both worker resolution and opt-in pool cancellation
+  prefix behavior; current-dev cleanup receipts survive.
+
+## Restart check
+
+One row per observed failure: failure, established mechanism (code/probe, not guess),
+plan element that addresses it. Include lost completed prefix/wait, successful source
+hidden by callback cancellation, callback descendant close cycle, provider-before-
+source cycle, outside-created actor bypassing scope-only protection, cancelled
+retirement reuse, repeated-cancel child escape, and busy-sensitive report retrieval
+masking true cancellation. Empty cells are findings; mostly empty means WRONG LAYER.
+
+## Inherited lessons
+
+For every lesson in desc/finding, name the step/order that satisfies it. Specifically,
+more passing unit probes cannot certify a composed lifetime; the full P0 candidate
+must be tested before bulk implementation. Source facts, task liveness, durable
+permission, quota and group acknowledgment have separate authorities. Check that
+an explicit boundary is enforced where detectable and not advertised as a global
+wait-graph oracle. Compare the extent of proposed helpers against their actual reach.
+
+## Fresh adversarial probes
+
+Run affordable reconnaissance on the unchanged current code or isolated candidate
+as needed to ground claims. Never contact Telegram or use real accounts/budgets.
+Preserve scripts, exact outputs, subject hashes and any negative control. Cases must
+observe actual SDK futures/requests/native disconnect and SQLite commits; cancellation
+of a fabricated reader that returns a wanted batch is non-covering. A watchdog kill
+is a failed test, never evidence of safe quiescence. A targeted probe is not P0 PASS.
+
+Check hidden paths around the three planned seams, including monitor setup/finalization,
+local media/storage exception provenance, source-free replay and state inspection
+after close. Any Medium/High must cite a concrete plan/code gap or observed behavior.
+Do not pad the critique because the earlier PR had two findings.
+
+## Verdict and experiment
+
+Create `critic.md` beside the plan. Begin with model/effort frontmatter, then one of
 IMPLEMENT AS WRITTEN; IMPLEMENT AFTER FOLDING THESE IN; REORDER — TEST BEFORE BUILD;
-or DO NOT IMPLEMENT — MEANING GAP (WRONG LAYER variant if failures are unaddressed).
+DO NOT IMPLEMENT — MEANING GAP (or WRONG LAYER). This is a judgment about shape/order.
+Immediately name the cheapest falsifier and whether it is affordable. If affordable,
+use REORDER and specify the real-composition experiment, cost, first dependent step,
+disqualifying observation and passing result. P0 already precedes all runtime work;
+REORDER here activates/holds that gate rather than inventing a later partial test.
+If the premise fails, deprecate the plan and record the closed behavioral discovery
+in desc; do not patch an architecture or silently weaken the experiment.
 
-Immediately below verdict emit:
-Falsifier: cheapest observation that would require replacing the plan's shape.
-Affordable now: yes|no, with time/access cost.
-If affordable and not already established, use REORDER, naming Experiment, Cost,
-Must precede, Disqualifying result and Passing result. Behavioral tests must run
-the real component in its real composition; a supplied result does not close a premise.
+## Risk format and separate selection pass
 
-After summary include Premise Inventory, then Restart Check with one row for each
-observed identity, hidden-wait, error-exhaustion, post-result-state and timeout-prefix
-failure. State established mechanism and the plan element that addresses it.
-Include Inherited Lessons with the exact step ordering that satisfies each lesson.
+After the high-level summary, premise inventory, restart check and inherited lessons,
+write each risk as a section (no risk table). Risk paragraph1 is plain and standalone,
+with no file/symbol/line references. Paragraph2 states the same risk precisely with
+paths, symbols, call/data flow and trigger. Then Severity(Low/Medium/High), Category,
+Impact, NoobEng (engineer unfamiliar with this system), and Affected areas.
 
-For each actual risk use prose sections, not a risk table. Risk has two paragraphs:
-plain self-contained explanation for an unfamiliar reader, then precise symbols,
-paths and trigger. Include Severity(Low/Medium/High), Category, Impact, NoobEng,
-Affected areas. Each Medium/High has quick, robust and long-term proposals;
-robust includes why this is robust, long-term why this is long term effective.
-Under every proposal emit initially unticked selected/elegant/last_resort boxes
-and Note with Why chosen: — and For future: —. Phase3 alone selects/annotates.
+For every Medium/High supply quick, robust and long-term mitigation. Explain “Why
+this is robust” and “Why this is long term effective.” Under each proposal initially
+write unchecked selected/elegant/last_resort boxes and empty Why chosen/For future
+notes. Save Phase2 before Phase3. Phase3 only selects and annotates; it may not
+quietly rewrite risk severity/options. Enumerate real same-policy instances before
+choosing a shared long-term mechanism; compare reach per extent. Robust wins when
+no real class exists or generalization expands the task. Never choose quick on merit.
 
-If DO NOT IMPLEMENT, follow critic-d's deprecation and desc-blocker procedure,
-without mitigation tiers or implementation. If REORDER, keep plan alive and give
-the actual pre-build experiment. Carry E1 unchanged. Phase3 applies reach/extent,
-real-class and size gates; do not pull #7 or a generalized scheduler into this task.
+Record in-session execution, exact covering evidence and limits, and whether the
+whole P0 has actually run. The output does not authorize implementing past the user's
+requested endpoint. Leave rejected PR26/delivered-code status distinct from plan
+acceptability. Preserve earlier artifacts rather than overwriting their evidence.
