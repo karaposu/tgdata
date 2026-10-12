@@ -14,9 +14,9 @@ A → Su → S → D → I → C → R (always)
 ## Iteration
 3
 ## Status
-ACTIVE
+COMPLETE
 ## Next Discipline
-Iteration evaluation
+—
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -96,6 +96,13 @@ Iteration evaluation
 - 2026-10-12_20-52: Critique3 complete: eight unchanged dimensions; clean assembly survivor, all five articulations answered; two stable-region continuations, manual10/10 PASS. Next: Routelister.
 
 - 2026-10-12_20-53: Routelister3 complete: fourteen re-confirmed identities, no new/stale; final route map plus persistent index written, original history retained; manual12/12 PASS. Next: Iteration evaluation.
+
+- 2026-10-12_20-59: CONCLUDE complete after three full passes. All five articulations answered:
+  incomplete source/observer/control ownership contracts explain the rework; retain
+  the supported pool core and prefer passive bounded observations. Finding compiled,
+  inherited commitments re-tested or explicitly flagged, all18 upstream/superseded
+  outputs archived; final route map/index stay root. Manual finding12/12 PASS.
+  Product files unchanged. Status COMPLETE.
 
 ## Iteration 2 focus
 

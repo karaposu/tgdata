@@ -9,7 +9,7 @@ No task status, dependency graph or process-control decision belongs in this ind
 - First-seen: 2026-10-12_20-24
 - Last-touched: 2026-10-12_20-53
 - Presence: live
-- Own manifestations: sensemaking_iter1.md A1 (chronology is the causal starting point)
+- Own manifestations: docarchive/sensemaking_iter1.md A1 (chronology is the causal starting point)
 - Own-depth pointer: none
 - Depth-signal: Concept re-confirmed; its own cited evidence and explicit limits define the current depth.
 - Individuation history: initially distinguished by its own referent and goal-role; re-confirmed with current own manifestations.
@@ -20,7 +20,7 @@ No task status, dependency graph or process-control decision belongs in this ind
 - First-seen: 2026-10-12_20-24
 - Last-touched: 2026-10-12_20-53
 - Presence: live
-- Own manifestations: sensemaking_iter1.md A2; innovation_iter1.md 2F/2C (actual holder and counterchecks constrain the rule)
+- Own manifestations: docarchive/sensemaking_iter1.md A2; docarchive/innovation_iter1.md 2F/2C (actual holder and counterchecks constrain the rule)
 - Own-depth pointer: none
 - Depth-signal: Concept re-confirmed; its own cited evidence and explicit limits define the current depth.
 - Individuation history: initially distinguished by its own referent and goal-role; re-confirmed with current own manifestations.
@@ -53,7 +53,7 @@ No task status, dependency graph or process-control decision belongs in this ind
 - First-seen: 2026-10-12_20-24
 - Last-touched: 2026-10-12_20-53
 - Presence: live
-- Own manifestations: innovation.md Assembly (captured-so-far retrieval without control ownership); critique.md Assembly A (complete role boundary)
+- Own manifestations: docarchive/innovation.md Assembly (captured-so-far retrieval without control ownership); docarchive/critique.md Assembly A (complete role boundary)
 - Own-depth pointer: none
 - Depth-signal: Passive capture/access/consumer/provider semantics are explicit; actual public API remains a future implementation.
 - Individuation history: initially distinguished by its own referent and goal-role; re-confirmed with current own manifestations.
@@ -75,7 +75,7 @@ No task status, dependency graph or process-control decision belongs in this ind
 - First-seen: 2026-10-12_20-24
 - Last-touched: 2026-10-12_20-53
 - Presence: live
-- Own manifestations: decomposition_iter1.md Q3 (persistent and temporary policies differ)
+- Own manifestations: docarchive/decomposition_iter1.md Q3 (persistent and temporary policies differ)
 - Own-depth pointer: none
 - Depth-signal: Concept re-confirmed; its own cited evidence and explicit limits define the current depth.
 - Individuation history: initially distinguished by its own referent and goal-role; re-confirmed with current own manifestations.
@@ -86,7 +86,7 @@ No task status, dependency graph or process-control decision belongs in this ind
 - First-seen: 2026-10-12_20-24
 - Last-touched: 2026-10-12_20-53
 - Presence: live
-- Own manifestations: sensemaking_iter1.md A5 (stored permission cannot establish physical quiescence)
+- Own manifestations: docarchive/sensemaking_iter1.md A5 (stored permission cannot establish physical quiescence)
 - Own-depth pointer: none
 - Depth-signal: Concept re-confirmed; its own cited evidence and explicit limits define the current depth.
 - Individuation history: initially distinguished by its own referent and goal-role; re-confirmed with current own manifestations.
@@ -119,7 +119,7 @@ No task status, dependency graph or process-control decision belongs in this ind
 - First-seen: 2026-10-12_20-24
 - Last-touched: 2026-10-12_20-53
 - Presence: live
-- Own manifestations: innovation_iter2.md 1G/1C/3C (explicit reporting and close alternatives preserve the choice)
+- Own manifestations: docarchive/innovation_iter2.md 1G/1C/3C (explicit reporting and close alternatives preserve the choice)
 - Own-depth pointer: none
 - Depth-signal: Concept re-confirmed; its own cited evidence and explicit limits define the current depth.
 - Individuation history: initially distinguished by its own referent and goal-role; re-confirmed with current own manifestations.
@@ -130,7 +130,7 @@ No task status, dependency graph or process-control decision belongs in this ind
 - First-seen: 2026-10-12_20-24
 - Last-touched: 2026-10-12_20-53
 - Presence: live
-- Own manifestations: innovation_iter1.md 1G/3G (similar vocabulary currently masks distinct owner policies)
+- Own manifestations: docarchive/innovation_iter1.md 1G/3G (similar vocabulary currently masks distinct owner policies)
 - Own-depth pointer: none
 - Depth-signal: Concept re-confirmed; its own cited evidence and explicit limits define the current depth.
 - Individuation history: initially distinguished by its own referent and goal-role; re-confirmed with current own manifestations.
@@ -141,7 +141,7 @@ No task status, dependency graph or process-control decision belongs in this ind
 - First-seen: 2026-10-12_20-24
 - Last-touched: 2026-10-12_20-53
 - Presence: live
-- Own manifestations: sensemaking_iter1.md A10 (offline evidence cannot supply real access)
+- Own manifestations: docarchive/sensemaking_iter1.md A10 (offline evidence cannot supply real access)
 - Own-depth pointer: none
 - Depth-signal: Concept re-confirmed; its own cited evidence and explicit limits define the current depth.
 - Individuation history: initially distinguished by its own referent and goal-role; re-confirmed with current own manifestations.
@@ -152,7 +152,7 @@ No task status, dependency graph or process-control decision belongs in this ind
 - First-seen: 2026-10-12_20-24
 - Last-touched: 2026-10-12_20-53
 - Presence: live
-- Own manifestations: decomposition_iter1.md Q6 (original boundary matrix); evidence/passive-retrieval.txt (external-close access comparison)
+- Own manifestations: docarchive/decomposition_iter1.md Q6 (original boundary matrix); evidence/passive-retrieval.txt (external-close access comparison)
 - Own-depth pointer: none
 - Depth-signal: none identified in contract meaning; exact production tests remain implementation work
 - Individuation history: initially distinguished by its own referent and goal-role; re-confirmed with current own manifestations.

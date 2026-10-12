@@ -12,7 +12,7 @@ usually after revision 3 it measn sth fundementally was wrong or not well establ
 
 ## Articulation Reference
 
-- **File:** `articulate_simple.md`
+- **File:** `docarchive/articulate_simple.md`
 - **Itemize count:**1
 - **Per-item identifiers:**`I1 — pool_revision_foundations`
 - **Verdict:** HIGH-PROCEED

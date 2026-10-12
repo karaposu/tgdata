@@ -45,7 +45,7 @@ Priority and Essentiality are attributes; no route is selected or executed.
 **WHY:** The inquiry can locate the right prerequisite without treating workflow numbering as evidence.
 **Priority:** MED; **Confidence:** HIGH; **Essentiality:** core.
 **Guidance Mode:** compact.
-- `sensemaking_iter1.md A1 (chronology is the causal starting point)` (because this own manifestation supplies the evidence or specific unresolved facet).
+- `docarchive/sensemaking_iter1.md A1 (chronology is the causal starting point)` (because this own manifestation supplies the evidence or specific unresolved facet).
 **Depth-link:** none; own facets are represented by the cited material, no separate depth run.
 
 ## R02 — Authoritative source completion
@@ -57,7 +57,7 @@ Priority and Essentiality are attributes; no route is selected or executed.
 **WHY:** The explanation and future design stop losing real observations behind task status.
 **Priority:** HIGH; **Confidence:** HIGH; **Essentiality:** core.
 **Guidance Mode:** compact.
-- `sensemaking_iter1.md A2; innovation_iter1.md 2F/2C (actual holder and counterchecks constrain the rule)` (because this own manifestation supplies the evidence or specific unresolved facet).
+- `docarchive/sensemaking_iter1.md A2; docarchive/innovation_iter1.md 2F/2C (actual holder and counterchecks constrain the rule)` (because this own manifestation supplies the evidence or specific unresolved facet).
 **Depth-link:** none; own facets are represented by the cited material, no separate depth run.
 
 ## R03 — Cancellation provenance
@@ -93,7 +93,7 @@ Priority and Essentiality are attributes; no route is selected or executed.
 **WHY:** The preferred simplification becomes concrete enough to prevent moved rather than removed cycles.
 **Priority:** HIGH; **Confidence:** HIGH; **Essentiality:** core.
 **Guidance Mode:** compact.
-- `innovation.md Assembly (captured-so-far retrieval without control ownership); critique.md Assembly A (complete role boundary)` (because this own manifestation supplies the evidence or specific unresolved facet).
+- `docarchive/innovation.md Assembly (captured-so-far retrieval without control ownership); docarchive/critique.md Assembly A (complete role boundary)` (because this own manifestation supplies the evidence or specific unresolved facet).
 **Depth-link:** none; own facets are represented by the cited material, no separate depth run.
 
 ## R06 — Storage-provider control boundary
@@ -117,7 +117,7 @@ Priority and Essentiality are attributes; no route is selected or executed.
 **WHY:** The simplification retains useful work instead of recreating the original retirement race.
 **Priority:** MED; **Confidence:** HIGH; **Essentiality:** supporting.
 **Guidance Mode:** compact.
-- `decomposition_iter1.md Q3 (persistent and temporary policies differ)` (because this own manifestation supplies the evidence or specific unresolved facet).
+- `docarchive/decomposition_iter1.md Q3 (persistent and temporary policies differ)` (because this own manifestation supplies the evidence or specific unresolved facet).
 **Depth-link:** none; own facets are represented by the cited material, no separate depth run.
 
 ## R08 — Durable account-attempt permission
@@ -129,7 +129,7 @@ Priority and Essentiality are attributes; no route is selected or executed.
 **WHY:** The proposed boundary can reuse the proven account-state mechanism.
 **Priority:** MED; **Confidence:** HIGH; **Essentiality:** supporting.
 **Guidance Mode:** compact.
-- `sensemaking_iter1.md A5 (stored permission cannot establish physical quiescence)` (because this own manifestation supplies the evidence or specific unresolved facet).
+- `docarchive/sensemaking_iter1.md A5 (stored permission cannot establish physical quiescence)` (because this own manifestation supplies the evidence or specific unresolved facet).
 **Depth-link:** none; own facets are represented by the cited material, no separate depth run.
 
 ## R09 — Authoritative quota accounting
@@ -165,7 +165,7 @@ Priority and Essentiality are attributes; no route is selected or executed.
 **WHY:** The resulting recommendation is adoptable without pretending every old behavior survived.
 **Priority:** MED; **Confidence:** MED; **Essentiality:** supporting.
 **Guidance Mode:** compact.
-- `innovation_iter2.md 1G/1C/3C (explicit reporting and close alternatives preserve the choice)` (because this own manifestation supplies the evidence or specific unresolved facet).
+- `docarchive/innovation_iter2.md 1G/1C/3C (explicit reporting and close alternatives preserve the choice)` (because this own manifestation supplies the evidence or specific unresolved facet).
 **Depth-link:** none; own facets are represented by the cited material, no separate depth run.
 
 ## R12 — Shared lifecycle mechanism
@@ -177,7 +177,7 @@ Priority and Essentiality are attributes; no route is selected or executed.
 **WHY:** Indirect future reuse may help; the current causal answer does not require a framework.
 **Priority:** LOW; **Confidence:** LOW; **Essentiality:** peripheral.
 **Guidance Mode:** compact.
-- `innovation_iter1.md 1G/3G (similar vocabulary currently masks distinct owner policies)` (because this own manifestation supplies the evidence or specific unresolved facet).
+- `docarchive/innovation_iter1.md 1G/3G (similar vocabulary currently masks distinct owner policies)` (because this own manifestation supplies the evidence or specific unresolved facet).
 **Depth-link:** none; own facets are represented by the cited material, no separate depth run.
 
 ## R13 — Real two-account qualification
@@ -189,7 +189,7 @@ Priority and Essentiality are attributes; no route is selected or executed.
 **WHY:** Future adoption gains real-world qualification without weakening the present causal explanation.
 **Priority:** LOW; **Confidence:** HIGH; **Essentiality:** supporting.
 **Guidance Mode:** compact.
-- `sensemaking_iter1.md A10 (offline evidence cannot supply real access)` (because this own manifestation supplies the evidence or specific unresolved facet).
+- `docarchive/sensemaking_iter1.md A10 (offline evidence cannot supply real access)` (because this own manifestation supplies the evidence or specific unresolved facet).
 **Depth-link:** none; own facets are represented by the cited material, no separate depth run.
 
 ## R14 — Operation-boundary evidence matrix
@@ -201,7 +201,7 @@ Priority and Essentiality are attributes; no route is selected or executed.
 **WHY:** The goal gains a way to challenge the next design before rebuilding downstream parts.
 **Priority:** HIGH; **Confidence:** HIGH; **Essentiality:** core.
 **Guidance Mode:** compact.
-- `decomposition_iter1.md Q6 (original boundary matrix); evidence/passive-retrieval.txt (external-close access comparison)` (because this own manifestation supplies the evidence or specific unresolved facet).
+- `docarchive/decomposition_iter1.md Q6 (original boundary matrix); evidence/passive-retrieval.txt (external-close access comparison)` (because this own manifestation supplies the evidence or specific unresolved facet).
 
 **Meaning-gaps:** none identified in contract meaning; exact production tests remain implementation work.
 **Depth-link:** none; own facets are represented by the cited material, no separate depth run.
