@@ -1,0 +1,10 @@
+{"case": "quiet", "signal": "SIGINT", "exit": 130, "clients": 1, "charge": 2, "restored": true, "cleanup_finished": true, "stderr_empty": true}
+{"case": "quiet", "signal": "SIGTERM", "exit": 143, "clients": 1, "charge": 2, "restored": true, "cleanup_finished": true, "stderr_empty": true}
+{"case": "held", "signal": "SIGINT", "exit": 130, "clients": 1, "charge": 2, "restored": true, "cleanup_finished": true, "stderr_empty": true}
+{"case": "held", "signal": "SIGTERM", "exit": 143, "clients": 1, "charge": 2, "restored": true, "cleanup_finished": true, "stderr_empty": true}
+{"case": "publication", "signal": "SIGINT", "exit": 130, "clients": 0, "charge": 0, "restored": true, "cleanup_finished": false, "stderr_empty": true}
+{"case": "publication", "signal": "SIGTERM", "exit": 143, "clients": 0, "charge": 0, "restored": true, "cleanup_finished": false, "stderr_empty": true}
+{"case": "finalize", "signal": "SIGINT", "exit": 130, "clients": 1, "charge": 2, "restored": true, "cleanup_finished": true, "stderr_empty": true}
+{"case": "finalize", "signal": "SIGTERM", "exit": 143, "clients": 1, "charge": 2, "restored": true, "cleanup_finished": true, "stderr_empty": true}
+PASS12 SDK/Worker auth routes + delivery-error projection + fatal projection; no raw sentinel
+PASS8 targeted process histories and14 diagnostic histories; full prebuild still pending
