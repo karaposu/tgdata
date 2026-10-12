@@ -8,7 +8,7 @@ A → Su → S → D → I → C → R (always)
 - [x] Surfacing
 - [x] Sensemaking
 - [x] Decomposition
-- [ ] Innovation
+- [x] Innovation
 - [ ] Critique
 - [ ] Routelister
 ## Iteration
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Innovation
+Critique
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -67,6 +67,10 @@ Innovation
 - 2026-10-12_20-36: Decomposition2 complete. Three remaining questions (access, bounded
   capture, control roles), eight interfaces with assumptions and runtime mechanisms.
   Manual structure7/7 and quality7/7 PASS. Next: Innovation2.
+
+- 2026-10-12_20-39: Innovation2 complete. Seven mechanisms, nine variants, three tested
+  shape inversions; preferred small drain/capture/control contract answers D6.
+  Alternatives and compatibility costs explicit; manual12/12 PASS. Next: Critique2.
 
 ## Iteration 2 focus
 
