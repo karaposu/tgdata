@@ -10,13 +10,13 @@ A → Su → S → D → I → C → R (always)
 - [x] Decomposition
 - [x] Innovation
 - [x] Critique
-- [ ] Routelister
+- [x] Routelister
 ## Iteration
 3
 ## Status
 ACTIVE
 ## Next Discipline
-Routelister
+Iteration evaluation
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -94,6 +94,8 @@ Routelister
 - 2026-10-12_20-50: Innovation3 complete: full seven mechanisms, G/F/C variants; local access survives, wait-for-idle killed; manual12/12 PASS. Next: Critique.
 
 - 2026-10-12_20-52: Critique3 complete: eight unchanged dimensions; clean assembly survivor, all five articulations answered; two stable-region continuations, manual10/10 PASS. Next: Routelister.
+
+- 2026-10-12_20-53: Routelister3 complete: fourteen re-confirmed identities, no new/stale; final route map plus persistent index written, original history retained; manual12/12 PASS. Next: Iteration evaluation.
 
 ## Iteration 2 focus
 
