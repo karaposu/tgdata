@@ -1,0 +1,53 @@
+{
+  "attempt": 1,
+  "result": "FAIL",
+  "checks": [
+    {
+      "name": "combined",
+      "passed": false,
+      "exit_code": 1,
+      "watchdog_killed": false,
+      "duration_s": 2.012,
+      "detail": {
+        "combined_cases": 37,
+        "passed": 36,
+        "failed": [
+          "backend_internal_cancel_after_source"
+        ]
+      },
+      "output": "attempt-1-combined.txt"
+    },
+    {
+      "name": "worker37",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "duration_s": 1.219,
+      "detail": {
+        "passed": 33,
+        "total": 33
+      },
+      "output": "attempt-1-worker37.txt"
+    },
+    {
+      "name": "worker38",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "duration_s": 42.854,
+      "detail": {
+        "passed": 25,
+        "total": 25
+      },
+      "output": "attempt-1-worker38.txt"
+    }
+  ],
+  "exported_runtime_unchanged": true,
+  "candidate_sha256": {
+    "prebuild_candidate.py": "3343d0dc1b3722208eacb55efe09da00a80cd88f8084d9d1dc4f063c88cf9857",
+    "prebuild_r3.py": "70f8b0349e31ad3385cc70d2394ebf3ae819ce03b38380370d5514336f9ee89c",
+    "run_prebuild.py": "4d4c148895e313150d408b3f9bc105f7d6f8b09a3ce298247dc434ae00483bad"
+  },
+  "candidate_python37_grammar": true,
+  "source_tree": "7d2dc2393c473cf6cdf9642c60f7c40618b21404"
+}

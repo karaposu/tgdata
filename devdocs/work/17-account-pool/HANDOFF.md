@@ -1,79 +1,70 @@
 ---
 model: gpt-6-astra
 effort: max
-status: PR_REJECTED_REVISION_3_REQUIRED
+status: PREBUILD_FAILED_REPLAN_REQUIRED
 ---
 # #17 account pool — current handoff
 
-**PR #26 is rejected: two Medium observer/ownership defects; revision-3 re-planning
-is required.** Product commit `4854464` combines dev `68f6bbd` (all five #7 stages)
-with the retained #17 router and the focused cancellation/retirement repair.
-The working branch is `feat/17-account-pool` at
-`/private/tmp/tgdata-17-account-pool`. [PR #26](https://github.com/karaposu/tgdata/pull/26)
-is open as a draft after review; no merge into dev has happened.
+**Revision3's combined prebuild failed. Do not implement the deprecated plan.**
+The user requested re-planning around the foundation finding followed by a small
+real-component prebuild. Those preparation steps ran; runtime implementation did not.
+Current worktree: `/private/tmp/tgdata-17-replan`, existing issue-linked branch
+`feat/17-account-pool`. Original partial worktree and main checkout were preserved.
 
-The [merge check](merge-check.md) passed at `cdcfd63` and was posted on the PR.
-The [fresh PR critique](pr-critic.md), initially committed at `4464021`, reproduced:
+## Current result
 
-- A callback awaiting its own cancelled future makes completed source work look
-  like caller cancellation: prefix100 and FloodWait7200 miss normal settlement.
-- Callback-created/awaited close bypasses exact-task reentry checks and forms a
-  retained wait cycle, hanging the read/close before SDK disconnect begins.
+[Prebuild report](prebuild.md):36/37 pool case groups passed; worker33/33 and25/25
+passed on an isolated #17+current-dev export. One group disproved the complete
+outcome guarantee: an asynchronous state provider's own cancelled future during
+settlement returned CancelledError with caller cancellation requests0. A real100-
+record prefix was absent from the public error and daily pending state. This occurred
+before and after the actual SQLite commit. Charge200 remained; before commit the
+account attempt stayed unresolved, after commit the known7200-second wait was saved.
 
-Eight fresh probe groups ran; six boundaries held and these two defects reproduced.
-No runtime patch followed the rejection. The selected robust directions are inputs
-to re-planning, not approval to patch the existing blueprint. The user queued #10
-after this review; preserve #17 here while that separate task begins.
-
-Current evidence: [retirement-rework/verification.md](retirement-rework/verification.md).
-There are 619 actual offline passes across 23 suites, with three live skips
-excluded; the pool suite is 46/46. Four demo runs, 76 compile/grammar checks
-and a separate export's pool suite/demo passed. No live Telegram operation ran.
-
-## What changed
-
-Client retirement now waits for the actual SDK disconnect despite repeated caller
-cancellation. A failed retirement blocks reuse until an explicit recheck/close
-successfully retries cleanup. Read cancellation keeps the real source child and
-pool guard until that child ends. Close waits for active work and all cleanup
-attempts; context exit preserves ordinary body errors and caller cancellation.
-
-The current-dev factory seam replaces the obsolete pool base hook. All merged
-#7 APIs remain intact. Routing, budgets, persisted restrictions, restart recovery
-and the daily/backfill facade were retained and checked for preservation. This
-delivery still routes only among groups the configured accounts can already read;
-it does not automatically join, add accounts or run a scheduler.
+The provider performed storage only; it did not reenter pool lifecycle. The tested
+role contract therefore does not exclude the failure. Caller cancellation and
+provider completion need distinct handling at this additional awaited boundary.
+No runtime patch, folded revision4 or verification claim followed the failure.
 
 ## Read next
 
-The parent [implementation plan](step_by_step_impl_plan.md), [desc.md](desc.md)
-and [critic.md](critic.md) explain
-the original feature. They are historical records, so references there to #7 being
-paused describe the original delivery. The scoped continuation is documented in
-[retirement-rework/triage.md](retirement-rework/triage.md),
-[desc.md](retirement-rework/desc.md), [plan.md](retirement-rework/plan.md) revision 2,
-and [critic.md](retirement-rework/critic.md). The fresh critic's one Medium required
-a source-child settlement fix; its mandatory actual-composition experiment passed
-before implementation and its selected robust mitigation was folded into the plan.
+- [Revised description](desc.md), including the CLOSED measured false premise.
+- [Deprecated revision3](DEPRECATED_step_by_step_impl_plan.md); retain as evidence,
+  never execute it. The canonical step_by_step_impl_plan.md is intentionally absent.
+- [Fresh plan critic](critic.md), result FAIL under its mandatory experiment.
+- [Prebuild report/scripts/results](prebuild.md), including exact candidate/source hashes.
+- [Foundation finding](../../inquiries/2026-10-12_19-42__17-account-pool-foundations/finding.md),
+  now carrying the later prebuild evidence pointer.
+- [First rejected PR review](pr-critic.md) and [its handoff](HANDOFF_pr_round1.md).
+  Original plan/critic/description are preserved as *_r2.md / critic_r1.md; the
+  scoped retirement work remains in retirement-rework/.
 
-The public contract is [docs/account_pool.md](../../../docs/account_pool.md).
-GitHub [#17](https://github.com/karaposu/tgdata/issues/17) owns current pipeline
-status; its original offline-delivery block is retained as history.
+## Next work
 
-## Remaining work
+Clarify outcome/cancellation ownership for awaited state-provider work, including
+actual caller stop, provider-internal cancellation and uncertain commits. Preserve
+completed source data through local storage interruption without detaching a live
+write or treating cancellation as proof of rollback. Then write a replacement plan,
+freshly critique it and rerun the complete combined gate before runtime changes.
+Do not blanket-convert CancelledError, retry CAS into permission or weaken the test.
 
-1. Revision-3 re-plan taking `pr-critic.md` and both original/scoped plans as input,
-   required by CONTRIBUTING §7.4. Preserve this first rejected round's evidence.
-2. Fresh plan critic, fold into revision 4, run the required candidate experiment,
-   implement, verify and renew both review gates on the same PR. If a second PR
-   round is rejected, return upstream to description/traverse under §7.4.
-3. Merge only after accepted gates and the user's go-ahead, excluding work documents
-   and preserving the feature branch as the archive.
-4. Parent Step 9/E1 live qualification remains pending: two distinct approved,
-   logged-in accounts with shared readable-group access and a bounded allowance.
-   The user supplied one account and selected offline-first implementation.
-   Do not claim live failover evidence or infer permission for live login/join.
+The rest of the candidate remains useful evidence: passive reports, source completion,
+scope/refusal controls, native cleanup, budgets and source-free daily/backfill all
+passed their listed cases. This does not qualify the full plan or PR.
 
-No work on automatic joining was added merely because #7 is now available.
-The original checkout, its untracked #7 handoff/todo, duncan and unrelated work
-remain untouched. No dev branch update is part of this handoff.
+## Status and limits
+
+This is **one failed prebuild**, not a second rejected PR review. There is still only
+one rejected PR critic (two Mediums); PR26 remains draft/unmerged. The new fresh plan
+critic found0 additional content risks but required this experiment, which then
+falsified an untested composition. Keep both facts visible.
+
+Working-branch runtime remains product4854464 at71502e5. Current dev2ddb852 was used
+only in an isolated export; its batch conflict resolution is recorded, not merged
+onto the runtime branch. Two-account live E1, production implementation, full suite,
+renewed merge check/PR critique and user-authorized merge remain pending.
+
+No live login/read/join or real allowance reset; all probe credentials/state are
+synthetic. Main checkout's untracked HANDOFF/todo, duncan and unrelated work remain
+untouched. Preserve all work/inquiry docs on the feature branch archive; exclude them
+from any later dev merge. No protected branch or PR merge was performed.

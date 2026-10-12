@@ -2,9 +2,12 @@
 model: gpt-6-astra
 effort: max
 revision: 3
-status: PLAN_FOR_FRESH_CRITIQUE
+status: DEPRECATED_PREBUILD_FAILED
 ---
-# Implementation plan — #17 operation ownership, revision 3
+# DEPRECATED — #17 operation ownership, revision 3
+
+**Do not implement.** The combined P0 experiment failed; see `prebuild.md`.
+The failed source/storage cancellation premise requires a replacement plan.
 
 Regenerated under CONTRIBUTING §7.4. Inputs: revised `desc.md` at79ecce7;
 `pr-critic.md` (first rejected round, both Medium findings); archived original

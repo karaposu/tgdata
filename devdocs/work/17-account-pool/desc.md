@@ -110,16 +110,33 @@ must establish this boundary before further pool implementation can be trusted.
 
 ## Known Blockers
 
-No open planning blocker. The completed traverse establishes the semantic direction;
-the affordable combined behavior is an explicit mandatory prebuild gate, not an
-unanswered human decision. A failed gate returns upstream rather than being patched
-into a purported success.
+### Awaited storage can cancel independently of the caller — CLOSED (measured)
 
-Execution-only: two approved, already logged-in accounts, a shared readable group
-and bounded allowance are still needed for later live qualification. The user chose
-one account/offline first. No live login, Telegram read/join or budget reset is part
-of this run. PROJECT_SPECIFICS.md is absent; reachable code/docs supply commands,
-and no project/process document is being fabricated to conceal that absence.
+**What was tested:** whether the revised source/observation boundary preserves a
+completed source result through real pool-state settlement when the storage adapter
+awaits its own cancelled future. The adapter performs storage only and does not call
+pool lifecycle; this is inside the supported provider role.
+
+**Result:** NO. The full P0 candidate returned CancelledError with caller requests0,
+actual prefix100 but returned prefix0/daily pending=false, and charge200. Before the
+SQLite settlement commit the account token remained unresolved; after commit the
+wait7200 was saved and the token cleared. Neither case delivered the completed prefix.
+
+**Source/evidence:** `prebuild.md`, `probes/prebuild_r3.py:backend_internal_cancel_after_source`,
+`evidence/replan-r3/attempt-1-combined.txt`, recorded by the mandatory real-component
+experiment on 2026-10-12. The design premise is known false, not an unanswered vendor
+question. Revision3 is `DEPRECATED_step_by_step_impl_plan.md`; do not implement it.
+
+**What must change next:** define cancellation ownership for awaited state-provider
+work, preserving source data on local storage interruption while genuine caller
+cancellation and uncertain commits remain conservative. Replace the plan, freshly
+critique it and rerun the entire combined prebuild. Converting every CancelledError
+into an ordinary storage error would also violate the caller-stop contract.
+No new account access or human product decision is needed to study this boundary.
+
+Execution-only E1 remains unchanged: two approved logged-in accounts, a shared group
+and bounded existing allowance are required for the later live gate. No live work
+or budget reset ran. PROJECT_SPECIFICS.md remains absent; no process file was created.
 
 ## Inherited lessons the plan must satisfy
 

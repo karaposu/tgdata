@@ -2,7 +2,7 @@
 model: gpt-6-astra
 effort: max
 subject_plan: 17ead79
-status: PREBUILD_REQUIRED
+status: PREBUILD_FAILED
 ---
 **REORDER — TEST BEFORE BUILD**
 
@@ -32,7 +32,15 @@ dev composition, with actual persisted facts/charges/prefixes/task completion, n
 network and no working-branch runtime changes. Narrow subsets are non-covering for
 this gate. Passing qualifies implementation of this plan, not the rejected PR.
 
-Result: PENDING — full combined candidate has not run.
+Result: FAIL — 2026-10-12_23-36. Combined candidate36/37 case groups passed; worker37
+33/33 and worker38 25/25 passed. A pool-state provider's own cancelled future during
+settlement returned CancelledError with caller cancellation requests0 and discarded
+the actual100-record prefix from public error/daily pending delivery, before and
+after the real SQLite commit. Before commit the attempt stayed unresolved; after
+commit the7200-second wait was saved, but the prefix was still withheld. The source/
+observer fix alone is insufficient at the awaited storage boundary. The plan is now
+`DEPRECATED_step_by_step_impl_plan.md`; no revision4 fold or runtime implementation.
+See `prebuild.md` and `evidence/replan-r3/attempt-1-summary.json`.
 
 ## High-level summary
 
@@ -192,3 +200,12 @@ already adopts the traverse's bounded pool-specific design; no shared class or n
 framework is selected by implication. Run the full mandatory P0 experiment next.
 If it passes, revision4 records zero selected mitigations and the qualified gate;
 production implementation remains beyond this request's endpoint.
+
+## Experiment disposition
+
+The affordable falsifier ran after the Phase2/Phase3 checkpoints and disproved the
+complete outcome guarantee at the provider boundary. The Phase2 findings/selection
+are preserved as history; this is not a retrospective rewrite of their severities.
+Under task-impl Experiment FAIL the plan is deprecated and the observed premise is
+recorded CLOSED in desc.md. This is one failed prebuild, not another rejected PR.
+The unchanged first PR review remains the only rejected PR round for #17.

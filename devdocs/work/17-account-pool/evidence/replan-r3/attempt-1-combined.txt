@@ -1,0 +1,88 @@
+{"start": "successful_source_and_callback_migration"}
+{"case": "successful_source_and_callback_migration", "result": "PASS", "observation": {"batch": 1, "charge": 1, "caller_cancel_requests": 0, "recovery_report": true, "callbacks_refused": 2}, "error_type": null}
+{"start": "prefix_raw_observer_close"}
+{"case": "prefix_raw_observer_close", "result": "PASS", "observation": {"mode": "raw", "app_observer_cancel": false, "same_error": true, "prefix": 100, "wait": 7200, "charge": 200, "external_actor_closed": true, "replay_ack": false}, "error_type": null}
+{"start": "prefix_raw_observer_cancel"}
+{"case": "prefix_raw_observer_cancel", "result": "PASS", "observation": {"mode": "raw", "app_observer_cancel": true, "same_error": true, "prefix": 100, "wait": 7200, "charge": 200, "external_actor_closed": true, "replay_ack": false}, "error_type": null}
+{"start": "prefix_daily_observer_close"}
+{"case": "prefix_daily_observer_close", "result": "PASS", "observation": {"mode": "daily", "app_observer_cancel": false, "same_error": true, "prefix": 100, "wait": 7200, "charge": 200, "external_actor_closed": true, "replay_ack": true}, "error_type": null}
+{"start": "prefix_daily_observer_cancel"}
+{"case": "prefix_daily_observer_cancel", "result": "PASS", "observation": {"mode": "daily", "app_observer_cancel": true, "same_error": true, "prefix": 100, "wait": 7200, "charge": 200, "external_actor_closed": true, "replay_ack": true}, "error_type": null}
+{"start": "prefix_backfill_observer_close"}
+{"case": "prefix_backfill_observer_close", "result": "PASS", "observation": {"mode": "backfill", "app_observer_cancel": false, "same_error": true, "prefix": 100, "wait": 7200, "charge": 200, "external_actor_closed": true, "replay_ack": true}, "error_type": null}
+{"start": "prefix_backfill_observer_cancel"}
+{"case": "prefix_backfill_observer_cancel", "result": "PASS", "observation": {"mode": "backfill", "app_observer_cancel": true, "same_error": true, "prefix": 100, "wait": 7200, "charge": 200, "external_actor_closed": true, "replay_ack": true}, "error_type": null}
+{"start": "source_internal_cancel_raw"}
+{"case": "source_internal_cancel_raw", "result": "PASS", "observation": {"mode": "raw", "caller_cancel_requests": 0, "local_interruption": true, "unresolved": true, "prefix": 100, "charge": 200, "replay_ack": false}, "error_type": null}
+{"start": "source_internal_cancel_daily"}
+{"case": "source_internal_cancel_daily", "result": "PASS", "observation": {"mode": "daily", "caller_cancel_requests": 0, "local_interruption": true, "unresolved": true, "prefix": 100, "charge": 200, "replay_ack": true}, "error_type": null}
+{"start": "source_internal_cancel_backfill"}
+{"case": "source_internal_cancel_backfill", "result": "PASS", "observation": {"mode": "backfill", "caller_cancel_requests": 0, "local_interruption": true, "unresolved": true, "prefix": 100, "charge": 200, "replay_ack": true}, "error_type": null}
+{"start": "secondary_finalization"}
+{"case": "secondary_finalization", "result": "PASS", "observation": {"combinations": [{"source": "success", "secondary": "error"}, {"source": "success", "secondary": "cancel"}, {"source": "success", "secondary": "timeout"}, {"source": "error", "secondary": "error"}, {"source": "error", "secondary": "cancel"}, {"source": "error", "secondary": "timeout"}], "original_outcomes_retained": true}, "error_type": null}
+{"start": "passive_drain_during_close"}
+{"case": "passive_drain_during_close", "result": "PASS", "observation": {"active_access": true, "closing_finally_preserves_cancel": true, "closed_backend_free": true}, "error_type": null}
+{"start": "provider_reentry"}
+{"case": "provider_reentry", "result": "PASS", "observation": {"refusals": ["load_read:direct", "load_read:task", "load_read:wait_for", "load_status:direct", "load_status:task", "load_status:wait_for", "cas_admit:direct", "cas_admit:task", "cas_admit:wait_for", "cas_settle:direct", "cas_settle:task", "cas_settle:wait_for"], "flags_unchanged": true, "actual_sqlite_forwarded": true}, "error_type": null}
+{"start": "scope_positive_controls"}
+{"case": "scope_positive_controls", "result": "PASS", "observation": {"foreign_allowed": true, "expired_allowed": true, "scope_references_released": true}, "error_type": null}
+{"start": "observation_bounds"}
+{"case": "observation_bounds", "result": "PASS", "observation": {"count_cap": 128, "byte_cap": 65536, "byte_limited_events": 23, "malformed_dropped": 5, "nested_values_owned": true, "ambient_capture": true, "legacy_callback_preserved": true, "observer_tasks": 0}, "error_type": null}
+{"start": "capture_failure"}
+{"case": "capture_failure", "result": "PASS", "observation": {"capture_fault_types": 2, "original_prefix": 100, "wait": 7200, "charge": 200}, "error_type": null}
+{"start": "native_failed_retirement"}
+{"case": "native_failed_retirement", "result": "PASS", "observation": {"native_failure_retry": ["error:False", "error:True", "cancel:False", "cancel:True"], "failed_client_never_reused": true}, "error_type": null}
+{"start": "caller_cancel_at_admission"}
+{"case": "caller_cancel_at_admission", "result": "PASS", "observation": {"admission_cancellation": [{"committed": false, "unresolved": false, "source_requests": 0, "caller_requests": 1}, {"committed": true, "unresolved": true, "source_requests": 0, "caller_requests": 1}]}, "error_type": null}
+{"start": "test_real_pagination_and_drain_budget"}
+{"case": "test_real_pagination_and_drain_budget", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_spread_uses_remaining_and_stable_ties"}
+{"case": "test_spread_uses_remaining_and_stable_ties", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_flood_failover_and_restart_wait"}
+{"case": "test_flood_failover_and_restart_wait", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_changed_identity_at_admission_never_sends_history"}
+{"case": "test_changed_identity_at_admission_never_sends_history", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_timeout_retains_completed_page_and_awaits_cancel"}
+{"case": "test_timeout_retains_completed_page_and_awaits_cancel", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_empty_timeout_fails_over_after_quiescence"}
+{"case": "test_empty_timeout_fails_over_after_quiescence", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_external_cancel_remains_unresolved_and_no_failover"}
+{"case": "test_external_cancel_remains_unresolved_and_no_failover", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_uncertain_admission_opens_no_source_and_survives_restart"}
+{"case": "test_uncertain_admission_opens_no_source_and_survives_restart", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_settlement_failure_preserves_data_and_daily_replay"}
+{"case": "test_settlement_failure_preserves_data_and_daily_replay", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_stale_settlement_cannot_erase_newer_stored_facts"}
+{"case": "test_stale_settlement_cannot_erase_newer_stored_facts", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_recheck_reloads_repaired_stored_credential"}
+{"case": "test_recheck_reloads_repaired_stored_credential", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_recheck_cancellation_holds_ownership_until_sdk_disconnect"}
+{"case": "test_recheck_cancellation_holds_ownership_until_sdk_disconnect", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_cancelled_retirement_cannot_overwrite_repaired_credential_later"}
+{"case": "test_cancelled_retirement_cannot_overwrite_repaired_credential_later", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_repeated_read_cancellation_retains_the_actual_child"}
+{"case": "test_repeated_read_cancellation_retains_the_actual_child", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_cancelled_close_waits_for_actual_source_child"}
+{"case": "test_cancelled_close_waits_for_actual_source_child", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_close_cancellation_settles_all_sdk_cleanup_and_stays_closed"}
+{"case": "test_close_cancellation_settles_all_sdk_cleanup_and_stays_closed", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_actual_cleanup_failure_keeps_body_error_and_can_be_retried"}
+{"case": "test_actual_cleanup_failure_keeps_body_error_and_can_be_retried", "result": "PASS", "observation": null, "error_type": null}
+{"start": "test_context_exit_preserves_caller_cancellation_after_cleanup"}
+{"case": "test_context_exit_preserves_caller_cancellation_after_cleanup", "result": "PASS", "observation": null, "error_type": null}
+{"start": "backend_internal_cancel_after_source"}
+{"observation": "backend_internal_cancel", "commit_happened": false, "caller_requests": 0, "returned": "CancelledError", "returned_prefix": 0, "actual_prefix": 100, "pending": false, "unresolved": true, "stored_wait": 0, "charge": 200, "second_source_reads": 0}
+{"observation": "backend_internal_cancel", "commit_happened": true, "caller_requests": 0, "returned": "CancelledError", "returned_prefix": 0, "actual_prefix": 100, "pending": false, "unresolved": false, "stored_wait": 7200.0, "charge": 200, "second_source_reads": 0}
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-17-replan/devdocs/work/17-account-pool/probes/prebuild_r3.py", line 423, in run_case
+    observation = await asyncio.wait_for(function(), 15)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-17-replan/devdocs/work/17-account-pool/probes/prebuild_r3.py", line 414, in backend_internal_cancel_after_source
+    assert all(o['caller_requests'] == 0 and o['returned'] != 'CancelledError' and o['pending']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: provider cancellation hid completed source facts
+{"case": "backend_internal_cancel_after_source", "result": "FAIL", "observation": null, "error_type": "AssertionError"}
+{"summary": {"combined_cases": 37, "passed": 36, "failed": ["backend_internal_cancel_after_source"]}}
