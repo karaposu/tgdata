@@ -204,9 +204,16 @@ preemption inside arbitrary interpreter imports or unrelated bootstrap code.
 
 ## Selection pass
 
-Pending separate Phase3 record. There are no new Medium/High proposals to select.
-The original two robust PR remedies are already incorporated in revision3; this
-review does not reopen their selection or add a generic framework.
+Phase3 complete, after the Phase2 checkpoint08ee0f2. There are no new Medium/High
+proposals to select, so no boxes are invented or ticked. Zero additional remedies
+will be folded. The original two robust PR remedies are already incorporated in
+revision3; their selection remains in pr-critic.md at8322827. The targeted candidate
+shows that a small local creation/finalization policy is viable; it does not create
+a second real process-owner class that warrants a generic supervisor. Existing
+generic-RPC/health projections already constrain unknown text, so no library-wide
+typed-error migration is justified. No lesser fix is forced by an external blocker.
+The complete combined prebuild is still pending and must not be inferred from
+either this selection pass or the fold marker. Phase2 findings/verdict are unchanged.
 
 ## Disposition
 
