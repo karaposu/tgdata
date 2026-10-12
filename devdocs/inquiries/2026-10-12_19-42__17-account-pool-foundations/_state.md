@@ -10,13 +10,13 @@ A → Su → S → D → I → C → R (always)
 - [x] Decomposition
 - [x] Innovation
 - [x] Critique
-- [ ] Routelister
+- [x] Routelister
 ## Iteration
 2
 ## Status
 ACTIVE
 ## Next Discipline
-Routelister
+Iteration evaluation
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -76,6 +76,10 @@ Routelister
   diagnosis survives; passive drain busy-refusal creates needless error precedence
   risk. REFINE only that access rule. First stable-region continuation; manual10/10
   PASS. Next: Routelister2, then focused confirmation iteration.
+
+- 2026-10-12_20-43: Routelister2 complete. Loaded/re-confirmed14 identities, enriched own
+  manifestations, preserved first-seen/log;0 new/stale. Both outputs, manual12/12 PASS.
+  Next: iteration evaluation from saved critique2.
 
 ## Iteration 2 focus
 
