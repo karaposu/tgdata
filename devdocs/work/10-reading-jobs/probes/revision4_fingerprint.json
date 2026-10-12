@@ -1,0 +1,47 @@
+{
+  "product": "6ee146c5212c5ffb3162c6cbaaf41eb1c788ede7",
+  "reviewed_plan": "5adc00a",
+  "python": "3.11.10",
+  "telethon": "1.45.0",
+  "canonical_auth_reasons": [
+    "ACTIVE_USER_REQUIRED",
+    "AUTH_KEY_DUPLICATED",
+    "AUTH_KEY_INVALID",
+    "AUTH_KEY_PERM_EMPTY",
+    "AUTH_KEY_UNREGISTERED",
+    "FILEREF_UPGRADE_NEEDED",
+    "FRESH_CHANGE_PHONE_FORBIDDEN",
+    "FRESH_RESET_AUTHORISATION_FORBIDDEN",
+    "PHONE_PASSWORD_FLOOD",
+    "PREMIUM_CURRENTLY_UNAVAILABLE",
+    "PREVIOUS_CHAT_IMPORT_ACTIVE_WAIT_XMIN",
+    "SEND_CODE_UNAVAILABLE",
+    "SESSION_EXPIRED",
+    "SESSION_PASSWORD_NEEDED",
+    "SESSION_REVOKED",
+    "STICKERSET_OWNER_ANONYMOUS",
+    "UPDATE_APP_TO_LOGIN",
+    "USERPIC_PRIVACY_REQUIRED",
+    "USER_DEACTIVATED",
+    "USER_DEACTIVATED_BAN"
+  ],
+  "sources": {
+    "tgdata/worker.py": "551e63b278cc4d656c867b91364aed551ac36d3412ee860c246f2025a1bf9bde",
+    "tgdata/worker_protocol.py": "0c16d09c7f3b37129f282d6707122ad392b85d53b04dbb0e4ce78e54bcc58cea",
+    "tgdata/worker_engine.py": "d19f7a4a063656f7d628430b1ddf862245c55aeb54f03acf8adcde6a6db5ce16",
+    "tgdata/account_operation.py": "e92110abe257ce946caa58d85206c0c33235ab15b662ab464a3a6f4e9c24d388",
+    "tgdata/connection_engine.py": "84ea57c53a729a482c869b8aed21dffbc5675e3fb62a45564371e6ebe8c7abd3",
+    "tgdata/owned_health.py": "81c8ee016f2237aa122c2c6b89b050f6dc08b46e8c350435f06271a584f4232d",
+    "tgdata/batch_engine.py": "ba2165c9042de11e1c4d99d07260601ec3a08c7ffe8dc17227432482c5c1186e",
+    "tgdata/read_budget.py": "52e3a53ccb2eba4d662a5c259d626ff7dd39079677177f8b47f09125d52922cf",
+    "tgdata/join_budget.py": "1eb6e4dcb32b0383853eb60ac12fb1291f73bbd843c5cecf99d3e3af3eda8628",
+    "tgdata/group_operations.py": "8a1655481f381415cc457bea30e7be8aec6f35b6663693909294229c9a73bcb0",
+    "tgdata/tgdata.py": "6ad0d3151a78802d3868d3d8c32d9d7f60a48e1acd6381913fbb0bfbad76f5e3",
+    "tgdata/smoke_tests/test_37_worker.py": "8b9d988b956313a9f844770481aa75f5726389d6bb8a6ec212cee8ecd3568454",
+    "tgdata/smoke_tests/test_38_worker_process.py": "6d45ef206a82e383f7e582268891a26f3b3f7dc115e448d0530e241d0c28a7b8"
+  },
+  "candidates": {
+    "revision4_candidate_serve.py": "7b5258e255960ac67c4b3143d4e9b7c7dd983bc6844d3392fd10a39e890c7b96",
+    "revision4_candidate_diagnostics.py": "74ef82a6fb672fdbf8bd2bd2f94a31eb5a8a195a5c1077e16a822ba61c94b0aa"
+  }
+}
