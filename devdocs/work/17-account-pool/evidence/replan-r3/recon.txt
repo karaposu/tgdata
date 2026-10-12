@@ -1,0 +1,2 @@
+{"case": "source_internal_cancel", "mode": "raw", "caller_cancel_requests": 0, "public_error": "CancelledError", "partial_records": 100, "pending_delivery": false, "unresolved": true, "charge": 200, "second_source_reads": 0}
+{"case": "source_internal_cancel", "mode": "daily", "caller_cancel_requests": 0, "public_error": "CancelledError", "partial_records": 100, "pending_delivery": false, "unresolved": true, "charge": 200, "second_source_reads": 0}

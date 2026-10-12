@@ -1,219 +1,190 @@
 ---
 model: gpt-6-astra
 effort: max
+subject_plan: 17ead79
+status: PREBUILD_REQUIRED
 ---
 **REORDER — TEST BEFORE BUILD**
 
-Falsifier: the actual SDK/budget/health composition cannot retain the real source
-owner and already-completed source outcome when an observer is cancelled by the
-pool timer; a proposed wrapper only works by fabricating the desired result.
-Affordable now: yes — offline, synthetic wire, actual SDK/ledger/HealthMonitor;
-under a minute, no credentials or network.
+Falsifier: the combined candidate cannot preserve actual source success/error/prefix,
+conservative account permission and real caller cancellation while removing observer
+work and refusing supported provider reentry, on the current-dev integration.
+Affordable now: yes — owned local SDK/SQLite/progress composition with synthetic wire
+and blocked sockets, minutes and no real account access.
 
-Experiment: run the retained plan-critic probe against current source. Confirm a
-wrong fresh ID is rejected before history/charge, then complete100 records and
-raise FloodWait7200 while the actual HealthMonitor awaits a blocked callback.
-Compare naive timer handling with a wrapper retaining the source body's completed
-outcome before observer work. Use actual BatchEngine with only the proposed
-cancellation exception seam, actual SDK requests and actual health context.
-Cost: local temporary SQLite/session data and <1 minute; no Telegram traffic.
-Must precede: step2, and task-impl requires it before step1.
-Disqualifying result: fresh mismatch sends history/charges an account, or retention
-cannot recover the original FloodWait and100-record prefix after observer cancellation.
-Passing result: zero wrong-owner history/charge; original FloodWait7200 and exact
-100-record interrupted prefix survive with the source child ended.
+Experiment: run the complete Gate P0 matrix from revision3 with one candidate source/
+collector/scope implementation, on an isolated71502e5+dev2ddb852 export retaining both
+batch options. Observe actual Telethon request futures/native disconnect, ReadBudget,
+SQLite CAS and daily/backfill publication/replay. Include source-internal cancellation,
+passive drain during external close, malformed/oversized/lost observations, and both
+negative reentry and positive independent-control cases. Run relevant worker tests
+on that same combined export. Retain exact candidate/source hashes and all outputs.
+Cost: bounded local temporary data/processes; no Telegram traffic or credentials.
+Must precede: Step1 and every runtime step. The written P0 order is already correct;
+this verdict keeps that prebuild gate mandatory rather than moving a late test.
+Disqualifying result: any named P0 invariant fails because of the candidate's design,
+a supported wait cycle remains, or passing requires faking a read/charge/permission/
+receipt, dropping live owned work, suppressing true caller cancellation or weakening
+an expected outcome. A watchdog kill is failure. Deprecate/return upstream on an
+architectural failure under task-impl; do not patch the plan after a false premise.
+Passing result: all P0 histories pass in the same real-component candidate and current-
+dev composition, with actual persisted facts/charges/prefixes/task completion, no
+network and no working-branch runtime changes. Narrow subsets are non-covering for
+this gate. Passing qualifies implementation of this plan, not the rejected PR.
 
-Result: PASS — zero wrong-owner history/charges; retaining the actual source outcome preserved FloodWaitError7200 and100 interrupted records after observer cancellation. Ran the real composed probe before plan step1 on 2026-10-08. Evidence: `probes/plan_premises.py`. No Telegram connection.
+Result: PENDING — full combined candidate has not run.
 
 ## High-level summary
 
-The owned account design survives. Two implementation boundaries need precision:
-retain source outcomes before health observers can suspend/cancel them, and reload
-stored credentials during deliberate repair. The first is demonstrated by a
-reconnaissance probe and receives the formal pre-build experiment above.
-One High and one Medium risk; no global #7 rewrite required.
+Fresh in-session critic-d of plan17ead79 and desc79ecce7, using prompt4410f5a.
+The plan addresses the actual source/observer/control failures and incorporates the
+traverse's outside-task and passive-access findings. It preserves the independent
+permission, quota and progress authorities. No additional High, Medium or Low content
+defect was established in this pass. Do not manufacture a finding from the already
+explicitly unsupported live/distributed/provider behaviors.
+
+The main uncertainty is behavioral composition of the new private monitor, cancellation
+precedence and expiring control scope on the current dev. Separate old probes cannot
+close that premise. The full prebuild is required even with zero new content findings.
+The present user request stops after that evidence and the selected fold; it does not
+run production implementation or renew the PR acceptance gate.
 
 ## Premise Inventory
 
-### 1. Actual guarded source can preserve identity and completed outcomes
+### 1. Source outcome and cancellation roles survive the combined wrapper
 
-**First dependent step:**2. **Waste if false:** steps2–8 would build on an unusable
-owned-reader seam. **Test scheduled at:**6, with narrower existing traverse probes.
-**Cheapest earlier test:** the formal experiment above, affordable now. **Coverage:**
-traverse proved stale identity, actual admission and raw cancellation-prefix transfer;
-it did not test a timer firing during HealthMonitor's awaited callback. Reconnaissance
-now shows the naive wrapper loses prefix/wait while retaining the actual source
-outcome preserves them. Run the exact retained composition before implementation.
-Fake readers returning a prefix are non-covering; these probes execute the reader.
+**First dependent step:**3 (and Step2's monitor composition). **Waste if false:**
+reporting/source integration and product tests/docs would rest on false semantics.
+**Test scheduled:**P0, before Step1. **Cheapest earlier test:** actual SDK read with
+success, prefix+wait, cancelled transport future, timer and held finalizer/native
+cleanup; affordable now. **Coverage:** old inquiry covers separate holder and passive
+sink cases, not the complete planned monitor/control implementation. Fresh baseline
+reconnaissance (`recon.txt`) confirms an SDK-awaited future cancellation produces
+CancelledError with caller requests0, prefix100, charge200, unresolved token and no
+daily pending delivery. This validates the need to test the plan's explicit local
+interruption path; it does not prove that path works.
 
-### 2. Actual SQLite supports token admission and stale-settlement refusal
+### 2. Passive capture/retrieval has no executable consumer lifetime
 
-**First dependent step:**1. **Waste if false:** state/router work. **Test scheduled
-at:**6. **Cheapest earlier test:** actual CAS/reconstructed backend, already run.
-**Coverage:** current traverse probe PASS; product tests still need the whole pool
-codec/transition composition. This documentary/primitive premise is closed, not a
-reason to infer the unbuilt state machine is already verified.
+**First dependent step:**2. **Waste if false:** new API and outcome promises. **Test
+scheduled:**P0. **Cheapest earlier test:** actual health emissions through the candidate
+monitor plus bounded malformed/oversize/capture-failure/drain cases; seconds. **Coverage:**
+worker's bounded collector is a useful existing mechanism, not proof of this collector.
+The inquiry's actual close comparison establishes why drain cannot refuse while busy.
+The new plan specifies native types/pre-encoding bounds, nested ownership, drop
+semantics, ambient-flag independence and a no-user-delivery monitor. These are
+concrete testable requirements; a sink that simply returns wanted reports is not covering.
 
-### 3. Actual progress engines accept reader substitution without source replay
+### 3. Scope guards cover supported providers without breaking valid close
 
-**First dependent step:**5. **Waste if false:** facade integration/docs/tests.
-**Test scheduled at:**6. **Cheapest earlier test:** real current daily/backfill
-engines and SQLite, already run. **Coverage:** both replay probes PASS with a changed
-source account and zero new reads. Facade extraction parity remains implementation
-verification, not an assumed SDK behavior.
+**First dependent step:**4. **Waste if false:** lifecycle guarantees and downstream
+qualification. **Test scheduled:**P0. **Cheapest earlier test:** actual load/CAS wrappers
+around SQLite initiate direct/create_task/wait_for close, together with independent
+close, stale scope, foreign pool and repeated cancellation. **Coverage:** the inquiry
+proved scope-only protection insufficient for arbitrary awaited observers; this plan
+removes that consumer edge and explicitly bounds provider behavior. It also scopes
+_backend for status-only paths. Do not call that a general dependency detector.
 
-### 4. Deployment ownership, time and live resources
+### 4. Current-dev union preserves both batch consumers
 
-**First dependent step:**9 for live deployment qualification; steps1–8 implement
-an explicit single-owner/UTC contract. **Waste if false:** a deployment outside the
-contract requires another ownership/time design. **Test scheduled at:**9.
-**Cheapest earlier test:** operator/deployment evidence, unavailable here; cannot
-be replaced by a fake clock or invented second account. **Coverage:** offline fault
-tests cover enforcement, not real deployment. User has explicitly replied one
-account for now; build/test offline first. E1 remains an execution precondition.
+**First dependent step:**1. **Waste if false:** worker regression or lost pool prefix
+support. **Test scheduled:**P0 export, then full Step6 regression. **Cheapest earlier
+test:** inspect the conflict and run actual pool/worker consumers on the union.
+**Coverage:** merge-tree reports exactly batch_engine.py; comparison to dev shows
+only asyncio import, opt-in prefix flag and its cancellation handler differ in the
+pool file. This supplies a concrete resolution but does not replace running both.
+
+### 5. Admission, quota and progress remain independent under new interruption
+
+**First dependent step:**3. **Waste if false:** source control can grant permission
+or lose a pending batch incorrectly. **Test scheduled:**P0 and Step5/6. **Cheapest
+earlier test:** actual SQLite before/after commit failures plus exact charges and
+real daily/backfill replay after source closure; affordable now. **Coverage:** fresh
+original-review controls still preserve six existing boundaries; new interruption/
+monitor composition remains to be tested as one candidate. Never stub settlement or
+have a fake reader supply the expected prefix.
+
+### 6. Deployment and real multi-account qualification
+
+**First dependent step:**7. **Waste if false:** live deployment claims. **Test scheduled:**
+Step7/E1. **Cheapest earlier test:** confirmed two-account/group/ledger resources,
+unavailable under the existing offline-first boundary. **Coverage:** synthetic wire
+is non-covering for real proxies, login state and visible history. E1 is unchanged,
+not a severity finding. One-loop/exclusive-session/trustworthy-UTC rules are explicit
+supported deployment limits, not claims of cross-process safety.
 
 ## Restart Check
 
-| Observed failure | Established mechanism | Design element |
+| Observed failure | Established mechanism | Plan element |
 |---|---|---|
-| Actual222 charged while health111 | SDK get_me leaves nonempty cached self ID | Step2 owned fresh identity and bound ledger |
-| Authentication requests7200-second sleep | Ordinary _authenticate catches FloodWait and sleeps | Step2 private direct authorization path |
-| Exhausted ServerError becomes ValueError | SDK default raise_last_call_error=False | Step2 preserved original SDK failure |
-| Post-result fact may not commit before crash | No pre-source restriction-state marker in first proposal | Steps1/3 durable attempt token |
-| Cancellation drops completed raw records | BatchEngine only catches Exception | Step2 opt-in prefix seam |
-| Observer cancellation masks actual source failure/prefix | HealthMonitor.call awaits _on_error after body raised | Risk1 retention before observers |
+| Completed prefix/wait hidden by observer cancellation | child.result bypasses captured body on normal terminal path | Step3 authoritative body outcome, Step2 removes application callbacks, P0 exact error/prefix/wait cases |
+| Successful read hidden by observer cancellation | Same mixed-task outcome on recovery notification | Step2/3 and P0 successful recovery plus secondary-fault cases |
+| Callback descendant close cycle | Exact-task guard misses child; retained waits point back | Step2 removes consumer dependency, Step4 guards live scopes, P0 direct/descendant/positive controls |
+| Storage descendant cycle before source | Awaited custom backend becomes pool controller | Step4 _backend scope and storage-only role, P0 actual SQLite forwarding wrappers |
+| Pre-existing actor defeats ancestry guard | Actor was created outside inherited context | Step2 application-owned observations; unsupported provider cycles explicitly excluded; P0 post-read actor close |
+| Cancelled recheck releases a disconnecting client | Native SDK shields disconnect beyond cancelled waiter | Existing retained retirement/quarantine preserved; P0 native delay/failure/retry controls |
+| Repeated cancellation releases source child | Interruptible cancellation waiter | Existing retained stop kept in Step3/4; P0 repeated read/close cancellation |
+| Reporting busy refusal masks cancellation | Reader finally runs while external close is active | Unconditional local drain in Step2; P0 close/finally comparison |
 
 ## Inherited Lessons
 
-Cached identity is not actual owner: probe precedes step1 and binding is step2.
-More retry/health machinery does not prove correct delivery: real SDK/prefix probe
-precedes router step3; actual progress composition tested in step6. Known state
-does not mean settled source: token admission precedes network in step3. No added
-source layer may duplicate acknowledgment: facade reuse step5; replay tests step6.
-Existing one-account live proof does not establish multi-account operation: E1/step9
-explicitly pending, never represented by synthetic account fixtures.
+Actual source completion, actual task quiescence and durable permission are separate:
+Steps2–4 keep those facts separate, and P0 challenges them before Step1. A different
+task is not an independent controller: Step4 uses bounded provenance and the provider
+contract, while Step2 removes the arbitrary observer edge. No global supervisor is
+introduced without a matching second owner.
 
-## Risk 1 — A timeout during reporting can replace the real source outcome
+Diagnostic data is not a commit receipt: Step2's snapshots remain advisory; source
+settlement and group acknowledgment retain their stores and P0 verifies lost-write
+responses and replay. More passing tests do not establish an untested composition:
+only the full combined P0 clears this gate. Current-dev integration is measured in
+that export before production Step1. Real live E1 remains separate.
 
-**Risk**
+## Adversarial assessment and findings
 
-A read may already have collected messages and received a long Telegram wait,
-while its optional health callback is still running. If the pool's timer then
-expires, it can see only a generic timeout. It would lose the completed messages
-and remember a short transport cooldown instead of the actual long wait.
+No new severity finding. The following were explicitly challenged rather than
+assumed from names:
 
-`tgdata/health.py:HealthMonitor.call` awaits `_on_error` after the batch body raises.
-The step2 wait_for wrapper can cancel that await after `BatchEngine.fetch_batch`
-has attached its prefix to the original FloodWaitError. The resulting CancelledError
-comes from callback delivery, not the batch exception seam, so inspecting only
-TimeoutError.__cause__.partial_result is insufficient. Reconnaissance reproduced
-zero prefix/unknown wait for naive handling, versus100 records/FloodWait7200 with
-source-body outcome retention.
+- Captured body truth could be bypassed again on one branch: the plan resolves it
+  on every terminal path and locates caller cancellation at the awaited outer
+  boundary, with a distinct conservative internal-source interruption rule.
+- A buffer could move the cycle into close: the plan owns no consumer task, invokes
+  no application observer/legacy health-log mirror, and drain has no wait or guard.
+- A count limit could leave unbounded payload serialization: prechecks and fixed
+  schema/encoded-size caps are explicit, including no arbitrary conversion hooks.
+- Inherited delivery recursion suppression could hide reports: the private monitor
+  bypasses that user-callback flag only for internal capture; P0 covers it.
+- Scope expiry could permanently block a later closer or retain the pool: finally
+  invalidation/released reference and foreign/stale positive controls are explicit.
+- Read-only status could bypass provider rules: _backend scope is required without
+  promoting local status to exclusive source work.
+- Converting source cancellation to an ordinary failure could clear permission:
+  the private subtype refuses _settle before row mutation; P0 asserts persisted token.
+- Constructor migration could silently keep executing callbacks: non-None is refused
+  before source construction, None remains harmless, and ordinary TgData is unchanged.
+- A prebuild could pass on helpers supplying the property under test: original read,
+  SDK, ledger, CAS and progress engines must run. Fault wrappers only interrupt the
+  boundary; result/token/charge/receipt assertions must observe actual components.
 
-**Severity:** High
-**Category:** Data preservation / error provenance
-**Impact:** lost completed observations and early reuse of a rate-limited account.
-**NoobEng:** health reporting is an awaited stage after the source has already
-finished; timing out the combined coroutine does not imply the source timed out.
-**Affected areas:** step2 pool_source timer, step3 outcome classification, daily/
-backfill prefix delivery, optional health callback.
+These are plan commitments awaiting P0 evidence, not assertions of an implemented fix.
+No mitigation tiers are emitted because no Medium/High content risk was established.
 
-### Mitigation — Quick
+## Executed evidence and limits
 
-Document that callbacks must never block and keep the simple timeout-cause lookup.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+Fresh unchanged-product reconnaissance ran raw and daily source-internal cancellation:
+caller requests0; public CancelledError; partial100; pending=false; active token retained;
+charge200; no second source. It supports the need for the planned distinction.
 
-**Note**
-*Why chosen:* —
-*For future:* —
+The unchanged first PR probe suite was re-run: eight groups, six preserved controls
+and the same two reproduced rejected defects. Its output is retained in
+`evidence/replan-r3/original-rejection-controls.txt`; the new two-case script/output
+are `probes/replan_recon.py` and `evidence/replan-r3/recon.txt`. Both block sockets and
+use owned synthetic SQLite/config state. Runtime files remain unchanged.
 
-### Mitigation — Robust
+The full combined prebuild has not run at this Phase2 checkpoint. No selected subset
+or earlier inquiry count is called a P0 pass. No PR/merge/live acceptance is inferred.
 
-Retain the source body's batch or original error in an owned outcome holder before
-HealthMonitor performs observer work. On an internal timer, await child termination;
-if source already finished, return/re-raise that exact outcome. Otherwise transfer
-the cancelled reader's completed prefix into PoolTimeoutError. External cancellation
-always propagates. Test both successful and failing source bodies with blocked
-callbacks, including long-wait retention and no extra source attempt.
-**Why this is robust:** covers the actual two-stage completion boundary without
-changing global health delivery or weakening the callback contract for other callers.
-- [x] selected   - [x] elegant   - [ ] last_resort
+## Phase 3 — Selection pass
 
-**Note**
-*Why chosen:* Selected robust/elegant: this pool is the only new timed observer composition. Existing _reported and listener paths form a possible broader class, but changing them expands scope and is unnecessary for the owned outcome holder. The local fix survives a future shared mechanism.
-*For future:* —
-
-### Mitigation — Long-term
-
-Separate source outcome capture from observation delivery throughout the existing
-TgData health decorator, listeners and pool contexts.
-**Why this is long term effective:** provides a shared outcome/observer boundary
-for every asynchronous reporting path.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* Revisit shared source/observer outcome capture when another timed public operation needs it; existing TgData decorators/listeners would then be concrete additional consumers.
-
-## Risk 2 — Rechecking an old client may ignore a repaired stored login
-
-**Risk**
-
-An operator can repair a login in its store, then ask the pool to recheck it. If
-the pool keeps using the previously opened client, that client still holds the old
-login key. The recheck would repeatedly fail even though the replacement login is
-valid, forcing callers to reconstruct the entire pool to recover.
-
-Step4 `recheck_account` promises authentication/identity repair but does not state
-that the owned client is retired and its session reloaded. Telethon's live session
-and `tgdata/session_store.py:StoredSession` cache the loaded credential; calling
-fresh `get_me` refreshes server identity for that credential, not the store record.
-The repair path must explicitly close/reload before its guarded authorization call.
-
-**Severity:** Medium
-**Category:** Stale credential / lifecycle detail
-**Impact:** repaired accounts remain unusable; unsafe ad-hoc client replacement by callers.
-**NoobEng:** a fresh request and fresh credential load are different operations.
-**Affected areas:** steps2/4 pool_source ownership, session storage and recheck.
-
-### Mitigation — Quick
-
-Require users to close/reconstruct the whole pool after every login repair.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* —
-
-### Mitigation — Robust
-
-Recheck only after quiescence/known waits: await retirement of that slot's client,
-reload its configured session and repeat alias preflight, then durably admit the
-identity-only check. Refuse if retirement cannot establish safe ownership. Preserve
-all stored restrictions until the new identity is verified and settlement commits;
-test an actual StoredSession credential replacement with no overwritten new key.
-**Why this is robust:** repairs the precise stale object while preserving the
-pool's durable restrictions and session-store conflict behavior.
-- [x] selected   - [x] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* Selected robust/elegant: retire/reload the exclusive slot and retain durable facts. Persistent TgData sessions are another rotation instance, but a global generation protocol changes their ownership contract and the pluggable store interface. This narrow reload remains useful if such a protocol is added.
-*For future:* —
-
-### Mitigation — Long-term
-
-Introduce credential generations and rotation coordination shared by all TgData
-clients and backends.
-**Why this is long term effective:** would support explicit live rotation across
-arbitrary callers, beyond this pool's exclusive-owner contract.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* Revisit credential generations only when live rotation across multiple independent client owners is requested; #7 remains paused and no new prerequisite is introduced.
-
-## Execution preconditions
-
-E1 unchanged: two approved distinct authenticated accounts/shared group and bounded
-allowance gate step9. User confirmed one account for now and offline-first delivery.
-No live work required or authorized for the current implementation run.
+Pending separate pass. Phase2 findings: High0, Medium0, Low0. No mitigation proposals
+to select; the mandatory experiment remains the next operation.
