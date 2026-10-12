@@ -142,10 +142,13 @@ exclusive administrative/source entry and asserts local refusal with unchanged s
 clients and quota; direct/task/wait_for paths must agree.
 **Why this is robust:** closes all existing exclusive controls at their shared entry,
 using the scope already needed by the plan. No new owner or task registry.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* Existing read/initialize/recheck/recover share one actual entry point,
+so one scope check covers the class. Temporary #7 operations and worker/standalone
+progress have different ownership policies; a common cross-library mechanism is not
+established. Robust has the best reach/extent and survives later capability work.
 *For future:* —
 
 ### Mitigation — Long-term
