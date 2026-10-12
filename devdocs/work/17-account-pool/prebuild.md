@@ -1,141 +1,77 @@
 ---
 model: gpt-6-astra
 effort: max
-status: FAIL
-plan: DEPRECATED_step_by_step_impl_plan.md
+status: PASS
+plan_revision: 4
 ---
-# #17 revision-3 prebuild — storage cancellation remains unresolved
+# Whole-operation prebuild — passed before production changes
 
-**Gate P0: FAIL. Do not implement revision 3.**
+**P0 PASS, 2026-10-13.** Final combined run:48/48 pool groups, worker37:33/33,
+worker38:25/25. No watchdog fired, no runtime candidate correction was needed.
 
-The proposed source/observation/control changes passed36 of37 pool case groups.
-Both current-dev worker suites passed:33/33 and25/25. The failed group exercises an
-allowed asynchronous storage adapter whose own awaited future is cancelled after
-a real read has completed. The pool mistakes that for caller cancellation and
-withholds the completed message prefix from the caller and daily delivery.
+Baseline: product71502e5 plus current dev2ddb852; combined Git tree
+7d2dc2393c473cf6cdf9642c60f7c40618b21404. Dev was rechecked unchanged afterward.
+Fresh isolated export, with the known batch constructor union; source, ledger,
+SQLite and progress engines are real. Telethon1.45.0/Python3.11.10. Synthetic wire
+supplies server replies; actual SDK/SQLite creates records, quotas, tokens and receipts.
+No network or real accounts used. Runtime branch stayed unchanged throughout P0.
 
-This is the purpose of the prebuild: it found an unhandled ownership boundary before
-working-branch runtime changes. No runtime implementation or revision4 fold followed.
-The failed plan is preserved under its DEPRECATED filename. This is one failed
-prebuild, not another PR rejection or a signal that the retained router must be rebuilt.
+Candidate implements steps2–5 and selected Risk1 in the export, not the branch.
+The78 runtime Python files stayed byte-identical during tests; manifests record all
+hashes and changed files. New files pass Python3.7 grammar; no native3.7 claim.
 
-## What ran
+## What was established
 
-- Plan17ead79; tailored critic prompt4410f5a; fresh critic5ce2527; selectionc96115a.
-- Product71502e5/4854464, combined with current dev2ddb852 in an isolated export.
-- Merge preview had exactly one conflict: batch_engine.py. Its explicit union kept
-  the existing resolver and pool-only opt-in cancellation-prefix behavior. Worker
-  cleanup-failure receipts and all other dev changes remained.
-- Combined tree:`7d2dc2393c473cf6cdf9642c60f7c40618b21404`.
-- Python3.11.10, Telethon1.45.0, actual SDK request/pagination/native disconnect,
-  actual ReadBudget and SQLite pool/daily/backfill stores. Synthetic wire supplied
-  server replies; no fake reader supplied results, charges, tokens or receipts.
-- Candidate changes existed only in `probes/prebuild_candidate.py`, installed over
-  the real exported classes in memory. All76 exported runtime Python file hashes
-  remained unchanged. Working-branch runtime files also match71502e5.
-- A parent process bounded each command. No watchdog fired or task was abandoned
-  as a supposed fix. Socket connect/connect_ex were forbidden in the candidate.
-  Existing worker suites use their controlled offline fixtures/processes.
+The previous37 groups all pass unchanged in meaning. Its failing storage case now
+returns PoolStorageError with prefix100 and daily pending=true, caller requests0,
+charge200, no second source. Before actual settlement the token stays unresolved;
+after actual commit the saved wait7200 remains and token is cleared. No rollback
+or fresh permission is inferred from a failed response.
 
-## Observed failure
+Eleven added groups cover pool load/admission, twelve raw/daily/backfill settlement
+histories, daily/backfill load/start/admission, eight publication histories, ack and
+controls, pool and backfill exact recovery, repeated caller stop during held real
+provider commits, raw completed-result cancellation, pre-start stop, sync session
+interruption, and45 provider-driven control refusals. Data, durable rows, actual
+budget, SDK requests and child termination are asserted separately.
 
-The actual reader produced100 complete messages followed by FloodWait7200. The real
-ledger retained200 units: the completed page and reservation for the failed request.
-The pool then awaited its state backend's compare-and-swap during settlement.
+Before/after-write provider interruption maps to local errors. Backfill admission
+never reconciles into permission; non-admission exact read-back can confirm the
+existing candidate. Error prefixes are interrupted data, not invented end evidence
+or receipts. Actual caller cancellation remains cancellation and retains complete
+known data while joining I/O. State-only replay/ack survives pool close. All source/
+retirement/observation positive controls and both current worker suites hold.
 
-The provider adapter awaited a separately cancelled Future. It never cancelled the
-reader task and never called pool.close or another lifecycle method. One case failed
-before committing; the other performed the actual SQLite CAS and then lost its reply
-through that cancellation. This is a controlled I/O fault around real storage, not
-fabricated permission or a synthetic source result.
+## Attempts and one local fixture correction
 
-| Observation | Before settlement commit | After actual settlement commit |
-|---|---|---|
-| Caller cancellation requests | 0 | 0 |
-| Public outcome | CancelledError | CancelledError |
-| Actual complete records | 100 | 100 |
-| Records on public error | 0 | 0 |
-| Daily pending delivery | absent | absent |
-| Account attempt | unresolved | settled |
-| Saved wait | none observed | 7200 seconds |
-| Actual charge | 200 | 200 |
-| Second source reads in the call | 0 | 0 |
+Attempt1:46/46+33/33+25/25, initial matrix. Final coverage audit added backfill recovery
+and raw completed-settlement cancellation. Attempt2:47/48+33/33+25/25. Its new recovery
+fixture expected two pages charged but supplied only one pending first page. Corrected
+input supplies a real100-record first page then pending second page; original expected
+charge200/state/retry/cursor assertions are unchanged. Candidate runtime unchanged.
+This is a local fixture correction, not a failed design premise or another PR rejection.
+Exact failed fixture and hash are preserved; see evidence/restart/fixture-correction.md.
+Attempt3:48/48+33/33+25/25 in one full combined run. No weakened assertion or silent fix.
 
-The unresolved token prevents automatic reuse in the first case. The second case
-preserves the known wait. Those safeguards held; neither supplies the missing
-message delivery. A later account need not see the same history, so withholding the
-already-read prefix is a real outcome defect.
-
-## Why revision 3 did not close it
-
-`AccountPool._backend` still propagates every CancelledError. `_settle` also lets it
-escape as cancellation, bypassing its ordinary local-storage-error/prefix path.
-`SyncEngine.prepare` consequently takes its caller-cancellation path rather than
-publishing the actual source-error prefix. The candidate wrapped _backend in a
-control scope, but did not give the awaited provider's completion its own cancellation
-meaning. The source holder cannot control what happens during the later state await.
-
-The critic's original Phase2 recorded no new content defect and required this combined
-experiment. The experiment falsified the overall outcome promise. Its result is now
-recorded in critic.md without rewriting that earlier review into a fictitious prior
-finding. Do not claim the plan passed merely because its headline callback cases did.
-
-## What the other cases established
-
-The same candidate passed real raw/daily/backfill prefix+wait histories, source-free
-replay/ack after closure/backend/config/budget removal, successful recovery reporting,
-application observer cancellation and outside-created close, secondary health-finalizer
-error/cancellation/timeout, and distinct source-internal cancellation with unresolved
-account permission and retained group prefix.
-
-It also passed twelve provider reentry combinations (load/status/admission/settlement
-with direct/task/wait_for close), foreign/expired-scope controls, drain during read/
-close/caller cleanup, event count/byte/oversize/type/drop behavior, ambient legacy
-callback-flag independence, and unchanged legacy health callbacks. Reporting created
-no observer tasks.
-
-Native held/failed disconnect and explicit retry, actual caller cancellation before/
-after admission, repeated source/close cancellation, credential reload, both routing
-strategies, identity mismatch, timeouts and ordinary uncertain-write/prefix cases
-also passed. Those results remain useful. They do not waive the failed37th group.
-
-The worker33+25 checks validate its actual source/process behavior on the combined
-batch seam. They do not constitute a full revised pool regression or live qualification.
-
-## Required next design work
-
-Distinguish the caller's stop request from cancellation inside an awaited storage
-provider. Preserve completed source data through the latter as a local storage
-failure, while retaining uncertain-write semantics and genuine caller cancellation.
-Any provider-task ownership solution must also specify what is awaited/cancelled
-before releasing an operation; it cannot simply detach a live state write.
-
-Do not blanket-catch cancellation as an ordinary error, assume a cancelled response
-means rollback, retry CAS into fresh permission, or change the failed test to expect
-lost data. Resolve this contract first, write a replacement plan, run a fresh critic
-and rerun the entire combined gate. The observation/reporting and source-control
-candidate can remain evidence; it is not installed product code.
-
-## Reproduction and evidence
-
-Run in a fresh Python process from the issue branch:
+## Reproduce
 
 ```bash
-python devdocs/work/17-account-pool/probes/export_prebuild.py
-python devdocs/work/17-account-pool/probes/run_prebuild.py
+python devdocs/work/17-account-pool/probes/restart/export.py
+python devdocs/work/17-account-pool/probes/restart/build_candidate.py
+python devdocs/work/17-account-pool/probes/restart/run.py
 ```
 
-Use the project's existing Telethon1.45.0 environment. The export command writes only
-an isolated Git index/export and its manifest, without moving branch refs or changing
-working-tree runtime files. The parent runner records a fresh numbered attempt and
-expects the combined gate to fail until a new accepted candidate addresses the gap.
+Use the existing Telethon1.45 environment. Export uses an isolated Git index, not a
+branch mutation. The parent runner bounds each child process and records numbered
+attempts. The48-group runner consumes the real candidate export; it does not fake
+reader results or install the deprecated candidate.
 
-- [Complete pool output](evidence/replan-r3/attempt-1-combined.txt)
-- [Machine-readable gate result and candidate hashes](evidence/replan-r3/attempt-1-summary.json)
-- [Export manifest and source hashes](evidence/replan-r3/export-manifest.json)
-- [Worker source suite](evidence/replan-r3/attempt-1-worker37.txt)
-- [Worker process suite](evidence/replan-r3/attempt-1-worker38.txt)
+Evidence: [final gate](evidence/restart/attempt-3-summary.json),
+[pool cases](evidence/restart/attempt-3-combined.txt),
+[worker source](evidence/restart/attempt-3-worker37.txt),
+[worker process](evidence/restart/attempt-3-worker38.txt),
+[candidate hashes](evidence/restart/candidate-manifest.json),
+[baseline export](evidence/restart/export-manifest.json).
 
-No Telegram account/session/login/read/join or live budget was used. Two-account E1,
-production implementation, full regression, renewed merge check/PR critique and merge
-remain pending. Main checkout, duncan and unrelated work are unchanged.
+Passing P0 authorizes fold and implementation under task-impl, not merge or live
+qualification. E1 is still pending; full offline regression follows runtime integration.

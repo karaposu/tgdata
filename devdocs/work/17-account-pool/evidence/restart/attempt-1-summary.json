@@ -1,0 +1,57 @@
+{
+  "attempt": 1,
+  "result": "PASS",
+  "checks": [
+    {
+      "name": "combined",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "duration_s": 3.689,
+      "detail": {
+        "combined_cases": 46,
+        "passed": 46,
+        "failed": []
+      },
+      "output": "attempt-1-combined.txt"
+    },
+    {
+      "name": "worker37",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "duration_s": 1.436,
+      "detail": {
+        "passed": 33,
+        "total": 33
+      },
+      "output": "attempt-1-worker37.txt"
+    },
+    {
+      "name": "worker38",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "duration_s": 46.358,
+      "detail": {
+        "passed": 25,
+        "total": 25
+      },
+      "output": "attempt-1-worker38.txt"
+    }
+  ],
+  "candidate_runtime_unchanged": true,
+  "candidate_sha256": {
+    "storage_cases.py": "49fc33eeb0a73c9b8da1599e29078a075cd65726f6ece72832d8a28b5c5880d1",
+    "run.py": "7d62df3b1621e2405ff5c9e0c8f032a4b8fa4340ac9cb412f1e3c518fa3e15a0",
+    "prebuild_candidate.py": "b7041ac34097b32ac1352e55ce02b355586942e92e606740cb9289936669db5b",
+    "export.py": "12f93a2ba7cd13fde625c3c0508478fd56befa31c50a858a669f5de5f7a58d14",
+    "pool_lifecycle.py": "f994048767d4e38d81edb274791b025c5fcbfdc1491b21e3fbd8544fe1ca19dd",
+    "build_candidate.py": "7fdd5530de8ee41d9de89f0d2f6a5e92455e6d893f2a0da29be72c6a85665341",
+    "pool_observation.py": "5b9cde1d801fb442cebb1e6f4cb9cac657a4118a2e3774bd55321929053d201f",
+    "combined.py": "463165482a8cd9a199ebcaa73f8d56f36e1f1731041bec592cf106321826a108",
+    "reentry_recon.py": "0681e518f63c2efbee056408d1216f67a9dd5ca19bed73ddd779b98b24bbdc1d"
+  },
+  "candidate_python37_grammar": true,
+  "source_tree": "7d2dc2393c473cf6cdf9642c60f7c40618b21404"
+}

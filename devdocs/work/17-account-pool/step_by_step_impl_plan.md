@@ -1,9 +1,12 @@
 ---
 model: gpt-6-astra
 effort: max
-revision: 4
+revision: 5
 ---
 # #17 — explicit ownership across source and storage
+
+**Critic folded:** 2026-10-13 — 1 mitigation (1 step changed, 0 added).
+P0 completed before step1; prebuild.md records48/48 plus both worker suites.
 
 ### What is the task
 
@@ -205,12 +208,16 @@ HealthMonitor attribution/recovery, credential loading, native SDK disconnect.
 
 4
 
-## Step 4 — controller and every configured async store
+## Step 4 — controller and every configured async store [folded: Risk1, robust]
 
 ### Proposed changes
 
-AccountPool._operation enters the expiring scope while retaining its existing exclusive
-caller task. _backend uses owned provider invocation for load/CAS and preserves existing
+AccountPool._operation first refuses a live same-pool scope before changing ownership,
+then enters the expiring scope while retaining its existing exclusive caller task.
+This covers initialize/read/recheck/recover invoked from state-only providers, even
+when no source is active. P0 covers all five exclusive controls (including close)
+from pool/daily/backfill providers through direct/task/wait_for paths; state, clients
+and quota stay unchanged. Foreign/expired scopes and local progress remain usable. _backend uses owned provider invocation for load/CAS and preserves existing
 PoolError translation. SyncEngine receives an owned wrapper of sync_store; backfill_store
 uses its own wrapper/namespace. State-only methods are scoped during provider work but
 do not acquire exclusive source ownership; they remain usable after close.

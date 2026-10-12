@@ -26,6 +26,11 @@ an acceptable repair. Minor fixture slips are recorded separately.
 Passing result: every retained/new case and both workers pass in one combined run,
 with hashes/commands recorded and working-branch runtime unchanged. Then fold/implement.
 
+Result: PASS — combined48/48, worker33/33 and25/25; all actual ownership/data/
+permission assertions held, no watchdog, 2026-10-13. See prebuild.md. A local added
+fixture input correction is recorded; no runtime candidate change or weakened
+expectation. Branch runtime remained identical to71502e5 throughout P0.
+
 ## High-level summary
 
 Reviewed plan7872998 against actual current implementations and accumulated history,
