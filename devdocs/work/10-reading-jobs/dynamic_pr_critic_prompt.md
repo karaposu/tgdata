@@ -2,88 +2,87 @@
 model: gpt-6-astra
 effort: max
 ---
-# Fresh PR critic prompt — #10 worker
+# Fresh PR critic prompt — #10 revision 4
 
-Ultrathink. Subject: actual product diff `68f6bbd...85c0455` (product6ee146c,
-13 files) AND `step_by_step_impl_plan.md` revision2, landing on current dev68f6bbd.
-This is CONTRIBUTING7.2's fresh soundness review after publication. The passing
-merge check only establishes fidelity. Read the complete changed files and the
-relevant surrounding implementations, not grep summaries. Work in this warmed
-session; no subagent. Preserve planning critic.md and its dynamic prompt.
+Ultrathink. Review the full product diff `68f6bbd...bbdc846` (product `d32abcd`)
+AND `step_by_step_impl_plan.md` revision4, landing on current dev68f6bbd. This is
+CONTRIBUTING7.2's second soundness review. Fidelity, passed tests and correspondence
+to a frozen candidate are evidence, not approval. Work in this warmed session,
+without delegation. Read complete relevant implementations and call paths.
 
-Read declared blockers first. There is no open offline planning/execution blocker.
-Live Telegram, native older Python/Windows and cross-process session ownership
-remain explicitly unqualified; do not rediscover those scope boundaries as defects.
-Question the selected serial process and temporary source composition on its own
-terms, including whether it is more complex than necessary. Avoid a framework
-merely because HTTP, #17 routing or a durable queue might be wanted later.
+Read desc/plan blockers first. None are open for offline delivery. Carry separately
+authorized live accounts, exclusive sessions and unqualified platforms as external
+preconditions; do not manufacture findings from acknowledged exclusions. Preserve
+planning critic.md/prompt, archive prior PR records, and make no runtime edits.
 
-Compute a premise inventory first, ranked by waste if false. Per premise record
-what is assumed, first dependent plan step, waste if false, scheduled test,
-cheapest earlier observation and covering/non-covering evidence. Disclosed vendor,
-runtime and lifecycle assumptions still require the real component in its real
-composition. A synthetic wire may supply Telegram data/errors, but may not supply
-the ownership, admission, loop wake-up, cleanup or output property being judged.
-A passing helper or test with an incidental task/timer is not automatically a
-qualification of an otherwise sleeping event loop. Run affordable falsifiers.
+Compute the premise inventory first, ranked by waste-if-false. For each premise
+state the first dependent step, waste if false, scheduled test, cheapest earlier
+observation/cost, and covering versus non-covering evidence. Claims about SDK,
+signals, storage and observers need real components in the real composition.
+Synthetic transport may supply data/errors; it must not supply ownership, cleanup,
+loop progress or charges. Run affordable falsifiers before a positive verdict.
 
-Attack these boundaries, and remain open to findings outside this list:
+Challenge these concepts, without treating the list as exhaustive:
 
-1. Actual authenticated identity versus session/cache; later read/join claims;
-   scoped health; private cleanup receipt under original failure/cancellation;
-   no silent SDK login, fallback discovery, retry or change to ordinary clients.
-2. Resident process scheduling: signal registration, an active source waiting
-   on I/O with no short timer, start of cancellation, retained disconnect, repeated
-   signals, idle input and output pressure. Observe OS signals and actual selector
-   behavior; remove test polling that could accidentally make progress for the code.
-3. Result/observer/output independence: complete versus partial batches, source
-   outcome retained after cleanup/serialization failure, notification correlation
-   and bounded drop accounting, exception text, and no source after unsafe output.
-4. Strict request/manifest boundaries and consumed request IDs; frame size/nesting,
-   canonical integer representation and precise group/query IDs through consumers;
-   absent/corrupt policies, file/store session addressing, aliases and relocation.
-5. Real subprocess/SDK tests and caller example: test real lifetime behavior rather
-   than desired stand-ins; complete source results and ledger charges despite lost
-   replies; no blanket retry after uncertain joins; packaging/import boundaries.
-6. Compatibility/security/performance: compare shared seams with dev, inspect
-   plaintext diagnostic surfaces and bounded resident state, and identify any new
-   schema, API or cross-module coupling that lacks a concrete requirement.
+1. Stop/admission/settlement ownership across synchronous I/O, task creation,
+   active requests, completed source work, native cleanup, output publication,
+   final tasks and the closed loop. Test first/repeated/mixed stop signals and
+   direct cancellation. A child timer must not supply missing progress. Preserve
+   original outcomes and first stop reason, restore process state and send no
+   successor source work. Distinguish cleanup starting from cleanup finishing.
+2. Fresh authenticated identity versus cached/file labels, including later
+   allowance admission; scoped health and real read/join claims; failed cleanup
+   feedback before cancellation escapes. Never silently retry, discover broadly,
+   join, log in or reset policy. Confirm ordinary library behavior is retained.
+3. Diagnostic publication across every wrapper and source phase: SDK-decoded
+   unknown/known errors during setup, initial/later proof, resolution and reading;
+   terminal, health, delivery-failure and fatal paths. Verify exact types, flags,
+   bounded recognized vocabulary, hostile metadata and absent raw text. Keep
+   message/group data and intentionally supplied labels distinct from diagnostics.
+4. Strict framing and consumed IDs, numeric/date/target limits, inventory/policy
+   validation, file/store addressing and aliases. Check broken/undrained/short
+   writes, source-versus-receipt uncertainty and bounded resident resources.
+   Successful membership is not readability; partial batches retain real hashes.
+5. Whole-codebase compatibility: shared cleanup/resolver seams, package imports,
+   existing source/health/budget/progress consumers, caller example and docs. Judge
+   whether the design is more complex than its present requirements justify. A
+   hypothetical future transport or #17 pool does not justify a new framework.
 
-Write and run fresh targeted probes with owned temporary files/processes and socket
-connections blocked. Record precise output, normal controls and adverse histories.
-Do not contact Telegram, reuse private account config, change real policies or edit
-product code during review. An unexpected result is evidence to understand, not a
-test to weaken. Retain fixture corrections with their reason. Every Medium/High
-must stand on an exact code path or a reproduced observation, not hypothetical prose.
+Write fresh probes using actual SDK/SQLite/OS processes and owned temporary files,
+with network blocked. Retain exact observations, positive/adverse controls and any
+fixture correction. Do not fake the property tested, weaken an assertion, contact
+Telegram or edit product code. Every Medium/High requires a concrete reachable
+path or reproduction. Separate reproduced defects from unavailable live evidence.
 
-Create `pr-critic.md` here (the gate-specific critic.md), beginning with model/effort
-frontmatter from current metadata. Immediately state one skill verdict:
-IMPLEMENT AS WRITTEN; IMPLEMENT AFTER FOLDING THESE IN; REORDER — TEST BEFORE BUILD;
-or DO NOT IMPLEMENT — MEANING GAP / WRONG LAYER. Then falsifier and Affordable now
-lines, high-level summary, premise inventory, restart check and inherited lessons.
-The falsifier rule still applies: an affordable unrun premise test precedes approval;
-name experiment/cost/first dependent step/disqualifying/passing results for REORDER.
-Separate shape/order judgment from the gate: any High or Medium means REJECTED,
-only consciously accepted Lows (or none) can pass. No merge authorization is implied.
+Create `pr-critic.md` here, the gate-specific critic.md, with a high-level summary
+near the top. First write model/effort frontmatter from current metadata (unknown
+if unavailable), then one verdict: IMPLEMENT AS WRITTEN; IMPLEMENT AFTER FOLDING
+THESE IN; REORDER — TEST BEFORE BUILD; or DO NOT IMPLEMENT — MEANING GAP / WRONG
+LAYER. Under verdicts1–3 put Falsifier and Affordable now lines; an affordable
+unrun falsifier requires REORDER with experiment/cost/first dependent step and
+passing/disqualifying results. A completed passing experiment is distinguished
+from an unrun one. Verdict4 uses a dash. State the separate PR gate: any High or
+Medium rejects; consciously accepted Lows or none pass. Neither gate authorizes merge.
 
-Restart check: map actual #17 observer/descendant-close failures, the original
-unbounded resolver/buffered-final-flush findings, and failed-disconnect pending-task
-diagnostics to established mechanisms and addressing design elements. Inherited
-lessons must be satisfied by execution order/real evidence, not acknowledgment in
-prose. Do not call reuse of an accepted primitive proof of a new process composition.
+After the summary include the premise inventory, a Restart Check mapping every
+observed prior failure to its established mechanism and addressing design, and
+Inherited Lessons mapped to execution order and actual evidence. Include original
+bounded-resolution/raw-output failures, quiet-selector and auth-text defects, and
+inherited observer/cleanup lessons. Do not call disclosure closure.
 
-For each risk use sections, not a risk table. Risk has two paragraphs: first a
-self-contained plain explanation of what a user sees and why; second exact paths,
-symbols, lines and triggering history. Include severity, category, impact, NoobEng
-and affected areas. For Medium/High offer quick, robust and long-term proposals,
-with why-this-is-robust / why-long-term-effective fields. Phase2 leaves every
-proposal's selected/elegant/last_resort boxes unticked, notes Why chosen/For future
-empty. Commit that Phase2 result before Phase3 selection. Phase3 only selects and
-fills notes, never changes findings/severity. Name a second real instance before
-claiming a class; compare reach/extent and reject unnecessary generalization.
+For each risk use sections, not a risk table: two Risk paragraphs (plain user
+consequence, then exact paths/symbols/lines/trigger), Severity, Category, Impact,
+NoobEng and Affected areas. Medium/High receive quick, robust and long-term proposals,
+including why-this-is-robust and why-this-is-long-term-effective. Under each proposal:
+- [ ] selected   - [ ] elegant   - [ ] last_resort
+**Note**
+*Why chosen:* —
+*For future:* —
 
-For DO NOT IMPLEMENT, apply skill2.5 (no tier selection, mark the plan deprecated
-and record the missing premise in desc; no replanning here). Otherwise preserve the
-plan. If the PR gate rejects, follow CONTRIBUTING7.4: save/publish critique, mark
-the PR draft and hand off revision3 re-planning; do not patch the findings here.
-Final report states evidence/limits and precisely what remains, including live work.
+Commit Phase2 with those selections empty. Phase3 only ticks boxes and fills notes;
+it does not alter severity/findings. Enumerate another real instance before claiming
+a shared class, compare reach/extent and route overly broad redesign separately.
+For DO NOT IMPLEMENT, follow skill2.5, record the premise gap and deprecate the plan;
+do not select tiers or rebuild here. Otherwise preserve the plan. If this second
+PR review rejects, publish it, retain draft status and hand off description/traverse
+under CONTRIBUTING7.4. Do not patch or start another revision cycle in this review.
