@@ -1,211 +1,167 @@
 ---
 model: gpt-6-astra
 effort: max
-subject_plan: 17ead79
-status: PREBUILD_FAILED
+revision: 4
 ---
-**REORDER — TEST BEFORE BUILD**
+**Verdict: REORDER — TEST BEFORE BUILD**
 
-Falsifier: the combined candidate cannot preserve actual source success/error/prefix,
-conservative account permission and real caller cancellation while removing observer
-work and refusing supported provider reentry, on the current-dev integration.
-Affordable now: yes — owned local SDK/SQLite/progress composition with synthetic wire
-and blocked sockets, minutes and no real account access.
+Falsifier: the combined actual source/SQLite/progress composition either treats
+provider interruption as caller stop, releases a live write, loses completed data,
+infers permission from an uncertain admission, or allows same-pool provider control.
+Affordable now: yes — local synthetic sessions/SQLite/blocked sockets, minutes of
+execution plus bounded candidate construction; no live credentials required.
 
-Experiment: run the complete Gate P0 matrix from revision3 with one candidate source/
-collector/scope implementation, on an isolated71502e5+dev2ddb852 export retaining both
-batch options. Observe actual Telethon request futures/native disconnect, ReadBudget,
-SQLite CAS and daily/backfill publication/replay. Include source-internal cancellation,
-passive drain during external close, malformed/oversized/lost observations, and both
-negative reentry and positive independent-control cases. Run relevant worker tests
-on that same combined export. Retain exact candidate/source hashes and all outputs.
-Cost: bounded local temporary data/processes; no Telegram traffic or credentials.
-Must precede: Step1 and every runtime step. The written P0 order is already correct;
-this verdict keeps that prebuild gate mandatory rather than moving a late test.
-Disqualifying result: any named P0 invariant fails because of the candidate's design,
-a supported wait cycle remains, or passing requires faking a read/charge/permission/
-receipt, dropping live owned work, suppressing true caller cancellation or weakening
-an expected outcome. A watchdog kill is failure. Deprecate/return upstream on an
-architectural failure under task-impl; do not patch the plan after a false premise.
-Passing result: all P0 histories pass in the same real-component candidate and current-
-dev composition, with actual persisted facts/charges/prefixes/task completion, no
-network and no working-branch runtime changes. Narrow subsets are non-covering for
-this gate. Passing qualifies implementation of this plan, not the rejected PR.
-
-Result: FAIL — 2026-10-12_23-36. Combined candidate36/37 case groups passed; worker37
-33/33 and worker38 25/25 passed. A pool-state provider's own cancelled future during
-settlement returned CancelledError with caller cancellation requests0 and discarded
-the actual100-record prefix from public error/daily pending delivery, before and
-after the real SQLite commit. Before commit the attempt stayed unresolved; after
-commit the7200-second wait was saved, but the prefix was still withheld. The source/
-observer fix alone is insufficient at the awaited storage boundary. The plan is now
-`DEPRECATED_step_by_step_impl_plan.md`; no revision4 fold or runtime implementation.
-See `prebuild.md` and `evidence/replan-r3/attempt-1-summary.json`.
+Experiment: execute the plan's full P0 using a fresh dev2ddb852/product71502e5 export,
+prototype steps2–5 and selected Risk1. Retain all37 earlier groups, add the complete
+source/pool/progress storage matrix, and run worker37/38 in the same parent-controlled
+attempt. Actual SDK pagination/native cleanup, ledger and SQLite create the outcomes;
+fault adapters may cancel their own awaited I/O before/after real CAS, not fabricate
+permission, data or receipt state. Include caller cancellation while a real provider
+finalizer waits to commit, and synchronous session load interruption.
+Cost: offline; no service spend; bounded parent watchdog per process.
+Must precede: step1 (the plan already lists P0 there; execute it, do not waive it).
+Disqualifying result: any semantic assertion fails or watchdog fires. A released
+live child, changed expected data loss, invented rollback or stand-in outcome is not
+an acceptable repair. Minor fixture slips are recorded separately.
+Passing result: every retained/new case and both workers pass in one combined run,
+with hashes/commands recorded and working-branch runtime unchanged. Then fold/implement.
 
 ## High-level summary
 
-Fresh in-session critic-d of plan17ead79 and desc79ecce7, using prompt4410f5a.
-The plan addresses the actual source/observer/control failures and incorporates the
-traverse's outside-task and passive-access findings. It preserves the independent
-permission, quota and progress authorities. No additional High, Medium or Low content
-defect was established in this pass. Do not manufacture a finding from the already
-explicitly unsupported live/distributed/provider behaviors.
-
-The main uncertainty is behavioral composition of the new private monitor, cancellation
-precedence and expiring control scope on the current dev. Separate old probes cannot
-close that premise. The full prebuild is required even with zero new content findings.
-The present user request stops after that evidence and the selected fold; it does not
-run production implementation or renew the PR acceptance gate.
+Reviewed plan7872998 against actual current implementations and accumulated history,
+in this warmed session. One Medium content risk; no High/Low padding. The proposed
+ownership mechanism serves real repeated source/provider instances. Cleanup retains
+a deliberately different policy. No replacement router, cursor engine or global
+supervisor is justified. The passive observation design has prior positive evidence,
+but source/store ownership and data preservation require the full fresh composition.
+This is a plan review, not another rejected PR review.
 
 ## Premise Inventory
 
-### 1. Source outcome and cancellation roles survive the combined wrapper
+### P1 — One interruptible owner can distinguish all cancellation origins
 
-**First dependent step:**3 (and Step2's monitor composition). **Waste if false:**
-reporting/source integration and product tests/docs would rest on false semantics.
-**Test scheduled:**P0, before Step1. **Cheapest earlier test:** actual SDK read with
-success, prefix+wait, cancelled transport future, timer and held finalizer/native
-cleanup; affordable now. **Coverage:** old inquiry covers separate holder and passive
-sink cases, not the complete planned monitor/control implementation. Fresh baseline
-reconnaissance (`recon.txt`) confirms an SDK-awaited future cancellation produces
-CancelledError with caller requests0, prefix100, charge200, unresolved token and no
-daily pending delivery. This validates the need to test the plan's explicit local
-interruption path; it does not prove that path works.
+First dependent step2; if false, steps2–6 lifetime/data work needs redesign.
+Test scheduled P0 before1, repeated6/7. Cheapest earlier test is P0: actual SDK plus
+SQLite provider I/O before/after commit, caller interruption while finalizing, all
+three progress modes. Prior source-only success is non-covering for store ownership;
+r3's failed37th group proves that. Task counts and documentation are non-covering.
+No use of Python3.11-only cancellation counters in runtime may supply the answer.
 
-### 2. Passive capture/retrieval has no executable consumer lifetime
+### P2 — Data retention does not become permission or a receipt
 
-**First dependent step:**2. **Waste if false:** new API and outcome promises. **Test
-scheduled:**P0. **Cheapest earlier test:** actual health emissions through the candidate
-monitor plus bounded malformed/oversize/capture-failure/drain cases; seconds. **Coverage:**
-worker's bounded collector is a useful existing mechanism, not proof of this collector.
-The inquiry's actual close comparison establishes why drain cannot refuse while busy.
-The new plan specifies native types/pre-encoding bounds, nested ownership, drop
-semantics, ambient-flag independence and a no-user-delivery monitor. These are
-concrete testable requirements; a sink that simply returns wanted reports is not covering.
+First dependent steps4–5; false would invalidate admission/ack claims. P0 precedes
+build,6/7 regress. Cheapest test: actual CAS and lost reply at admission, settlement,
+publication and acknowledgment, inspect stored bytes and source traffic; minutes.
+Existing pool prefix/error behavior and backfill exact reconciliation provide reuse
+points, not coverage of new CancelledError paths. Success/end batch and failed-read
+prefix both needed. Check same saved payload/hash on replay; error data alone is not
+acknowledgeable and cannot prove end-of-history.
 
-### 3. Scope guards cover supported providers without breaking valid close
+### P3 — Source-free storage calls still reject provider-driven source control
 
-**First dependent step:**4. **Waste if false:** lifecycle guarantees and downstream
-qualification. **Test scheduled:**P0. **Cheapest earlier test:** actual load/CAS wrappers
-around SQLite initiate direct/create_task/wait_for close, together with independent
-close, stale scope, foreign pool and repeated cancellation. **Coverage:** the inquiry
-proved scope-only protection insufficient for arbitrary awaited observers; this plan
-removes that consumer edge and explicitly bounds provider behavior. It also scopes
-_backend for status-only paths. Do not call that a general dependency detector.
+First dependent step4; false permits I/O role reversal or recursive ownership during
+status calls. Cheap real-component probe ran in probes/restart/reentry_recon.py:
+get_pool_status's provider awaited recheck_account, actual verification and SQLite
+verified_at update succeeded. P0 must test refusal for all exclusive operation entry
+points after the proposed task/scope hop. Risk1 below is a local content amendment,
+not a new abstraction or premise requiring different steps.
 
-### 4. Current-dev union preserves both batch consumers
+### P4 — Combined compatibility and actual live service behavior
 
-**First dependent step:**1. **Waste if false:** worker regression or lost pool prefix
-support. **Test scheduled:**P0 export, then full Step6 regression. **Cheapest earlier
-test:** inspect the conflict and run actual pool/worker consumers on the union.
-**Coverage:** merge-tree reports exactly batch_engine.py; comparison to dev shows
-only asyncio import, opt-in prefix flag and its cancellation handler differ in the
-pool file. This supplies a concrete resolution but does not replace running both.
-
-### 5. Admission, quota and progress remain independent under new interruption
-
-**First dependent step:**3. **Waste if false:** source control can grant permission
-or lose a pending batch incorrectly. **Test scheduled:**P0 and Step5/6. **Cheapest
-earlier test:** actual SQLite before/after commit failures plus exact charges and
-real daily/backfill replay after source closure; affordable now. **Coverage:** fresh
-original-review controls still preserve six existing boundaries; new interruption/
-monitor composition remains to be tested as one candidate. Never stub settlement or
-have a fake reader supply the expected prefix.
-
-### 6. Deployment and real multi-account qualification
-
-**First dependent step:**7. **Waste if false:** live deployment claims. **Test scheduled:**
-Step7/E1. **Cheapest earlier test:** confirmed two-account/group/ledger resources,
-unavailable under the existing offline-first boundary. **Coverage:** synthetic wire
-is non-covering for real proxies, login state and visible history. E1 is unchanged,
-not a severity finding. One-loop/exclusive-session/trustworthy-UTC rules are explicit
-supported deployment limits, not claims of cross-process safety.
+First dependent step1 for current-dev union; P0 workers plus step7 full suite close
+that local composition. Previous workers pass on union, not new helper. Ordinary
+TgData health/cancellation must keep existing behavior except added error data.
+For real account/proxy/visibility behavior first dependent step8, E1 OPEN; user must
+supply two approved accounts/group/allowance. Synthetic wire is non-covering for live
+service behavior. Earlier real live test is not affordable with one account.
 
 ## Restart Check
 
-| Observed failure | Established mechanism | Plan element |
+| Observed failure | Established mechanism | Addressing design |
 |---|---|---|
-| Completed prefix/wait hidden by observer cancellation | child.result bypasses captured body on normal terminal path | Step3 authoritative body outcome, Step2 removes application callbacks, P0 exact error/prefix/wait cases |
-| Successful read hidden by observer cancellation | Same mixed-task outcome on recovery notification | Step2/3 and P0 successful recovery plus secondary-fault cases |
-| Callback descendant close cycle | Exact-task guard misses child; retained waits point back | Step2 removes consumer dependency, Step4 guards live scopes, P0 direct/descendant/positive controls |
-| Storage descendant cycle before source | Awaited custom backend becomes pool controller | Step4 _backend scope and storage-only role, P0 actual SQLite forwarding wrappers |
-| Pre-existing actor defeats ancestry guard | Actor was created outside inherited context | Step2 application-owned observations; unsupported provider cycles explicitly excluded; P0 post-read actor close |
-| Cancelled recheck releases a disconnecting client | Native SDK shields disconnect beyond cancelled waiter | Existing retained retirement/quarantine preserved; P0 native delay/failure/retry controls |
-| Repeated cancellation releases source child | Interruptible cancellation waiter | Existing retained stop kept in Step3/4; P0 repeated read/close cancellation |
-| Reporting busy refusal masks cancellation | Reader finally runs while external close is active | Unconditional local drain in Step2; P0 close/finally comparison |
+| Client reused during cancelled native disconnect | SDK shield outlived waiter | Steps2/3 retain existing physical retirement, P0 native controls |
+| Repeated cancellation released source child | Interruptible cancellation waiter | Step2 owned cancel-and-join, P0 held finalizer |
+| Callback cancellation hid completed prefix/wait | Child status substituted for source outcome | Step3 body holder all paths + passive capture |
+| Callback child/outside actor deadlocked shutdown | Reader/observer/close wait cycle; ancestry incomplete | Step3 removes observer dependency, step2 scopes/provider role |
+| Drain during closing replaced reader cancellation | Busy policy applied to local observation | Step3 drain synchronous in every state |
+| Store cancellation hid real source data | Inline _backend CancelledError bypassed settlement/error publication | Steps2/4 owned provider, step5 known data retention |
+| Status provider can reenter administrative control | No _active_task during state-only load | Risk1 guard at step4 _operation as well as close |
 
 ## Inherited Lessons
 
-Actual source completion, actual task quiescence and durable permission are separate:
-Steps2–4 keep those facts separate, and P0 challenges them before Step1. A different
-task is not an independent controller: Step4 uses bounded provenance and the provider
-contract, while Step2 removes the arbitrary observer edge. No global supervisor is
-introduced without a matching second owner.
+Task termination/source outcome: steps2/3 and P0 beforebuild. Cancellation/rollback:
+step4 definite admission and exact existing reconciliation, P0 both commit sides.
+Data/durability/ack: step5 interrupted errors, P0 actual pending/replay. Acyclic retained
+cleanup: steps2–4 provider role plus guarded control, P0 external/foreign/expired
+controls. Ancestry is not a wait graph: callback dependency removed, no general claim.
+Composition precedes bulk implementation: full P0 mandatory before step1; neither
+recon nor the earlier36 successes substitute. Existing mechanisms retained only where
+their authority contract is unchanged; no schema/protocol redesign hidden in helper.
 
-Diagnostic data is not a commit receipt: Step2's snapshots remain advisory; source
-settlement and group acknowledgment retain their stores and P0 verifies lost-write
-responses and replay. More passing tests do not establish an untested composition:
-only the full combined P0 clears this gate. Current-dev integration is measured in
-that export before production Step1. Real live E1 remains separate.
+## Risk1 — Status providers can enter account administration
 
-## Adversarial assessment and findings
+**Risk**
 
-No new severity finding. The following were explicitly challenged rather than
-assumed from names:
+An application-supplied storage method can run while the pool is only reporting
+status. If that method tries to repair or initialize the same pool, there may be no
+active reader for the usual busy check to detect. The supposedly storage-only call
+can then verify an account or change its permission record, and a provider that
+repeats the dependency can recurse or wait on its own work. Rejecting shutdown alone
+does not enforce the promised separation between providers and lifecycle control.
 
-- Captured body truth could be bypassed again on one branch: the plan resolves it
-  on every terminal path and locates caller cancellation at the awaited outer
-  boundary, with a distinct conservative internal-source interruption rule.
-- A buffer could move the cycle into close: the plan owns no consumer task, invokes
-  no application observer/legacy health-log mirror, and drain has no wait or guard.
-- A count limit could leave unbounded payload serialization: prechecks and fixed
-  schema/encoded-size caps are explicit, including no arbitrary conversion hooks.
-- Inherited delivery recursion suppression could hide reports: the private monitor
-  bypasses that user-callback flag only for internal capture; P0 covers it.
-- Scope expiry could permanently block a later closer or retain the pool: finally
-  invalidation/released reference and foreign/stale positive controls are explicit.
-- Read-only status could bypass provider rules: _backend scope is required without
-  promoting local status to exclusive source work.
-- Converting source cancellation to an ordinary failure could clear permission:
-  the private subtype refuses _settle before row mutation; P0 asserts persisted token.
-- Constructor migration could silently keep executing callbacks: non-None is refused
-  before source construction, None remains harmless, and ordinary TgData is unchanged.
-- A prebuild could pass on helpers supplying the property under test: original read,
-  SDK, ledger, CAS and progress engines must run. Fault wrappers only interrupt the
-  boundary; result/token/charge/receipt assertions must observe actual components.
+`AccountPool.get_pool_status` awaits `_backend` outside `_operation`. Step4 adds a
+scope but only specifies a refusal at `close`; `_operation` still checks closed and
+`_active_task`. A provider can invoke `initialize`, `recheck_account`, `recover_account`
+or `read` while `_active_task is None`. The actual baseline probe made a status-load
+provider call recheck_account and observed a real verified_at SQLite update. The same
+scope predicate must also be checked before entering `_operation`, not only recorded
+inside it. P0 must cover status-originated pool/sync/backfill provider calls.
 
-These are plan commitments awaiting P0 evidence, not assertions of an implemented fix.
-No mitigation tiers are emitted because no Medium/High content risk was established.
+**Severity:** Medium
+**Category:** Lifecycle reentry / extension contract
+**Impact:** hidden source/admin mutation and possible recursive provider dependency.
+**NoobEng:** state reports deliberately remain usable without claiming a source slot;
+that is why the existing one-active-reader check is insufficient for their providers.
+**Affected areas:** account_pool._operation, pool_lifecycle scope, provider reentry tests.
 
-## Executed evidence and limits
+### Mitigation — Quick
 
-Fresh unchanged-product reconnaissance ran raw and daily source-internal cancellation:
-caller requests0; public CancelledError; partial100; pending=false; active token retained;
-charge200; no second source. It supports the need for the planned distinction.
+Document the provider prohibition and rely on applications to honor it.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
 
-The unchanged first PR probe suite was re-run: eight groups, six preserved controls
-and the same two reproduced rejected defects. Its output is retained in
-`evidence/replan-r3/original-rejection-controls.txt`; the new two-case script/output
-are `probes/replan_recon.py` and `evidence/replan-r3/recon.txt`. Both block sockets and
-use owned synthetic SQLite/config state. Runtime files remain unchanged.
+**Note**
+*Why chosen:* —
+*For future:* —
 
-The full combined prebuild has not run at this Phase2 checkpoint. No selected subset
-or earlier inquiry count is called a P0 pass. No PR/merge/live acceptance is inferred.
+### Mitigation — Robust
 
-## Phase 3 — Selection pass
+Check the existing live same-pool scope predicate before _operation changes ownership,
+as well as before close changes flags. Preserve state-only status/replay/ack and foreign/
+expired scope behavior. P0 uses actual pool/daily/backfill load providers to try each
+exclusive administrative/source entry and asserts local refusal with unchanged state,
+clients and quota; direct/task/wait_for paths must agree.
+**Why this is robust:** closes all existing exclusive controls at their shared entry,
+using the scope already needed by the plan. No new owner or task registry.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
 
-Selection pass complete in the same session. Phase2 findings remain High0, Medium0,
-Low0; no proposals exist to tick or fold. No severity/risk text changed. The plan
-already adopts the traverse's bounded pool-specific design; no shared class or new
-framework is selected by implication. Run the full mandatory P0 experiment next.
-If it passes, revision4 records zero selected mitigations and the qualified gate;
-production implementation remains beyond this request's endpoint.
+**Note**
+*Why chosen:* —
+*For future:* —
 
-## Experiment disposition
+### Mitigation — Long-term
 
-The affordable falsifier ran after the Phase2/Phase3 checkpoints and disproved the
-complete outcome guarantee at the provider boundary. The Phase2 findings/selection
-are preserved as history; this is not a retrospective rewrite of their severities.
-Under task-impl Experiment FAIL the plan is deprecated and the observed premise is
-recorded CLOSED in desc.md. This is one failed prebuild, not another rejected PR.
-The unchanged first PR review remains the only rejected PR round for #17.
+A repository-wide provider capability layer for pool, temporary account operations,
+worker and standalone progress stores.
+**Why this is long term effective:** explicit capabilities could prevent provider
+control inversion across public components if a common ownership contract is established.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
+
+**Note**
+*Why chosen:* —
+*For future:* —
+
+## Execution preconditions
+
+E1 unchanged: step8 needs two approved accounts/shared group/existing allowance.
+No live access/joins/budget reset were used in this review. PROJECT_SPECIFICS absent;
+commands must come from existing runners. PR26 stays draft until renewed later gates.

@@ -1,0 +1,1 @@
+{"caller": "get_pool_status", "provider_entered": "recheck_account", "actual_verified_write": true, "local_refusal": false}
