@@ -7,7 +7,7 @@ A → Su → S → D → I → C → R (always)
 - [x] Articulate-Simple
 - [x] Surfacing
 - [x] Sensemaking
-- [ ] Decomposition
+- [x] Decomposition
 - [ ] Innovation
 - [ ] Critique
 - [ ] Routelister
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Decomposition
+Innovation
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -63,6 +63,10 @@ Decomposition
 - 2026-10-12_20-34: Sensemaking2 complete, SV1–SV6; eight narrowed ambiguities and all ten
   inherited concepts re-tested. Role contract stable; observation access shape open.
   Manual10/10 PASS (checker unavailable). Next: Decomposition2.
+
+- 2026-10-12_20-36: Decomposition2 complete. Three remaining questions (access, bounded
+  capture, control roles), eight interfaces with assumptions and runtime mechanisms.
+  Manual structure7/7 and quality7/7 PASS. Next: Innovation2.
 
 ## Iteration 2 focus
 
