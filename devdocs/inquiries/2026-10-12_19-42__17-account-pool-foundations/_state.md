@@ -7,7 +7,7 @@ A → Su → S → D → I → C → R (always)
 - [x] Articulate-Simple
 - [x] Surfacing
 - [x] Sensemaking
-- [ ] Decomposition
+- [x] Decomposition
 - [ ] Innovation
 - [ ] Critique
 - [ ] Routelister
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Decomposition
+Innovation
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -33,3 +33,7 @@ Decomposition
   extend success and backend-descendant cases; no runtime edits. Ten ambiguities,
   nine high-confidence constraints and reuse extent left open. Manual10/10 PASS.
   Next: Decomposition.
+- 2026-10-12_19-59: Decomposition complete. Six conceptual questions, six boundaries,
+  nine explicit interfaces/assumptions; runtime determination assigned. Manual
+  structure7/7 and quality7/7 PASS. Contract-first dependency order; no coding plan.
+  Next: Innovation.
