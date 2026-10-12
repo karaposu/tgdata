@@ -1,0 +1,7 @@
+{"case": "raw", "observer_own_cancel": false, "prefix": 100, "stored_wait": 7200, "charge": 200, "controller_close_completed": true, "replay_source_free": true}
+{"case": "raw", "observer_own_cancel": true, "prefix": 100, "stored_wait": 7200, "charge": 200, "controller_close_completed": true, "replay_source_free": true}
+{"case": "daily", "observer_own_cancel": false, "prefix": 100, "stored_wait": 7200, "charge": 200, "controller_close_completed": true, "replay_source_free": true}
+{"case": "daily", "observer_own_cancel": true, "prefix": 100, "stored_wait": 7200, "charge": 200, "controller_close_completed": true, "replay_source_free": true}
+{"case": "backfill", "observer_own_cancel": false, "prefix": 100, "stored_wait": 7200, "charge": 200, "controller_close_completed": true, "replay_source_free": true}
+{"case": "backfill", "observer_own_cancel": true, "prefix": 100, "stored_wait": 7200, "charge": 200, "controller_close_completed": true, "replay_source_free": true}
+PASS6 observation-boundary histories on original runtime; event API unimplemented.

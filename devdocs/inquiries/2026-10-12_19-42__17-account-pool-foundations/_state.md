@@ -9,14 +9,14 @@ A → Su → S → D → I → C → R (always)
 - [x] Sensemaking
 - [x] Decomposition
 - [x] Innovation
-- [ ] Critique
+- [x] Critique
 - [ ] Routelister
 ## Iteration
 1
 ## Status
 ACTIVE
 ## Next Discipline
-Critique
+Routelister
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -42,3 +42,8 @@ Critique
   assembly fails a pre-existing-task dependency; passive-event alternative survives
   that case. Preferred conceptual assemblyA plus explicit alternatives/limits.
   Manual12/12 PASS; no product edits. Next: Critique.
+- 2026-10-12_20-21: Critique1 complete:18 variants, four assemblies, eight dimensions;
+  six additional actual raw/daily/backfill observation-boundary histories passed.
+  Diagnosis survives; preferredA needs explicit notification/provider/control role
+  contract. B killed by pre-existing-actor cycle. ITERATE after required Routelister;
+  no false two-iteration convergence. Manual10/10 PASS. Next: Routelister.
