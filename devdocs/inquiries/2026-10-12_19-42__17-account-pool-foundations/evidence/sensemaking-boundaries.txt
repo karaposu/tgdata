@@ -1,0 +1,4 @@
+{"actual_charge": 1, "actual_source_reads": 1, "caller_cancel_requests": 0, "case": "success_hidden_by_observer_cancel", "returned": "CancelledError", "unresolved": true}
+{"all_clients_retired": true, "case": "independent_close_control", "external_close_completed": true, "reader_cancelled": true}
+{"case": "backend_descendant_close_cycle", "cleanup_waits_for_reader": true, "close_done": false, "reader_done": false, "reader_waits_for_close": true, "sdk_disconnects_started": 0, "source_started": false}
+PASS3 current-code conceptual counterchecks; no runtime edits.
