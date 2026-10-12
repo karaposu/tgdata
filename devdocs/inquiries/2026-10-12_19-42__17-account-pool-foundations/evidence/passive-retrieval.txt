@@ -1,0 +1,3 @@
+{"contract": "busy_refusal", "caller_result": "PoolBusyError", "closing_when_drained": true, "reports_retrieved": false, "close_completed": true, "all_clients_retired": true}
+{"contract": "always_local", "caller_result": "CancelledError", "closing_when_drained": true, "reports_retrieved": true, "close_completed": true, "all_clients_retired": true}
+PASS2 access-contract comparisons; source/close runtime unchanged.

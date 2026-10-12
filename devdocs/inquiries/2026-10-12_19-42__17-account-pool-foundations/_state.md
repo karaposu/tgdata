@@ -6,7 +6,7 @@ A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
 - [x] Surfacing
-- [ ] Sensemaking
+- [x] Sensemaking
 - [ ] Decomposition
 - [ ] Innovation
 - [ ] Critique
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Sensemaking
+Decomposition
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -86,6 +86,8 @@ Sensemaking
   *_iter2.md, original framing/index retained. Next: Surfacing3.
 
 - 2026-10-12_20-45: Surfacing3 complete: four core anchors, two cycles; manual10/10 PASS (checker unavailable). Next: Sensemaking.
+
+- 2026-10-12_20-47: Sensemaking3 complete: two real-source/close comparisons distinguish access rules; SV1–SV6, all inherited groups re-tested; manual10/10 PASS. Next: Decomposition.
 
 ## Iteration 2 focus
 
