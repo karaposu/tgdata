@@ -71,6 +71,20 @@ timestamps and restrictions, never credentials, messages, quotas or accepted mes
 positions. SQLite does short synchronous I/O on the event loop; remote methods may
 await their own I/O. Status and initialization do not open Telegram clients.
 
+Pool, daily and backfill providers run in owned child tasks. They must complete or
+settle their subordinate I/O before returning; they must not detach writes. They
+serve storage only and must not call, or depend on another task controlling, the
+same pool. Detected calls to read/initialize/recheck/recover/close from their live
+scope raise `PoolBusyError` before source or administrative mutation. This guard
+is not a general detector of dependencies through pre-existing external tasks.
+
+Cancellation of a provider's own awaited I/O becomes a local storage error with
+only its type in the message. Cancelling the public caller instead cancels its
+provider once, waits for it to finish (including finalization), then propagates
+cancellation. A provider may commit during that finalization. Neither outcome proves
+rollback or grants new source permission. Set appropriate I/O timeouts in your
+provider; the pool cannot turn a deadline into proof a write has stopped.
+
 ## Read and select accounts
 
 ```python
@@ -120,15 +134,22 @@ their type/object and `partial_result`, plus safe `pool_account_id`/`pool_attemp
 metadata. Handle those complete records before deciding to read again.
 
 An internal timeout cancels and awaits its task. `PoolTimeoutError` carries any
-complete interrupted prefix. If only a health callback was delayed after the source
-finished, the actual result/error survives instead. A long flood wait cannot become
-a short transport cooldown. Keep callbacks quick and avoid pool reentry.
+complete interrupted prefix. If only internal health finalization was delayed after
+the source finished, the actual result/error survives instead. A long flood wait
+cannot become a short transport cooldown. The pool runs no application health callbacks.
 
 Timeout is cooperative, not hard preemption of blocking code. No next account starts
 while its predecessor's source task runs. Caller cancellation, including repeated
-cancellation, waits for that task to end before propagating. It leaves an unresolved
-account attempt and does not promise a saved prefix. Uncertain quota charges
-remain. Local input/configuration/media/format and unknown errors stop without failover.
+cancellation, waits for that task to end before propagating. If it interrupts an
+admitted source, the account attempt remains unresolved. If it interrupts later
+settlement, inspect the store: the write may already have committed. Already-known
+complete records are retained on `partial_result`, but cancellation starts no new
+publication just to save them. Uncertain quota charges remain. Local input/configuration/
+media/format and unknown errors stop without failover.
+
+An unexpected source-internal cancellation with no completed result raises a local
+`PoolStateError` subtype, keeps any complete prefix and leaves account admission
+unresolved. It does not silently cancel the caller or authorize another account.
 
 Permission is saved before source work. Token-specific settlement records the outcome
 and retires that permission. An uncertain admission starts no source; an unresolved
@@ -138,6 +159,41 @@ A failed pool-state settlement raises a local `PoolStateError` subtype. It may c
 complete records as an interrupted `partial_result`, and a source error separately as
 `read_error`. It is not Telegram health evidence. Never treat a lost write response
 as proof of rollback or automatically recreate pool state.
+
+Daily/backfill publication failures also retain validated complete records on the
+local error's `partial_result`; `read_error` retains an earlier source failure when
+there was one. This interrupted batch is available data, **not a durable pending
+receipt**. Its hash can differ from a successfully committed full batch because its
+stop reason is interrupted. Reload/replay saved pending data and use its actual
+receipt before acknowledgment. Backfill may confirm a non-admission write by reading
+back the exact candidate state; an uncertain admission never uses that to start a read.
+
+## Passive health observations
+
+`AccountPool` rejects non-None `health_callback=`. Migrate application reactions to
+`pool.drain_health_events()`, a synchronous local call returning
+`{"events": [...], "dropped": N}`. Ordinary `TgData` health callbacks keep their behavior.
+
+```python
+try:
+    result = await pool.read(chat_id, after_id=500, limit=100)
+finally:
+    observations = pool.drain_health_events()
+# Your application owns handling observations and retaining result/error data.
+```
+
+Draining works while reading, while closing, in a caller's finally block and after
+close. It returns detached plain event values captured so far and resets the buffer
+and loss count. Later captures belong to a later drain. It does no source, store or
+quota I/O. The pool neither awaits a consumer nor creates observer tasks or mirrors
+these observations to the application health logger.
+
+Capture retains at most 128 events, 4,096 encoded bytes per event and 65,536 total encoded
+bytes (compact ASCII JSON). New events are dropped on overflow; malformed/capture
+failures count as losses. `dropped` saturates at 2**63-1. Existing health event fields
+include account/session identifiers, verdict/scope/request and wait/error type, never
+credentials or message bodies. Keep labels free of secrets. These best-effort,
+non-durable observations are not a complete audit, account permission or group ack.
 
 ## Use daily and backfill delivery
 
@@ -211,7 +267,9 @@ is not a distributed lease. A process disappearing does not establish another wo
 quiescence automatically.
 
 `close()` blocks new pool work, cancels/awaits active work and retires every client.
-Calling it from a source callback refuses to prevent a parent/child deadlock.
+Calling it from a live same-pool operation/provider scope refuses before changing
+flags, including inherited child-task calls. Expired and foreign-pool scopes do not
+block ordinary application control.
 Cancellation waits for the active reader and cleanup attempts to settle, then
 propagates; another close while this is pending refuses busy. A failed or cancelled
 close is not proof every retirement succeeded; retry cleanup as needed. The pool
@@ -219,17 +277,23 @@ stays closed to new source work. There is no shutdown deadline for SDK work that
 does not finish. Async context exit preserves an existing body exception when
 ordinary cleanup fails; caller cancellation during cleanup takes precedence after
 settlement. State-only progress methods
-remain usable; source reads on a closed pool refuse.
+remain usable; their own callers retain any outstanding storage work. Close owns
+source/account activity, not every independent progress/status task in the application.
+Source reads on a closed pool refuse.
 
 ## Offline demonstration
 
 ```bash
 python examples/account_pool.py --demo
 python -m tgdata.smoke_tests.test_31_account_pool
+python -m tgdata.smoke_tests.test_39_pool_lifecycle
 ```
 
-The demo opens no Telegram sockets and reads no real config. The 46 test groups
-exercise actual SDK/SQLite behavior with synthetic replies, including real overlapping
-tasks, native SDK teardown, repeated cancellation, failed-retirement refusal/retry
-and process exits around commits. Delayed reader finalizers are labeled fault
-injections. These are not disk power-loss or live-account tests.
+The demo opens no Telegram sockets and reads no real config. Test 31 exercises routing,
+identity, real overlapping tasks, native teardown, uncertain writes and process exits.
+Test 39 adds 48 lifecycle groups, including cancellation before/after actual commits,
+held provider finalization, available data versus pending delivery, exact recovery,
+provider control refusal and bounded passive observations. Delayed finalizers and
+wire replies are explicit test instrumentation. Tests run on Python 3.11/Telethon 1.45;
+Python 3.7 grammar checks are not a native 3.7 run. These are not disk power-loss or
+live-account tests.

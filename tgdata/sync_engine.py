@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 import os
 
 from .batch_files import prepare_directory, _verify_existing
-from .message_batch import MessageBatch, BatchFormatError, MAX_BATCH_MESSAGES, MAX_MESSAGE_ID
+from .message_batch import MessageBatch, BatchFormatError, MAX_BATCH_MESSAGES, MAX_MESSAGE_ID, _interrupted_prefix
 from .history_window import _HistoryWindow
 from .sync_store import (
     SyncError, SyncConfigurationError, SyncNotInitializedError,
@@ -120,7 +120,11 @@ class SyncEngine:
                                 window=state.window)
         if not value['messages']:
             return None
-        await self._replace(state.chat_id, raw, replace(state, pending=batch))
+        try:
+            await self._replace(state.chat_id, raw, replace(state, pending=batch))
+        except (SyncError, asyncio.CancelledError) as error:
+            error.partial_result = _interrupted_prefix(batch)
+            raise
         return batch
 
     async def prepare(self, chat_id, *, limit=200, download_media_to=None):

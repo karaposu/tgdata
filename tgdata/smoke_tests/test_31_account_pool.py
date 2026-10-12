@@ -219,12 +219,11 @@ async def test_group_denial_does_not_disable_other_groups():
 
 
 async def test_actual_identity_overrides_stale_cache_for_events():
-    events = []
-    e = await setup(callback=events.append)
+    e = await setup()
     e.clients[111]._mb_entity_cache.set_self_user(999, False, 1)
     e.senders[111].script = [errors.ChannelPrivateError(request=None)]
     assert (await read(e)).account_id == 222
-    assert events[0]['account']['user_id'] == 111
+    assert e.pool.drain_health_events()['events'][0]['account']['user_id'] == 111
     assert e.budget.status(111).reserved == 1
     assert e.clients[111]._self_id == 999  # The actual SDK cache remains stale.
 
@@ -288,10 +287,14 @@ async def test_empty_timeout_fails_over_after_quiescence():
     assert e.budget.status(111).used == e.budget.status(222).used == 1
 
 
-async def test_observer_timeout_preserves_original_flood_and_prefix():
-    async def callback(event):
-        await asyncio.Event().wait()
-    e = await setup(policy=PoolPolicy(attempt_timeout=0.04), callback=callback)
+async def test_secondary_timeout_preserves_original_flood_and_prefix():
+    e = await setup(policy=PoolPolicy(attempt_timeout=0.04))
+    monitor = e.pool._sources[111].monitor
+    actual = monitor._safely
+    async def delayed(*args):
+        await actual(*args)
+        await asyncio.Event().wait()  # Fault in secondary finalization, not a callback API.
+    monitor._safely = delayed
     failure = errors.FloodWaitError(request=None, capture=7200)
     e.senders[111].script = [f.response([f.message(n) for n in reversed(range(101, 201))]), failure]
     caught = await f.expect(errors.FloodWaitError, read(e, limit=200))
@@ -300,16 +303,16 @@ async def test_observer_timeout_preserves_original_flood_and_prefix():
     assert not e.senders[222].reads
 
 
-async def test_success_observer_timeout_keeps_successful_batch():
-    async def callback(event):
-        await asyncio.Event().wait()
-    e = await setup(policy=PoolPolicy(attempt_timeout=0.03), callback=callback)
+async def test_success_secondary_timeout_keeps_successful_batch():
+    e = await setup(policy=PoolPolicy(attempt_timeout=0.03))
     monitor = e.pool._sources[111].monitor
-    # Actual prior health fact; source success proves recovery, whose callback blocks.
-    monitor.callback = None
     async with monitor.call('prior', group=CHAT):
         await health.report(errors.ChannelPrivateError(request=None), 'handled')
-    monitor.callback = callback
+    actual = monitor._safely
+    async def delayed(*args):
+        await actual(*args)
+        await asyncio.Event().wait()
+    monitor._safely = delayed
     result = await read(e)
     assert result.account_id == 111 and len(result.batch.messages) == 1
     assert not e.senders[222].reads
@@ -389,16 +392,16 @@ async def test_overlapping_calls_are_real_and_close_quiesces():
     assert not e.senders[222].reads
 
 
-async def test_callback_close_cannot_create_parent_child_deadlock():
-    holder, outcomes = {}, []
-    async def callback(event):
-        await f.expect(PoolBusyError, holder['pool'].close())
-        outcomes.append('refused')
-    e = await setup(callback=callback)
-    holder['pool'] = e.pool
-    e.senders[111].script = [errors.ChannelPrivateError(request=None)]
-    assert (await read(e)).account_id == 222 and outcomes == ['refused']
-    assert not e.pool._closed
+async def test_application_callbacks_are_refused_locally():
+    e = await setup()
+    calls = []
+    def callback(event):
+        calls.append(event)
+    f.rejected(PoolConfigurationError, lambda: AccountPool(
+        e.pool.accounts, tuple(e.pool.groups.values()), read_budget=e.budget,
+        state_store=e.store, health_callback=callback))
+    assert not calls and not any(s.calls for s in e.senders.values())
+    assert not e.pool._closed and e.budget.status(111).used == 0
 
 
 async def test_uncertain_admission_opens_no_source_and_survives_restart():
@@ -546,15 +549,14 @@ async def test_backfill_failover_replay_ack_are_public_and_source_free():
 
 
 async def test_local_media_failure_is_not_failover_or_health():
-    events = []
-    e = await setup(callback=events.append)
+    e = await setup()
     message = b.document()
     e.senders[111].files[b.ASSET_ID] = b.PAYLOAD
     e.senders[111].script = [d.finite_response([message])]
     failure = PermissionError(SECRET)
     with patch('tgdata.batch_files._publish', side_effect=failure):
         caught = await f.expect(PermissionError, read(e, download_media_to=path('media')))
-    assert caught is failure and not e.senders[222].calls and not events
+    assert caught is failure and not e.senders[222].calls and not e.pool.drain_health_events()['events']
     assert (await e.pool.get_pool_status(CHAT)).accounts[0].eligible
 
 
@@ -707,8 +709,7 @@ async def test_recheck_cancellation_holds_ownership_until_sdk_disconnect():
 
 async def test_retirement_failure_refuses_reuse_until_explicit_recheck():
     for internal, cancelled in [('error', False), ('cancel', False), ('error', True), ('cancel', True)]:
-        events = []
-        e = await setup(callback=events.append)
+        e = await setup()
         source = e.pool._sources[111]
         old = source._primary_client
         initial = await e.store.load()
@@ -729,7 +730,7 @@ async def test_retirement_failure_refuses_reuse_until_explicit_recheck():
             await f.expect(PoolStateError, read(e))
             await f.expect(PoolStateError, source._verify())
             assert await e.store.load() == initial
-            assert not events and not any(sender.calls for sender in e.senders.values())
+            assert not e.pool.drain_health_events()['events'] and not any(sender.calls for sender in e.senders.values())
             assert e.budget.status(111).used == e.budget.status(222).used == 0
             await gate.restore()
             factory = source._new_client

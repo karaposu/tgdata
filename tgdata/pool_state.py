@@ -60,6 +60,10 @@ class PoolUnavailable(PoolError):
         self.retry_after = retry_after
 
 
+class _SourceInterrupted(PoolStateError):
+    """Source ended without a completed outcome; account admission stays unresolved."""
+
+
 class _UnresolvedGroup(PoolError):
     pass
 

@@ -24,7 +24,7 @@ from .batch_files import prepare_directory, _verify_existing, BatchStorageError
 from .backfill_state import _BackfillState, initial_record, SCHEMA, VERSION
 from .history_window import _HistoryWindow, _utc, _encode_date, _decode_date
 from .health import WAIT_ERRORS
-from .message_batch import MessageBatch, MAX_LONG
+from .message_batch import MessageBatch, MAX_LONG, _interrupted_prefix
 from .read_budget import ReadBudgetExceeded, ReadBudgetError, ReadBudgetStorageError
 
 
@@ -348,6 +348,13 @@ class BackfillEngine:
             row['terminal_outcome'] = 'completed'
 
     async def _settle(self, admitted, batch, timing, failure=None):
+        try:
+            return await self._settle_state(admitted, batch, timing, failure)
+        except (BackfillError, asyncio.CancelledError) as error:
+            error.partial_result = _interrupted_prefix(batch)
+            raise
+
+    async def _settle_state(self, admitted, batch, timing, failure=None):
         run = BackfillRunRef.from_dict(admitted['ref'])
         ended, deadline = timing
         value = batch.to_dict() if batch is not None else None

@@ -137,7 +137,12 @@ async def demo(directory):
         print('Acknowledged through:', (await pool.get_sync_status(CHAT)).after_id)
         print('Allowance charged:', {aid: budget.status(aid).used for aid in (111, 222)})
     finally:
-        await pool.close()
+        try:
+            await pool.close()
+        finally:
+            observations = pool.drain_health_events()
+            print('Health observations:', len(observations['events']))
+            print('Dropped observations:', observations['dropped'])
 
 
 def main():

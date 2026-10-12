@@ -11,40 +11,14 @@ from telethon.tl import types
 
 from .batch_engine import BatchEngine
 from .connection_engine import ConnectionEngine
-from .health import HealthMonitor
+from .pool_lifecycle import _await_cleanup, _start_owned, _wait_owned
+from .pool_observation import PoolMonitor
+from .message_batch import _interrupted_prefix
 from .message_engine import GroupAccessError
 from .pool_state import (
     PoolConfigurationError, PoolIdentityError, PoolStateError, PoolTimeoutError,
-    _UnresolvedGroup, _WarmupPending,
+    _UnresolvedGroup, _WarmupPending, _SourceInterrupted,
 )
-
-
-async def _await_cleanup(work):
-    """Settle owned work before delivering cancellation of its caller.
-
-    Capture internal cancellation as an outcome so it cannot be confused with
-    cancellation of this waiter, including on Python3.7. No timeout can establish
-    that still-running cleanup has finished.
-    """
-    async def finish():
-        try:
-            return await work, None
-        except (Exception, asyncio.CancelledError) as error:
-            return None, error
-
-    completion = asyncio.ensure_future(finish())
-    cancelled = None
-    while not completion.done():
-        try:
-            await asyncio.shield(completion)
-        except asyncio.CancelledError as error:
-            cancelled = error
-    value, error = completion.result()
-    if cancelled is not None:
-        raise cancelled
-    if error is not None:
-        raise error
-    return value
 
 
 class _BoundBudget:
@@ -69,7 +43,7 @@ class _BoundBudget:
 
 
 class _OwnedSource(ConnectionEngine):
-    def __init__(self, account, ledger, policy, groups, callback):
+    def __init__(self, account, ledger, policy, groups, observations):
         super().__init__(config_path=account.config_path, pool_size=1,
                          interactive_login=False, session_store=account.session_store)
         self.account = account
@@ -79,7 +53,7 @@ class _OwnedSource(ConnectionEngine):
         self.task = None
         self._retirement_blocked = False
         self.read_budget = _BoundBudget(self, ledger, policy.min_warmup_days)
-        self.monitor = HealthMonitor(callback, account.label, self._identity)
+        self.monitor = PoolMonitor(observations, account.label, self._identity)
         self.batch_reader = BatchEngine(self, _resolve_entity=self._resolve,
                                         _retain_cancelled_prefix=True)
 
@@ -122,7 +96,7 @@ class _OwnedSource(ConnectionEngine):
             return session, fingerprint
         except (PoolConfigurationError, PoolIdentityError):
             raise
-        except Exception as error:
+        except (Exception, asyncio.CancelledError) as error:
             raise PoolConfigurationError('Account configuration/session unavailable ({})'.format(
                 type(error).__name__)) from None
 
@@ -176,9 +150,6 @@ class _OwnedSource(ConnectionEngine):
                     value = (await self.batch_reader.fetch_batch(chat_id, **options)
                              if chat_id is not None else await self._verify())
                 except BaseException as error:
-                    # Capture before HealthMonitor awaits observers. A timer
-                    # expiring during callback delivery must not replace a
-                    # completed FloodWait or its already-collected records.
                     outcome['error'] = error
                     outcome['done'] = not isinstance(error, asyncio.CancelledError)
                     raise
@@ -186,38 +157,27 @@ class _OwnedSource(ConnectionEngine):
                     outcome['value'], outcome['done'] = value, True
                     return value
 
-        child = self.task = asyncio.ensure_future(observed())
-
-        async def stop():
-            if not child.done():
-                child.cancel()
-            try:
-                await child
-            except (Exception, asyncio.CancelledError):
-                pass  # The outcome holder keeps the original source result.
-
+        await asyncio.sleep(0)
+        child = self.task = _start_owned(observed)
         try:
-            try:
-                # Observing the timeout must not transfer ownership of child
-                # cancellation to an interruptible wait_for cancellation waiter.
-                done, _ = await asyncio.wait((child,), timeout=self.policy.attempt_timeout)
-                if done:
-                    return child.result()
-                await _await_cleanup(stop())
-            except asyncio.CancelledError:
-                await _await_cleanup(stop())
-                raise
+            _, terminal, timed_out = await _wait_owned(child, self.policy.attempt_timeout)
+        except asyncio.CancelledError as error:
+            error.partial_result = _interrupted_prefix(outcome.get('value') or
+                                      getattr(outcome.get('error'), 'partial_result', None))
+            raise
         finally:
             self.task = None
-        # Outside the except block: preserve the actual source exception's
-        # original cause, without making the observer timeout its new context.
         if outcome.get('done'):
             if 'error' in outcome:
                 raise outcome['error']
             return outcome['value']
-        error = PoolTimeoutError('The account source attempt timed out')
-        prefix = getattr(outcome.get('error'), 'partial_result', None)
-        error.partial_result = prefix
+        if timed_out:
+            error = PoolTimeoutError('The account source attempt timed out')
+        elif isinstance(terminal, asyncio.CancelledError) or terminal is None:
+            error = _SourceInterrupted('Account source was interrupted; recover its unresolved attempt')
+        else:
+            raise terminal
+        error.partial_result = _interrupted_prefix(getattr(outcome.get('error'), 'partial_result', None))
         raise error from None
 
     async def retire(self):

@@ -430,8 +430,12 @@ No eligible account raises structured `PoolUnavailable`, not empty history.
 
 The adapter requires Telethon **1.45.0**, one owning process and exclusive sessions.
 It never joins or prompts. Results describe the selected account's visible history.
-Cancellation waits for owned source work and client cleanup to settle. Failed
-client retirement blocks reuse until an explicit recheck or close succeeds.
+Cancellation waits for owned source/storage work and client cleanup to settle.
+Provider-owned interruption is a local storage error, not caller cancellation.
+Completed data remains available on errors without implying a durable receipt.
+Failed client retirement blocks reuse until an explicit recheck or close succeeds.
+Use synchronous `pool.drain_health_events()` for bounded passive health observations;
+AccountPool does not accept application health callbacks.
 Offline tests pass; two-account live qualification remains pending. See
 [Account pools](docs/account_pool.md) for selection, recovery and delivery contracts.
 Run the offline example with `python examples/account_pool.py --demo`.

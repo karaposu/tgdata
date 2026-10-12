@@ -23,6 +23,11 @@ from .history_window import _HistoryWindow
 from .message_batch import MessageBatch, BatchFormatError, MAX_BATCH_MESSAGES, MAX_MESSAGE_ID
 from .read_budget import ReadBudget, ReadBudgetError, ReadBudgetExceeded
 from .sync_engine import SyncEngine
+from .sync_store import SyncStorageError
+from .backfill import BackfillStorageError
+from .message_batch import _interrupted_prefix
+from .pool_lifecycle import _scope, _inside, _call_store, _StoreBoundary
+from .pool_observation import ObservationBuffer
 from .progress_facade import ProgressFacade
 from .pool_source import _OwnedSource, _await_cleanup
 from . import pool_state as state
@@ -30,7 +35,7 @@ from .pool_state import (
     PoolError, PoolConfigurationError, PoolStateError, PoolStorageError,
     PoolConflictError, PoolClockError, PoolBusyError, PoolClosedError,
     PoolIdentityError, PoolTimeoutError, PoolUnavailable, SQLiteAccountPoolStore,
-    _integer, _seconds, _chat, _UnresolvedGroup, _WarmupPending,
+    _integer, _seconds, _chat, _UnresolvedGroup, _WarmupPending, _SourceInterrupted,
 )
 
 logger = logging.getLogger(__name__)
@@ -188,14 +193,15 @@ class AccountPool(ProgressFacade):
             raise PoolConfigurationError('state_store requires async load and compare_and_swap')
         if policy is not None and not isinstance(policy, PoolPolicy):
             raise PoolConfigurationError('policy must be a PoolPolicy')
-        if health_callback is not None and not callable(health_callback):
-            raise PoolConfigurationError('health_callback must be callable or None')
+        if health_callback is not None:
+            raise PoolConfigurationError('AccountPool does not run health callbacks; use drain_health_events()')
         self.accounts = accounts
         self.groups = {g.chat_id: g for g in groups}
         self.policy = policy or PoolPolicy()
         self.read_budget = read_budget
         self._store = state_store
-        self._sources = {a.account_id: _OwnedSource(a, read_budget, self.policy, self.groups, health_callback)
+        self._observations = ObservationBuffer()
+        self._sources = {a.account_id: _OwnedSource(a, read_budget, self.policy, self.groups, self._observations)
                          for a in accounts}
         self._active_task = None
         self._closed = False
@@ -204,19 +210,24 @@ class AccountPool(ProgressFacade):
         self._monotonic = time.monotonic
         self._last_time = 0.0
         self._wait_ticks = {}
-        self.sync_engine = SyncEngine(self.get_message_batch, sync_store)
-        self._backfill_store = backfill_store
+        self.sync_engine = SyncEngine(self.get_message_batch,
+            _StoreBoundary(self, sync_store, SyncStorageError, 'Sync') if sync_store is not None else None)
+        self._backfill_store = (_StoreBoundary(self, backfill_store, BackfillStorageError, 'Backfill')
+                                if backfill_store is not None else None)
         self._backfill_engines = {}
 
     @contextmanager
     def _operation(self):
+        if _inside(self):
+            raise PoolBusyError('Cannot control this pool from its live operation/provider scope')
         if self._closed:
             raise PoolClosedError('Account pool is closed')
         if self._active_task is not None:
             raise PoolBusyError('Another account-pool operation is active')
         self._active_task = asyncio.current_task()
         try:
-            yield
+            with _scope(self):
+                yield
         finally:
             self._active_task = None
 
@@ -233,7 +244,7 @@ class AccountPool(ProgressFacade):
 
     async def _backend(self, method, *args):
         try:
-            return await getattr(self._store, method)(*args)
+            return await _call_store(self, self._store, method, args, PoolStorageError, 'Pool')
         except asyncio.CancelledError:
             raise
         except PoolError as error:
@@ -401,18 +412,12 @@ class AccountPool(ProgressFacade):
             return 'transport', True, self.policy.transient_retry_seconds
         return 'unknown', False, None
 
-    @staticmethod
-    def _prefix(value):
-        if not isinstance(value, MessageBatch) or not value.messages:
-            return None
-        if value.stop_reason == 'interrupted':
-            return value
-        wire = value.to_dict()
-        return MessageBatch._from_records(int(wire['chat_id']), int(wire['after_id']),
-                    wire['messages'], wire['media_mode'], 'interrupted')
+    _prefix = staticmethod(_interrupted_prefix)
 
     async def _settle(self, expected, document, account_id, attempt_id, chat_id,
                       source_error=None, batch=None, recheck=False):
+        if isinstance(source_error, _SourceInterrupted):
+            raise source_error
         row = self._require_row(document, account_id)
         if row['active'] is None or row['active']['id'] != attempt_id:
             raise PoolConflictError('Source outcome no longer owns this account attempt')
@@ -438,7 +443,11 @@ class AccountPool(ProgressFacade):
             document['observed_at'] = now
             raw = await self._write(expected, document)
             return raw, outcome, retry
-        except asyncio.CancelledError:
+        except asyncio.CancelledError as error:
+            error.partial_result = self._prefix(batch if batch is not None else
+                                               getattr(source_error, 'partial_result', None))
+            if source_error is not None:
+                error.read_error = source_error
             raise
         except Exception as error:
             local = error if isinstance(error, PoolError) else PoolStateError(
@@ -569,6 +578,8 @@ class AccountPool(ProgressFacade):
 
     async def close(self):
         """Stop owned activity and retire clients; new source calls stay closed."""
+        if _inside(self):
+            raise PoolBusyError('Cannot close this pool from its live operation/provider scope')
         current = asyncio.current_task()
         if current is self._active_task or any(current is getattr(s, 'task', None) for s in self._sources.values()):
             raise PoolBusyError('Cannot close a pool from inside its own source operation or observer')
@@ -602,6 +613,10 @@ class AccountPool(ProgressFacade):
             await _await_cleanup(finish())
         finally:
             self._closing = False
+
+    def drain_health_events(self):
+        """Return/reset bounded captured-so-far observations; no I/O in any state."""
+        return self._observations.drain()
 
     async def __aenter__(self):
         if self._closed:

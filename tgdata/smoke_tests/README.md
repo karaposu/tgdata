@@ -459,7 +459,7 @@ Forty-six groups exercise the actual Telethon 1.45 factory/request path, budget
 ledger, SQLite pool state and daily/backfill facades over synthetic wire replies.
 They cover drain/spread, scoped failure/restart, stale identity and changed identity
 at admission, duplicate credentials, quota races, canonical groups, timeout prefixes,
-blocked health observers, real overlap/cancellation, uncertain writes, owned process
+secondary health-finalization faults, real overlap/cancellation, uncertain writes, owned process
 exits around admission/settlement, exact recovery retries, login reload and source-free
 delivery. Native SDK teardown is held to verify repeated cancellation, failed/internal-
 cancelled retirement, blocked reuse, successful retry and credential preservation.
@@ -468,3 +468,26 @@ source or shutdown; context-exit tests distinguish caller cancellation from clea
 errors. An older cancellation-hierarchy fixture is not a native Python3.7 run.
 Sockets are blocked. Three legacy live skips elsewhere are not evidence
 for this suite; #17's two-account live gate remains pending.
+
+
+### Test 39: account-pool operation and storage lifetime (offline)
+
+```bash
+python -m tgdata.smoke_tests.test_39_pool_lifecycle
+```
+
+48 groups use the actual pool, Telethon 1.45, ReadBudget and SQLite progress stores.
+They retain the prior 37 counterexample/control groups and add source/pool/daily/
+backfill storage histories before and after real commits, held provider finalizers
+under repeated caller cancellation, source-free replay/ack, exact account/backfill
+recovery, 45 same-pool provider control refusals, pre-start cancellation and synchronous
+session load interruption. They assert data, durable state, charges, source traffic
+and task completion separately. Bounded passive event capture and ordinary TgData
+callback controls are included. `pool_storage_cases.py` supplies the additional
+actual-component histories; no helper supplies source results or permission receipts.
+
+The suite is the permanent form of the full prebuild composition, run on Python 3.11
+with sockets blocked. Cancellation-count instrumentation is test-only, not a runtime
+compatibility dependency. A parent watchdog is used by the recorded prebuild/full
+verification runners; an unresponsive child is failure, not proof of cleanup.
+Two-account live qualification remains pending.
