@@ -1,0 +1,15 @@
+{"mode": "quiet_mixed", "first": "SIGINT", "repeat": "SIGTERM", "exit": 130, "charge": 2, "successor": false, "cleanup_attempts": 1, "disconnected": true, "restored": true, "pending_tasks": 0}
+{"mode": "quiet_mixed", "first": "SIGTERM", "repeat": "SIGINT", "exit": 143, "charge": 2, "successor": false, "cleanup_attempts": 1, "disconnected": true, "restored": true, "pending_tasks": 0}
+{"mode": "held_success", "first": "SIGINT", "repeat": "SIGTERM", "exit": 130, "charge": 2, "successor": false, "cleanup_attempts": 1, "disconnected": true, "restored": true, "pending_tasks": 0}
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-10-reading-jobs/devdocs/work/10-reading-jobs/probes/pr_r4_lifetime.py", line 140, in <module>
+    main()
+  File "/private/tmp/tgdata-10-reading-jobs/devdocs/work/10-reading-jobs/probes/pr_r4_lifetime.py", line 131, in main
+    result = history(mode, first)
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-10-reading-jobs/devdocs/work/10-reading-jobs/probes/pr_r4_lifetime.py", line 115, in history
+    p.wait(128 + first, timeout=5)
+  File "/private/tmp/tgdata-10-reading-jobs/tgdata/smoke_tests/test_38_worker_process.py", line 221, in wait
+    assert self.p.wait(timeout=timeout) == code, 'unexpected worker exit code'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpected worker exit code

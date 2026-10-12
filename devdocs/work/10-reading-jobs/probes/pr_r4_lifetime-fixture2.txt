@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-10-reading-jobs/devdocs/work/10-reading-jobs/probes/pr_r4_lifetime.py", line 171, in <module>
+    main()
+  File "/private/tmp/tgdata-10-reading-jobs/devdocs/work/10-reading-jobs/probes/pr_r4_lifetime.py", line 159, in main
+    print(json.dumps(coalescing_control()), flush=True)
+                     ^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-10-reading-jobs/devdocs/work/10-reading-jobs/probes/pr_r4_lifetime.py", line 149, in coalescing_control
+    p.wait(128 + handled[0], timeout=5)
+  File "/private/tmp/tgdata-10-reading-jobs/tgdata/smoke_tests/test_38_worker_process.py", line 221, in wait
+    assert self.p.wait(timeout=timeout) == code, 'unexpected worker exit code'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpected worker exit code

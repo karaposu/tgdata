@@ -1,0 +1,17 @@
+{"observation": "mixed_pending", "completed_handlers": [{"signum": 2, "owner": 2}, {"signum": 15, "owner": 2}], "exit": 130}
+{"control": "back_to_back_dispatch", "sent": [15, 2], "handled": [{"signum": 2, "owner": 2}, {"signum": 15, "owner": 2}], "exit": 130, "first_dispatched_wins": true}
+{"observation": "mixed_pending", "completed_handlers": [{"signum": 15, "owner": 15}, {"signum": 2, "owner": 15}], "exit": 143}
+{"control": "back_to_back_dispatch", "sent": [15, 2], "handled": [{"signum": 15, "owner": 15}, {"signum": 2, "owner": 15}], "exit": 143, "first_dispatched_wins": true}
+{"observation": "mixed_pending", "completed_handlers": [{"signum": 2, "owner": 2}, {"signum": 15, "owner": 2}], "exit": 130}
+{"control": "back_to_back_dispatch", "sent": [15, 2], "handled": [{"signum": 2, "owner": 2}, {"signum": 15, "owner": 2}], "exit": 130, "first_dispatched_wins": true}
+{"mode": "quiet_mixed", "first": "SIGINT", "repeat": "SIGTERM", "exit": 130, "charge": 2, "successor": false, "cleanup_attempts": 1, "disconnected": true, "restored": true, "pending_tasks": 0}
+{"mode": "quiet_mixed", "first": "SIGTERM", "repeat": "SIGINT", "exit": 143, "charge": 2, "successor": false, "cleanup_attempts": 1, "disconnected": true, "restored": true, "pending_tasks": 0}
+{"mode": "held_success", "first": "SIGINT", "repeat": "SIGTERM", "exit": 130, "charge": 2, "successor": false, "cleanup_attempts": 1, "disconnected": true, "restored": true, "pending_tasks": 0}
+{"mode": "held_success", "first": "SIGTERM", "repeat": "SIGINT", "exit": 143, "charge": 2, "successor": false, "cleanup_attempts": 1, "disconnected": true, "restored": true, "pending_tasks": 0}
+{"mode": "held_failure", "first": "SIGINT", "repeat": "SIGTERM", "exit": 130, "charge": 2, "successor": false, "cleanup_attempts": 1, "disconnected": false, "restored": true, "pending_tasks": 0}
+{"mode": "held_failure", "first": "SIGTERM", "repeat": "SIGINT", "exit": 143, "charge": 2, "successor": false, "cleanup_attempts": 1, "disconnected": false, "restored": true, "pending_tasks": 0}
+{"mode": "before_reply", "first": "SIGINT", "repeat": null, "exit": 130, "charge": 2, "successor": false, "cleanup_attempts": 1, "disconnected": true, "restored": true, "pending_tasks": 0}
+{"mode": "before_reply", "first": "SIGTERM", "repeat": null, "exit": 143, "charge": 2, "successor": false, "cleanup_attempts": 1, "disconnected": true, "restored": true, "pending_tasks": 0}
+{"mode": "closed_loop", "first": "SIGINT", "repeat": null, "exit": 130, "charge": 2, "successor": false, "cleanup_attempts": 1, "disconnected": true, "restored": true, "pending_tasks": 0}
+{"mode": "closed_loop", "first": "SIGTERM", "repeat": null, "exit": 143, "charge": 2, "successor": false, "cleanup_attempts": 1, "disconnected": true, "restored": true, "pending_tasks": 0}
+PASS fresh lifetime histories: 10

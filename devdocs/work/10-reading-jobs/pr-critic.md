@@ -2,290 +2,225 @@
 model: gpt-6-astra
 effort: max
 ---
-**Verdict: REORDER — TEST BEFORE BUILD**
+**Verdict: IMPLEMENT AS WRITTEN**
 
-Falsifier: a worker-owned stop/diagnostic boundary cannot preserve immediate loop
-wake-up, retained cleanup and type-only unknown authentication errors without
-changing the selected serial-process architecture.
-Affordable now: yes — a small candidate composition and actual subprocess/SDK
-controls, seconds offline, before the corrective implementation is built.
+Falsifier: the integrated worker loses source/cleanup ownership at a stop transition,
+executes a successor after unsafe shutdown, or forwards unknown diagnostic text through
+an actual SDK wrapper/health path despite the declared process contract.
+Affordable now: yes — executed during this review on the actual product, SDK, SQLite
+and OS processes. The candidate prebuild had already passed before integration.
+**Result: PASS.** The new observations below close this review's affordable falsifiers;
+no unrun local experiment is being deferred past approval. Live/platform qualification
+still requires its separately declared resources and authorization.
 
-Experiment: qualify the revised process stop handoff with a quiescent selector,
-no periodic test helper, SIGINT/SIGTERM, held disconnect, repeated signals, idle
-input and blocked raw output; qualify canonical authentication diagnostics with
-SDK-decoded unknown401/406, ordinary403 and known authentication-error controls.
-Cost: owned temporary sessions/SQLite, OS pipes and synthetic RPC answers; no network.
-Must precede: revision3's replacements for source/protocol Step1 and process Step3,
-before the next implementation cycle; the review does not patch those steps here.
-Disqualifying result: progress still depends on an unrelated timer/I/O event,
-cleanup is abandoned, output regains a final flush, raw diagnostic text escapes,
-or solving these requires a different job/source ownership architecture.
-Passing result: wake-up occurs through the owned stop path, existing outcome/cleanup
-rules hold in all states, unknown auth text is absent, and canonical known reasons
-remain useful. The experiments below reproduce the current failures and controls;
-they are not a passing implementation of the proposed remedies.
-
-**PR gate: REJECTED — 0 High, 2 Medium, 0 Low.**
+**PR gate: PASS — 0 High, 0 Medium, 0 Low.**
 
 ## High-level summary
 
-Fresh review of PR27's actual13-file product diff plus revision2 plan, against
-current dev68f6bbd, in the same warmed session under GPT-6 Astra/max. Product remains
-6ee146c; merge-check85c0455 established fidelity, not soundness. No subagent.
+Fresh in-session soundness review of the entire13-file product diff plus revision4
+plan, landing on unchanged dev68f6bbd. Product remains **d32abcd**, with implementation
+records0c0144d and renewed fidelity checkbbdc846. Promptc36c0a1 was committed before
+these probes. Same warmed session, no subagent; current metadata at
+2026-10-12T12:22:23.561Z verifies GPT-6 Astra/max.
 
-Two integration boundaries escaped the earlier qualification. The process requests
-cancellation but does not wake a sleeping event loop; the existing active-signal
-test supplies a10 ms helper timer that hides this. Separately, authentication
-wrapping turns arbitrary SDK error text into a field the worker treats as safe.
-Unknown401/406 text reaches JSON even though ordinary403 text is correctly omitted.
+The two original Medium findings are addressed at their actual boundaries. Stopping
+owns both cancellation and loop progress, without a polling task or new supervisor.
+Recognized authentication vocabulary is enforced at the serialized worker boundary,
+while ordinary library reasons and existing error/health classification remain intact.
+The design remains an explicit-account serial process; no new routing, persistence,
+transport or global error framework is warranted by this review.
 
-Nine fresh probe histories cover four signal runs, four SDK-decoded error runs and
-one protocol-control group. Two failure mechanisms reproduce with matched controls.
-The existing25 core and14 process groups still pass. Their pass is valid coverage of
-their cases and does not override these observations. No credential, account or live
-Telegram resource was used; the text sentinel is synthetic.
+Fresh probes passed **13 actual subprocess histories** (10 ordered lifecycle histories
+and3 pending-signal controls), **48 actual SDK/Worker error histories**, and one protocol
+control group. Later proof failures keep zero unspent charge; failed reads retain real
+charges and partial batches; a successful accountB job neither inherits nor clears
+accountA's state. Unknown text is absent from terminal and correlated health frames.
+Cleanup/output and process-state restoration hold through the tested transitions.
 
-The explicit-account serial worker remains a reasonable layer. These findings do
-not justify HTTP, a queue, a router or a generic supervisor. A corrected plan and
-small prebuild are required by CONTRIBUTING7.4 before further implementation.
+The committed24-suite631-pass/3-live-skip record covers this identical product and dev.
+It was inspected and hash-checked, not represented as a new full-suite run. New probes
+are fresh evidence beyond those tests. The earlier rejected PR review is preserved
+exactly in `pr-critic_r1.md`; planning critic.md remains untouched.
 
 ## Premise Inventory
 
-### P1 — Asking an active task to cancel makes process shutdown run
+### P1 — Process stopping owns admission, progress and settlement together
 
-First dependent Step3; waste if false: process/tests/docs/qualification3–6. Scheduled
-test4 and full test6. Cheapest earlier test: same process with actual selector/SDK
-and a pending network future, without a helper timer, under a second per adverse
-history. Existing active-signal tests are **non-covering for quiescent wake-up**:
-their release watcher schedules asyncio.sleep(.01), periodically waking the loop.
-Fresh quiet runs leave cleanup unstarted after SIGINT/SIGTERM and a repeat. An
-explicit self-pipe wake lets the already-cancelled source clean up and exit130/143.
-The polling control exits normally. Requesting cancellation and waking its executor
-are separate facts. A revised mechanism needs real qualification before building.
+**Premise:** one process owner can stop synchronous I/O, wake a quiet active task and
+retain native/final cleanup without running another queued job.
+**First dependent step:**2; **waste if false:** process integration, permanent tests,
+docs and qualification2–5 need a different ownership design.
+**Test scheduled at:** complete combined prebuild1, before integration; permanent4/5.
+**Cheapest earlier test:** real process/selector with actual SDK work, seconds per
+history; already executed before integration and extended in this review.
+**Coverage:** frozen prebuild82/67 and permanent process25/25 already cover idle input,
+quiet waits, creation/publication, held finalization, caller cancellation and broken/
+undrained raw output. Fresh `pr_r4_lifetime.py` adds mixed signal types during quiet
+work, a first stop during successful-source cleanup and failed cleanup, a stop at
+completed-result publication, and a stop after the actual loop closes, for both
+SIGINT/SIGTERM. All preserve the selected first reason, one disconnect attempt,
+charges, no successor, restored handlers/logging and zero pending loop tasks.
 
-### P2 — An authentication reason is trusted metadata rather than error text
+A periodic child release watcher would be **non-covering** for quiet wake-up. None
+runs. Parent-side polling and explicit Event release do not advance the child's loop
+before its stop. The handler wrapper observes the real stop owner without changing
+its action. Native cleanup failure is explicitly observed as disconnected=false;
+process exit/task settlement is not claimed as successful transport cleanup.
 
-First dependent Step1; waste if false: protocol/source/privacy documentation/tests1–6.
-Scheduled test4 covers unknown generic RPC text but not authentication rewrapping.
-Cheapest earlier test: SDK-decode unknown401/406 RPC errors and execute real worker
-jobs, milliseconds. Fresh runs show raw sentinel text in error.reason. The underlying
-library intentionally preserves unknown Telegram names in AuthRequiredError.reason;
-the process cannot infer that a name-shaped string came from a known SDK mapping.
-403 and AUTH_KEY_UNREGISTERED controls retain the intended distinction.
+### P2 — Diagnostic publication remains bounded across source phases
 
-### P3 — Temporary verified operations preserve ownership and primary outcomes
+**Premise:** worker-local projection can omit unknown text after real SDK decoding,
+wrapping and health attribution, preserving known fields and original failure types.
+**First dependent step:**3; **waste if false:** diagnostics/public contract/tests3–5.
+**Test scheduled at:**1, then4/5; **cheapest earlier test:** actual SDK-decoded errors
+through Worker and its accepted account operation, milliseconds per history.
+**Coverage:** the full prebuild and permanent tests cover unknown401/406, generic403,
+known auth codes, flags, faulty metadata and terminal/delivery/fatal paths. Fresh
+`pr_r4_diagnostics.py` tests GetState setup, later budget proof, group resolution,
+history and a100-message prefix followed by failure. Every applicable verb is
+exercised with unknown401/406/403; six later-proof controls preserve SESSION_REVOKED
+and USER_DEACTIVATED_BAN.48 histories passed with actual SDK request construction,
+SQLite charges and native cleanup. Raw authentication wrappers retain their original
+Python reason; their portable projections omit it. Generic errors retain their
+SDK type/code instead of being falsely turned into authentication wrappers.
 
-First dependent Step2; prior prebuild plus tests32–38 cover actual SDK/context/ledger
-behavior with synthetic Telegram data. Current read/source foundations are byte-
-identical to dev except the documented resolver and cleanup receipt seams. Fresh
-diagnostic runs prove zero group traffic/charge on failed identity authentication,
-real cleanup, and no borrowed account. No contrary result found. A fabricated Worker
-return would not cover these properties; the probes execute the real Worker.
+Fake error dictionaries or pre-sanitized return values would be **non-covering**.
+Probes decode TL error bytes using the SDK, bind them at actual request transport,
+and execute the real Worker; no source outcome or projector is replaced.
 
-### P4 — Serial framing and output preserve delivered versus unknown completion
+### P3 — Fresh proof, accounting, health and source results keep one owner
 
-First dependent Steps1/3; original prebuild actual pipes and fresh test38 cover EOF,
-broken output, raw backpressure, partial batches and exact consumer IDs. Fresh local
-protocol controls reject six malformed IDs without consuming the counter, consume
-a recognized refused job and reject its repeat. Existing size/serialization faults
-remain explicit delivery failure. This does not prove arbitrary crash exactly-once
-delivery, and the contract correctly promises none.
+**Premise:** wrapping accepted library operations in a resident process preserves
+expected-account checks, later admission, partial batches and source/observer isolation.
+**First dependent step:** original source integration, retained by revision4 steps2–5.
+**Waste if false:** the source/process boundary must be rebuilt rather than documented.
+**Test scheduled at:** original/combined prebuild and permanent tests before delivery.
+**Cheapest earlier test:** actual account-operation/SDK/SQLite composition, available
+and executed at those stages and again for the fresh error histories.
+**Coverage:** all current source foundations remain unchanged except the original
+narrow cleanup receipt and worker resolver seams. Fresh later proof failures emit no
+history/join and consume no allowance. Errors after send retain1/2 or200 charges as
+appropriate; the100-message partial batch keeps its actual batch ID. All48 cases
+then execute a real successful accountB read: no inherited event and no change to
+accountA's health state. Existing stale-cache/mismatch tests cover numeric identity.
+A stand-in returning a selected account/result would not prove this premise.
 
-### P5 — A live deployment can use assigned sessions and target groups
+### P4 — Framing and output preserve receipt uncertainty without added ownership
 
-External precondition, not a hidden offline success premise. Live Telegram, proxy
-availability, permission, safe rates, exclusive cross-process assignment and native
-Windows/older Python remain unqualified. No cheap local stand-in closes those facts.
-They are disclosed deployment boundaries and are not new findings in this review.
+**Premise:** bounded JSON/request identity, one writer and raw output can carry exact
+results without implying durable acceptance, storage or safe replay.
+**First dependent steps:** original protocol/process integration, retained in2–5.
+**Waste if false:** caller contract, process behavior and examples become misleading.
+**Test scheduled at:** original/combined prebuild and permanent suites; **cheapest
+earlier test:** real pipes plus decoder/encoder controls, already run.
+**Coverage:** retained tests cover framing, malformed/duplicate requests, full limits,
+exact Node query IDs, all four verbs, partial output and lost replies. Fresh controls
+reject exponent infinity, excessive nesting and5000-digit integers without consuming
+an ID. Exact encoded-frame size succeeds; one byte less refuses. Three-byte writes
+reassemble exactly. Fresh completed-result stop histories leave no terminal reply,
+keep the read charge and run no successor. No durable or exactly-once claim is made.
+The short-writer control alone is **non-covering** for OS backpressure; the real pipe
+qualification supplies that evidence separately.
+
+### P5 — Live/platform deployment meets external preconditions
+
+**Premise:** real accounts, proxies, readable groups, assigned sessions and provisioned
+allowances exist on the chosen deployment platform.
+**First dependent work:** later live deployment, outside this offline delivery.
+**Waste if false:** deployment must wait; it does not change the selected local API.
+**Test scheduled at:** separately authorized live/platform qualification.
+**Cheapest earlier test:** requires those actual resources/permission; none in the
+owned synthetic test environment can establish it.
+**Coverage:** none claimed. Offline SDK data does not establish real access/proxy
+behavior or safe rates. Python3.7 grammar is not native execution; Windows is not
+POSIX. These declared preconditions are carried unchanged, not padded as new risks.
 
 ## Restart Check
 
-| Observed failure | Established mechanism | Addressing design / remaining gap |
+| Observed failure | Established mechanism | Addressing design and evidence |
 |---|---|---|
-| #17 observer cancellation replaces source; descendant close forms a cycle | Inline callback coupled to source lifetime | Accepted post-cleanup monitor and fixed worker collector; overlap/observer controls pass |
-| Failed SDK disconnect returns while transport/tasks remain | Existing result-preserving helper hides cleanup failure from caller | Private receipt stops admission; loop tasks are settled; process control passes |
-| Missing cached read peer scans dialogs | Legacy BatchEngine fallback | Worker bounded resolver; default path remains unchanged |
-| Buffered stdout flush outlives stop | Interpreter-owned pending output buffer | Raw writer and no teardown flush; real pipe tests pass |
-| Active stop waits while no cleanup has begun | No wake-up accompanies task cancellation | **Gap: Risk1; polling fixture masked this composition** |
-| Unknown auth diagnostic appears in portable result | Raw SDK message rewrapped as reason, then syntax-checked | **Gap: Risk2; trust origin was lost across wrapper boundary** |
+| Inherited #17 observer failures replace outcomes or create close cycles | Observer/source ownership coupled | Accepted post-cleanup monitor, fixed collector and overlap rules; existing source tests retained |
+| Disconnect helper returns despite native failure | Primary result preservation hid failure from process admission | Private receipt recorded before cancellation escapes; sticky stop and remaining-task settlement; fresh held-failure signal controls |
+| Uncached worker read scans all dialogs | Legacy BatchEngine fallback | Worker-only bounded resolver; unchanged library fallback confirmed structurally |
+| Buffered output survives stop/error at interpreter exit | Hidden final flush retries pending bytes | Raw writer, no teardown flush; actual broken/undrained pipe tests retained |
+| Quiet stop does not begin cleanup | Task cancellation did not wake the selector; test timer hid it | Immediate cancel plus public loop wake; timer-free permanent and fresh quiet mixed-signal controls |
+| Raw auth text reaches JSON reason | Wrapper preserved raw text; spelling was treated as trust | Frozen canonical-name set in worker projector; all source phases and secondary paths covered |
 
-Most established prior failures have concrete addressing mechanisms; this is not
-a wrong-layer verdict. The two fresh gaps need a renewed plan, not symptom patches.
+Every established failure has a corresponding mechanism and actual covering evidence.
+No empty restart row, wrong-layer conclusion or missing architectural premise found.
 
 ## Inherited Lessons
 
-- Account filenames/caches are not identity: Step2 uses the accepted fresh proof;
-  tests37/38 and these failed-auth controls preserve that ordering.
-- Observer failure must not replace source completion: fixed bounded collector and
-  post-cleanup delivery are covered by actual operation tests, not just a mock.
-- Cleanup return is not proof of disconnection: the receipt is set before cancellation
-  escapes and admission stops. **Requesting cancellation is likewise not proof that
-  cleanup started**; Risk1 shows the additional process boundary must be tested first.
-- Raw stdout is needed for stop under backpressure: tested before implementation and
-  retained. Do not replace it with an event-loop-only signal handler that cannot
-  interrupt the synchronous idle/write paths.
-- Exact IDs do not imply safe diagnostics: string projection is correct, but error
-  field origin also matters. Risk2 needs a known-name rule across auth wrapping.
+- Requested cancellation is not started cleanup: timer-free real-loop prebuild1
+  preceded Step2; permanent tests and new quiet controls observe actual cleanup entry.
+- Returned cleanup is not disconnection: receipt/transport state are checked, and
+  fresh failed cleanup remains disconnected=false while task settlement succeeds.
+- Name-shaped text is not recognized metadata: canonical vocabulary is fixed before
+  Step3; decoded SDK tests prove omission after later wrappers/health observation.
+- Passing neighboring tests is not the new composition: full combined prebuild
+  preceded integration; fresh review extends edges rather than repeating its totals.
+- Cache/session labels are not identity; membership is not readability: existing
+  expected-account and qualified group APIs remain authoritative, before claims.
+- More abstraction is not more safety: two small private process phases and one
+  publication set address real boundaries. There is no second concrete worker
+  transport requiring a controller, nor another broken canonical-error consumer
+  justifying a library-wide migration.
 
-## Risk 1 — Stop signals do not wake a waiting source job
+## Risks
 
-**Risk**
+No new reportable High, Medium or Low findings. No mitigation tiers are invented
+for unsupported hypothetical deployments or for a benign trusted constructor form
+already acknowledged by revision4. No product change is requested by this review.
 
-When a Telegram request is waiting and nothing else is happening, asking the worker
-to stop can leave it asleep instead of beginning client cleanup. Sending the stop
-signal again does not help. It resumes when an unrelated event wakes it, so a caller
-may wait unnecessarily or force-kill the process while its connection is still open.
-This is a delay before cleanup starts, distinct from the documented possibility
-that native cleanup itself takes a long time.
+## Probe results, fixture corrections and limits
 
-`tgdata/worker.py:132–146` installs a synchronous signal.signal handler that calls
-active.cancel() and returns; it neither registers an asyncio wakeup fd nor posts via
-a wake-capable loop path. During `loop.run_until_complete(active)` at169 the actual
-KqueueSelector can remain in its approximately60-second SDK timer wait after the
-signal. `test_38_worker_process.py:40–50` starts a10 ms release watcher, hiding the
-problem. `probes/pr_lifetime.py` uses actual Worker/Telethon and selector calls:
-without the watcher, SIGINT and SIGTERM leave cleanup unstarted after0.7 s and a
-repeat; SIGUSR1's diagnostic call_soon_threadsafe wake then permits native cleanup
-and exit130/143. The polling control succeeds. No Worker execution was replaced.
-
-**Severity:** Medium
-**Category:** Process lifecycle / cancellation scheduling / test coverage
-**Impact:** graceful stop depends on unrelated traffic/timers; supervision may
-escalate to hard termination even though cleanup has not had a chance to run.
-**NoobEng:** Task.cancel queues work for the event loop. A signal handler returning
-from an interrupted OS wait does not necessarily make that queue run; the selector
-needs its own wake-up. A helper timer can make a defective stop path look correct.
-**Affected areas:** worker process signal/loop ownership, active-stop tests and docs.
-
-### Mitigation — Quick
-
-Add a periodic worker heartbeat solely to make pending cancellations run.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* —
-
-### Mitigation — Robust
-
-Define the owned signal handoff for each process phase. For an active job, enqueue
-its single cancellation through a wake-capable owned-loop operation; keep immediate
-interruption for synchronous idle input/output, preserve repeated-signal cleanup
-protection, and restore owned handler state. Qualify quiet-selector and held-cleanup
-histories without polling assistance alongside the existing raw-output controls.
-**Why this is robust:** supplies the missing executor wake-up at the stop boundary
-without another task, transport, deadline policy or change to source ownership.
-- [x] selected   - [x] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* One actual process owner exists in worker.serve; the CLI and Python bootstrap share it. Existing examples use their own established asyncio runners, not a second implementation of this hybrid signal contract. A wake-capable handoff closes this instance without a framework or polling dependency. The candidate still needs the named prebuild before corrective implementation.
-*For future:* —
-
-### Mitigation — Long-term
-
-Introduce a reusable process lifecycle/transport controller for pipe, HTTP and
-future worker front ends, with explicit phase and signal ownership.
-**Why this is long term effective:** could make wake-up, blocking-I/O interruption
-and restoration policies reusable across genuine future process implementations.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* Revisit only when a second concrete worker transport needs the same blocking-I/O and active-loop lifecycle. #17's pool is an in-process client owner and is not such an instance. The narrow stop boundary would survive a later transport controller.
-
-## Risk 2 — Authentication wrapping forwards raw diagnostic text
-
-**Risk**
-
-The worker promises portable errors that omit arbitrary exception text. An unknown
-authentication error bypasses that protection: its text is copied into a field
-called “reason” and returned to the caller if it resembles a short identifier.
-Such text can contain private diagnostic material. Consumers cannot rely on the
-documented sanitization rule, even though other unknown Telegram errors are filtered.
-
-`tgdata/health.py:114–117` intentionally returns unknown SDK .message text;
-`ConnectionEngine._auth_required` at873 stores it in AuthRequiredError.reason.
-`worker_protocol.py:227–231` copies any reason matching `_NAME`, unlike its known-
-class RPC allowlist at252–258. `probes/pr_diagnostics.py` serializes/decodes real
-TL RpcError replies and uses Telethon's rpc_message_to_error, then executes actual
-lookup jobs. Unknown401/UnauthorizedError and406/AuthKeyError both publish
-`RAW_AUTH_DIAGNOSTIC_7D93C1` verbatim as reason; ordinary403 omits it. The known
-AUTH_KEY_UNREGISTERED control preserves its canonical reason. Cleanup succeeds,
-with zero group requests or charges in all four histories.
-
-**Severity:** Medium
-**Category:** Diagnostic privacy / trust provenance / protocol contract
-**Impact:** unknown authentication text crosses a boundary documented as type/known-
-metadata only. This proves an output path, not a observed leak of a real credential.
-**NoobEng:** the library intentionally keeps a raw reason for Python callers.
-Renaming it and checking its spelling does not make it trusted metadata for a
-serialized worker reply. The worker must decide which names it recognizes.
-**Affected areas:** worker authentication projection and privacy tests; ordinary
-library AuthRequiredError behavior need not change.
-
-### Mitigation — Quick
-
-Remove every authentication reason, including useful recognized Telegram reasons.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* —
-
-### Mitigation — Robust
-
-At the worker projection boundary, publish only explicitly recognized canonical
-authentication reasons; omit or use a fixed unknown value for all other text.
-Retain type/category/first_login/banned and the existing known-reason behavior.
-Test decoded unknown401/406 and known authentication failures through real worker
-operations, in addition to the ordinary generic-RPC control.
-**Why this is robust:** closes the demonstrated privacy boundary while preserving
-the library's intentional raw diagnostics and the worker's useful fixed metadata.
-- [x] selected   - [x] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* The two actual neighboring projections, generic RPC errors and health events in worker_protocol, already reject unknown text. This authentication branch is the uncovered instance. A canonical-name rule at the existing worker boundary gives the required reach without migrating ordinary library error fields or changing their diagnostic contract.
-*For future:* —
-
-### Mitigation — Long-term
-
-Give library errors separate typed canonical and raw diagnostic fields and require
-future public transports to project only the canonical representation.
-**Why this is long term effective:** could carry trust provenance across multiple
-wrappers/transports instead of each consumer deciding which strings are publishable.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* A typed diagnostic representation is useful if another actual public transport needs it. It would touch existing library error construction/consumers beyond this worker boundary; the robust projection would remain necessary and can survive that later change. No present blocker forces a lesser remedy.
-
-## Probe evidence and limits
+`probes/pr_r4_lifetime.py/.txt`:
 
 ```text
-SIGINT quiet: stalled=true; cleanup_started_before_wake=false; repeat_still_waiting=true; exit130 after explicit wake
-SIGINT polling: stalled=false; cleanup_started=true; exit130
-SIGTERM quiet: stalled=true; cleanup_started_before_wake=false; repeat_still_waiting=true; exit143 after explicit wake
-SIGTERM polling: stalled=false; cleanup_started=true; exit143
-unknown401: UnauthorizedError -> AuthRequiredError.reason=raw sentinel
-unknown406: AuthKeyError -> AuthRequiredError.reason=raw sentinel
-unknown403: ForbiddenError -> no raw sentinel
-known401: AuthKeyUnregisteredError -> canonical AUTH_KEY_UNREGISTERED
-protocol: six malformed IDs refused; recognized invalid job consumes ID; repeat refused
+10 ordered histories: quiet mixed signals; successful/failed native cleanup;
+  completed-result publication; closed loop — each under SIGINT/SIGTERM.
+Exits130/143; charge2; one client/disconnect attempt; no successor; handlers/logging
+  restored; pending tasks0. Failed cleanup remains disconnected=false.
+3 back-to-back controls: sent [SIGTERM,SIGINT], observed owner can be INT or TERM;
+  exit always128+the real stop owner. No child timer supplies progress.
 ```
 
-Exact timings/selector deadlines, retained charges and cleanup observations are in
-`probes/pr_lifetime.txt`; exact JSON projections are in `probes/pr_diagnostics.txt`.
-The selector wrapper observes calls without supplying a timer. The separate SIGUSR1
-wake is a diagnostic control, not production behavior or a claimed implemented fix.
-The0.7-second observation bounds the probe; the finding is missing wake-up and delayed
-cleanup entry, not an invented subsecond shutdown SLA. The source's normal SDK timer
-or future network event can eventually wake the unchanged worker.
+The initial probe sent two different signals without a dispatch handshake and
+incorrectly assumed send order was handler order; its failure is retained in
+`pr_r4_lifetime-fixture.txt`. A first instrumentation attempt incorrectly used
+handler **completion** order as ownership; nested handlers can finish out of order,
+and that failed control is retained in `pr_r4_lifetime-fixture2.txt`. The final probe
+observes the real handler's already-set stop-reason closure. Ordered histories wait
+for the first completed handler before sending the other signal; their original
+first-signal assertions remain. Separate back-to-back controls demonstrate that
+both130 and143 are possible for that send sequence, depending on actual ownership.
+No production signal action, cleanup behavior or accepted result was changed.
 
-No product edits, live requests or real secrets. Existing39 worker groups passed
-again; prior612 actual passes/3 live skips remain recorded for their covered cases.
-Neither count qualifies these newly found mechanisms. Constructor positional
-optionality recorded by merge-check is benign API breadth, not a padded Low risk.
+`probes/pr_r4_diagnostics.py/.txt`:
 
-**Disposition:** CONTRIBUTING7.3 rejects on either Medium. Keep PR27 draft and #10
-open. Under7.4, next is revision3 re-planning using this critique, then plan critique,
-fold and implementation before both PR gates repeat. No findings are patched here.
+```text
+42 unknown401/406/403 source histories +6 canonical later-proof controls =48 PASS.
+Setup/admission/resolution: no read/join charge. History: correct1/2 charge.
+After100-message prefix: original batch ID preserved, charge200, error still raised.
+All48: no raw sentinel in replies/health; actual cleanup; B succeeds without
+  inheriting/clearing A's state. Protocol/short-write/library-reason controls PASS.
+```
+
+No diagnostic fixture correction was required. Socket connect/connect_ex are blocked;
+all configs, sessions, ledgers and processes are synthetic and owned. Named signal,
+write and loop-close hooks observe/inject a specific boundary and delegate to the
+real implementation; they are not claims of arbitrary production timing coverage.
+No source functions, SDK cleanup, budget decisions or output encoders were fabricated.
+
+The prior631-pass/3-live-skip and package/example artifacts remain valid for the
+identical product. This review adds evidence; it does not claim an exhaustive proof,
+live Telegram qualification, unbounded graceful-shutdown deadline or concurrent
+session safety. No product edits, real policy changes or merge occurred.
+
+## Disposition
+
+Phase2 complete. The renewed fidelity check passed and this fresh soundness gate
+passes with no findings. Phase3 still records its independent selection pass before
+publication is finalized. PR27 may then leave draft status; merge still requires
+the maintainer's explicit go-ahead and must exclude the work documents while keeping
+the feature branch as the archive.
