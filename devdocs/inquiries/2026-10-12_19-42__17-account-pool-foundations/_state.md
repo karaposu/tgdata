@@ -10,13 +10,13 @@ A → Su → S → D → I → C → R (always)
 - [x] Decomposition
 - [x] Innovation
 - [x] Critique
-- [ ] Routelister
+- [x] Routelister
 ## Iteration
 1
 ## Status
 ACTIVE
 ## Next Discipline
-Routelister
+Iteration evaluation
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -47,3 +47,6 @@ Routelister
   Diagnosis survives; preferredA needs explicit notification/provider/control role
   contract. B killed by pre-existing-actor cycle. ITERATE after required Routelister;
   no false two-iteration convergence. Manual10/10 PASS. Next: Routelister.
+- 2026-10-12_20-24: Routelister complete;14 identities, high6/core7, both canonical
+  outputs written; no selected move or inter-concept dependency graph. Manual12/12
+  PASS. Next: iteration evaluation from saved critique (focused continuation required).
