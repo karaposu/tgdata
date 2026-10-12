@@ -224,3 +224,15 @@ passes with no findings. Phase3 still records its independent selection pass bef
 publication is finalized. PR27 may then leave draft status; merge still requires
 the maintainer's explicit go-ahead and must exclude the work documents while keeping
 the feature branch as the archive.
+
+## Selection pass — Phase3
+
+Completed after Phase2 commit `899d3bd`, in the same session. There are no Medium
+or High findings and therefore no mitigation tiers or selection boxes to fill.
+No risk, severity, premise, proposal or Phase2 verdict was altered. No additional
+framework or public API change is selected: the reviewed local mechanisms cover
+the real instances, and hypothetical future transports do not create a shared class.
+
+**Final disposition:** renewed merge fidelity and fresh PR soundness both PASS.
+Post this committed review, update issue6/7 and allow PR27 to leave draft status.
+No merge is performed; the maintainer's explicit go-ahead remains required.

@@ -12,8 +12,9 @@ revision4 implementation and verification complete at product `d32abcd`.** The R
 Its frozen candidate at2cc9995, not the fold marker, supplies the qualification.
 Steps2–5 are implemented and verified:631 actual passes /3 live skips across24
 suites, plus packaging/examples. Step6 records separate product/work commits and
-same-branch publication. See `implementation_r4.md` and `verification_r4.md`; renewed
-merge check and fresh PR critique remain pending.
+same-branch publication. See `implementation_r4.md` and `verification_r4.md`.
+Renewed merge-check `bbdc846` and fresh PR critique `899d3bd` now PASS (0 High,
+0 Medium, 0 Low); separate merge authorization remains required.
 
 Revision3 at9ce9ae3 was reviewed under the new dynamic prompt at1d6cac7, with
 Phase2 at08ee0f2 and Phase3 selection atd49f8a0 in critic.md. No additional
@@ -23,12 +24,13 @@ The six implementation steps and their contracts below are unchanged by this fol
 
 Revision3 is retained exactly in `step_by_step_impl_plan_r3.md`; revision2 in
 `step_by_step_impl_plan_r2.md`. The first planning critic/prompt are `critic_r1.md`
-and `dynamic_critic_prompt_r1.md`. `pr-critic.md` remains the rejected first PR
+and `dynamic_critic_prompt_r1.md`. `pr-critic_r1.md` preserves the rejected first PR
 review (837d06f, selections8322827), whose two robust remedies drove the re-plan.
 The current critic.md belongs to revision3, not to the first planning cycle.
 
-Base dev remains68f6bbd. Original product6ee146c is revised by `d32abcd`; PR27
-remains draft pending renewed gates. The first PR critique remains rejected.
+Base dev remains68f6bbd. Original product6ee146c is revised by `d32abcd`. Both
+renewed gates now pass; PR27 awaits a separate merge decision. The first rejected
+PR critique and merge check remain archived as `pr-critic_r1.md` / `merge-check_r1.md`.
 This is the first rejected PR round, so re-planning is permitted. A second rejected
 round requires returning to description/traverse under7.4, not another patch cycle.
 Current review/fold metadata at2026-10-12T07:38:03.247Z verifies GPT-6 Astra/max.

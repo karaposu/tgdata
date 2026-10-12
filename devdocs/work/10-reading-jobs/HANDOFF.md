@@ -2,68 +2,71 @@
 model: gpt-6-astra
 effort: max
 ---
-# #10 handoff — revision 4 implemented; renewed review next
+# #10 handoff — both renewed gates passed; merge decision next
 
 2026-10-12. Branch `feat/10-reading-jobs`, worktree
 `/private/tmp/tgdata-10-reading-jobs`, current dev still `68f6bbd`.
-Product **`d32abcd`** integrates the passing revision4 candidate and permanent
-regressions. Work notes/evidence are committed separately. PR27 remains **DRAFT**;
-#10 stays open. **Next: renewed merge check → fresh PR critique.** No merge.
+Product **`d32abcd`**; separate implementation/evidence record **`0c0144d`**.
+**Renewed merge check PASS:bbdc846. Fresh PR critic PASS:899d3bd,
+0 High /0 Medium /0 Low.** Phase3 selected no changes. No runtime edit during review.
 
-## What passed
+Issue https://github.com/karaposu/tgdata/issues/10 remains open;
+PR https://github.com/karaposu/tgdata/pull/27 targets dev with Closes #10.
+Publish the completed selection/handoff, post the new critique and synchronize6/7;
+PR27 can leave draft status because both gates passed. **Next: merge only with the
+maintainer's explicit go-ahead.** This review request did not authorize a merge.
 
-- Complete combined prebuild: `95acfc3`, 82 groups /67 controlled subprocesses,
-  candidates frozen before execution at `2cc9995`.
-- Integrated product:24 suites, **631 actual passes /3 explicit live skips**.
-  Worker core33/33; process25/25 with67 controlled subprocesses, three direct
-  module checks and a real Node identifier check. No child polling helper.
-- Compile/Python3.7 grammar, isolated wheel/install, module and console entrypoints,
-  worker/daily/new+restarted-backfill examples passed.
-- Two permanent regressions fail isolated rejected runtime6ee146c, demonstrating
-  sensitivity to both original findings. All current-code checks passed first run.
+## Verified product and fresh review evidence
 
-Read `implementation_r4.md`, `verification_r4.md` and `verification_r4/` for the
-exact scope, logs, scripts, counts, model metadata and source/candidate audit.
-The two integrated functions match the frozen candidates; nine other fingerprinted
-runtime foundations are unchanged. Runtime edits are worker.py / worker_protocol.py.
-No new architectural plan decision or generic process framework was added.
+- Complete combined prebuild95acfc3:82 groups /67 controlled subprocesses, candidates
+  frozen before execution at2cc9995. Integrated functions match those candidates.
+- Full implementation verification:24 suites, **631 actual passes /3 live skips**.
+  Worker core33/33, process25/25 with67 controlled subprocesses. Compile/3.7 grammar,
+  isolated wheel/install, module/console and worker/daily/new+restarted-backfill
+  examples passed. Two new regressions fail isolated rejected runtime6ee146c.
+- Renewed read-only fidelity audit confirms13 product paths,21 ancestor checkpoints,
+  exact verification hashes,11 unchanged dev foundations and9 unchanged revision4
+  foundations. Existing library resolution remains unchanged. Dev has not moved.
+- Fresh soundness probes:13 actual process histories (10 ordered transitions plus
+  3 pending-signal controls),48 SDK/Worker error histories,1 protocol control group.
+  Later authentication loss, partial reads, actual charges, health ownership and
+  subsequent accountB success all retain the contract. Unknown raw text is absent.
+- Lifetime-probe corrections are retained: parent send order and nested handler
+  completion order are not necessarily stop ownership. Final probes observe the
+  actual latch and handshake ordered repetitions; production behavior is unchanged.
 
-## Review state and next actions
+Read `merge-check.md`, `pr-critic.md` and `probes/pr_r4_*` for review; read
+`implementation_r4.md`, `verification_r4.md` and `verification_r4/` for implementation.
+The full suite was not rerun during review on identical code/base; new probes extend
+its evidence. No claim of live Telegram or other-platform qualification.
 
-Issue https://github.com/karaposu/tgdata/issues/10,
-draft PR https://github.com/karaposu/tgdata/pull/27 targeting dev with Closes #10.
+## Eventual merge requirements
 
-The original PR review remains **REJECTED:0 High /2 Medium /0 Low**, at837d06f
-(selections/handoff8322827). Findings were quiet-selector cancellation and unknown
-SDK401/406 text escaping through AuthRequiredError.reason. Both now have integrated
-remedies and passing permanent regressions; that does not count as fresh approval.
+Only after maintainer go-ahead: refresh dev/head and ensure the reviewed product
+has not changed; merge through PR27 while excluding `devdocs/work/10-reading-jobs/`
+and warming artifacts per CONTRIBUTING7.6. Run the appropriate merged-code suites,
+push the reviewed merge, keep the feature branch as archive and close #10 manually
+if GitHub's dev-targeted closing reference does not do so. No deletion of branch.
 
-1. Renew merge-check against triage, desc, current revision4 plan, critic and the
-   full diff versus current dev. Archive old `merge-check.md` first, preserve its
-   posted85c0455 evidence, and verify issue status/model §9.
-2. Commit/post the check on the same PR. Run fresh critic-d in-session over the
-   whole diff plus plan. Archive old `pr-critic.md` and its prompt/probes without
-   overwriting history. Commit/post the new critique.
-3. Any High/Medium rejects. This would be the second PR rejection: return to
-   desc/traverse under CONTRIBUTING7.4, not another patch/re-plan loop. If passed,
-   merge still requires the maintainer's separate go-ahead; exclude work docs and
-   retain this branch as the archive.
+A change/failure before merge invalidates any affected evidence; do not patch a
+new High/Medium review finding under the old pass. A second PR rejection would
+require description/traverse under7.4, not another revision cycle.
 
-Do not repeat the unchanged passed prebuild or re-critique the folded plan without
-new evidence. Do not invoke live Telegram or reset existing budgets. The issue/PR
-status should tick implementation only after both implementation commits are pushed;
-renewed merge-check/fresh-critic boxes remain unchecked.
+## Preserved history and scope
 
-## Preserved history and boundaries
+Original product6ee146c / verification6c60832 (612 actual passes /3 skips), first
+fidelity85c0455 and rejected fresh review837d06f (selections8322827). Archived exact
+records: `merge-check_r1.md`, `pr-critic_r1.md`, `dynamic_pr_critic_prompt_r1.md`.
+Revision3 re-plan9ce9ae3; fresh plan prompt1d6cac7, Phase2 08ee0f2, Phase3 d49f8a0;
+folded revision4 5adc00a. Earlier plans/critics/prebuild corrections remain intact.
+Planning critic.md still records its own passed prebuild gate. Current fresh PR
+promptc36c0a1 precedes Phase2 899d3bd and the separate completed selection record.
 
-Original implementation6ee146c / verification6c60832 (612 actual passes /3 skips),
-first merge-check85c0455, rejected PR critique837d06f. Revision3 re-plan9ce9ae3;
-fresh prompt1d6cac7, Phase2 08ee0f2, Phase3 d49f8a0; folded revision4 5adc00a.
-Revisions2/3, first planning critic/prompt, old PR critique, and the first combined
-prebuild harness trace correction all remain preserved. See `prebuild-result.md`.
+Same warmed session, no subagent. Current review metadata at
+2026-10-12T12:22:23.561Z verifies GPT-6 Astra/max and satisfies §9.
 
-No live Telegram, deployment, merge, new allowance, session reassignment or #17
-integration occurred. #17's separate rejected draft PR26 and its71502e5 handoff
-remain independent. Original checkout stays at8a43d23 with its untracked HANDOFF /
-todo, and duncan untouched. Current session is warmed, GPT-6 Astra/max, verified
-at2026-10-12T11:18:36.654Z; no subagent was used.
+No live Telegram, deployment, merge, allowance reset, session transfer or #17
+integration occurred. #17's separate rejected draft PR26 remains independent.
+Original checkout remains8a43d23 with its untracked HANDOFF/todo; duncan and other
+worktrees remain untouched. The worker remains explicit-account and serial;
+routing, scheduling, storage, acknowledgments and uncertain-job retries stay external.
