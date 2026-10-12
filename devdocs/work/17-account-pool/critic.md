@@ -186,5 +186,9 @@ or earlier inquiry count is called a P0 pass. No PR/merge/live acceptance is inf
 
 ## Phase 3 — Selection pass
 
-Pending separate pass. Phase2 findings: High0, Medium0, Low0. No mitigation proposals
-to select; the mandatory experiment remains the next operation.
+Selection pass complete in the same session. Phase2 findings remain High0, Medium0,
+Low0; no proposals exist to tick or fold. No severity/risk text changed. The plan
+already adopts the traverse's bounded pool-specific design; no shared class or new
+framework is selected by implication. Run the full mandatory P0 experiment next.
+If it passes, revision4 records zero selected mitigations and the qualified gate;
+production implementation remains beyond this request's endpoint.
