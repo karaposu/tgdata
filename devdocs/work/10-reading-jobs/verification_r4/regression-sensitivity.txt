@@ -1,0 +1,3 @@
+PASS sensitivity: rejected auth projector fails permanent SDK regression
+PASS sensitivity: rejected stop handler fails permanent quiet-selector regression
+Retained isolated rejected-code controls: /private/tmp/tgdata10_r4_negative_lewzl3lk

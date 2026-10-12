@@ -1,0 +1,224 @@
+{
+  "status": "PASS",
+  "suites": 24,
+  "actual_passes": 631,
+  "live_skips": 3,
+  "results": [
+    {
+      "suite": "test_12_proxy",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_12_proxy.log",
+      "tail": "..\n! skipped \u2014 /private/tmp/tgdata10-r4-verification/intentionally-missing-config.ini not found (only its api_id / api_hash are read)\n\nTEST 7: a real proxy from the config...\n! skipped \u2014 /private/tmp/tgdata10-r4-verification/intentionally-missing-config.ini not found\n\nSummary\n============================================================\nPassed: 7/7\n",
+      "passed": 5,
+      "live_skipped": 2,
+      "artifact": "test_12_proxy.txt"
+    },
+    {
+      "suite": "test_13_device_identity",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_13_device_identity.log",
+      "tail": "['device_identity'] matches the pinned values\n\nTEST 6: Telegram accepts a connection presenting a pinned identity (throwaway session)...\n! skipped \u2014 /private/tmp/tgdata10-r4-verification/intentionally-missing-config.ini not found (only its api_id / api_hash are read)\n\nSummary\n============================================================\nPassed: 6/6\n",
+      "passed": 5,
+      "live_skipped": 1,
+      "artifact": "test_13_device_identity.txt"
+    },
+    {
+      "suite": "test_14_flood_threshold",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_14_flood_threshold.log",
+      "tail": "ps: DiscoveryInterrupted(retry_after=5) after 0.00s\n\nTEST 11: premium flood waits are handled as waits...\n\u2713 search_groups: the premium wait was slept with ticks and the search retried\n\u2713 linked_groups: a premium lookup wait raised DiscoveryInterrupted(retry_after=5)\n\nSummary\n============================================================\nPassed: 11/11\n",
+      "passed": 11,
+      "live_skipped": 0,
+      "artifact": "test_14_flood_threshold.txt"
+    },
+    {
+      "suite": "test_15_login_checks",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_15_login_checks.log",
+      "tail": " 11: AuthRequiredError keeps its old type and gains the persistent path's...\n\u2713 Both a RuntimeError and a ConnectionError\n\nTEST 12: a logged-out pool connection fails start-up and leaves nothing open...\n\u2713 AuthRequiredError; both clients closed; nothing kept; no code\n\nSummary\n============================================================\nPassed: 11/11\n",
+      "passed": 11,
+      "live_skipped": 0,
+      "artifact": "test_15_login_checks.txt"
+    },
+    {
+      "suite": "test_16_health_events",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_16_health_events.log",
+      "tail": "T 21: a callback that calls tgdata is not called back for its own calls' events...\n\u2713 one nested call and one callback run; the nested event recorded, not delivered back\n\u2713 the scheduled path too: the callback's own call slept, was counted, and was not delivered back\n\nSummary\n============================================================\nPassed: 21/21\n",
+      "passed": 21,
+      "live_skipped": 0,
+      "artifact": "test_16_health_events.txt"
+    },
+    {
+      "suite": "test_17_session_store",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_17_session_store.log",
+      "tail": "\n\nTEST 2: every_connection_path\n\u2713 Passed\n\nTEST 3: round_trip\n\u2713 Passed\n\nTEST 4: bounded_cache\n\u2713 Passed\n\nTEST 5: save_points\n\u2713 Passed\n\nTEST 6: failures\n\u2713 Passed\n\nTEST 7: login_rules\n\u2713 Passed\n\nTEST 8: log_out\n\u2713 Passed\n\nTEST 9: two_clients\n\u2713 Passed\n\nTEST 10: mixed_rows\n\u2713 Passed\n\nTEST 11: clone\n\u2713 Passed\n\nTEST 12: health_identity\n\u2713 Passed\n\nPassed: 12/12\n",
+      "passed": 12,
+      "live_skipped": 0,
+      "artifact": "test_17_session_store.txt"
+    },
+    {
+      "suite": "test_18_read_budget",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_18_read_budget.log",
+      "tail": "\nTEST 21: fetch_partial_and_filtered_rows\n\u2713 Passed\n\nTEST 22: search_and_count\n\u2713 Passed\n\nTEST 23: polling_partial_stop\n\u2713 Passed\n\nTEST 24: media_partial_and_default\n\u2713 Passed\n\nTEST 25: discovery_partial\n\u2713 Passed\n\nTEST 26: conversion_and_callback_errors\n\u2713 Passed\n\nTEST 27: budget_errors_are_local\n\u2713 Passed\n\nTEST 28: factory_paths\n\u2713 Passed\n\nPassed: 28/28\n",
+      "passed": 28,
+      "live_skipped": 0,
+      "artifact": "test_18_read_budget.txt"
+    },
+    {
+      "suite": "test_19_message_batches",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_19_message_batches.log",
+      "tail": "t_cause_is_preserved\n\u2713 Passed\n\nTEST 29: primary_rpc_survives_real_cleanup_denial\n\u2713 Passed\n\nTEST 30: secondary_failures_and_logging_cannot_mask_primary\n\u2713 Passed\n\nTEST 31: cancellation_survives_cleanup_denial\n\u2713 Passed\n\nTEST 32: cleanup_only_media_and_manifest_errors\n\u2713 Passed\n\nTEST 33: verification_error_and_cleanup_precedence\n\u2713 Passed\n\nPassed: 33/33\n",
+      "passed": 33,
+      "live_skipped": 0,
+      "artifact": "test_19_message_batches.txt"
+    },
+    {
+      "suite": "test_22_daily_continuation",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_22_daily_continuation.log",
+      "tail": "_and_mode_validation\n\u2713 Passed\n\nTEST: offline_operations_do_not_recover_health\n\u2713 Passed\n\nTEST: process_exit_at_actual_ack_commit\n\u2713 Passed\n\nTEST: real_receiver_lost_acknowledgment\n\u2713 Passed\n\nTEST: sqlite_cleanup_precedence_and_safe_logs\n\u2713 Passed\n\nTEST: backend_return_and_empty_pending_validation\n\u2713 Passed\n\nTEST: offline_example\n\u2713 Passed\n\nPassed: 25/25\n",
+      "passed": 25,
+      "live_skipped": 0,
+      "artifact": "test_22_daily_continuation.txt"
+    },
+    {
+      "suite": "test_23_fixed_windows",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_23_fixed_windows.log",
+      "tail": "t_window_state_and_pending_refused\n\u2713 Passed\n\nTEST: reader_output_must_match_window\n\u2713 Passed\n\nTEST: daily_and_history_collections_stay_independent\n\u2713 Passed\n\nTEST: uncertain_initialization_reuses_committed_window\n\u2713 Passed\n\nTEST: process_exit_at_window_ack_commit\n\u2713 Passed\n\nTEST: cancelled_read_retains_window_and_releases_guard\n\u2713 Passed\n\nPassed: 22/22\n",
+      "passed": 22,
+      "live_skipped": 0,
+      "artifact": "test_23_fixed_windows.txt"
+    },
+    {
+      "suite": "test_24_backfill_state",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_24_backfill_state.log",
+      "tail": "on_and_ownership\n\u2713 Passed\n\nTEST: test_exhaustion_and_attempt_cross_invariants\n\u2713 Passed\n\nTEST: test_control_recovery_and_failure_snapshot_validation\n\u2713 Passed\n\nTEST: test_abandonment_and_pending_predecessor_refused\n\u2713 Passed\n\nTEST: test_counter_limits_and_stale_reference\n\u2713 Passed\n\nTEST: test_window_and_clock_failures_are_local\n\u2713 Passed\n\nPassed: 23/23\n",
+      "passed": 23,
+      "live_skipped": 0,
+      "artifact": "test_24_backfill_state.txt"
+    },
+    {
+      "suite": "test_25_backfill_delivery",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_25_backfill_delivery.log",
+      "tail": "ations_never_recover_source_health\n\u2713 Passed\n\nTEST: test_future_unknown_timing_blocks_source_but_not_pending_ack\n\u2713 Passed\n\nTEST: test_real_receiver_commit_with_lost_reply_replays_without_duplication\n\u2713 Passed\n\nTEST: test_process_exit_before_and_after_pending_commit\n\u2713 Passed\n\nTEST: test_process_exit_before_and_after_ack_commit\n\u2713 Passed\n\nPassed: 41/41\n",
+      "passed": 41,
+      "live_skipped": 0,
+      "artifact": "test_25_backfill_delivery.txt"
+    },
+    {
+      "suite": "test_26_backfill_completion",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_26_backfill_completion.log",
+      "tail": "ED \u2014 call=get_message_batch account=account_47\n\u2713 Passed\n\nTEST: test_empty_end_preserves_pause_or_cancel_fixture\n\u2713 Passed\n\nTEST: test_abandoned_final_fixture_never_accepts_or_completes\n\u2713 Passed\n\nTEST: test_actual_final_sqlite_close_errors_confirm_immediately\n\u2713 Passed\n\nTEST: test_subprocess_exit_at_all_final_commit_boundaries\n\u2713 Passed\n\nPassed: 16/16\n",
+      "passed": 16,
+      "live_skipped": 0,
+      "artifact": "test_26_backfill_completion.txt"
+    },
+    {
+      "suite": "test_27_backfill_pacing",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_27_backfill_pacing.log",
+      "tail": "ines_leave_attempt_unknown\n\u2713 Passed\n\nTEST: test_real_elapsed_wait_does_not_sleep_inside_engine\n\u2713 Passed\n\nTEST: test_generation_change_does_not_reuse_an_old_wait_anchor\n\u2713 Passed\n\nTEST: test_recovery_cas_race_cannot_clear_a_replacement_attempt\n\u2713 Passed\n\nTEST: test_process_exit_recovery_before_after_commit_keeps_exact_deadline\n\u2713 Passed\n\nPassed: 32/32\n",
+      "passed": 32,
+      "live_skipped": 0,
+      "artifact": "test_27_backfill_pacing.txt"
+    },
+    {
+      "suite": "test_28_backfill_controls",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_28_backfill_controls.log",
+      "tail": "dback_never_overwrites_later_control\n\u2713 Passed\n\nTEST: test_cancelled_control_reply_reconciles_without_resetting_wait\n\u2713 Passed\n\nTEST: test_real_post_commit_close_failure_confirms_control\n\u2713 Passed\n\nTEST: test_corrupt_missing_or_foreign_state_is_not_repaired\n\u2713 Passed\n\nTEST: test_process_exit_before_and_after_real_control_commit\n\u2713 Passed\n\nPassed: 32/32\n",
+      "passed": 32,
+      "live_skipped": 0,
+      "artifact": "test_28_backfill_controls.txt"
+    },
+    {
+      "suite": "test_29_backfill_public",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_29_backfill_public.log",
+      "tail": "test_example_missing_known_state_and_repeated_new_do_not_reset\n\u2713 Passed\n\nTEST: test_example_receiver_keeps_full_snapshots_and_refuses_wrong_scope\n\u2713 Passed\n\nTEST: test_example_namespace_adapter_uses_actual_atomic_conditional_storage\n\u2713 Passed\n\nTEST: test_example_receiver_commit_failure_is_atomic_and_lost_reply_retries_exactly\n\u2713 Passed\n\nPassed: 23/23\n",
+      "passed": 23,
+      "live_skipped": 0,
+      "artifact": "test_29_backfill_public.txt"
+    },
+    {
+      "suite": "test_30_backfill_integration",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_30_backfill_integration.log",
+      "tail": "ontrols_and_delayed_resume_are_revision_ordered\n\u2713 Passed\n\nTEST: test_media_receipt_custody_ack_without_source_bytes_and_health\n\u2713 Passed\n\nTEST: test_missing_malformed_known_state_and_cleanup_preserve_uncertainty\nSync storage cleanup failed during rollback (RuntimeError)\nSync storage cleanup failed during close (RuntimeError)\n\u2713 Passed\n\nPassed: 15/15\n",
+      "passed": 15,
+      "live_skipped": 0,
+      "artifact": "test_30_backfill_integration.txt"
+    },
+    {
+      "suite": "test_32_account_operation",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_32_account_operation.log",
+      "tail": "st_cleanup_internal_cancel_and_broken_logger_preserve_success\nTEST: test_cancelled_body_waits_for_actual_sdk_disconnect\nTEST: test_cancellation_during_authentication_closes_client\nTEST: test_cancellation_during_successful_cleanup_is_preserved\nTEST: test_cancelled_body_survives_failed_cleanup\nAccount operation cleanup failed (OSError)\nPassed: 28/28\n",
+      "passed": 28,
+      "live_skipped": 0,
+      "artifact": "test_32_account_operation.txt"
+    },
+    {
+      "suite": "test_33_owned_health",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_33_owned_health.log",
+      "tail": "nt=test account\nTEST: test_r4_implicit_context_before_isolation_is_not_adopted\nTEST: test_r4_forwarded_preproof_wrappers_remain_neutral\nTEST: test_r4_isolated_sdk_multierror_leaves_remain_neutral\nTEST: test_r4_neutral_metadata_failures_and_cycles_preserve_outcomes\nTEST: test_r4_real_multierror_partial_success_is_not_recovery_evidence\nPassed: 62/62\n",
+      "passed": 62,
+      "live_skipped": 0,
+      "artifact": "test_33_owned_health.txt"
+    },
+    {
+      "suite": "test_34_group_access",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_34_group_access.log",
+      "tail": " AUTH_KEY_UNREGISTERED \u2014 call=check_group_access account=test account\nPASS test_unclassified_wait_and_auth_rpcs_still_raise_original\nhealth: unclassified [-] CHAT_WRITE_FORBIDDEN \u2014 call=check_group_access account=test account\nPASS test_verified_owner_and_existing_factory_policy\nPASS test_wrong_owner_prevents_every_group_request\n49 passed; 0 failed\n",
+      "passed": 49,
+      "live_skipped": 0,
+      "artifact": "test_34_group_access.txt"
+    },
+    {
+      "suite": "test_35_join_budget",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_35_join_budget.log",
+      "tail": "\ntest_status_is_frozen_and_dict_is_fresh (__main__.JoinBudgetTests.test_status_is_frozen_and_dict_is_fresh) ... ok\ntest_status_reserves_nothing_and_each_claim_counts (__main__.JoinBudgetTests.test_status_reserves_nothing_and_each_claim_counts) ... ok\n\n----------------------------------------------------------------------\nRan 35 tests in 3.054s\n\nOK\n",
+      "passed": 35,
+      "live_skipped": 0,
+      "artifact": "test_35_join_budget.txt"
+    },
+    {
+      "suite": "test_36_group_join",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_36_group_join.log",
+      "tail": "equest_and_account_recovery_keep_existing_rules\nPASS test_stale_cached_identity_does_not_own_claim_or_result\nPASS test_unusable_and_malformed_lookup_never_mutates\nPASS test_webview_is_portable_incomplete_data\nPASS test_wrong_expected_account_prevents_all_group_requests\nPASS test_zero_cap_observes_membership_but_refuses_mutation\n44 passed; 0 failed\n",
+      "passed": 44,
+      "live_skipped": 0,
+      "artifact": "test_36_group_join.txt"
+    },
+    {
+      "suite": "test_37_worker",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_37_worker.log",
+      "tail": "on_keeps_the_completed_prefix\nPASS test_mutation_named_error_from_identity_is_not_join_success\nPASS test_notification_capacity_is_counted_without_changing_source\nPASS test_store_clients_create_no_session_files_or_suffixes\nPASS test_serialization_failure_keeps_known_source_outcome\nPASS test_one_large_health_event_is_counted_as_dropped\nPassed: 33/33\n",
+      "passed": 33,
+      "live_skipped": 0,
+      "artifact": "test_37_worker.txt"
+    },
+    {
+      "suite": "test_38_worker_process",
+      "exit": 0,
+      "log": "/private/tmp/tgdata10-r4-verification/test_38_worker_process.log",
+      "tail": "on_waits_for_native_cleanup\nPASS test_sdk_authentication_read_batch\nPASS test_sdk_authentication_lookup_group\nPASS test_sdk_authentication_check_group_access\nPASS test_sdk_authentication_join_group\nPASS test_delivery_failure_omits_unknown_authentication_text\nPASS test_fatal_authentication_projection\nPassed: 25/25\nControlled worker subprocesses: 67\n",
+      "passed": 25,
+      "live_skipped": 0,
+      "artifact": "test_38_worker_process.txt"
+    }
+  ]
+}

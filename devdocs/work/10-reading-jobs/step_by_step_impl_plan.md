@@ -7,9 +7,13 @@ effort: max
 **Critic folded:** 2026-10-12 — 0 additional mitigations (0 implementation steps
 changed, 0 added). The two robust PR remedies already encoded in revision3 remain.
 **Review state: critique/fold complete; combined Step1 prebuild PASSED;
-product integration not started.** The REORDER experiment in critic.md passed
+revision4 implementation and verification complete at product `d32abcd`.** The REORDER experiment in critic.md passed
 82 groups across67 controlled subprocesses on2026-10-12. See `prebuild-result.md`.
 Its frozen candidate at2cc9995, not the fold marker, supplies the qualification.
+Steps2–5 are implemented and verified:631 actual passes /3 live skips across24
+suites, plus packaging/examples. Step6 records separate product/work commits and
+same-branch publication. See `implementation_r4.md` and `verification_r4.md`; renewed
+merge check and fresh PR critique remain pending.
 
 Revision3 at9ce9ae3 was reviewed under the new dynamic prompt at1d6cac7, with
 Phase2 at08ee0f2 and Phase3 selection atd49f8a0 in critic.md. No additional
@@ -23,7 +27,8 @@ and `dynamic_critic_prompt_r1.md`. `pr-critic.md` remains the rejected first PR
 review (837d06f, selections8322827), whose two robust remedies drove the re-plan.
 The current critic.md belongs to revision3, not to the first planning cycle.
 
-Base dev remains68f6bbd. Existing product is6ee146c; PR27 remains draft/rejected.
+Base dev remains68f6bbd. Original product6ee146c is revised by `d32abcd`; PR27
+remains draft pending renewed gates. The first PR critique remains rejected.
 This is the first rejected PR round, so re-planning is permitted. A second rejected
 round requires returning to description/traverse under7.4, not another patch cycle.
 Current review/fold metadata at2026-10-12T07:38:03.247Z verifies GPT-6 Astra/max.

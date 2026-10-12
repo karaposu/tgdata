@@ -2,106 +2,68 @@
 model: gpt-6-astra
 effort: max
 ---
-# #10 handoff — combined prebuild passed; integration next
+# #10 handoff — revision 4 implemented; renewed review next
 
 2026-10-12. Branch `feat/10-reading-jobs`, worktree
-`/private/tmp/tgdata-10-reading-jobs`, unchanged current dev `68f6bbd`.
-**Product remains `6ee146c`; no product edits during review.**
+`/private/tmp/tgdata-10-reading-jobs`, current dev still `68f6bbd`.
+Product **`d32abcd`** integrates the passing revision4 candidate and permanent
+regressions. Work notes/evidence are committed separately. PR27 remains **DRAFT**;
+#10 stays open. **Next: renewed merge check → fresh PR critique.** No merge.
 
-Revision3 at9ce9ae3 has received a fresh in-session critic-d review and is folded
-into revision4 in `step_by_step_impl_plan.md`. Prompt1d6cac7, Phase2 08ee0f2,
-then a separate completed selection pass d49f8a0. No additional High/Medium/Low plan risks
-were found; zero new remedies were folded. The two original robust PR remedies
-were already present in revision3. Exact revision3 is archived in
-`step_by_step_impl_plan_r3.md`.
+## What passed
 
-**The complete combined Step1 prebuild has now PASSED:**82 groups across67
-controlled Python subprocesses, both candidate functions installed together.
-Candidate/source fingerprints were frozen at2cc9995 before execution and remain
-unchanged. See `prebuild-result.md`, `probes/revision4_fingerprint.json` and the
-full log/machine results `probes/revision4_prebuild.txt` and
-`probes/revision4_prebuild_result.json`.
+- Complete combined prebuild: `95acfc3`, 82 groups /67 controlled subprocesses,
+  candidates frozen before execution at `2cc9995`.
+- Integrated product:24 suites, **631 actual passes /3 explicit live skips**.
+  Worker core33/33; process25/25 with67 controlled subprocesses, three direct
+  module checks and a real Node identifier check. No child polling helper.
+- Compile/Python3.7 grammar, isolated wheel/install, module and console entrypoints,
+  worker/daily/new+restarted-backfill examples passed.
+- Two permanent regressions fail isolated rejected runtime6ee146c, demonstrating
+  sensitivity to both original findings. All current-code checks passed first run.
 
-**Next: implement Step2 onward.** Integrate the tested process phase policy and
-known-auth diagnostic vocabulary; install permanent regressions and run full
-offline/package verification before renewed PR gates. The critic's REORDER result
-is now PASS; do not repeat the unchanged prebuild or re-critique the already folded
-plan without a new change/concern. Product files are still unchanged at this checkpoint.
-No live action, PR approval or merge occurred.
+Read `implementation_r4.md`, `verification_r4.md` and `verification_r4/` for the
+exact scope, logs, scripts, counts, model metadata and source/candidate audit.
+The two integrated functions match the frozen candidates; nine other fingerprinted
+runtime foundations are unchanged. Runtime edits are worker.py / worker_protocol.py.
+No new architectural plan decision or generic process framework was added.
 
-The first combined attempt hit a harness-only mismatch: provenance was mixed into
-a trace the existing tests define as source activity. It is retained separately.
-Moving bookkeeping into a separate evidence file preserved every original assertion;
-the candidate did not change, and the complete82-group matrix then passed.
+## Review state and next actions
 
-Fresh review evidence: `probes/revision3_critic.py/.txt`,8 actual process histories
-(quiet, held disconnect, creation/publication and held finalization, both signals)
-and14 diagnostic histories (all four verbs, delivery-error and fatal projections).
-All22 passed with real Worker/SDK/SQLite and OS signals, candidates compiled in
-memory, no child polling helper and no live network. These targeted observations
-did not replace the full startup/EOF/raw-pipe/cleanup-fault composition; that matrix
-has now been run separately and is the basis of the PASS above.
+Issue https://github.com/karaposu/tgdata/issues/10,
+draft PR https://github.com/karaposu/tgdata/pull/27 targeting dev with Closes #10.
 
-The plan has six steps: qualify the complete boundary; implement one process stop
-policy; restrict authentication diagnostic vocabulary; add permanent regressions;
-document/verify; commit and update the same draft PR for renewed gates. It covers
-task creation, synchronous I/O, active work and final settlement together, rather
-than treating a cancellation call as proof of shutdown progress.
+The original PR review remains **REJECTED:0 High /2 Medium /0 Low**, at837d06f
+(selections/handoff8322827). Findings were quiet-selector cancellation and unknown
+SDK401/406 text escaping through AuthRequiredError.reason. Both now have integrated
+remedies and passing permanent regressions; that does not count as fresh approval.
 
-Planning-only feasibility evidence in `probes/revision3_feasibility.py/.txt` passed
-two quiet worker subprocesses, two native asyncio ordering controls and six actual
-SDK/Worker authentication cases. Candidates were compiled in memory only. Immediate
-cancellation marking plus loop wake works; merely queuing cancellation can let a
-ready Task step first. Known authentication metadata survives without raw text.
-The full creation/held-cleanup/finalization/pipe matrix was subsequently qualified
-in Step1; the narrower planning experiments are retained as earlier evidence.
+1. Renew merge-check against triage, desc, current revision4 plan, critic and the
+   full diff versus current dev. Archive old `merge-check.md` first, preserve its
+   posted85c0455 evidence, and verify issue status/model §9.
+2. Commit/post the check on the same PR. Run fresh critic-d in-session over the
+   whole diff plus plan. Archive old `pr-critic.md` and its prompt/probes without
+   overwriting history. Commit/post the new critique.
+3. Any High/Medium rejects. This would be the second PR rejection: return to
+   desc/traverse under CONTRIBUTING7.4, not another patch/re-plan loop. If passed,
+   merge still requires the maintainer's separate go-ahead; exclude work docs and
+   retain this branch as the archive.
 
-Archived without altering their contents: plans r2/r3, `critic_r1.md`,
-`dynamic_critic_prompt_r1.md`. The live `critic.md` now holds the new revision3
-review; its experiment now carries the full prebuild PASS. `pr-critic.md`
-remains the first rejected PR review and has not been overwritten.
+Do not repeat the unchanged passed prebuild or re-critique the folded plan without
+new evidence. Do not invoke live Telegram or reset existing budgets. The issue/PR
+status should tick implementation only after both implementation commits are pushed;
+renewed merge-check/fresh-critic boxes remain unchecked.
 
-The user-requested merge check → PR → fresh critique is complete:
+## Preserved history and boundaries
 
-- Fidelity check **PASS**, commit `85c0455`, posted at
-  https://github.com/karaposu/tgdata/pull/27#issuecomment-6118444113.
-- PR https://github.com/karaposu/tgdata/pull/27 targets dev with Closes #10.
-- Fresh critic-d prompt `d6d3e7d`; Phase2 critique/probes `837d06f`.
-- **Gate REJECTED: 0 High, 2 Medium, 0 Low.** PR is draft. Read `pr-critic.md`;
-  Phase3 selects both robust remedies, without editing the Phase2 findings.
+Original implementation6ee146c / verification6c60832 (612 actual passes /3 skips),
+first merge-check85c0455, rejected PR critique837d06f. Revision3 re-plan9ce9ae3;
+fresh prompt1d6cac7, Phase2 08ee0f2, Phase3 d49f8a0; folded revision4 5adc00a.
+Revisions2/3, first planning critic/prompt, old PR critique, and the first combined
+prebuild harness trace correction all remain preserved. See `prebuild-result.md`.
 
-The findings are reproducible, not hypothetical:
-
-1. Active SIGINT/SIGTERM calls Task.cancel without waking the selector. Without
-   the test's10 ms polling helper, native cleanup has not begun until unrelated
-   loop activity occurs. Both signals/repeats fail; an explicit self-pipe wake
-   permits real SDK cleanup and exit130/143. The long native-cleanup allowance
-   does not explain a failure to start cleanup.
-2. Unknown SDK401/406 raw text passes through AuthRequiredError.reason into JSON.
-   The regex checks spelling, not trusted origin. SDK-decoded403 and canonical
-   AUTH_KEY_UNREGISTERED controls show the intended neighboring behavior.
-
-Probes: `probes/pr_lifetime.py/.txt`, `probes/pr_diagnostics.py/.txt` (9 histories).
-All25 existing core and14 process groups passed again. Prior24-suite612-pass/3-live-
-skip and packaging records remain accurate for their coverage; neither is evidence
-that these new findings are safe. No live Telegram or real credential was used.
-
-**Next under CONTRIBUTING7.4:** implementation; renew
-merge check and fresh PR critique on the same PR. Do not re-critique the folded
-plan just because it is revision4. Old plans are archived as history, not marked
-as meaning-gap deprecations. This is the first rejected PR round; a second PR
-rejection goes back to description/traverse under7.4. Do not merge or close #10.
-
-The worker remains explicit-account, serial JSON lines over caller-owned pipes,
-with temporary verified clients and existing budgets. These findings do not justify
-a queue, HTTP service or pool redesign. Live deployment remains separately pending.
-
-Formal first-cycle history: feature-heavy triage, traverse, desc, plan, planning
-critic/prebuild, folded revision2, product6ee146c, verification6c60832. The transport
-default was a declared engineering choice after an unanswered optional question.
-Current §9 metadata confirms GPT-6 Astra/max; both review gates ran in-session.
-
-**Prior #17:** PR26 remains draft/rejected, revision3 re-plan next, at `71502e5` in
-`/private/tmp/tgdata-17-account-pool`. It is independent and no runtime was copied.
-Original checkout at `8a43d23`, untracked HANDOFF/todo, duncan and other worktrees
-remain untouched. No dev merge, live action, existing allowance reset or deployment.
+No live Telegram, deployment, merge, new allowance, session reassignment or #17
+integration occurred. #17's separate rejected draft PR26 and its71502e5 handoff
+remain independent. Original checkout stays at8a43d23 with its untracked HANDOFF /
+todo, and duncan untouched. Current session is warmed, GPT-6 Astra/max, verified
+at2026-10-12T11:18:36.654Z; no subagent was used.

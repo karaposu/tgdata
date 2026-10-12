@@ -1,0 +1,31 @@
+{
+  "product": "d32abcd87b873f7cbfd9c0ccc127de0b44f489c0",
+  "base_dev": "68f6bbda33aeb1963b96b3c719d8f23938fa4449",
+  "candidate_ast_match": [
+    "serve",
+    "describe_error"
+  ],
+  "unchanged_source_files": [
+    "tgdata/worker_engine.py",
+    "tgdata/account_operation.py",
+    "tgdata/connection_engine.py",
+    "tgdata/owned_health.py",
+    "tgdata/batch_engine.py",
+    "tgdata/read_budget.py",
+    "tgdata/join_budget.py",
+    "tgdata/group_operations.py",
+    "tgdata/tgdata.py"
+  ],
+  "changed_files_sha256": {
+    "docs/worker.md": "27a11ab5438adcbed92698d86eca80b98a7007c2eb488238c5477c5b1942b403",
+    "tgdata/smoke_tests/README.md": "aa3d87fcd926227e2325180be63b084dc6a857e2d71f9400d3a4a3412e23e727",
+    "tgdata/smoke_tests/test_37_worker.py": "5b45542a25ad104176d20fd028a3e0335fe1efe68e9d0bfcd358f37d3b5f9962",
+    "tgdata/smoke_tests/test_38_worker_process.py": "c5d929d5613c681b6417d28bc6869ee41e82247e97a4613512dd7287ba7be08f",
+    "tgdata/worker.py": "897d06e1ba225f2b76cb94b6db9b4c1a3bdb61e7a34657e004b3958835f97e8a",
+    "tgdata/worker_protocol.py": "855e65e4deb3c10aac4d037bcccfca62852a217139fb0c9e11b3a570e26aa21f"
+  },
+  "no_work_folder_dependencies": true,
+  "model": "gpt-6-astra",
+  "effort": "max",
+  "model_metadata_timestamp": "2026-10-12T11:18:36.654Z"
+}
