@@ -1,87 +1,132 @@
-# Existing-access account routing and recovery — #17
+---
+model: gpt-6-astra
+effort: max
+revision: 3
+---
+# Existing-access account routing — explicit operation ownership
 
-> Session warmed at `95ed4c76c4d2aba7800d8793b16eb5d54cfba4ec` (2026-10-07),
-> retained from this session's #18/#19 implementation and merge verification;
-> connection, health, budget, raw batch and progress interfaces refreshed for #17.
-> Existing architecture summaries retained; no second warm-up skill run claimed.
+> Session warm at ancestor `ebbaaac` (2026-10-12), carried from the full foundation
+> traverse and complete source/controller/health/state/batch/progress-facade/test31
+> reads. Current-dev2ddb852 differences inspected; see `triage.md`. No new
+> archaeology-skill run claimed. Model/effort verified from current turn metadata.
 
-**Path/weight:** feature-heavy. **Model:** GPT-6 Astra / max.
-**Source:** issue17 and confirmed scope in `source-input.md`.
-**Design basis:** `traverse/finding.md`, completed in `d1daa84` after two iterations.
+**Path/weight:** feature-heavy. **Issue:**17; same draft PR26.
+**Basis:** first rejected `pr-critic.md`, original/scoped plans and
+[completed foundation finding](../../inquiries/2026-10-12_19-42__17-account-pool-foundations/finding.md).
+The initial description remains in `desc_r2.md`; the accepted retirement guarantees
+remain in `retirement-rework/`. This replaces their incomplete observer/control
+assumptions, not the original routing and delivery goals.
 
 ## Problem Statement
 
-An application currently chooses the account for every group read and implements
-its own reaction to account logout, ban, cooldown, lost group access and exhausted
-allowance. Tgdata's ConnectionPool only supplies several sessions of one account.
-It is not a distinct-account router.
+The pool already selects accounts and composes with quotas and acknowledged group
+progress. Its enclosing source task also runs arbitrary application health callbacks.
+That mixes a Telegram read's result with the result of reporting it. A cancelled
+callback can hide completed messages and a known wait even when the caller did not
+cancel. Shutdown can also wait for an operation that is itself waiting for shutdown.
+Exact task identity, and even inherited task context alone, do not identify every
+such dependency.
 
-Simply wrapping TgData instances is unsafe: actual-account budget admission and
-cached-identity health can disagree, and ordinary authentication can sleep through
-long flood waits. Restart and partial reads also require explicit stopping rules.
+The complete traverse reproduced both rejected findings, extended them to successful
+reads and asynchronous storage, and rejected a scope-only callback fix. The useful
+change is to define source outcome, true caller stop, permitted lifecycle control,
+physical retirement and diagnostic data separately. The account router and durable
+stores should continue to serve their existing purposes.
 
 ## User Value Proposition
 
-An application supplies accounts, their existing configuration/session sources,
-known groups, a shared ReadBudget and persistent pool state. It asks the pool for
-a bounded group batch or uses the existing daily/backfill operations. The library
-selects eligible accounts and moves past recoverable source failures, preserving
-the existing delivery and allowance contracts.
+An application can still ask for a bounded group read and let tgdata choose an
+eligible preconfigured account. A reporting failure cannot erase the read's useful
+outcome or weaken account restrictions. Shutdown has a defined ownership boundary.
+The application retrieves plain health observations and owns their processing.
 
-The application retains scheduling, receiver storage, account login/repair and
-explicit recovery of unknown source attempts. Adding this library capability does
-not turn tgdata into an application worker or scheduler.
+Daily/backfill delivery remains durable and acknowledged by the existing progress
+engines. The application still owns receiver storage, scheduling, account login/
+repair and explicit recovery of uncertain attempts.
 
 ## Success Criteria
 
-1. Separate AccountPool/PoolAccount/PoolGroup API; existing TgData construction,
-   connection_pool_size and MessageBatch v1 behavior unchanged.
-2. Canonical group IDs and fixed expected account IDs; fresh actual identity checked
-   before history and at actual quota admission. Duplicate inventory/known session
-   credentials refuse. Unknown identity is reported honestly.
-3. Deterministic drain/spread selection uses the existing ledger and explicit
-   optional minimum warm-up age. No local budget reset, refund or unlimited fallback.
-4. No terminal login, joining, dialog sweep or hidden long flood sleep. Cooperative
-   timeout awaits source-task termination before any failover.
-5. Account attempts are durably admitted before source calls. Token-specific
-   settlement records scoped failures; uncertain attempts remain blocked across
-   restart. Explicit initialization/recovery cannot erase known prohibitions.
-6. No more than one active pool operation; each candidate attempted at most once
-   per read. Structured unavailable/busy outcomes never masquerade as empty history.
-7. Nonempty prefixes stop failover. Timeout and local settlement errors preserve
-   complete records; ordinary source exceptions retain their type and prefix.
-   Caller cancellation propagates and never starts another account.
-8. Daily/backfill use their current engines and acknowledgment rules. Pending
-   replay/ack need no account configuration, selection, authentication or quota.
-9. Local input/store/media faults never become Telegram health or failover reasons.
-   Errors/status/logs contain no credentials or stored message content.
-10. Actual Telethon1.45/SQLite offline histories cover stale identity, waits, quota,
-    no access, partial reads, cancellation, uncertain writes, restart and concurrency;
-    existing supported offline suites pass. A separate bounded live gate qualifies
-    two real accounts when resources are available.
+1. Preserve numeric identity verification, deterministic drain/spread, actual ledger
+   admission, stored restrictions, unknown-attempt recovery and the current no-prefix
+   failover rules. MessageBatch v1 and group receipt formats stay unchanged.
+2. Preserve the exact completed source value/error and complete prefix regardless
+   of secondary health/reporting termination. The rule applies on normal completion
+   and pool-owned timeout, not just one branch of the wrapper.
+3. Distinguish actual caller cancellation, internal attempt timeout and unexpected
+   source-internal cancellation. Caller stop retains owned cleanup and propagates
+   cancellation. An interrupted source with no completed result must not become
+   successful settlement or fresh permission; any complete prefix remains usable.
+4. Retain actual SDK/source cleanup through repeated cancellation. Failed retirement
+   quarantines the persistent client until successful explicit retry. Cleanup cannot
+   replace the primary source/body outcome; no deadline is proof of quiescence.
+5. Pool reporting is bounded passive data. The pool executes no application health
+   callback, owns no observer task and does not await observation consumers. Capture
+   limits and losses are explicit; diagnostics never authorize source work or ack data.
+6. A synchronous local `drain_health_events()` returns captured-so-far independent
+   event values and a loss indication, then clears them. It works during reads,
+   failures and close and after closure, with no source/state I/O or busy predicate.
+   Later captures belong to a later drain; reporting is not durable or complete.
+7. Direct/detectable descendant lifecycle reentry refuses before mutation. Ordinary
+   external close still stops/awaits source work and retires clients. Scope records
+   expire and belong to one pool. Storage adapters serve I/O and cannot depend on
+   controlling the pool they serve; arbitrary external wait-graph detection is not
+   promised. State-only reports do not gain source-operation ownership.
+8. Explicitly reject application callback configuration on the unmerged pool API;
+   explain migration to passive data. Ordinary TgData/#7/#10 health behavior remains
+   as merged. Local faults and credentials/message bodies do not become health data.
+9. Preserve both current-dev worker resolver support and the pool's opt-in interrupted
+   prefix support at the shared batch seam. The combined composition is tested before
+   runtime implementation, rather than assumed safe from each branch separately.
+10. A bounded prebuild uses real Telethon1.45.0 methods, native disconnect, ReadBudget,
+    SQLite pool/progress stores and real task scheduling with controlled wire replies.
+    The combined candidate must preserve source results, saved waits/charges, replay,
+    ownership and cleanup in the stated counterexamples and controls.
 
 ## Scope Boundaries
 
-- The user explicitly selected existing-access routing/failover. Automatic joining
-  is deferred and #7 remains paused; no rejected #7 implementation is adopted.
-- No global retrofit of all existing health ownership, login wizard, account repair
-  automation, background scheduler, distributed pool or competing group reader.
-- No union-history guarantee, old edit/deletion reconciliation, new message schema,
-  copied quota ledger or copied cursor/receipt lifecycle.
-- No merge or deployment in this request; merge-check/PR/fresh critique remain later.
-- [ASSUMPTION] One owning process/event loop, exclusive client/session ownership,
-  trustworthy UTC and caller-enforced single reader per group. Clock regression
-  and unresolved attempt state refuse new source permission.
-- [ASSUMPTION] User confirmed one account for now and offline-first delivery; the two-account
-  live gate stays pending. Synthetic account tests are never called live proof.
+This is the selected existing-access first delivery. #7 and #10 are now merged;
+that does not add automatic joining, a worker protocol change, affinity, scheduling,
+a login wizard, distributed ownership or union-history guarantees to #17.
+
+Retain exclusive persistent account clients; do not replace them with temporary
+clients or a global lifecycle supervisor. Keep quota, account permission and group
+progress separate. No general health-system retrofit or durable telemetry service.
+
+[ASSUMPTION] One owning process/event loop, exclusive session ownership, trustworthy
+UTC and one source reader per group remain the established deployment contract.
+Custom providers are not permitted to coordinate the same pool's lifecycle while
+serving it. This is an explicit extension contract, not a hidden dependency detector.
+
+**Requested endpoint:** revision-3 re-plan, fresh critic, selected fold and a small
+combined real-component prebuild. Application/runtime changes are prototyped only
+inside an isolated candidate/export for evidence. The working branch's runtime files
+remain unchanged in this run. Implementation, full regression and renewed PR gates
+are later work; merge still needs the user's go-ahead. Preserve unrelated files.
 
 ## Priority Level
 
-**Medium / P2**, selected now by the maintainer. This removes duplicated routing
-from scraping consumers while preserving already-built daily/backfill delivery.
+**Medium/P2 feature; blocking correctness work for its continuation.** Another plan
+must establish this boundary before further pool implementation can be trusted.
 
 ## Known Blockers
 
-No open planning blocker. Execution-only: two already logged-in, distinct accounts
-and an approved shared group plus bounded allowance are needed for the live gate.
-That does not gate code, documentation or deterministic offline verification.
+No open planning blocker. The completed traverse establishes the semantic direction;
+the affordable combined behavior is an explicit mandatory prebuild gate, not an
+unanswered human decision. A failed gate returns upstream rather than being patched
+into a purported success.
+
+Execution-only: two approved, already logged-in accounts, a shared readable group
+and bounded allowance are still needed for later live qualification. The user chose
+one account/offline first. No live login, Telegram read/join or budget reset is part
+of this run. PROJECT_SPECIFICS.md is absent; reachable code/docs supply commands,
+and no project/process document is being fabricated to conceal that absence.
+
+## Inherited lessons the plan must satisfy
+
+- A task finishing does not prove which enclosed activity supplied its result.
+- A different task or inherited context is not a complete dependency graph.
+- Retaining cleanup cannot make a circular wait valid.
+- Reports are observations, not account permission or group acknowledgments.
+- Detectable reentry guards supplement explicit provider roles; they do not replace them.
+- Real-component prebuild comes before production steps; targeted demonstrations
+  alone do not replace the combined gate or final regression/live qualification.
