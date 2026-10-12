@@ -1,64 +1,68 @@
-# Triage — issue #17
+---
+model: gpt-6-astra
+effort: max
+revision: 3
+---
+# Triage — #17 operation boundary re-plan
 
-**Weight:** feature-heavy
-**Base:** `95ed4c76c4d2aba7800d8793b16eb5d54cfba4ec` (dev, 2026-10-07).
-**Surfaced:** distinct-account ownership; ConnectionEngine and its same-account
-session pool; HealthMonitor; real-identity budget admission; raw batches; daily
-and backfill delivery state; Telethon 1.45 request/authentication behavior;
-ScrapeOps selection policy; paused #7 review evidence. See `surfacing.md`.
-**Why heavy:** selection combines separate contracts for authentication,
-account-wide failures, group visibility, quotas, waits and owed deliveries.
-Successful source failover must not falsely mean complete group history.
-**Watch for:** cached identity being used as operation ownership, flood waits
-hidden inside SDK/authentication paths, changing the quota authority, discarding
-a partial batch, treating inaccessible history as empty, or adopting paused #7.
+**Weight:** feature-heavy continuation. **Branch:** feat/17-account-pool.
+**Product baseline:**71502e5 (product4854464). **Current dev:**2ddb852.
+**Preparation base:**ebbaaac, completed foundation inquiry now carried onto the
+existing issue-linked branch. Original triage is preserved as `triage_r1.md`.
 
-## Authorization and selected boundary
+## Scope and reach
 
-The user selected #17 with task-impl and then explicitly chose: “Routing and
-failover for groups accounts can already read; keep #7 paused (recommended).”
-This first delivery excludes joining and leaves #7 paused. The original issue
-remains the umbrella for that later capability. No protected branch merge or
-live account operation is part of this preparation checkpoint.
+Use the [new finding](../../inquiries/2026-10-12_19-42__17-account-pool-foundations/finding.md)
+and first rejected [PR critique](pr-critic.md) to regenerate the plan. The source
+result/observer/control boundary changes; selection, durable account permissions,
+quotas and group delivery remain their existing responsibilities. No new issue is
+needed for a separate supervisor or general health redesign.
 
-## Session warmth
+[Surfacing](surfacing_r3.md) covers the source/controller/health/batch/state/progress
+interfaces, actual SDK/SQLite test fixtures, public contract/example and current-dev
+difference. A small private observation module is a proposed new home; it is not an
+existing module claimed read. Planned product reach: pool_source.py, account_pool.py,
+pool_state.py, new pool_observation.py, test31, docs/account_pool.md, pool example,
+README/smoke README; current-dev integration also touches the existing batch seam.
 
-Already warm in this same session through #18/#19 implementation, review and
-dev merge verification. Refreshed against dev `95ed4c7`: connection_engine,
-tgdata facade, health, read_budget, budget_client, batch_engine, message_engine
-resolution fallback and sync_engine. Backfill engines/state and receipts remain
-unchanged from the just-reviewed merge. Existing architecture summaries retained;
-this checkpoint does not claim a second architecture-skill run.
+Why heavy: raw, daily and backfill consumers share failure and cancellation paths;
+misclassification can silently discard a prefix or grant work after uncertainty.
+A callback/API change and shutdown behavior cross multiple concepts even if the
+runtime delta is small. Watch for a new abstraction merely moving the wait cycle.
 
-## Traverse decision
+## Current-dev integration
 
-Required by CONTRIBUTING §5: a new account ownership structure and a delicate
-join between source attempts, budgets and acknowledged progress. Execute the full
-same-session traverse in `traverse/` before description/planning. Its purpose is
-to establish whether a bounded account reader can safely compose with those
-existing contracts, and which decisions belong to the caller. It must not adopt
-the rejected #7 implementation or begin its broader health redesign by accident.
+A non-mutating merge-tree preview reports one conflict: tgdata/batch_engine.py.
+Both branches added the same private resolver; the pool also added the opt-in
+cancellation-prefix parameter. The intended union retains both, with the pool-only
+option default False. Diffing the pool file against dev shows only that opt-in
+cancellation support. Worker connection/account-operation cleanup receipts must also
+remain. The prebuild uses an isolated export of this integration; no runtime merge
+is made on the working branch during the requested preparation run.
 
-## Known evidence and unresolved questions
+## Session warmth and preparation
 
-- ConnectionPool expands sessions of one account; this cannot silently become
-  a pool of distinct accounts.
-- BudgetClient obtains the authenticated identity from get_me; TgData health
-  uses cached primary-client `_self_id`. These are different identity sources.
-- SDK waits and connection-engine waits can delay failover. Probe the actual
-  installed 1.45 composition before committing to timing/error guarantees.
-- Daily/backfill persistence owns pending batches and acknowledgments. Account
-  selection must not introduce a second cursor or pretend failover has equal
-  historical visibility.
-- ScrapeOps `state/accounts.py` at `dc49db8` is policy context, not a budget
-  backend to copy: tgdata already reserves allowances before source requests.
-- Selection, fairness, affinity, retry scope, warm-up eligibility and restart
-  behavior remain design questions for traverse. No runtime implementation yet.
+Same warmed session as the full #17 foundation traverse. At ancestor ebbaaac,
+account_pool, pool_source, health, pool_state, progress_facade, batch_engine, test31,
+public account-pool docs and example were read fully; relevant connection/budget/
+progress implementations and actual SDK boundaries were consumed during the prior
+inquiry. Current-dev differences are inspected explicitly. No second architecture-
+skill run or archaeology refresh is claimed. Hooks exist and are executable.
+PROJECT_SPECIFICS.md is absent; no process-file change is made. Commands are obtained
+from actual suite runners. Current turn metadata confirms GPT-6 Astra/max.
 
-## Model and verification boundary
+All issue titles were read. #7 and #10 are closed/merged; #18/#19 supply existing
+progress contracts. #3 and #8 are independent pending features. #17 has exactly one
+rejected PR artifact, no PARKED block, and the requested foundation traverse is
+complete. This is formal re-planning, not a fourth rejected design.
 
-Feature path: this session reports GPT-6 Astra / max (higher than §9 xhigh).
-No delegation; the required critiques remain in this warmed session.
-Python 3.11.10, installed Telethon 1.45.0. No 1.33 compatibility work.
-Only offline analysis/probes are presently scheduled; real multi-account
-qualification will need a concrete bounded gate, not assumed prior results.
+## Authorized endpoint and gates
+
+This run ends at revised description/plan, fresh in-session critic, selected fold
+and the combined real-component prebuild. Full runtime implementation, renewed PR
+review, live tests and merge remain later work. Keep existing-access routing; no
+joining, login, new account inventory, budget reset or scheduler is introduced.
+Two-account live resources remain an execution-only prerequisite for that later
+gate. Only synthetic credentials, owned temporary SQLite files and blocked sockets
+are used in the present prebuild. Main checkout, duncan and other worktrees stay
+untouched.
