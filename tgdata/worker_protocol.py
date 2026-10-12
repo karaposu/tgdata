@@ -6,11 +6,11 @@ import json
 import math
 import re
 
-from telethon.errors import RPCError
+from telethon.errors import AuthKeyError, RPCError, UnauthorizedError
 
 from . import health
 from .account_operation import AccountIdentityError
-from .connection_engine import AuthRequiredError, ProxyConfigError
+from .connection_engine import AuthRequiredError, ProxyConfigError, _BANNED
 from .group_operations import GroupReferenceError, GroupResponseError, _parse_target
 from .history_window import _HistoryWindow
 from .join_budget import JoinBudgetError, JoinBudgetExceeded
@@ -29,6 +29,12 @@ MAX_REQUEST_ID = (1 << 53) - 1
 MAX_HEALTH_EVENTS = 256
 MAX_HEALTH_EVENT_BYTES = 8192
 OPERATIONS = ('read_batch', 'lookup_group', 'check_group_access', 'join_group')
+
+# Unknown SDK RPC text can survive inside AuthRequiredError.reason. Only publish
+# recognized authentication codes, never arbitrary text from that wrapper.
+_CANONICAL_AUTH_REASONS = frozenset(
+    name for cls, name in health._TELEGRAM_NAMES.items()
+    if issubclass(cls, (UnauthorizedError, AuthKeyError))) | frozenset(_BANNED)
 
 _CODES = frozenset(('invalid_json', 'invalid_envelope', 'invalid_request_id',
     'stale_request_id', 'unknown_account', 'unknown_operation', 'invalid_parameters',
@@ -227,7 +233,7 @@ def describe_error(error):
     elif isinstance(error, AuthRequiredError):
         result['category'] = 'authentication_required'
         reason = _optional(lambda: error.reason)
-        if type(reason) is str and _NAME.fullmatch(reason):
+        if type(reason) is str and reason in _CANONICAL_AUTH_REASONS:
             result['reason'] = reason
         for name in ('banned', 'first_login'):
             value = _optional(lambda: getattr(error, name))

@@ -4,8 +4,9 @@ All files and policies belong to temporary test directories. No real accounts,
 network, login, joins or allowance reset outside those directories.
 """
 import asyncio
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 import json
+import logging
 import os
 from pathlib import Path
 import selectors
@@ -21,66 +22,145 @@ from unittest.mock import patch
 
 from telethon import errors, types
 from tgdata import MessageBatch, ReadBudget, JoinBudget
-from tgdata import worker_protocol as protocol
+from tgdata import worker, worker_protocol as protocol
+from tgdata.connection_engine import ConnectionEngine
 from tgdata.smoke_tests import test_37_worker as f
 
 ROOT = Path(__file__).resolve().parents[2]
+PROCESS_COUNT = 0
 
 
-def child(root, scenario):
-    """Test-only bootstrap: replace transport, never execution or process I/O."""
-    from tgdata.worker import main, load_inventory, serve, WorkerAccount
+def child(root, scenario, stock=False):
+    """Real driver/SDK; synthetic transport and named boundary observations only."""
+    parts = scenario.split(':')
+    mode = parts[0]
+    stop_signal = int(parts[1]) if len(parts) > 1 else int(signal.SIGTERM)
     root = Path(root)
-    items = {aid: f.fixture(root, aid) for aid in (111, 222)}
+    items = {} if stock else {aid: f.fixture(root, aid) for aid in (111, 222)}
+    old_handlers = {s: signal.getsignal(s) for s in (signal.SIGINT, signal.SIGTERM)}
+    old_logging = logging.root.manager.disable
 
     def trace(kind, detail):
-        with (root / 'trace.jsonl').open('a') as stream:
+        # Keep source activity separate from test-only lifecycle observations.
+        name = 'trace.jsonl' if kind in ('client', 'request', 'cleanup') else 'evidence.jsonl'
+        with (root / name).open('a') as stream:
             stream.write(json.dumps([kind, detail]) + '\n')
 
-    async def release(wire):
-        while not (root / 'release').exists():
-            await asyncio.sleep(.01)
-        wire.close_release.set()
+    def release_on_command(event):
+        loop = asyncio.get_running_loop()
+        signal.signal(signal.SIGUSR1, lambda s, frame: loop.call_soon_threadsafe(event.set))
 
-    def hook(client, wire):
-        trace('client', wire.account)
-        if scenario == 'held':
-            wire.script['GetHistoryRequest'] = [asyncio.get_running_loop().create_future()]
-            wire.close_release = asyncio.Event()
-            asyncio.create_task(release(wire))
-        elif scenario == 'cleanup_failure':
-            wire.close_error = OSError(f.SECRET)
+    def hook(client, sender):
+        loop = asyncio.get_running_loop()
+        trace('client', sender.account)
+        if mode in ('quiet', 'held', 'caller_cancel'):
+            sender.script['GetHistoryRequest'] = [loop.create_future()]
+        if mode in ('held', 'caller_cancel'):
+            sender.close_release = asyncio.Event()
+            release_on_command(sender.close_release)
+        if mode == 'caller_cancel':
+            owner = asyncio.current_task()
+            signal.signal(signal.SIGUSR2, lambda s, frame: loop.call_soon_threadsafe(owner.cancel))
+        if mode in ('cleanup_failure', 'body_cleanup', 'setup_cleanup', 'partial_cleanup'):
+            sender.close_error = OSError(f.SECRET)
+        elif mode == 'internal_cleanup_cancel':
+            sender.close_error = asyncio.CancelledError(f.SECRET)
+        if mode in ('quiet', 'held', 'caller_cancel'):
+            select = loop._selector.select
+            def observed(timeout=None):
+                trace('select', timeout)
+                return select(timeout)
+            loop._selector.select = observed
 
     for item in items.values():
         item.trace, item.hook = trace, hook
         item.room.left = True
-    item = items[111]
-    if scenario == 'partial':
-        item.scripts['GetHistoryRequest'] = [
-            f.b.f.response([f.b.f.message(n) for n in reversed(range(101, 201))]),
-            errors.FloodWaitError(request=None, capture=7200)]
-    elif scenario == 'pressure':
-        message = f.b.f.message(101)
-        message.message = 'x' * (2 * 1024 * 1024)
-        item.scripts['GetHistoryRequest'] = [f.b.f.response([message])]
-    elif scenario == 'wrong_owner':
-        item.actual = 333
-    elif scenario == 'unauthenticated':
-        item.logged_in = False
-        item.responses['GetStateRequest'] = errors.AuthKeyUnregisteredError(request=None)
-    elif scenario == 'webview':
-        item.join_result = types.messages.ChatInviteJoinResultWebView(
-            111, 1152921504606847099, [])
+    if items:
+        item = items[111]
+        if mode in ('partial', 'partial_cleanup'):
+            item.scripts['GetHistoryRequest'] = [
+                f.b.f.response([f.b.f.message(n) for n in reversed(range(101, 201))]),
+                errors.FloodWaitError(request=None, capture=7200)]
+        elif mode == 'pressure':
+            message = f.b.f.message(101)
+            message.message = 'x' * (2 * 1024 * 1024)
+            item.scripts['GetHistoryRequest'] = [f.b.f.response([message])]
+        elif mode == 'wrong_owner':
+            item.actual = 333
+        elif mode == 'unauthenticated':
+            item.logged_in = False
+            item.responses['GetStateRequest'] = errors.AuthKeyUnregisteredError(request=None)
+        elif mode == 'webview':
+            item.join_result = types.messages.ChatInviteJoinResultWebView(111, 1152921504606847099, [])
+        elif mode == 'body_cleanup':
+            item.scripts['GetHistoryRequest'] = [errors.ChannelPrivateError(request=None)]
+        elif mode == 'setup_cleanup':
+            item.connect_error = LookupError(f.SECRET)
+        elif mode.startswith('auth_') or mode == 'delivery_projection':
+            code, text = (401, f.SECRET) if mode == 'delivery_projection' else f.AUTH_CASES[mode][:2]
+            item.scripts['GetUsersRequest'] = [f.sdk_error(code, text)]
 
-    with patch.object(socket.socket, 'connect', side_effect=AssertionError('network forbidden')), \
-         patch.object(socket.socket, 'connect_ex', side_effect=AssertionError('network forbidden')), \
-         f.install_factory(items):
-        if scenario == 'store':
-            options = load_inventory(root / 'worker.json')
-            options['accounts'] = [WorkerAccount(aid, item.config, session_store=item.store)
+    real_create = asyncio.BaseEventLoop.create_task
+    def create(loop, coro, *args, **kwargs):
+        if mode == 'before_task' and getattr(coro, '__qualname__', '') == 'Worker.execute':
+            trace('publication', 'before-create')
+            os.kill(os.getpid(), stop_signal)
+        task = real_create(loop, coro, *args, **kwargs)
+        if mode == 'publication' and getattr(coro, '__qualname__', '') == 'Worker.execute':
+            trace('publication', 'created-before-return')
+            os.kill(os.getpid(), stop_signal)
+        return task
+
+    real_close = worker.Worker.close
+    async def close(instance):
+        if mode == 'finalize':
+            event = asyncio.Event()
+            release_on_command(event)
+            trace('finalize', 'entered')
+            await event.wait()  # Named pause, then actual facade close.
+        await real_close(instance)
+        trace('finalize', 'finished')
+
+    real_loop_close = asyncio.BaseEventLoop.close
+    def loop_close(loop):
+        pending = len([t for t in asyncio.all_tasks(loop) if not t.done()])
+        real_loop_close(loop)
+        trace('loop', dict(pending=pending, closed=loop.is_closed()))
+
+    real_encoder = protocol.encode_frame
+    def encoder(value, **options):
+        if mode == 'delivery_projection' and value.get('kind') == 'result' and (
+                value.get('error') or {}).get('category') == 'authentication_required':
+            raise protocol.WorkerError('delivery_failed')  # Explicit post-source serializer fault.
+        return real_encoder(value, **options)
+
+    with ExitStack() as stack:
+        stack.enter_context(patch.object(socket.socket, 'connect', side_effect=AssertionError('network forbidden')))
+        stack.enter_context(patch.object(socket.socket, 'connect_ex', side_effect=AssertionError('network forbidden')))
+        stack.enter_context(patch.object(asyncio.BaseEventLoop, 'create_task', create))
+        stack.enter_context(patch.object(asyncio.BaseEventLoop, 'close', loop_close))
+        stack.enter_context(patch.object(worker.Worker, 'close', close))
+        stack.enter_context(patch.object(protocol, 'encode_frame', encoder))
+        if items:
+            stack.enter_context(f.install_factory(items))
+        if mode.startswith('fatal_'):
+            # Shared encoder control, not source/startup authentication.
+            code, text = f.AUTH_CASES[mode.replace('fatal_', 'auth_', 1)][:2]
+            wrapped = ConnectionEngine._auth_required('private', f.sdk_error(code, text), False)
+            worker._fatal(wrapped, worker._raw_output(None))
+            result = 2
+        elif mode == 'store':
+            options = worker.load_inventory(root / 'worker.json')
+            options['accounts'] = [worker.WorkerAccount(aid, item.config, session_store=item.store)
                                    for aid, item in items.items()]
-            return serve(**options)
-        return main(['--config', str(root / 'worker.json')])
+            result = worker.serve(**options)
+        else:
+            result = worker.main(['--config', str(root / 'worker.json')])
+    trace('clients_final', [dict(account=item.actual, closed=c._sender.closed,
+          disconnect_attempts=c._sender.close_calls) for item in items.values() for c in item.clients])
+    trace('restored', all(signal.getsignal(s) == h for s, h in old_handlers.items())
+          and logging.root.manager.disable == old_logging)
+    return result
 
 
 def request(ident=1, account=111, operation='read_batch', **params):
@@ -93,10 +173,11 @@ def request(ident=1, account=111, operation='read_batch', **params):
 
 class Process:
     def __init__(self, root, scenario='normal', stock=False):
+        global PROCESS_COUNT
+        PROCESS_COUNT += 1
         self.root, self.buffer = root, bytearray()
-        command = [sys.executable, '-m', 'tgdata.worker', '--config', str(root / 'worker.json')] \
-            if stock else [sys.executable, '-m', 'tgdata.smoke_tests.test_38_worker_process',
-                           '--child', str(root), scenario]
+        command = [sys.executable, '-m', 'tgdata.smoke_tests.test_38_worker_process',
+                   '--child', str(root), scenario, str(int(stock))]
         self.p = subprocess.Popen(command, cwd=str(ROOT), stdin=subprocess.PIPE,
                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=0)
         self.stderr = b''
@@ -140,9 +221,19 @@ class Process:
         assert self.p.wait(timeout=timeout) == code, 'unexpected worker exit code'
         self.stderr += self.p.stderr.read()
         assert not self.stderr, self.stderr.decode(errors='replace')
+        rows = self.observations()
+        assert ['restored', True] in rows
+        assert all(row[1]['pending'] == 0 and row[1]['closed'] for row in rows if row[0] == 'loop')
+        assert f.SECRET.encode() not in self.buffer
 
     def trace(self):
-        path = self.root / 'trace.jsonl'
+        return self._rows('trace.jsonl')
+
+    def observations(self):
+        return self.trace() + self._rows('evidence.jsonl')
+
+    def _rows(self, name):
+        path = self.root / name
         if not path.exists():
             return []
         data = path.read_bytes()
@@ -150,7 +241,7 @@ class Process:
 
     def until(self, predicate, timeout=15):
         deadline = time.monotonic() + timeout
-        while not predicate(self.trace()):
+        while not predicate(self.observations()):
             assert self.p.poll() is None and time.monotonic() < deadline, 'trace timed out'
             time.sleep(.01)
 
@@ -193,6 +284,11 @@ def test_stock_empty_inventory_ready_eof_and_module_help():
         assert ready['limits']['request_bytes'] == 16384 and not p.trace()
         p.eof()
         p.wait()
+        module = subprocess.run([sys.executable, '-m', 'tgdata.worker', '--config',
+                                 str(p.root / 'worker.json')], cwd=str(ROOT), input=b'',
+                                capture_output=True, timeout=15)
+        assert module.returncode == 0 and not module.stderr
+        assert json.loads(module.stdout)['account_count'] == 0
     help_run = subprocess.run([sys.executable, '-m', 'tgdata.worker', '--help'],
                               cwd=str(ROOT), capture_output=True, timeout=15)
     assert help_run.returncode == 0 and b'--config' in help_run.stdout and not help_run.stderr
@@ -336,15 +432,33 @@ def test_session_store_bootstrap_does_not_create_session_files():
 
 
 def test_cleanup_failure_keeps_result_then_exits_without_successor():
-    with setup('cleanup_failure') as (p, budget, join):
-        p.line()
-        p.send(request() + request(2, 222))
-        p.eof()
-        value, _ = p.result()
-        assert value['ok'] and value['worker_stopping'] and len(value['data']['messages']) == 2
-        p.wait(3)
-        assert budget.status(111).used == 2 and budget.status(222).used == 0
-        assert [row for row in p.trace() if row[0] == 'client'] == [['client', 111]]
+    for mode in ('cleanup_failure', 'body_cleanup', 'setup_cleanup',
+                 'internal_cleanup_cancel', 'partial_cleanup'):
+        with setup(mode) as (p, budget, join):
+            p.line()
+            first = request(group_id='@room', after_id='100', limit=200) \
+                if mode == 'partial_cleanup' else request()
+            p.send(first + request(2, 222))
+            p.eof()
+            value, _ = p.result()
+            assert value['worker_stopping']
+            assert value['ok'] is (mode in ('cleanup_failure', 'internal_cleanup_cancel'))
+            if value['ok']:
+                assert len(value['data']['messages']) == 2
+            if mode == 'body_cleanup':
+                assert value['error']['type'] == 'ChannelPrivateError'
+            if mode == 'setup_cleanup':
+                assert value['error']['type'] == 'LookupError'
+            if mode == 'partial_cleanup':
+                assert value['error']['wait_seconds'] == 7200
+                assert len(MessageBatch(value['partial_result']).messages) == 100
+            p.wait(3)
+            final = next(row[1] for row in p.observations() if row[0] == 'clients_final')
+            assert len(final) == 1 and final[0]['disconnect_attempts'] == 1 and not final[0]['closed']
+            assert budget.status(111).used == (0 if mode == 'setup_cleanup' else
+                                             200 if mode == 'partial_cleanup' else 2)
+            assert budget.status(222).used == join.status(111).used == 0
+            assert [row for row in p.trace() if row[0] == 'client'] == [['client', 111]]
 
 
 def test_broken_stdout_stops_without_retry_flush_or_next_job():
@@ -387,21 +501,124 @@ def test_signal_under_output_pressure_does_not_need_reader_drain():
 
 def test_repeated_active_signals_wait_for_native_cleanup():
     for sig in (signal.SIGINT, signal.SIGTERM):
-        with setup('held') as (p, budget, join):
+        lifecycle('held', sig)
+
+
+def lifecycle(mode, sig):
+    with setup(mode + ':' + str(int(sig))) as (p, budget, join):
+        assert p.line()['kind'] == 'ready'
+        p.send(request() + (b'' if mode == 'finalize' else request(2, 222)))
+        if mode == 'finalize':
+            assert p.result()[0]['ok']
+            p.eof()
+            p.until(lambda rows: ['finalize', 'entered'] in rows)
+        elif mode not in ('before_task', 'publication'):
+            p.until(lambda rows: ['request', 'GetHistoryRequest'] in rows and
+                    any(r[0] == 'select' and r[1] is not None and r[1] > 1 for r in rows))
+        cancel_signal = signal.SIGUSR2 if mode == 'caller_cancel' else sig
+        if mode not in ('before_task', 'publication'):
+            p.p.send_signal(cancel_signal)
+        if mode in ('held', 'finalize', 'caller_cancel'):
+            if mode != 'finalize':
+                p.until(lambda rows: ['cleanup', 'entered'] in rows)
+            p.p.send_signal(cancel_signal)
+            time.sleep(.15)  # Parent observation only; no child polling timer.
+            assert p.p.poll() is None
+            assert ['finalize' if mode == 'finalize' else 'cleanup', 'finished'] not in p.observations()
+            p.p.send_signal(signal.SIGUSR1)  # Explicit release of the held SDK/event boundary.
+        p.wait(3 if mode == 'caller_cancel' else 128 + sig, timeout=5)
+        rows = p.observations()
+        expected = 0 if mode in ('before_task', 'publication') else 1
+        assert len([r for r in rows if r[0] == 'client']) == expected
+        assert budget.status(111).used == 2 * expected
+        assert budget.status(222).used == join.status(111).used == 0
+        assert rows.count(['cleanup', 'finished']) == expected
+        assert ['finalize', 'finished'] in rows
+        assert not p.p.stdout.read()  # Interrupted jobs never become success replies.
+
+
+def test_active_signal_wakes_quiet_selector():
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        lifecycle('quiet', sig)
+
+
+def test_stop_before_task_creation_never_starts_source():
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        lifecycle('before_task', sig)
+
+
+def test_stop_before_task_publication_never_starts_source():
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        lifecycle('publication', sig)
+
+
+def test_repeated_signals_during_finalization_preserve_cleanup():
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        lifecycle('finalize', sig)
+
+
+def test_repeated_direct_cancellation_waits_for_native_cleanup():
+    lifecycle('caller_cancel', signal.SIGTERM)
+
+
+def authentication_cases(operation):
+    for mode in f.AUTH_CASES:
+        with setup(mode) as (p, budget, join):
             p.line()
-            p.send(request() + request(2, 222))
-            p.until(lambda rows: ['request', 'GetHistoryRequest'] in rows)
-            assert budget.status(111).used == 2
-            p.p.send_signal(sig)
-            p.until(lambda rows: ['cleanup', 'entered'] in rows)
-            p.p.send_signal(sig)
-            time.sleep(.1)
-            assert p.p.poll() is None and ['cleanup', 'finished'] not in p.trace()
-            (p.root / 'release').touch()
-            p.wait(128 + sig)
-            assert p.trace().count(['cleanup', 'finished']) == 1
-            assert budget.status(111).used == 2 and budget.status(222).used == 0
-            assert not p.p.stdout.read()  # Cancellation is not a success reply.
+            p.send(request(operation=operation))
+            p.eof()
+            value, events = p.result()
+            assert not value['ok'] and not events
+            f.assert_auth_error(value['error'], mode)
+            p.wait()
+            rows = p.trace()
+            assert rows.count(['cleanup', 'finished']) == 1
+            f.assert_auth_source_free([r[1] for r in rows if r[0] == 'request'])
+            assert budget.status(111).used == join.status(111).used == 0
+
+
+def test_sdk_authentication_read_batch():
+    authentication_cases('read_batch')
+
+
+def test_sdk_authentication_lookup_group():
+    authentication_cases('lookup_group')
+
+
+def test_sdk_authentication_check_group_access():
+    authentication_cases('check_group_access')
+
+
+def test_sdk_authentication_join_group():
+    authentication_cases('join_group')
+
+
+def test_delivery_failure_omits_unknown_authentication_text():
+    with setup('delivery_projection') as (p, budget, join):
+        p.line()
+        p.send(request() + request(2, 222))
+        p.eof()
+        value, events = p.result()
+        assert value['partial_omitted'] and value['worker_stopping'] and not events
+        assert value['error']['code'] == 'delivery_failed'
+        f.assert_auth_error(value['source_error'], 'auth_unknown401')
+        p.wait(3)
+        assert p.trace().count(['cleanup', 'finished']) == 1
+        f.assert_auth_source_free([r[1] for r in p.trace() if r[0] == 'request'])
+        assert budget.status(111).used == budget.status(222).used == join.status(111).used == 0
+
+
+def test_fatal_authentication_projection():
+    for mode in ('fatal_unknown401', 'fatal_unknown406', 'fatal_unregistered', 'fatal_banned'):
+        with setup(mode, stock=True) as (p, budget, join):
+            value = p.line()
+            assert value['kind'] == 'fatal' and value['worker_stopping']
+            assert value['error']['category'] == 'configuration_error'
+            detail = dict(value['error'], category='authentication_required')
+            f.assert_auth_error(detail, mode.replace('fatal_', 'auth_', 1))
+            p.wait(2)
+            assert not p.trace()
+            assert budget.status(111).used == budget.status(222).used == join.status(111).used == 0
 
 
 def main():
@@ -417,10 +634,11 @@ def main():
             print('FAIL', test.__name__, flush=True)
             results.append(False)
     print('Passed: {}/{}'.format(sum(results), len(results)), flush=True)
+    print('Controlled worker subprocesses:', PROCESS_COUNT, flush=True)
     return 0 if all(results) else 1
 
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == '--child':
-        raise SystemExit(child(sys.argv[2], sys.argv[3]))
+        raise SystemExit(child(sys.argv[2], sys.argv[3], bool(int(sys.argv[4]))))
     raise SystemExit(main())

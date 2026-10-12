@@ -176,6 +176,13 @@ raw exception messages, reprs or tracebacks. Categories include `worker_error`,
 `group_error`, `configuration_error` and `telegram_error`. Local refusal codes
 include `unknown_account`, `unknown_operation`, `stale_request_id`,
 `invalid_parameters` and `join_disabled`. Treat unknown categories/types as errors.
+Authentication errors retain boolean `first_login` and `banned` flags. A `reason`
+appears only for a recognized SDK authentication code, such as `SESSION_REVOKED`
+or `AUTH_KEY_UNREGISTERED`, or an existing banned-account code. Unknown Telegram
+text is omitted even when it looks like a code. The same rule applies to terminal
+errors, `delivery_failed.source_error` and fatal diagnostics. Ordinary library
+`AuthRequiredError.reason` values are unchanged.
+
 Successful message/group data and intended health labels still contain application
 data: this sanitization does not make protocol output public or suitable for logs.
 
@@ -206,9 +213,12 @@ successful disconnect, nor does it overwrite a completed read or join outcome.
 | Invalid startup | Safe `fatal` frame when possible; exit 2 |
 | Cleanup failure or result serialization/size failure | Preserve known outcome when possible, stop, exit 3 |
 | Broken/failed stdout | Stop immediately, no second output channel/retry, exit 3 |
-| SIGINT / SIGTERM | Cancel active work once, await owned cleanup, exit 130 / 143 |
+| SIGINT / SIGTERM | Freeze admission, cancel active work once, await owned cleanup, exit 130 / 143 for the first signal |
 
-Repeated stop signals do not abandon an in-progress cleanup waiter. Idle input or
+The first stop signal wakes an idle event loop even while a Telegram request is
+waiting without network activity. A stop received before a submitted job starts
+prevents that job from opening a client. Repeated signals preserve the first exit
+reason and do not abandon client cleanup or final process cleanup. Idle input or
 blocked output can be interrupted without waiting for stdin EOF or stdout drain.
 Output uses the raw binary stream, leaving no protocol bytes for Python to retry
 flushing during interpreter exit. There is no graceful-shutdown time limit:
@@ -259,6 +269,9 @@ to its `.raw` stream. Do not add another buffering writer or print to protocol s
 Worker CLI logging is disabled; sanitized protocol diagnostics are authoritative.
 
 Offline suites37/38 use actual Telethon, SQLite, native disconnect tasks and real
-process pipes with synthetic transport and blocked sockets. They cover all verbs,
-ownership, charges, partial results, exact IDs, cleanup and process failures. This
-is not live qualification or evidence that two machines may share a session safely.
+process pipes with synthetic transport and blocked sockets. Their 33 and 25 test
+groups cover all verbs, ownership, charges, partial results, exact IDs, SDK-decoded
+authentication errors, quiet request cancellation, stops around job creation,
+retained cleanup and process failures. Held cleanup is released explicitly by the
+test parent; no child polling timer supplies progress. This is not live qualification
+or evidence that two machines may share a session safely.

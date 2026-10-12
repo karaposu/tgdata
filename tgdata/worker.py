@@ -128,15 +128,24 @@ def serve(accounts, *, worker_id, read_budget, join_budget=None,
     handlers = {}
     stopping_signal = None
     code = 0
+    creating = finalizing = False
 
     def stop(signum, frame):
         nonlocal stopping_signal
         if stopping_signal is not None:
             return
         stopping_signal = signum
+        if worker is not None:
+            worker.stopping = True
+        if creating or finalizing:
+            # Retain ownership while publishing a task or settling cleanup.
+            if loop is not None and not loop.is_closed():
+                loop.call_soon_threadsafe(lambda: None)
+            return
         if active is not None and not active.done():
-            # Do not interrupt a retained cleanup waiter with repeated cancels.
             active.cancel()
+            # Cancellation alone does not wake a selector inside a signal handler.
+            loop.call_soon_threadsafe(lambda: None)
         else:
             raise _Stop()
 
@@ -164,7 +173,14 @@ def serve(accounts, *, worker_id, read_budget, join_budget=None,
                     code = 2
                     break
                 continue
-            active = loop.create_task(worker.execute(job))
+            creating = True
+            try:
+                active = loop.create_task(worker.execute(job))
+            finally:
+                creating = False
+            if stopping_signal is not None:
+                # A stop during creation must win before the task's first turn.
+                active.cancel()
             try:
                 frames = loop.run_until_complete(active)
             except asyncio.CancelledError:
@@ -189,6 +205,9 @@ def serve(accounts, *, worker_id, read_budget, join_budget=None,
         code = 2 if worker is None else 3
         _fatal(error, output, 'configuration_error' if worker is None else 'worker_error')
     finally:
+        finalizing = True
+        if worker is not None:
+            worker.stopping = True
         if loop is not None:
             try:
                 if active is not None and not active.done():

@@ -2,6 +2,7 @@
 import asyncio
 from datetime import timedelta
 import inspect
+import io
 import json
 import logging
 from pathlib import Path
@@ -15,9 +16,10 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from telethon import errors, functions, types
 from telethon.crypto import AuthKey
+from telethon.extensions import BinaryReader
 from telethon._updates import SessionState
 from tgdata import MessageBatch, ReadBudget, JoinBudget
-from tgdata.connection_engine import ConnectionEngine
+from tgdata.connection_engine import AuthRequiredError, ConnectionEngine
 from tgdata.worker_engine import Worker, WorkerAccount
 from tgdata import worker_protocol as protocol
 from tgdata.smoke_tests import test_32_account_operation as f
@@ -25,6 +27,42 @@ from tgdata.smoke_tests import test_19_message_batches as b
 
 SECRET = 'WORKER_PRIVATE_TEXT_MUST_NOT_ESCAPE'
 CHAT = -1000000000007
+AUTH_CASES = {
+    'auth_unknown401': (401, SECRET, None),
+    'auth_unknown406': (406, SECRET, None),
+    'auth_generic403': (403, SECRET, None),
+    'auth_unregistered': (401, 'AUTH_KEY_UNREGISTERED', 'AUTH_KEY_UNREGISTERED'),
+    'auth_revoked': (401, 'SESSION_REVOKED', 'SESSION_REVOKED'),
+    'auth_banned': (401, 'USER_DEACTIVATED_BAN', 'USER_DEACTIVATED_BAN'),
+}
+
+
+def sdk_error(code, text):
+    """Decode actual TL error bytes through the pinned SDK's error mapping."""
+    with BinaryReader(bytes(types.RpcError(code, text))) as reader:
+        decoded = reader.tgread_object()
+    return errors.rpc_message_to_error(decoded,
+        functions.users.GetUsersRequest([types.InputUserSelf()]))
+
+
+def assert_auth_error(detail, mode):
+    code, text, reason = AUTH_CASES[mode]
+    assert detail.get('reason') == reason
+    assert SECRET not in json.dumps(detail)
+    if code == 403:
+        assert detail['category'] == 'telegram_error' and detail['code'] == 403
+        assert detail['type'] == 'ForbiddenError'
+    else:
+        assert detail['category'] == 'authentication_required'
+        assert detail['type'] == 'AuthRequiredError'
+        assert detail['first_login'] is False
+        assert detail['banned'] is (mode == 'auth_banned')
+
+
+def assert_auth_source_free(calls):
+    assert not set(calls).intersection(('GetHistoryRequest', 'GetChannelsRequest',
+        'CheckChatInviteRequest', 'JoinChannelRequest', 'ImportChatInviteRequest',
+        'ResolveUsernameRequest', 'SendCodeRequest', 'SignInRequest'))
 
 
 def fixture(root, aid):
@@ -296,6 +334,105 @@ async def test_unknown_rpc_text_and_metadata_fault_do_not_escape():
         result, _ = await s.call('lookup_group')
         assert result['error']['type'] == 'BadMetadata' and result['partial_result'] is None
         assert not s.worker.stopping
+
+
+async def authentication_cases(operation):
+    for mode, (code, text, reason) in AUTH_CASES.items():
+        async with Setup() as s:
+            s.items[111].scripts['GetUsersRequest'] = [sdk_error(code, text)]
+            result, events = await s.call(operation)
+            assert not result['ok'] and not events and not s.worker.stopping
+            assert_auth_error(result['error'], mode)
+            sender = s.items[111].clients[-1]._sender
+            assert sender.closed and sender.close_calls == 1
+            assert_auth_source_free(sender.calls)
+            assert s.budget.status(111).used == s.join.status(111).used == 0
+            assert not s.items[222].clients
+
+
+async def test_sdk_authentication_read_batch():
+    await authentication_cases('read_batch')
+
+
+async def test_sdk_authentication_lookup_group():
+    await authentication_cases('lookup_group')
+
+
+async def test_sdk_authentication_check_group_access():
+    await authentication_cases('check_group_access')
+
+
+async def test_sdk_authentication_join_group():
+    await authentication_cases('join_group')
+
+
+async def test_library_authentication_reason_is_unchanged():
+    for mode, (code, text, reason) in AUTH_CASES.items():
+        if code == 403:
+            continue
+        wrapped = ConnectionEngine._auth_required('private-session', sdk_error(code, text), False)
+        assert wrapped.reason == text  # Ordinary library callers still receive the SDK reason.
+        assert_auth_error(protocol.describe_error(wrapped), mode)
+
+
+async def test_authentication_metadata_faults_are_omitted():
+    class BadMetadata(AuthRequiredError):
+        def __getattribute__(self, name):
+            if name in ('reason', 'banned', 'first_login'):
+                raise asyncio.CancelledError(SECRET)
+            return super().__getattribute__(name)
+    class BadString(str):
+        def __hash__(self):
+            raise AssertionError('Untrusted reason was hashed')
+    for error in (BadMetadata(SECRET),
+                  AuthRequiredError(SECRET, reason=BadString('SESSION_REVOKED'),
+                                    banned=1, first_login=0)):
+        assert protocol.describe_error(error) == {
+            'category': 'authentication_required', 'type': type(error).__name__}
+    assert asyncio.current_task().cancelling() == 0
+
+
+async def test_authentication_delivery_failure_uses_same_projection():
+    original = protocol.encode_frame
+    def fail_terminal(value, **options):
+        if value.get('kind') == 'result' and value.get('error', {}).get('category') in (
+                'authentication_required', 'telegram_error'):
+            raise protocol.WorkerError('delivery_failed')  # After the actual source error/cleanup.
+        return original(value, **options)
+    for mode, (code, text, reason) in AUTH_CASES.items():
+        async with Setup() as s:
+            s.items[111].scripts['GetUsersRequest'] = [sdk_error(code, text)]
+            with patch.object(protocol, 'encode_frame', fail_terminal):
+                result, events = await s.call()
+            assert result['error']['code'] == 'delivery_failed' and not events
+            assert result['partial_omitted'] and result['worker_stopping']
+            assert result['source_outcome'] == 'raised'
+            assert_auth_error(result['source_error'], mode)
+            sender = s.items[111].clients[-1]._sender
+            assert sender.closed and sender.close_calls == 1
+            assert_auth_source_free(sender.calls)
+            assert s.budget.status(111).used == s.join.status(111).used == 0
+            assert (await expect(protocol.WorkerError,
+                s.worker.execute(s.job(account=222)))).code == 'worker_stopping'
+            assert not s.items[222].clients
+
+
+async def test_fatal_authentication_uses_same_projection():
+    from tgdata.worker import _fatal
+    for mode, (code, text, reason) in AUTH_CASES.items():
+        if code == 403:
+            continue
+        # Shared fatal encoder control, not a claim that startup authenticates.
+        error = ConnectionEngine._auth_required('private-session', sdk_error(code, text), False)
+        output = io.BytesIO()
+        _fatal(error, output)
+        raw = output.getvalue()
+        assert SECRET.encode() not in raw
+        frame = json.loads(raw)
+        assert frame['kind'] == 'fatal' and frame['worker_stopping']
+        assert frame['error']['category'] == 'configuration_error'
+        detail = dict(frame['error'], category='authentication_required')
+        assert_auth_error(detail, mode)
 
 
 async def test_missing_authentication_never_requests_code():
