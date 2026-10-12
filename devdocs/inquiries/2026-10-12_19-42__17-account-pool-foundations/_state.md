@@ -5,7 +5,7 @@ articulated-surfacing-routed
 A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
-- [ ] Surfacing
+- [x] Surfacing
 - [ ] Sensemaking
 - [ ] Decomposition
 - [ ] Innovation
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Surfacing
+Sensemaking
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -84,6 +84,8 @@ Surfacing
 - 2026-10-12_20-44: Iteration2 evaluated. Same architectural regions; clarify local drain
   during active work/close, then confirm the complete contract. Six outputs renamed
   *_iter2.md, original framing/index retained. Next: Surfacing3.
+
+- 2026-10-12_20-45: Surfacing3 complete: four core anchors, two cycles; manual10/10 PASS (checker unavailable). Next: Sensemaking.
 
 ## Iteration 2 focus
 
