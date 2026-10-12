@@ -1,0 +1,16 @@
+fatal: path 'tgdata/group_join.py' does not exist in '68f6bbd'
+PASS exact13 product paths; product unchanged since 6ee146c
+PASS10 warmth/pipeline/base ancestry checks
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-10-reading-jobs/devdocs/work/10-reading-jobs/probes/merge_fidelity.py", line 38, in <module>
+    assert git('show', BASE + ':' + path) == (ROOT / path).read_bytes()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-10-reading-jobs/devdocs/work/10-reading-jobs/probes/merge_fidelity.py", line 15, in git
+    return subprocess.check_output(['git', *args], cwd=str(ROOT))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', 'show', '68f6bbd:tgdata/group_join.py']' returned non-zero exit status 128.

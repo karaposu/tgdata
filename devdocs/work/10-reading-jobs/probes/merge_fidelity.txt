@@ -1,0 +1,7 @@
+PASS exact13 product paths; product unchanged since 6ee146c
+PASS10 warmth/pipeline/base ancestry checks
+PASS11 source, allowance, ownership and progress foundations byte-identical to dev
+PASS default BatchEngine get_entity/dialog fallback AST unchanged
+Inventory signature: (account_id: int, config_path: str, session_store: object = None, label: str = None) -> None
+NOTE optional store/label accept positional arguments; planned keyword-only restriction absent
+PASS complete branch whitespace
