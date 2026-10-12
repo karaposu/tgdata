@@ -8,7 +8,7 @@ A → Su → S → D → I → C → R (always)
 - [x] Surfacing
 - [x] Sensemaking
 - [x] Decomposition
-- [ ] Innovation
+- [x] Innovation
 - [ ] Critique
 - [ ] Routelister
 ## Iteration
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Innovation
+Critique
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -90,6 +90,8 @@ Innovation
 - 2026-10-12_20-47: Sensemaking3 complete: two real-source/close comparisons distinguish access rules; SV1–SV6, all inherited groups re-tested; manual10/10 PASS. Next: Decomposition.
 
 - 2026-10-12_20-49: Decomposition3 complete: one atomic access question, four explicit interfaces, all seven quality checks PASS. Next: Innovation.
+
+- 2026-10-12_20-50: Innovation3 complete: full seven mechanisms, G/F/C variants; local access survives, wait-for-idle killed; manual12/12 PASS. Next: Critique.
 
 ## Iteration 2 focus
 
