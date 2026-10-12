@@ -9,14 +9,14 @@ A → Su → S → D → I → C → R (always)
 - [x] Sensemaking
 - [x] Decomposition
 - [x] Innovation
-- [ ] Critique
+- [x] Critique
 - [ ] Routelister
 ## Iteration
 2
 ## Status
 ACTIVE
 ## Next Discipline
-Critique
+Routelister
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -71,6 +71,11 @@ Critique
 - 2026-10-12_20-39: Innovation2 complete. Seven mechanisms, nine variants, three tested
   shape inversions; preferred small drain/capture/control contract answers D6.
   Alternatives and compatibility costs explicit; manual12/12 PASS. Next: Critique2.
+
+- 2026-10-12_20-42: Critique2 complete. Same eight dimensions; nine candidates. Core/role
+  diagnosis survives; passive drain busy-refusal creates needless error precedence
+  risk. REFINE only that access rule. First stable-region continuation; manual10/10
+  PASS. Next: Routelister2, then focused confirmation iteration.
 
 ## Iteration 2 focus
 
