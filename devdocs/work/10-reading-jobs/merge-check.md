@@ -2,112 +2,116 @@
 model: gpt-6-astra
 effort: max
 ---
-# Merge check — #10 reading worker
+# Renewed merge check — #10, revision 4
 
-**Fidelity gate: PASS — proceed to PR and fresh PR critique.**
-2026-10-12. Reviewed product `6ee146c`, branch snapshot `77734d7`, against freshly
+**Fidelity gate: PASS — proceed to fresh PR critique on PR27.**
+2026-10-12. Product `d32abcd`; reviewed branch snapshot `0c0144d` against freshly
 fetched dev `68f6bbda33aeb1963b96b3c719d8f23938fa4449`. Dev has not moved.
-This is the plan/diff check required by CONTRIBUTING7.1, not a soundness verdict
-or merge authorization. The user now explicitly requested PR publication/review.
+This checks plan/diff fidelity under CONTRIBUTING7.1. It is not a soundness verdict
+or permission to merge. Original merge check85c0455 is preserved as `merge-check_r1.md`.
 
-## Warmth, weight and model
+## Warmth, weight and §9
 
-Same session as implementation and #17 review. Re-read the full changed product
-files, revision2 plan, desc, triage, selected planning findings and retained
-verification; refreshed relevant factory/owned operation/health/batch interfaces.
-The warmed base and all10 checked pipeline checkpoints are branch ancestors.
-No subagent review. Feature-heavy triage matches issue labels enhancement/heavy.
+Same warmed session; no subagent. Read full current plan, desc, triage, current
+planning critic, prior planning/PR findings, all worker modules/tests and relevant
+owned-operation, resolver, batch and cleanup implementations. Inspected the complete
+13-file product diff, public contract/example and committed verification evidence.
 
-**§9 checked:** current turn metadata at `2026-10-12T05:32:12.915Z` records
-`gpt-6-astra`, effort `max`; this meets the feature gate's Astra/xhigh requirement.
-This is observed metadata, not a guessed model name or an unresolved user question.
+Feature-heavy triage matches issue10's `enhancement` / `heavy` labels. The declared
+warm base and all21 checked pipeline/base checkpoints are ancestors of this branch.
+Current-turn metadata at2026-10-12T12:22:23.561Z records **gpt-6-astra / max**, meeting
+§9's feature requirement. No unverified model/effort question remains.
 
-## Diff against the surfaced work
+## Surfaced scope and complete diff
 
-Exactly13 product files changed. `worker_protocol.py`, `worker_engine.py` and
-`worker.py` implement the protocol/inventory/source/process surfaces. Three existing
-files carry narrow private seams: account_operation, connection_engine and
-batch_engine. Setup adds a console entry point. Two smoke suites, their README,
-public README/docs/worker and the caller example complete the product.
+Exactly13 product paths differ from dev: three worker modules; three narrow shared
+seams (account_operation, connection_engine and batch_engine); setup entry point;
+two smoke suites and their README; public README, worker guide and caller example.
+These all lie in triage's account/source/process/protocol/packaging/test/docs scope.
+No additional runtime surface or reweighting is required.
 
-All lie in triage's process/source/ownership/packaging/test/docs territory. No
-unrelated product path, duncan, session file, policy database or original checkout
-edit is included. Eleven existing facade/health/group/allowance/session/batch/progress
-modules are byte-identical to dev. No code from #17's unmerged pool is present.
-Product paths are unchanged since implementation commit `6ee146c`.
+Revision4 changes six of those files: worker.py, worker_protocol.py, both worker
+suites, the guide and smoke README. Eleven facade/health/group/ledger/session/batch/
+progress modules remain byte-identical to dev. Nine other prebuild-fingerprinted
+runtime files, including the executor and shared seams, remain unchanged from the
+original product6ee146c. No #17 code, new schema, queue or transport was introduced.
+Original checkout/untracked files, duncan, real sessions and policy stores are outside
+the diff. Work-folder records remain separate from both product commits.
 
 ## Plan fidelity and deviations
 
-1. **Protocol:** four allowlisted verbs, finite versioned frames, canonical IDs,
-   fixed parameter validation, increasing consumed IDs and sanitized errors exist.
-   Batch documents remain unchanged; health/group/error identifiers are projected.
-2. **Source:** existing expected-account/health contexts wrap reads and group APIs.
-   The new optional BatchEngine resolver is worker-specific. Private cleanup
-   failure receipt is recorded before logging/caller cancellation and stops admission.
-3. **Process:** one loop/job/output writer; source-free ready; existing ledger
-   policy checks; raw stdout; EOF/error/signal handling; module/console entry points.
-4. **Qualification:** actual SDK/SQLite and subprocess test groups implement the
-   planned histories. Existing smoke tests remain intact. Coverage is evidence for
-   the cases exercised, not proof that the subsequent critic can find no gap.
-5. **Public docs/example:** manifest and four request forms, exact IDs, partial
-   batches, uncertain completion, stores, limits and exit behavior are documented.
-6. **Verification:** retained24-suite result612 actual passes/3 live skips,
-   compile/3.7 grammar and isolated installed module/console/demo qualification.
-7. **Commits:** product6ee146c is separate from work/evidence6c60832 and archived
-   whitespace77734d7. Issue status is backed by those committed artifacts.
+1. **Prebuild before integration:** frozen candidates2cc9995 and full PASS95acfc3
+   precede productd32abcd in ancestry.82 groups /67 controlled subprocesses qualified
+   the complete combined matrix. The earlier22 targeted histories were not used as
+   a substitute. The initial harness bookkeeping correction is retained separately.
+2. **Stop policy:** first signal freezes admission, immediately cancels active work
+   and wakes its loop. Small private creation/finalization flags preserve ownership
+   and existing cleanup settlement; a cancelled publication cannot enter source work.
+   Repeated signals retain the first reason. Raw synchronous I/O and final task
+   settlement remain. Integrated `serve` matches the frozen candidate AST.
+3. **Diagnostic publication:** the frozen20-name canonical authentication set and
+   `describe_error` match the tested candidate. Unknown text is omitted, valid flags
+   retained, and terminal/delivery/fatal paths share the projector. Ordinary library
+   error construction and health naming remain unchanged.
+4. **Permanent regressions:** all39 original groups remain, expanded to58. Process
+   coverage removes the child polling helper and uses explicit parent release;
+   actual SDK/loop/pipe/ledger behavior remains under test. Test code has no Git,
+   work-folder dependency or candidate source reconstruction. Negative controls
+   demonstrate both original defects fail permanent regressions on rejected code.
+5. **Contract and verification:** public docs match first-stop, diagnostics, bounds,
+   exclusive sessions, lost-reply and no-retry semantics. README/example remain
+   consistent. Exact product hashes match631 actual passes /3 live skips across24
+   suites, compile/3.7 grammar, isolated wheel/entrypoints and examples.
+6. **Delivery:** productd32abcd and evidence0c0144d are separate and pushed. Issue5
+   accurately records completion while renewed gates6/7 remain unchecked at entry.
 
-Named implementation refinements: 8 KiB per collected health event; count all
-discarded unpublished events on encoding failure; cancel/gather remaining owned-loop
-tasks after failed native disconnect. All are disclosed in the product commit and
-implementation.md and complete the plan's existing bounds/teardown responsibilities.
-The offline caller demo deliberately uses no accounts and proves ready/refusal/EOF;
-source proof is in the SDK tests. Reference-only media was already the selected scope.
+No architectural deviation. Permanent tests group repeated histories by operation
+and lifecycle, so58 groups are not presented as82 prebuild groups. The process suite
+still executes67 controlled worker children. Revision4 explicitly accepts the trusted
+WorkerAccount optional positional arguments noted in the first merge check; that
+previous signature discrepancy is resolved in the plan, without an unnecessary API
+change. Earlier event-size/drop-count/remaining-task refinements remain documented.
 
-One small unrecorded signature drift: the dataclass WorkerAccount accepts optional
-session_store/label positionally, whereas the plan sketched them keyword-only.
-The documented keyword calls work and validation/ownership semantics are unchanged;
-this broadens the trusted constructor's accepted calling form. Record it here rather
-than silently claiming an exact signature match. It is not a reason to introduce a
-new constructor solely for formatting fidelity in this review pass.
+The plan still describes this implementation: explicit accounts, temporary verified
+clients, bounded group resolution, existing allowance/health ownership and one caller-
+managed process. It does not shift scheduling, cursors or uncertain-join recovery into
+tgdata. No open offline planning blocker or unclosed fidelity condition found.
 
-The plan's architecture still describes the implementation: explicit accounts,
-temporary verified clients, existing policies and caller-owned scheduling/delivery.
-No structural deviation or unclosed planning blocker found by this fidelity pass.
+## Findings accounted for
 
-## Every planning finding
+- Original planning Risk1 (Medium), broad legacy discovery: worker resolver uses
+  accepted strict group parsing/resolution and checks canonical identity. Ordinary
+  BatchEngine get_entity/dialog fallback AST is unchanged from dev.
+- Original planning Risk2 (Medium), buffered final flush: raw write-all remains,
+  with no teardown output retry; retained real-pipe tests cover broken and undrained
+  output under both stop signals.
+- Original PR Risk1 (Medium), quiet selector not woken: first-stop cancellation plus
+  public loop wake and task/finalization ownership integrated exactly as qualified;
+  permanent quiet/held/publication/finalization/repeated-cancellation tests cover it.
+- Original PR Risk2 (Medium), raw authentication text: recognized-name projection
+  and actual SDK decoding cover all four verbs and secondary projections. Library
+  raw-reason controls establish that its intentional behavior is unchanged.
+- Revision3 planning critic found zero additional risks and required the combined
+  prebuild. Its PASS is committed before integration. No Low finding was left aside.
 
-- **Risk1 / Medium — unbounded legacy resolution:** worker `_read` uses merged
-  group parsing/resolution and a checked InputPeer, refusing absent peers without
-  scanning dialogs. BatchEngine's default get_entity/dialog-fallback AST is identical
-  to dev. Original prebuild7 source histories and current test37 cover bounded worker
-  reads/refusals, wrong ownership, partial wait and canonical ID matching.
-- **Risk2 / Medium — buffered output survives stop:** CLI unwraps raw output and
-  uses write-all without teardown flush. Actual test38 exercises broken-reader exit3
-  and SIGINT/SIGTERM under backpressure without draining the still-open output pipe.
-- No High or Low planning findings remain to account for. Both selected robust
-  remedies were folded after the required prebuild passed, before runtime edits.
+These statements establish correspondence and evidence, not immunity to a fresh
+soundness finding. The next critic must attack the whole product and plan anew.
 
-## Evidence reviewed and refreshed
+## Evidence and issue truth
 
-`probes/merge_fidelity.py` records13 product paths,10 ancestry checks,11 unchanged
-foundations and an unchanged default BatchEngine resolution AST. A probe-only wrong
-module name was corrected from group_join to the actual join_client; its initial
-failure is retained in merge_fidelity-fixture.txt. No product or expectation changed.
+New read-only audit: `probes/merge_fidelity_r4.py/.txt` —13 product paths,21 ancestry
+checks,11 unchanged dev foundations,9 unchanged revision4 foundations, exact candidate
+AST/name equality, unchanged default resolver, retained39 groups, all six verified
+product hashes and committed24-suite evidence. Full branch whitespace passes.
+The full suite was inspected, not rerun without a code/base change; fresh behavioral
+probes belong to the following soundness pass.
 
-Fresh runs: **test37 25/25; test38 14/14**, under the same Python3.11.10/Telethon1.45.0
-runtime. Logs: probes/merge_test37.txt and merge_test38.txt. The prior full612-pass
-record remains applicable to identical product code/current dev; it was inspected,
-not represented as rerun today. Full branch whitespace passes. No Telegram sockets,
-login, live joins or budget changes outside owned synthetic test directories.
+Issue10 remains open and PR27 draft, targeting dev with Closes #10. T/0/1/2/3/4/5
+are backed by committed artifacts. Tick6 only after this check is committed/pushed
+and posted; leave7 pending until the fresh critique's actual verdict. Prior no-PR
+scope in desc describes the implementation run; the user explicitly authorizes
+these review/publication actions now.
 
-## Issue truth and publication
-
-Issue10 is open. T/0/1/2/3/4/5 are checked with committed evidence;6/7 were correctly
-pending at entry. Implementation's old “no PR in this run” boundary describes that
-completed run; today's user instruction authorizes these review/publication steps.
-Update6 only after this committed check and PR publication, and7 only from the fresh
-critique's actual result. Keep live qualification separate from offline success.
-
-PR must target dev and say Closes #10. Per7.6, the eventual approved merge must
-exclude devdocs/work/10-reading-jobs; those documents stay on the archived branch.
-Keep #17's draft rejection/re-plan independent. No merge in this task.
+Live Telegram, Windows/native older Python and shared-session deployment remain
+unqualified. No live action, real policy reset or merge took place. An eventual
+maintainer-approved merge excludes work docs and retains the feature branch.

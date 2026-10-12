@@ -1,0 +1,13 @@
+PASS exact13 product paths; product unchanged since d32abcd
+PASS21 warmth/pipeline/base ancestry checks
+PASS11 source, allowance, ownership and progress foundations byte-identical to dev
+PASS default BatchEngine get_entity/dialog fallback AST unchanged
+Inventory signature: (account_id: int, config_path: str, session_store: object = None, label: str = None) -> None
+PASS revision4 explicitly preserves the optional positional inventory arguments
+PASS complete branch whitespace
+PASS all6 product/documentation file hashes match the631-pass verification snapshot
+PASS9 other fingerprinted runtime files unchanged through revision4
+PASS both frozen candidate functions and20 canonical auth names match integration
+PASS all39 original worker groups retained; now58 groups
+PASS committed24-suite/631-pass/3-skip evidence complete; no rerun claimed
+PASS issue labels/status and draft PR head/base/closing reference match committed work
