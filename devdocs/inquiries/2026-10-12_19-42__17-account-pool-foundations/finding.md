@@ -3,14 +3,14 @@ status: active
 model: gpt-6-astra
 effort: max
 refines: devdocs/work/17-account-pool/traverse/finding.md
-impacted_by: devdocs/work/17-account-pool/prebuild.md
+impacted_by: devdocs/work/17-account-pool/prebuild_r3.md
 ---
 # Finding: #17 needs a clearer operation boundary before further implementation
 
 > **Later evidence, 2026-10-12:** the subsequent combined prebuild passed the
 > proposed observer/source/control cases but found the same cancellation-origin
 > mistake during awaited state settlement. The provider contract needs completion
-> semantics as well as control restrictions. [Read the failed prebuild](../../work/17-account-pool/prebuild.md)
+> semantics as well as control restrictions. [Read the failed prebuild](../../work/17-account-pool/prebuild_r3.md)
 > before using this finding for implementation; revision3 was deprecated. The
 > original inquiry below is preserved as the record that produced that candidate.
 

@@ -7,6 +7,8 @@ revision: 5
 
 **Critic folded:** 2026-10-13 — 1 mitigation (1 step changed, 0 added).
 P0 completed before step1; prebuild.md records48/48 plus both worker suites.
+**Implementation:** steps1–7 complete at producta63099e; verification_restart.md.
+Step8 remains gated by E1; renewed PR gates are separate.
 
 ### What is the task
 

@@ -122,8 +122,9 @@ commit, independently cancelled provider I/O yielded caller requests0, prefix0 a
 no daily pending despite actual prefix100/charge200. See prebuild_r3.md and exact
 replan-r3 evidence. DEPRECATED_step_by_step_impl_plan.md must not be resumed.
 The missing requirement is now explicit across source and all state-provider work.
-The proposed ownership mechanism still needs the mandatory fresh experiment; this
-record closes the factual question, not its replacement's behavioral qualification.
+The replacement passed its mandatory fresh experiment at3f535d1 and was implemented
+in a63099e with full offline verification (verification_restart.md). This preserves
+the historical false premise without marking the replacement live-qualified.
 
 ### E1 — two-account live qualification — OPEN, execution only
 

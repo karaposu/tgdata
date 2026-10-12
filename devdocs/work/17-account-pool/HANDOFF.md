@@ -1,70 +1,46 @@
 ---
 model: gpt-6-astra
 effort: max
-status: PREBUILD_FAILED_REPLAN_REQUIRED
+status: OFFLINE_IMPLEMENTED
 ---
-# #17 account pool — current handoff
+# #17 — next: renewed merge check and fresh PR critique
 
-**Revision3's combined prebuild failed. Do not implement the deprecated plan.**
-The user requested re-planning around the foundation finding followed by a small
-real-component prebuild. Those preparation steps ran; runtime implementation did not.
-Current worktree: `/private/tmp/tgdata-17-replan`, existing issue-linked branch
-`feat/17-account-pool`. Original partial worktree and main checkout were preserved.
+The user requested a from-scratch task-impl restart with cancellation ownership
+covering storage too. That chain is complete through offline implementation/verification.
+Do not resume the deprecated revision3 plan or the old rejected PR implementation.
 
-## Current result
+- Worktree: `/private/tmp/tgdata-17-replan`, branch `feat/17-account-pool`.
+- Product:a63099e; dev2ddb852 integrated atceda2bf using the exact P0 union.
+- Active plan:step_by_step_impl_plan.md revision5; description revision4.
+- Fresh plan critic:6c81299; one Medium, robust selected52f31c9; folded after P0 at3f535d1.
+- P0:48/48 pool +33/33 worker +25/25 process tests, no watchdog or runtime candidate fix.
+- Full regression:725 executed offline checks passed;3 explicit legacy live skips;
+  all3 examples, compilation,86 Python3.7 grammar checks and package imports passed.
+- All8 changed runtime modules exactly match the passed candidate. See
+  verification_restart.md and evidence/restart/final-summary.json.
 
-[Prebuild report](prebuild.md):36/37 pool case groups passed; worker33/33 and25/25
-passed on an isolated #17+current-dev export. One group disproved the complete
-outcome guarantee: an asynchronous state provider's own cancelled future during
-settlement returned CancelledError with caller cancellation requests0. A real100-
-record prefix was absent from the public error and daily pending state. This occurred
-before and after the actual SQLite commit. Charge200 remained; before commit the
-account attempt stayed unresolved, after commit the known7200-second wait was saved.
+The pool now distinguishes component interruption from actual caller cancellation
+across source and pool/daily/backfill storage. It joins actual work before releasing
+its caller, preserves known batches without inventing receipts, retains uncertain
+admission safeguards and replaces application callbacks with bounded passive health
+observations. Same-pool provider control refuses at both operation entry and close.
+Routing, budgets, durable account permissions and progress engines are reused.
 
-The provider performed storage only; it did not reenter pool lifecycle. The tested
-role contract therefore does not exclude the failure. Caller cancellation and
-provider completion need distinct handling at this additional awaited boundary.
-No runtime patch, folded revision4 or verification claim followed the failure.
+One local P0 fixture correction and one collector-format correction are recorded;
+neither changes a runtime premise or weakens an expected outcome. Original failed
+r3 probes/artifacts and the one rejected PR review are preserved. The first foundation
+inquiry points to the archived failed report so its historical note is not misleading.
 
-## Read next
+**Next authorized workflow when requested:** renewed merge-check against triage/
+desc/plan/critic plus current dev, then refresh draft PR26 and run a fresh in-session
+PR critique. Keep PR26 draft until gates pass. No new PR is needed. Do not mistake
+this plan critique or full regression for the required fresh PR critique.
 
-- [Revised description](desc.md), including the CLOSED measured false premise.
-- [Deprecated revision3](DEPRECATED_step_by_step_impl_plan.md); retain as evidence,
-  never execute it. The canonical step_by_step_impl_plan.md is intentionally absent.
-- [Fresh plan critic](critic.md), result FAIL under its mandatory experiment.
-- [Prebuild report/scripts/results](prebuild.md), including exact candidate/source hashes.
-- [Foundation finding](../../inquiries/2026-10-12_19-42__17-account-pool-foundations/finding.md),
-  now carrying the later prebuild evidence pointer.
-- [First rejected PR review](pr-critic.md) and [its handoff](HANDOFF_pr_round1.md).
-  Original plan/critic/description are preserved as *_r2.md / critic_r1.md; the
-  scoped retirement work remains in retirement-rework/.
+**E1 pending:** two approved logged-in accounts, a shared group and their existing
+bounded allowance. User chose one account/offline-first; no live calls, login, joining
+or budget reset occurred. Plan step8 is stopped at task-impl's execution gate.
+#7 being merged does not add automatic joining to this selected delivery.
 
-## Next work
-
-Clarify outcome/cancellation ownership for awaited state-provider work, including
-actual caller stop, provider-internal cancellation and uncertain commits. Preserve
-completed source data through local storage interruption without detaching a live
-write or treating cancellation as proof of rollback. Then write a replacement plan,
-freshly critique it and rerun the complete combined gate before runtime changes.
-Do not blanket-convert CancelledError, retry CAS into permission or weaken the test.
-
-The rest of the candidate remains useful evidence: passive reports, source completion,
-scope/refusal controls, native cleanup, budgets and source-free daily/backfill all
-passed their listed cases. This does not qualify the full plan or PR.
-
-## Status and limits
-
-This is **one failed prebuild**, not a second rejected PR review. There is still only
-one rejected PR critic (two Mediums); PR26 remains draft/unmerged. The new fresh plan
-critic found0 additional content risks but required this experiment, which then
-falsified an untested composition. Keep both facts visible.
-
-Working-branch runtime remains product4854464 at71502e5. Current dev2ddb852 was used
-only in an isolated export; its batch conflict resolution is recorded, not merged
-onto the runtime branch. Two-account live E1, production implementation, full suite,
-renewed merge check/PR critique and user-authorized merge remain pending.
-
-No live login/read/join or real allowance reset; all probe credentials/state are
-synthetic. Main checkout's untracked HANDOFF/todo, duncan and unrelated work remain
-untouched. Preserve all work/inquiry docs on the feature branch archive; exclude them
-from any later dev merge. No protected branch or PR merge was performed.
+Merge still needs user go-ahead and must exclude work/inquiry/archaeology documents
+from dev, preserve this branch as archive, and keep #17's broader automatic-joining
+scope explicit. Main checkout, duncan and unrelated work remain untouched.

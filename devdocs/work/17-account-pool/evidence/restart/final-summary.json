@@ -1,0 +1,510 @@
+{
+  "result": "PASS",
+  "checks": {
+    "example_account_pool": {
+      "name": "example_account_pool",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": null,
+      "skipped": 0,
+      "duration_s": 0.598,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "/private/tmp/tgdata-17-replan/examples/account_pool.py",
+        "--demo"
+      ]
+    },
+    "example_backfill_runs": {
+      "name": "example_backfill_runs",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": null,
+      "skipped": 0,
+      "duration_s": 1.56,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "/private/tmp/tgdata-17-replan/examples/backfill_runs.py",
+        "--demo"
+      ]
+    },
+    "example_daily_continuation": {
+      "name": "example_daily_continuation",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": null,
+      "skipped": 0,
+      "duration_s": 0.581,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "/private/tmp/tgdata-17-replan/examples/daily_continuation.py",
+        "--demo"
+      ]
+    },
+    "test_12_proxy": {
+      "name": "test_12_proxy",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        7,
+        7
+      ],
+      "skipped": 2,
+      "duration_s": 13.073,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_12_proxy",
+        "/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-offline-only-au42iky9/NO_LIVE_CONFIG.ini"
+      ]
+    },
+    "test_13_device_identity": {
+      "name": "test_13_device_identity",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        6,
+        6
+      ],
+      "skipped": 1,
+      "duration_s": 0.966,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_13_device_identity",
+        "/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata17-offline-only-au42iky9/NO_LIVE_CONFIG.ini"
+      ]
+    },
+    "test_14_flood_threshold": {
+      "name": "test_14_flood_threshold",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        11,
+        11
+      ],
+      "skipped": 0,
+      "duration_s": 9.006,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_14_flood_threshold"
+      ]
+    },
+    "test_15_login_checks": {
+      "name": "test_15_login_checks",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        11,
+        11
+      ],
+      "skipped": 0,
+      "duration_s": 2.964,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_15_login_checks"
+      ]
+    },
+    "test_16_health_events": {
+      "name": "test_16_health_events",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        21,
+        21
+      ],
+      "skipped": 0,
+      "duration_s": 9.048,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_16_health_events"
+      ]
+    },
+    "test_17_session_store": {
+      "name": "test_17_session_store",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        12,
+        12
+      ],
+      "skipped": 0,
+      "duration_s": 0.601,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_17_session_store"
+      ]
+    },
+    "test_18_read_budget": {
+      "name": "test_18_read_budget",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        28,
+        28
+      ],
+      "skipped": 0,
+      "duration_s": 3.425,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_18_read_budget"
+      ]
+    },
+    "test_19_message_batches": {
+      "name": "test_19_message_batches",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        33,
+        33
+      ],
+      "skipped": 0,
+      "duration_s": 0.717,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_19_message_batches"
+      ]
+    },
+    "test_22_daily_continuation": {
+      "name": "test_22_daily_continuation",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        25,
+        25
+      ],
+      "skipped": 0,
+      "duration_s": 2.242,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_22_daily_continuation"
+      ]
+    },
+    "test_23_fixed_windows": {
+      "name": "test_23_fixed_windows",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        22,
+        22
+      ],
+      "skipped": 0,
+      "duration_s": 1.643,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_23_fixed_windows"
+      ]
+    },
+    "test_24_backfill_state": {
+      "name": "test_24_backfill_state",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        23,
+        23
+      ],
+      "skipped": 0,
+      "duration_s": 1.601,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_24_backfill_state"
+      ]
+    },
+    "test_25_backfill_delivery": {
+      "name": "test_25_backfill_delivery",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        41,
+        41
+      ],
+      "skipped": 0,
+      "duration_s": 3.004,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_25_backfill_delivery"
+      ]
+    },
+    "test_26_backfill_completion": {
+      "name": "test_26_backfill_completion",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        16,
+        16
+      ],
+      "skipped": 0,
+      "duration_s": 4.946,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_26_backfill_completion"
+      ]
+    },
+    "test_27_backfill_pacing": {
+      "name": "test_27_backfill_pacing",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        32,
+        32
+      ],
+      "skipped": 0,
+      "duration_s": 3.168,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_27_backfill_pacing"
+      ]
+    },
+    "test_28_backfill_controls": {
+      "name": "test_28_backfill_controls",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        32,
+        32
+      ],
+      "skipped": 0,
+      "duration_s": 2.064,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_28_backfill_controls"
+      ]
+    },
+    "test_29_backfill_public": {
+      "name": "test_29_backfill_public",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        23,
+        23
+      ],
+      "skipped": 0,
+      "duration_s": 8.262,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_29_backfill_public"
+      ]
+    },
+    "test_30_backfill_integration": {
+      "name": "test_30_backfill_integration",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        15,
+        15
+      ],
+      "skipped": 0,
+      "duration_s": 10.189,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_30_backfill_integration"
+      ]
+    },
+    "test_31_account_pool": {
+      "name": "test_31_account_pool",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        46,
+        46
+      ],
+      "skipped": 0,
+      "duration_s": 6.425,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_31_account_pool"
+      ]
+    },
+    "test_32_account_operation": {
+      "name": "test_32_account_operation",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        28,
+        28
+      ],
+      "skipped": 0,
+      "duration_s": 0.653,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_32_account_operation"
+      ]
+    },
+    "test_33_owned_health": {
+      "name": "test_33_owned_health",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        62,
+        62
+      ],
+      "skipped": 0,
+      "duration_s": 0.732,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_33_owned_health"
+      ]
+    },
+    "test_34_group_access": {
+      "name": "test_34_group_access",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        49,
+        49
+      ],
+      "skipped": 0,
+      "duration_s": 2.226,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_34_group_access"
+      ]
+    },
+    "test_35_join_budget": {
+      "name": "test_35_join_budget",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        35,
+        35
+      ],
+      "skipped": 0,
+      "duration_s": 4.073,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_35_join_budget"
+      ]
+    },
+    "test_36_group_join": {
+      "name": "test_36_group_join",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        44,
+        44
+      ],
+      "skipped": 0,
+      "duration_s": 8.344,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_36_group_join"
+      ]
+    },
+    "test_37_worker": {
+      "name": "test_37_worker",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        33,
+        33
+      ],
+      "skipped": 0,
+      "duration_s": 1.293,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_37_worker"
+      ]
+    },
+    "test_38_worker_process": {
+      "name": "test_38_worker_process",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        25,
+        25
+      ],
+      "skipped": 0,
+      "duration_s": 41.244,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_38_worker_process"
+      ]
+    },
+    "test_39_pool_lifecycle": {
+      "name": "test_39_pool_lifecycle",
+      "passed": true,
+      "exit_code": 0,
+      "watchdog_killed": false,
+      "count": [
+        48,
+        48
+      ],
+      "skipped": 0,
+      "duration_s": 3.177,
+      "command": [
+        "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+        "-m",
+        "tgdata.smoke_tests.test_39_pool_lifecycle"
+      ]
+    }
+  },
+  "reported_groups": 728,
+  "executed_groups": 725,
+  "live_skips": 3,
+  "python37_grammar_files": 86,
+  "production_candidate_parity": {
+    "tgdata/account_pool.py": true,
+    "tgdata/backfill_engine.py": true,
+    "tgdata/message_batch.py": true,
+    "tgdata/pool_lifecycle.py": true,
+    "tgdata/pool_observation.py": true,
+    "tgdata/pool_source.py": true,
+    "tgdata/pool_state.py": true,
+    "tgdata/sync_engine.py": true
+  },
+  "source_runs": [
+    "final-attempt-1",
+    "final-attempt-2"
+  ],
+  "note": "Second run corrects collector format handling for test34/35/36 only. No runtime or test change."
+}
