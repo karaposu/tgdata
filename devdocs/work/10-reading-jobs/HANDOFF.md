@@ -2,9 +2,18 @@
 model: gpt-6-astra
 effort: max
 ---
-# #10 handoff — both renewed gates passed; merge decision next
+# #10 handoff — merged into dev; complete
 
-2026-10-12. Branch `feat/10-reading-jobs`, worktree
+2026-10-12. **Completed:** PR27 merged into dev as `2ddb852` after the user’s go-ahead.
+Merged-code verification passed631 actual groups /3 live skips across24 suites,
+plus compile/grammar, isolated package/entrypoints and examples. #10 is closed;
+feature branch retained as archive. Work documents were excluded and dev archaeology
+preserved. See `merge-result.md` / `merge_verification/`. No #10 work remains.
+
+The following preserves the review checkpoint and eventual-merge instructions as
+historical context; those instructions have now been carried out.
+
+2026-10-12 review checkpoint. Branch `feat/10-reading-jobs`, worktree
 `/private/tmp/tgdata-10-reading-jobs`, current dev still `68f6bbd`.
 Product **`d32abcd`**; separate implementation/evidence record **`0c0144d`**.
 **Renewed merge check PASS:bbdc846. Fresh PR critic PASS:899d3bd,
