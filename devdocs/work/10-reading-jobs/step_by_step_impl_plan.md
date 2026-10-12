@@ -2,409 +2,453 @@
 model: gpt-6-astra
 effort: max
 ---
-# Implementation plan — #10 reading-job worker
+# Implementation plan — #10 reading worker, revision 3
 
-**Critic folded:** 2026-10-11 — 2 robust mitigations (5 steps changed,0 added).
-Mandatory prebuild PASS before product edits:7 actual source histories,6 cleanup
-cases and4 real pipe controls; see `critic.md` and `probes/prebuild.txt`.
+2026-10-12. **Review state: awaiting fresh plan critique; not folded or implemented.**
+Re-planned under CONTRIBUTING7.4 from desc.md and the full PR critique at837d06f,
+with its selected robust remedies at8322827. This replaces the active revision2
+plan; its exact text is retained in `step_by_step_impl_plan_r2.md`. Its planning
+critic/prompt are `critic_r1.md` / `dynamic_critic_prompt_r1.md`. `pr-critic.md`
+remains the rejected first PR review. A fresh `critic.md` must judge this plan;
+the archived planning critic must not be folded into revision3 by a resume command.
 
-Revision2. Input: `desc.md` at `faa2f18`; design finding at `e8bf7f0`.
-Base: dev `68f6bbd`. #17 is neither merged nor a runtime dependency.
+Base dev remains68f6bbd. Existing product is6ee146c; PR27 remains draft/rejected.
+This is the first rejected PR round, so re-planning is permitted. A second rejected
+round requires returning to description/traverse under7.4, not another patch cycle.
+Current turn metadata at2026-10-12T07:08:25.710Z verifies GPT-6 Astra/max. Same warmed
+session; no delegation. The original feature-heavy scope remains appropriate.
 
 ### What is the task
 
-Expose the accepted library operations through a small resident caller-managed
-process. Explicit-account jobs perform bounded reading, lookup, access checks or
-joining and return exact results/health observations. Keep scheduling, account
-assignment, receiver acceptance and uncertain-result recovery with the caller.
+Complete a small caller-managed process that performs explicitly assigned Telegram
+read/lookup/access/join jobs, preserves their results and account ownership, and
+can be stopped without depending on unrelated activity. Its serialized diagnostics
+must carry only recognized safe metadata. The application retains scheduling,
+account assignment, message storage, acknowledgment and uncertain-result recovery.
+The first implementation stands; this cycle redefines and qualifies the process
+boundary that its earlier tests failed to establish.
 
 ### Huge Hard Blockers
 
 #### Planning Blockers
 
-None identified. The actual owned operation + BatchEngine + health composition,
-cleanup-failure receipt under cancellation, OS pipe pitfalls and Node identifier
-round trips were probed before this plan. The stated initial transport is JSON
-lines over stdin/stdout; no answer to the optional preference question has arrived.
-This is an explicit selectable first-delivery design, not a claim about an unknown
-consumer contract. A later explicit HTTP request would change the transport scope.
+None identified. The two rejected premises are understood and have reachable
+mechanisms, rather than human decisions disguised as blockers:
+
+- Cancellation marks a Task but need not wake its selector. Python3.11 Runner's
+  native SIGINT handling marks cancellation then uses call_soon_threadsafe to wake
+  the loop. A planning-only candidate using that sequence passed both real quiet
+  worker subprocesses with their60-second selector waits and no polling helper.
+- AuthRequiredError.reason intentionally retains unknown SDK text for Python
+  callers. A worker-local frozen set of recognized names, derived from the pinned
+  SDK authentication classes plus existing banned names, removed unknown401/406
+  text while preserving known authentication metadata in six actual SDK/Worker runs.
+
+Evidence: `probes/revision3_feasibility.py/.txt`, compiled candidates in memory only.
+The script also showed that queuing task.cancel can let an already-ready Task step
+first; marking cancellation immediately and waking separately did not. These two
+ordering controls are actual asyncio scheduling observations, not SDK source tests.
+The first probe bootstrap overmatched an indented source line and exited before
+ready; `revision3_feasibility-bootstrap.txt` retains it. Exact-line matching fixed
+the experiment, without changing product code or expectations.
+
+These observations establish feasibility of the mechanisms. They do **not** claim
+the combined bootstrap/job/output/finalization contract has passed. The complete
+candidate prebuild is Step1, before any runtime edit. Its failure stops this plan;
+no assumption converts a failing experiment into permission to implement.
+
+Inherited desc boundaries remain: caller-owned pipes and exclusive sessions;
+serial JSON lines is the stated engineering choice after the unanswered optional
+transport question. There is no new transport or account-ownership decision to ask.
 
 #### Execution Blockers
 
-None for these seven offline implementation steps. Live deployment qualification
-requires separately approved logged-in account/group access, exclusive sessions
-and bounded existing allowance; it is outside this delivery, not a hidden final
-step or permission to reuse earlier live tests.
+None for these six offline steps. Fresh plan critique/fold and Step1 qualification
+are local workflow gates, not out-of-reach external blockers. Live account/group
+permission, exclusive sessions and bounded existing allowances are external
+preconditions for later deployment qualification; that work is outside this plan.
+No live login/read/join, existing policy reset, merge or deployment is authorized.
 
 ### How this implementation moves toward desired state
 
-Define a small strict wire contract, adapt existing verified source operations,
-then give a serial process ownership of admission and output. A private cleanup
-receipt prevents unsafe continuation without changing existing library results.
-Actual subprocess/SDK tests qualify the composition before packaging/documentation
-are declared complete. No queue, router, login or new quota engine is introduced.
+Treat process stopping and public diagnostics as two complete boundary contracts,
+then qualify their composition before integrating it. Reuse the accepted source
+ownership, cleanup helper, budgets, resolver and raw writer. The stop owner must
+both prevent new work and make existing work progress toward cleanup; the projector
+must distinguish recognized metadata from name-shaped text. Permanent tests remove
+the incidental timer that concealed the failure and exercise every entry/exit phase.
+This cycle does not reconstruct routing, SDK operations or a generic supervisor.
 
 ### High-Level Summary
 
 | Step | Description | Expected output |
 |---|---|---|
-| 1 | Strict values, request decoding and result projection | Versioned finite protocol with exact IDs and safe errors |
-| 2 | Owned job execution and cleanup-failure feedback | Four jobs using accepted account/group/batch/ledger mechanisms |
-| 3 | Serial process, inventory loader and CLI | Resident stdin/stdout worker with explicit stop/EOF behavior |
-| 4 | Actual SDK and subprocess qualification | New worker suites covering source and process failure histories |
-| 5 | Public contract and caller example | Usable configuration, job, retry and shutdown documentation |
-| 6 | Full offline/package verification | Measured supported regressions, compile/grammar and isolated invocation |
-| 7 | Commit and publish implementation evidence | Separate product/work commits and honest issue status |
+| 1 | Qualify the complete candidate boundary before product edits | Actual-process/SDK prebuild with explicit pass/fail evidence |
+| 2 | Give the process one stop and finalization policy | No new admission, immediate cancellation marking, loop wake-up and retained cleanup |
+| 3 | Project recognized authentication diagnostics | Unknown text omitted; known reasons and flags preserved |
+| 4 | Install permanent boundary regressions | Timer-free stop tests and decoded authentication-error controls |
+| 5 | Update public contract and verify the integrated product | Full offline/package/example evidence with honest limits |
+| 6 | Commit and publish the revised implementation record | Separate product/work commits, same draft PR ready for renewed gates |
 
-## Fixed first-delivery contract
+## Re-planning decisions and findings answered
 
-### Source and configuration
+**R1 — stop signals:** the missing concept was progress ownership, not another
+timeout. Marking cancellation, waking its loop and retaining cleanup are three
+obligations of the same process owner. Step1 qualifies them across all phases;
+Step2 implements that policy; Step4 removes masking test assistance. Merely adding
+a periodic timer, adopting asyncio.run as a new incompatible driver, or handling
+signals only while the loop runs does not satisfy the contract.
 
-Require Telethon exactly1.45.0 for this opt-in worker; ordinary library requirements
-stay unchanged. Add `WorkerAccount(account_id, config_path, *, session_store=None,
-label=None)` as a frozen trusted-Python inventory value in `worker_engine.py`.
-IDs are positive signed64 integers excluding bool; paths/labels validated and
-credentials/config paths excluded from repr/errors. File sessions are the CLI
-default; Python bootstrap may supply a session-store object without any import or
-credential selection in job data.
+**R2 — raw authentication reason:** a field name or identifier-shaped string is
+not evidence of safe origin. Step1 qualifies the allowed diagnostic vocabulary;
+Step3 makes projection explicit at the worker boundary; Step4 covers SDK wrapping.
+The library's existing raw AuthRequiredError semantics remain available to its
+Python callers. No new public error hierarchy or global diagnostic framework.
 
-`Worker(accounts, *, worker_id, read_budget, join_budget=None)` owns its TgData
-instances, constructs them with `connection_pool_size=1`, `interactive_login=False`
-and a fixed event collector, and never initializes a persistent connection/pool.
-Required ReadBudget is the caller's existing object; optional JoinBudget enables
-join jobs but its per-account policy still applies at the accepted send boundary.
-No configure/reset call belongs in worker execution.
+**Coupling / simplicity:** the process driver is the only owner of signal state,
+the loop and protocol I/O. Worker.execute remains the only job executor. Keep a
+small amount of private phase state in worker.py; a general state-machine class,
+thread, polling task, transport abstraction and job queue are unnecessary. The
+projection remains in worker_protocol.py. The two rejected boundaries are tested
+together without moving source behavior into either one.
 
-CLI: `python -m tgdata.worker --config worker.json` and installed `tgdata-worker`.
-Manifest exact fields: `version:1`, `worker_id`, `read_budget`, `accounts`; optional
-`join_budget`. Accounts are objects with `account_id` as canonical decimal string,
-`config_path`, optional `label`; unknown keys refuse. Maximum manifest1MiB,
-inventory1000 accounts; zero accounts allowed for a local protocol-only demonstration.
-Paths in the manifest resolve relative to its directory. INI session naming retains
-existing library behavior (relative names resolve from worker cwd); document absolute
-session paths for relocation. Pin that resolved file path once for file-backed
-worker clients; custom store names remain opaque. Reject duplicate IDs, config
-paths and known file/store session addresses locally. Do not read credentials or
-open SDK clients merely to report ready.
+## Complete retained product contract
 
-CLI read-budget path must exist, and every configured account must have an existing
-read policy. Opening may perform the ledger's existing schema/clock/expiry bookkeeping;
-it never creates an account policy or erases usage. JoinBudget reopens with create=False;
-join policy is checked only by a join job. Config/session/proxy failures are type-only
-local diagnostics. No live account resource is needed for tests or examples.
+### Inventory, ownership and source
 
-### Requests and replies
+Keep Telethon exactly1.45.0 for the opt-in worker. WorkerAccount is the existing
+frozen trusted value `(account_id, config_path, session_store=None, label=None)`;
+optional positional arguments remain accepted, matching actual product rather
+than silently reintroducing revision2's unused keyword-only sketch. Account IDs
+are positive signed64 integers excluding bool. Paths exist and labels are bounded;
+credentials/config paths are excluded from repr/diagnostics.
 
-UTF-8 JSON objects, one complete LF-terminated line per request. Maximum request
-16KiB including LF; CRLF accepted. Reject duplicate keys, nonfinite numbers, invalid
-UTF-8 and unknown fields. Maximum nesting is bounded by the frame and the fixed
-schema; parser recursion/value errors become local protocol failures.
+`Worker(accounts, *, worker_id, read_budget, join_budget=None)` holds existing
+TgData facades configured for one session each, no interactive login, fixed health
+collector and no persistent client/pool. Every operation uses the merged expected-
+account proof, including later budget admission. Stale cached identity is not
+authority. No hidden login, join, retry, routing or allowance setup.
 
-Request fields exactly `version`, `request_id`, `account_id`, `operation`, `params`.
-Version is integer1 excluding bool. request_id is integer1..2^53-1, strictly greater
-than the last accepted envelope ID in this process; gaps are allowed, no wrap or
-reset. A recognized fresh ID is consumed before argument/source processing, including
-a subsequent invalid operation/argument outcome. Malformed envelopes without a valid
-version/ID consume none. Reused/old IDs refuse without work. IDs are correlation and
-process-local duplicate protection, not durable idempotency across process restart.
+Keep the CLI/module and trusted `serve` bootstrap in a dedicated main-thread
+process. The manifest has version, worker_id, existing read_budget and accounts;
+optional join_budget. Each account names its decimal-string ID, config_path and
+optional label. Existing limits remain:1 MiB manifest,1000 accounts, empty inventory
+allowed. Manifest paths are relative to its directory; file sessions retain the
+documented pinned cwd-relative names, and stores retain opaque keys. Duplicate
+IDs/config paths/known session addresses refuse locally. Exclusive cross-process
+ownership remains the caller's duty. Ready is local configuration, not health proof.
 
-account_id is a canonical positive decimal string identifying inventory. Operations:
+All accounts require existing ReadBudget policies. JoinBudget is optional, reopened
+with create=False; missing join configuration refuses before authentication, and
+the existing per-account policy controls actual mutations. No worker configure/reset.
+Normal clock/schema/expiry bookkeeping remains ledger-owned.
 
-- `read_batch`: params `group_id` (nonempty reference string or canonical integer),
-  optional `after_id` (canonical decimal string0..MAX_MESSAGE_ID, default"0"),
-  `limit` (integer1..1000, default200), and paired aware ISO `start_date`/`end_date`.
-  Validate the existing date-window/batch argument rules before a source context.
-  Use the accepted group reference parser for the target and the bounded worker
-  resolver below; no arbitrary SDK string/phone resolver or dialog/contact scan.
-  This first worker protocol returns reference-mode media; file downloads remain
-  available through the library and are not an extra worker verb or arbitrary path.
-- `lookup_group`, `check_group_access`, `join_group`: params exactly `target` as a
-  supported string or canonical integer; validate with existing group reference
-  rules before client creation. Join without configured JoinBudget is locally
-  disabled before authentication. No hidden retries, joins or dialog warm-up jobs.
+Read jobs retain bounded group parsing/resolution, actual owned health and
+BatchEngine composition. Never scan dialogs/contacts to resolve a missing private
+channel hash, nor join an invite preview. Other library BatchEngine consumers keep
+their unchanged default resolution. Existing lookup/access/join statuses remain
+qualified; membership is not readability. Ordinary source failures retain valid
+partial MessageBatch documents and real charges. MAX_MESSAGE_ID shortcuts do not
+invent successful group-access evidence. The private cleanup receipt remains
+sticky and result-preserving; failed cleanup prevents another source job.
 
-Ready frame: `version`, `kind:"ready"`, `worker_id`, `instance_id` (new opaque process
-identity), `state:"idle"`, account IDs/count and documented protocol limits. Ready
-means configured/idle, not authenticated or Telegram-healthy.
+### Wire and delivery
 
-Health frames: `version`, `kind:"health"`, worker/instance/request/account IDs and
-the plain event. Terminal frame: same correlation, `kind:"result"`, `operation`,
-`ok`, `data` or `error`, `partial_result` (batch dict or null), `health_dropped`,
-`worker_stopping`. Preserve all GroupAccess/GroupJoin status meanings. Identifier
-fields become decimal strings in group/health/error projections; counts/booleans
-keep their types. Raw MessageBatch.to_dict and batch_id are unchanged.
+Retain version1 strict UTF-8 JSON lines, LF/CRLF,16 KiB requests, duplicate/unknown-
+key/type validation and one job at a time. Envelope fields remain version,
+request_id, account_id, operation, params. IDs1..2^53-1 strictly increase per process;
+a recognized fresh ID is consumed before later argument refusal. They are not
+durable idempotency tokens. Malformed input must not open a client.
 
-Errors include fixed category, exception type, and bounded safe fields when known:
-auth reason/first_login/banned, identity expected/actual IDs, allowance retry/status,
-and Telegram error name/wait seconds/code. Never use raw exception strings, repr,
-traceback, raw request payload or credential/config contents. Unknown exceptions
-remain explicit `operation_error` with type only; no guessed health or retry.
+The four verbs remain read_batch, lookup_group, check_group_access and join_group.
+Reads accept supported group_id, decimal after_id0..MAX_MESSAGE_ID (default0),
+integer limit1..1000 (default200) and paired aware start/end dates under the existing
+fixed-window contract. Other verbs accept target only. Media stays reference-only;
+jobs carry no arbitrary output path or backend/credential choice.
 
-Health collection cap256 per job, dropping excess with an explicit count; notification
-collection must never fail the source. Serialize a complete frame before writing,
-with a64MiB encoded-frame ceiling and no silent truncation. If a source outcome cannot
-fit or serialize, emit a small explicit delivery-error terminal frame with safe source
-outcome/error metadata and `partial_omitted:true`, then stop. Never present an empty
-batch/success or acknowledge omitted data. Closed/failed output may prevent even that
-frame; exit with unknown caller receipt. This is a transport limitation, not a source
-retry or quota refund. Build bounded bytes incrementally and check size before write.
+Ready, correlated health and terminal result frames keep their existing shape,
+including worker/instance/request/account identities, ok, data/error, partial_result,
+health_dropped and worker_stopping. Preserve exact decimal identifiers and unchanged
+MessageBatch hashes; counts/booleans retain types. Collection stays256 events per
+job and8 KiB per event, with explicit drops; frame encoding stays64 MiB and precedes
+all publication. Serialization/size failure produces bounded delivery_failed,
+safe source metadata and partial_omitted:true, then stops. Unknown/partial output
+never implies a source rollback, unspent budget or safe automatic join retry.
 
-### Lifetime and stopping
+### One process stop policy [answers PR-R1]
 
-One job at a time, no internal pending-job queue. Do not read/admit the next frame
-while a source job or its output is active. Keep one worker-owned event loop for
-async source work; synchronous binary input/output runs only outside active source
-work. No executor stdin thread and no user callback performing protocol writes.
+The first SIGINT/SIGTERM owns the stop reason. It monotonically prevents new job
+admission and any later SDK operation from a queued-but-unstarted job. A repeated
+signal must not send another cancellation into retained cleanup. Use the existing
+Worker.stopping admission predicate as appropriate; do not add a competing job flag.
 
-No new automatic job timeout. Accepted owned clients already disable retries/long
-flood sleeps; caller-controlled process cancellation handles an unresponsive job.
-SIGINT/SIGTERM set a stopping flag. During active work cancel its task once and
-wait for the existing owned cleanup; repeated signals do not break that wait or
-start another job. During idle input/output interrupt the blocking operation and
-exit. A hanging cleanup has no hard deadline; supervisor hard termination leaves
-completion unknown. EOF after a completed request permits its result before exit;
-an incomplete final line is not executed. Fatal oversized/truncated frames stop,
-while a complete malformed JSON/envelope can produce an uncorrelated local error
-and continue. No input/result receipt is called durable acceptance.
+| Phase at first signal | Required behavior |
+|---|---|
+| Synchronous startup / ready / waiting for input / publishing output | Interrupt the blocking operation through the private stop path; freeze admission |
+| Job has been scheduled but not started | Freeze admission, cancel it before its body can step, settle it without a source call |
+| Active job, including its owned native disconnect | Mark its Task cancelled once in the owning main thread, then wake the loop; retain the existing cleanup waiter |
+| Completed job before/during reply | Permit loss/truncation under existing unknown-receipt semantics; no successor job or output retry |
+| Final process settlement | Record exit reason and wake a live loop if needed; do not inject a stop exception or extra cancellation that abandons settlement |
+| Closed loop / restored handlers | No scheduling on a closed loop; the worker's handler ownership has ended |
 
-Exit0: normal EOF. Exit2: startup/fatal protocol error. Exit3: cleanup/serialization/
-output failure requiring stop. Signal exit128+signal. Per-job source errors do not
-exit the worker unless cleanup/transport is unsafe. Restore signal handlers and
-close the owned loop; bootstrap callers must exit the dedicated process with the
-returned code. Never imply failed SDK cleanup guarantees successful connection close.
+For active cancellation prefer the proven sequence `active.cancel()` followed by
+`loop.call_soon_threadsafe(noop)`, with actual live-loop/phase guards. Do not merely
+queue active.cancel behind already-ready job work: the planning control observed
+that work stepping first. This is main-thread signal ownership, not an invitation
+to call Task.cancel from arbitrary threads. Keep signal.signal's blocking-I/O
+interruption behavior; a loop-only add_signal_handler would leave idle read/write
+outside the loop unhandled. No private self-pipe API or takeover of a foreign
+signal wakeup fd is needed when the public wake-capable loop call suffices.
 
-## Step 1 — Protocol and trusted values [folded: Risk1, robust]
+Task publication and cleanup are part of this policy: a signal may arrive between
+Task creation and storing its reference. Freeze worker admission before any final
+event-loop turn; find/cancel/settle any created unstarted job before running other
+shutdown coroutines. Never start a job merely as a side effect of draining the loop.
+Use the dedicated loop's ownership to account for tasks; do not cancel another
+application's loop. Test the transition deterministically at the real creation
+boundary. This is a contract to qualify in Step1, not a claim that the narrow
+planning candidate already handles every such interleaving.
 
-### Proposed changes
+After the owned job has settled, retire notifications/facades and remaining SDK
+tasks, shut down async generators and close the loop. Signal behavior during this
+phase must preserve that work. Keep the original source result/failure and cleanup
+receipt; teardown diagnostics do not overwrite them. Always restore owned signal
+handlers and logging state. No new final output attempt, buffered flush, source
+retry, forced cleanup deadline or generic supervisor. A supervisor's hard kill
+still means uncertain completion; waiting for native cleanup is still permitted.
 
-Add `tgdata/worker_protocol.py` for constants, safe WorkerError taxonomy, duplicate-key
-decoding, exact request parsing, canonical identifier conversion and JSON-ready
-frame projection. Use a small immutable parsed-job value; no global registry or
-mutable raw payload retained across admission. Explicit operation allowlist and
-parameter schema; no getattr dispatch from untrusted names. Validate all local
-arguments before a source task. Read targets use the same accepted `_parse_target`
-rules as group jobs, rather than arbitrary nonempty SDK strings. Preserve errors' real categories without exposing
-their text; recursively project only known identifier fields and leave batch dicts
-as their existing schema. Bound diagnostics and serialization; optional error metadata
-must not replace an original source outcome if inspection itself fails.
+Exit meanings remain0 normal EOF,2 startup/fatal input,3 unsafe cleanup/delivery/
+output, or128+the first stop signal. Per-job source refusal alone is not process
+failure. A signal must make cancellation progress independently of SDK timers;
+this is not a promise of a subsecond end-to-end cleanup deadline.
 
-### Output
+### Diagnostic vocabulary [answers PR-R2]
 
-An explicit protocol contract implemented as local pure validation/projection.
-### Safe in nature
-True — additive module; no existing path changed.
-### Peripheral concepts
-MessageBatch v1, GroupAccess/GroupJoin values, auth/budget errors, JSON integer precision.
-### Hardness Lvl
-4
+Classify by existing exception types and keep category/type plus recognized bounded
+metadata. For authentication, emit reason only when it belongs to a frozen set of
+canonical names from Telethon1.45.0 classes accepted by the existing authentication
+translation (UnauthorizedError/AuthKeyError), plus the library's existing banned
+names. Reuse the SDK name table; no arbitrary .message, str/repr, custom registration
+or regex match expands the set. The planning candidate measured this20-name set.
 
-## Step 2 — Owned source execution and cleanup evidence [folded: Risk1, robust]
+Unknown reasons, absent values and malformed metadata omit the optional reason;
+do not replace the whole failure or erase valid first_login/banned flags. Known
+AUTH_KEY_UNREGISTERED, SESSION_REVOKED and USER_DEACTIVATED_BAN retain their meaning.
+An unknown code401/406 string identical to a known canonical name is safe as that
+fixed vocabulary value; this does not claim stronger source provenance or create
+new recovery/authentication actions. The contract is bounded publication, not a
+new classification engine. A future SDK version requires explicit qualification.
 
-### Proposed changes
+Generic RPC type/code/known-name/wait projection and health-event sanitization keep
+their existing policies; neither is relaxed to match the auth branch. Metadata
+access faults remain secondary and must not replace the primary source outcome.
+Apply this same projector to terminal errors, source_error in delivery failures and
+safe fatal/startup diagnostics. Message bodies/group data/intended labels are still
+application data; do not claim all protocol content is safe to publish publicly.
 
-Add `tgdata/worker_engine.py` with WorkerAccount, Worker and a private bound-session
-adapter whose async session yields the current verified operation.client in its
-opening task. Build a BatchEngine over that adapter inside `_account_health_operation`
-for read jobs. Add an optional private `_resolve_entity` hook to BatchEngine's
-constructor; when absent, retain the exact current get_entity/dialog-sync fallback.
-The worker hook calls the merged group `_resolve` on its parsed target and verified
-operation, refuses missing peers/unsupported community reads, retrieves the resulting
-InputPeer entity with the SDK and verifies its canonical ID equals the lookup's.
-Never enumerate dialogs/contacts or join to resolve a worker read. A private channel
-ID needs its account-specific cache or a usable public/invite reference; uncertainty
-is an explicit GroupReferenceError. The prebuild exercises this actual composition,
-including the unchanged default branch. Successful actual history answers may confirm group access; do not
-claim access recovery for the MAX_MESSAGE_ID shortcut or metadata-only work.
-Dispatch the three group jobs to existing public methods with the configured account.
-
-Implement the tested private cleanup-feedback seam: `_disconnect_owned(client,
-failures=None)` appends the failure type to the trusted optional receipt BEFORE
-diagnostics/caller cancellation. `ConnectionEngine` starts with no cleanup failure;
-its `_account_operation` uses a local receipt and records a sticky
-`_account_cleanup_failure` in finally even when cancellation or setup failure escapes.
-Do not alter existing return/error/logging precedence or ordinary connection policy.
-No public failure callback, new supervisor or credential-generation protocol.
-
-Worker validates read policies/config addresses locally, keeps one fresh-source
-TgData per configured account and uses no primary client/pool. A ContextVar carries
-the immutable job collector into owned notification tasks. Callback appends bounded
-plain events only; no application/network/output callbacks. After the operation
-ends, drain its owned notification tasks under the same bounded trusted collector,
-then construct health and terminal frames. Retain a completed value/error before
-notification/projection work. Actual caller cancellation stops the worker; it is
-never recast as a retryable source error. Any cleanup failure makes worker stopping
-sticky before a terminal result is handed to the process; future execute calls refuse.
-
-### Output
-
-All four operations use verified existing mechanisms and produce correlated outcomes.
-### Safe in nature
-False — shared owned cleanup gains a private observation path; correctness is delicate.
-### Peripheral concepts
-AccountOperation lifetime, same-owner quota claims, deferred health, partial batches, join guard.
-### Hardness Lvl
-5
-
-## Step 3 — Process driver and package entry point [folded: Risk2, robust]
+## Step 1 — Qualify the combined boundary before product edits [PR-R1, PR-R2]
 
 ### Proposed changes
 
-Add `tgdata/worker.py` with strict bounded manifest loader, `serve(...)` for trusted
-Python bootstrap with session-store objects, and CLI main/argparse. Export worker
-types from the worker module, not the package root (avoid eager new import cycles).
-Add the console script in setup.py; `python -m tgdata.worker` shares the exact path.
+After the fresh plan critique and fold, create `probes/revision3_prebuild.py` (or
+the next reviewed revision name) using temporary/in-memory candidate code derived
+from the exact current product. No runtime file is edited to make the experiment
+pass. Use actual Worker, Telethon1.45.0, SQLite, OS pipes and the real selector.
+Synthetic transport may supply RPC replies, but must not supply stop, cleanup,
+budget, ownership or serialization behavior. Retain normal and adverse controls.
 
-Own one loop and signal state on the main thread; reject running inside another
-active event loop. Ready before request input; binary bounded readline, single job
-task and one complete-frame writer. Write-all handles short writes; failed/closed
-output stops immediately and never admits another job. The CLI uses unbuffered
-output (raw descriptor/raw binary stream), leaving no worker bytes in Python's
-stdout buffer for interpreter-finalization retries. Normalize a standard buffered
-bootstrap stream to its raw stream or require a genuinely unbuffered supplied one;
-do not flush/retry protocol output during teardown after a failed/interrupted write.
-Retain pre-encoding, size bounds and write-all semantics. Real pipe controls showed
-buffered exit120 and a final-flush wait, versus raw exit3/143 without drain.
-CLI disables library/SDK
-diagnostic logging to avoid contaminating stdout or exposing failure text; own
-startup/fatal diagnostics contain types/codes only. Restore the embedding process's
-logging/signal state before returning its exit code. The documented bootstrap is a
-dedicated process entry point and exits with that code.
+Mandatory matrix before Step2/3:
 
-On EOF/normal completion close source-free facade state and notifications. On unsafe
-cleanup, do not try another source or claim recovery; finish the bounded known reply
-when possible and terminate the process. Source clients are temporary; the SDK
-cleanup attempt has already settled, and final process exit ends remaining resources.
-Do not add multiprocessing children, executor readers, HTTP listeners, polling or
-automatic rerun. Keep request counters and collectors bounded for an unlimited
-number of sequential jobs.
+- Quiet active request under SIGINT and SIGTERM: selector parked with a long SDK
+  timer; no child polling/helper timer; cancellation reaches actual native cleanup
+  without unrelated wake-up. Queued next job performs no source work.
+- Held native disconnect for both signals, repeated signals and caller cancellation:
+  use a parent-driven pipe/event to release it after observing cleanup entry, not
+  a periodic file watcher. The child remains alive until release; charges remain.
+- Signal at job creation/publication and before the task's first step: no client,
+  lookup/history/join request or claim; created tasks are settled without warnings.
+- First/repeated signal while finalization is deliberately held: preserve settlement
+  and handler/logging restoration; no closed-loop scheduling or pending-task stderr.
+- Idle input, startup refusal, completed reply/EOF, broken stdout and output
+  backpressure: preserve exits0/2/3/130/143, no drain requirement/final flush or second
+  source. SDK cleanup failure keeps its known result and sticky stop.
+- Decode unknown401/406, ordinary403 and the three known auth controls through the
+  actual SDK and real worker operations. Unknown sentinel absent from serialized
+  errors and stderr; known fields retained, zero group traffic/charges on auth failure.
+  Exercise the shared projection at bounded delivery-error/fatal call sites as well.
+
+Use parent watchdogs, trace actual requests/cleanup and inspect remaining tasks;
+do not infer cleanup from process exit alone. The parent may poll trace files;
+the child must not receive progress assistance before the stop it is qualifying.
+
+**Gate:** all required observations pass before any product edits. A candidate
+failure is not patched around in the implementation. Resolve the mechanism and
+revise this plan/experiment as needed; if its architecture cannot meet the contract,
+stop for description/traverse work. The earlier10 feasibility observations are
+evidence inputs, not a substitute or a pre-ticked PASS for this combined matrix.
 
 ### Output
 
-A resident worker command with deterministic request/exit behavior and no live defaults.
+Committed candidate/source fingerprint, complete execution log and explicit
+PASS/FAIL comparison with this matrix, before runtime implementation.
+
 ### Safe in nature
-False — process I/O, signal and packaging behavior is new; must test actual processes.
+True — owned offline experiments and work artifacts only.
 ### Peripheral concepts
-Binary pipes/files, event-loop ownership, signal cancellation, backpressure, config/ledger paths.
+OS signals, asyncio task/selector scheduling, SDK shielded cleanup, wrapper metadata, pipe uncertainty.
 ### Hardness Lvl
 5
 
-## Step 4 — Source and process tests [folded: Risk1, robust; Risk2, robust]
+## Step 2 — Implement the single process stop owner [PR-R1]
 
 ### Proposed changes
 
-Add test_37_worker.py for protocol/engine composition and test_38_worker_process.py
-for real subprocess CLI histories. Use actual factory/SDK/SQLite with synthetic wire;
-test child bootstrap may replace only transport fixtures, never Worker execution or
-the behavior being qualified. Block sockets. Keep fixture hooks out of production
-arguments/protocol. Include process watchdogs and explicit cleanup for test resources.
+Rework the signal/job/teardown region of `tgdata/worker.py` around the proven phase
+contract. Keep state private and small: first stop reason, actual job task/loop,
+and explicit settlement phase. First stop freezes admission, immediately marks an
+active job cancelled and wakes its loop. Synchronous input/output still interrupts.
+Publish and retire task ownership deliberately, checking the creation boundary;
+settle any interrupted unstarted task before shutdown can run it. During final
+settlement, signals record/wake without abandoning cleanup. Restore handlers/logging
+and avoid scheduling on a closed loop on every exit path.
 
-Cover: all four verbs; two configured expected accounts and stale cache; wrong actual
-identity before any group/join/charged read; no login code; proxy/device/settings;
-read and join denial/retained charges; qualified join/access statuses; original
-RPC/local error and complete partial batch; large IDs through JSON/Node-style consumer;
-malformed/unknown/duplicate fields, IDs and operations; argument validation without
-source; missing/bad manifest/config/ledger and known session alias; custom session
-store bootstrap; exact MessageBatch hash round trip; source-free ready/empty inventory;
-fixed-window read and maximum-cursor no false recovery; bounded health/drop disclosure.
-Include valid handle/cached ID, uncached private ID and invite-preview read refusal;
-assert no GetDialogs/GetContacts/Join/Import requests in worker resolution, and
-retain a control proving ordinary BatchEngine default fallback remains unchanged.
-
-Lifetime histories: successful/body-failed/setup-failed operation plus native cleanup
-failure; SDK-internal cancellation; repeated caller cancellation; broken diagnostics;
-sticky refusal of the next job; observer/source separation and stable job correlation;
-actual EOF after a job, truncated/oversized line, multiple requests and old IDs;
-SIGINT/SIGTERM idle and active with a held native disconnect; repeated signals;
-broken/slow stdout after a source result; no second source while output is blocked;
-raw-output broken-reader exit3 with no shutdown warning; SIGINT/SIGTERM under
-backpressure exits without first draining the still-open pipe, with no final flush;
-response size/encoding failure with explicit omission and no false empty success;
-unrelated ordinary library semantics. Prove actual charges, requests, outcomes and
-task/client settlement, not just a mocked method call count.
+Keep raw output/write-all, pre-encoded frames, the existing one-job executor,
+sanitized diagnostics and no teardown flush. Preserve original exceptions/results
+and cancellation semantics; do not weaken `_disconnect_owned`, invent a timeout,
+or modify SDK retry settings. `worker_engine.py` already has the stopping predicate;
+reuse it, with no new source API or ownership logic. Any necessary behavioral change
+outside these stated worker surfaces requires revisiting the plan rather than
+quietly expanding this step.
 
 ### Output
 
-Measured offline worker suites and retained failure histories without Telegram use.
+Worker process with the qualified stop, task publication and final settlement policy.
+
 ### Safe in nature
-True — tests own temporary files, processes and synthetic data.
+False — process-wide signals and source lifetime are delicate existing behavior.
 ### Peripheral concepts
-Existing tests19/32–36 fixtures, real pipes, lost replies, SQLite policies, SDK tasks.
+Task publication, event-loop wake-up, admission, notification retirement, raw stdout, exception precedence.
 ### Hardness Lvl
 5
 
-## Step 5 — Public docs and example [folded: Risk1, robust; Risk2, robust]
+## Step 3 — Enforce recognized diagnostic publication [PR-R2]
 
 ### Proposed changes
 
-Add docs/worker.md with the complete manifest/request/frame/exit contract and examples
-for four operations, allowance provisioning outside startup, absolute session paths,
-trusted Python bootstrap/session stores, output draining, partial results, exact IDs,
-lost reply/uncertain join handling, cleanup-stop policy, platform/runtime qualification
-and no live claims. README and smoke-test README link it and record measured suites.
-Explain bounded read resolution and the cached-ID/reference requirement; an uncached
-private group does not trigger global discovery. Document raw/unbuffered bootstrap
-output and the rule that interrupted output is not retried during teardown.
-Add examples/reading_worker.py as a caller that reads ready/health/result correctly;
-provide an explicitly offline demo and normal supplied-config mode. Example defaults
-never read project credentials, request login, join or reset an existing allowance.
-No work-folder dependency in runtime or examples.
+In `tgdata/worker_protocol.py`, build the small immutable canonical-auth name set
+from the pinned SDK metadata and existing banned names, and use it in describe_error.
+Omit unknown reason text; retain type/category and validated flags. Keep safe metadata
+inspection and the generic RPC/health policies. No changes to ConnectionEngine's
+AuthRequiredError construction, health.telegram_error_name or other library callers.
+Verify that terminal, delivery-failure source_error and fatal diagnostics share the
+same rule. Do not add a public typed-error migration or sanitize ordinary message data.
 
 ### Output
 
-A usable documented process interface and runnable caller demonstration.
+Known authentication metadata survives every worker diagnostic path; unknown text
+cannot be promoted to a public reason merely because its spelling looks valid.
+
 ### Safe in nature
-True — docs/example additions.
+False — changes serialized worker errors, although ordinary library errors remain intact.
 ### Peripheral concepts
-Consumer persistence, exclusive assignment, job correlation, process supervision, partial delivery.
+SDK class tables, AuthRequiredError wrapping, optional metadata, health and delivery-error projections.
 ### Hardness Lvl
 3
 
-## Step 6 — Verify integrated behavior and packaging
+## Step 4 — Install permanent source/process regressions [PR-R1, PR-R2]
 
 ### Proposed changes
 
-Run new37/38 first, then supported offline12–19,22–30,32–36 (22 existing suites;
-573 actual prior passes and3 explicit live skips) plus new suites. No test31 because
-#17 is absent from dev. Pass an intentionally missing config to legacy12/13 to keep
-their live checks skipped, and count skips separately. No live join/login/read.
+Extend `test_37_worker.py` with SDK-decoded unknown/known authentication cases and
+secondary projection paths; check byte absence of the sentinel, semantic flags,
+original error category, actual cleanup and zero unauthorized source/claims.
+Keep ordinary raw library reason available in a control; do not alter shared tests
+to hide its intentional behavior. Exercise all four worker verbs at the auth boundary.
 
-Compile all product/examples/setup and check Python3.7 grammar under actual3.11.10.
-Run the offline caller demo and existing daily/new/restarted-backfill examples.
-Build/install a package or equivalent isolated export without Git/devdocs and verify
-the module/console entrypoints and worker protocol from there. Review signatures,
-scoped diff/whitespace, no dependency on work docs or unmerged #17, and unchanged
-library behavior. Required process fault cases must be actual subprocess runs.
+Extend `test_38_worker_process.py` with the qualified quiet-selector, creation,
+finalization and repeated-signal cases. Replace its10 ms file-watcher assistance
+with explicit pipe/event release for held cleanup. Retain and distinguish quiet
+source versus held cleanup: one proves cancellation begins, the other proves it
+is not abandoned. Use actual subprocesses and native SDK work; patch only transport
+data or a named boundary pause/instrumentation. No test-only production flags.
 
-Small nonarchitectural slips may be corrected and recorded, with failed checks rerun.
-An architectural verification failure stops task-impl for re-planning; never weaken
-expectations to claim success.
+Carry every important Step1 history into tests that have no dependency on devdocs,
+Git or candidate source rewriting. Preserve existing39 worker groups and their
+ordinary source/budget/batch/pipe coverage; count actual cases and skips accurately.
 
 ### Output
 
-Measured final verification with exact environments, actual passes and limits.
+Portable permanent regressions that fail the rejected code and verify the rebuilt
+product's process and diagnostic contracts without incidental progress helpers.
+
 ### Safe in nature
-False — integration and process verification can expose real design failure.
+True — tests use synthetic data and own their processes/files.
 ### Peripheral concepts
-Current-dev regression baseline, package imports/entrypoints, synthetic/live evidence boundary.
+Regression sensitivity, instrumentation versus supplied behavior, real TL errors, sockets forbidden, watchdogs.
+### Hardness Lvl
+5
+
+## Step 5 — Document and verify the integrated worker
+
+### Proposed changes
+
+Update `docs/worker.md` and smoke-test README with first-stop/wake/cleanup semantics,
+known versus omitted auth reasons, measured case counts and exact limitations.
+Keep the public request/reply shapes, budget ownership and lost-reply rules. Inspect
+README and `examples/reading_worker.py` against this contract; change only any actual
+inconsistency. No new transport, destination storage or automatic job retry.
+
+Run the new tests first, then all24 supported offline suites:12–19,22–30,32–38.
+Use an intentionally missing config for12/13; permit test12's local loopback only
+as needed, with its two live checks skipped. Keep live skips separate from passes.
+Baseline was612 actual passes/3 live skips; new counts must be measured, not assumed.
+
+Compile product/examples/setup and check Python3.7 grammar under Python3.11.10 /
+Telethon1.45.0. Build/install from an export without Git/devdocs and test both module
+and console entry points. Run worker/daily and new/restarted-backfill offline examples
+(explicit --new for new retained backfill state). Recheck the complete product diff,
+no work-folder imports, unchanged source foundations and no unrelated edits.
+
+Record every failed check and correction. Small implementation slips may be fixed
+and rerun; an architectural failure returns to planning. Do not weaken acceptance,
+replace native behavior with a fake, or call synthetic evidence live qualification.
+
+### Output
+
+Updated public contract, exact integrated test totals and isolated package/example
+evidence for the rebuilt product, with all limitations and corrections recorded.
+
+### Safe in nature
+False — integrated verification can reveal a broken design or compatibility change.
+### Peripheral concepts
+Process/SDK version qualification, legacy semantics, packaging, decoder precision, live/offline evidence.
 ### Hardness Lvl
 4
 
-## Step 7 — Commit implementation and evidence
+## Step 6 — Commit and hand off the revised PR cycle
 
 ### Proposed changes
 
-Commit code/tests/public docs/example/setup in one product commit, then verification,
-implementation record and handoff/evidence separately. Preserve all other worktrees,
-original untracked files and duncan. Push the issue-linked branch and update #10's
-status from committed evidence, with live qualification and merge-check/PR/fresh
-critique still later. Do not publish a PR or merge/deploy in this task-impl run.
+Commit code/tests/public docs separately from work notes/evidence. Preserve archived
+revision2, planning critic r1 and rejected PR critique; record which current findings
+were answered and the real prebuild/verification results. Push the same branch and
+update #10/PR27 from committed artifacts. Keep the PR draft until the renewed checks
+have actually passed; implemented remedies are not a fresh PR approval.
+
+Next review remains merge check → fresh PR critique on the same PR, each committed
+and posted. Archive the old gate records when writing new ones. If the second PR
+round rejects, follow CONTRIBUTING7.4 back to desc/traverse. Merge requires the
+maintainer's separate go-ahead, excludes work docs and keeps the branch as archive.
+Preserve duncan, the original checkout/untracked files and other issues/worktrees.
 
 ### Output
 
-Completed offline worker delivery ready for its separately requested review gates.
+One reviewable revised implementation, honest current-cycle issue/PR status and a
+saved handoff for renewed gates; no merge or live deployment implied.
+
 ### Safe in nature
-False — deliberate commits/push and issue updates.
+False — deliberate version-control and remote issue/PR publication.
 ### Peripheral concepts
-Pipeline status, archive-only work documents, product review boundary.
+Review provenance, rejection thresholds, archive paths, publication, merge authority.
 ### Hardness Lvl
 2

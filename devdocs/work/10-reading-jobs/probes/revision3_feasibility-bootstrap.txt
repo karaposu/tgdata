@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-10-reading-jobs/devdocs/work/10-reading-jobs/probes/revision3_feasibility.py", line 88, in <module>
+    value = lifetime.signal_case(sig, 'quiet')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-10-reading-jobs/devdocs/work/10-reading-jobs/probes/pr_lifetime.py", line 64, in signal_case
+    assert process.line()['kind'] == 'ready'
+           ^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-10-reading-jobs/tgdata/smoke_tests/test_38_worker_process.py", line 123, in line
+    assert data, 'worker exited before complete reply'
+           ^^^^
+AssertionError: worker exited before complete reply

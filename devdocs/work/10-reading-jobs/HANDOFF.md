@@ -2,11 +2,36 @@
 model: gpt-6-astra
 effort: max
 ---
-# #10 handoff — PR27 rejected; revision3 re-planning next
+# #10 handoff — revision3 written; fresh plan critique next
 
 2026-10-12. Branch `feat/10-reading-jobs`, worktree
 `/private/tmp/tgdata-10-reading-jobs`, unchanged current dev `68f6bbd`.
 **Product remains `6ee146c`; no product edits during review.**
+
+Revision3 re-planning is now complete in `step_by_step_impl_plan.md`, using the
+full rejected PR review and its selected remedies. The next action is a fresh
+critic-d review of this plan, then fold into revision4. The combined candidate
+prebuild is the first implementation step, before any runtime edit. No new plan
+critique, fold or product implementation was performed during this planning run.
+
+The plan has six steps: qualify the complete boundary; implement one process stop
+policy; restrict authentication diagnostic vocabulary; add permanent regressions;
+document/verify; commit and update the same draft PR for renewed gates. It covers
+task creation, synchronous I/O, active work and final settlement together, rather
+than treating a cancellation call as proof of shutdown progress.
+
+Planning-only feasibility evidence in `probes/revision3_feasibility.py/.txt` passed
+two quiet worker subprocesses, two native asyncio ordering controls and six actual
+SDK/Worker authentication cases. Candidates were compiled in memory only. Immediate
+cancellation marking plus loop wake works; merely queuing cancellation can let a
+ready Task step first. Known authentication metadata survives without raw text.
+The full creation/held-cleanup/finalization/pipe matrix remains Step1's mandatory
+prebuild, not a claimed PASS from these narrower experiments.
+
+Archived without altering their contents: `step_by_step_impl_plan_r2.md`,
+`critic_r1.md`, `dynamic_critic_prompt_r1.md`. The live `critic.md` is absent so a
+task-impl resume invokes a new plan critique instead of folding the old verdict.
+`pr-critic.md` remains the first rejected PR review; it has not been overwritten.
 
 The user-requested merge check → PR → fresh critique is complete:
 
@@ -33,12 +58,11 @@ All25 existing core and14 process groups passed again. Prior24-suite612-pass/3-l
 skip and packaging records remain accurate for their coverage; neither is evidence
 that these new findings are safe. No live Telegram or real credential was used.
 
-**Next under CONTRIBUTING7.4:** revision3 re-plan using the whole critique and
-desc; fresh plan critic; fold into revision4; required prebuild; implementation;
-renew merge check and fresh PR critique on the same PR. Do not apply isolated
-findings as patches in this review run. The skill verdict REORDER preserves the
-existing plan as history and requires a candidate experiment before rebuilding;
-no meaning-gap deprecation was triggered. Do not merge or close #10.
+**Next under CONTRIBUTING7.4:** fresh plan critic for revision3; fold into revision4;
+required combined prebuild; implementation; renew merge check and fresh PR critique
+on the same PR. The old plan is archived as history, not marked as a meaning-gap
+deprecation. This is the first rejected PR round; a second rejection goes back to
+description/traverse under7.4. Do not merge or close #10.
 
 The worker remains explicit-account, serial JSON lines over caller-owned pipes,
 with temporary verified clients and existing budgets. These findings do not justify
