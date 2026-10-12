@@ -175,10 +175,10 @@ protection, and restore owned handler state. Qualify quiet-selector and held-cle
 histories without polling assistance alongside the existing raw-output controls.
 **Why this is robust:** supplies the missing executor wake-up at the stop boundary
 without another task, transport, deadline policy or change to source ownership.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* One actual process owner exists in worker.serve; the CLI and Python bootstrap share it. Existing examples use their own established asyncio runners, not a second implementation of this hybrid signal contract. A wake-capable handoff closes this instance without a framework or polling dependency. The candidate still needs the named prebuild before corrective implementation.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -191,7 +191,7 @@ and restoration policies reusable across genuine future process implementations.
 
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* Revisit only when a second concrete worker transport needs the same blocking-I/O and active-loop lifecycle. #17's pool is an in-process client owner and is not such an instance. The narrow stop boundary would survive a later transport controller.
 
 ## Risk 2 — Authentication wrapping forwards raw diagnostic text
 
@@ -241,10 +241,10 @@ Test decoded unknown401/406 and known authentication failures through real worke
 operations, in addition to the ordinary generic-RPC control.
 **Why this is robust:** closes the demonstrated privacy boundary while preserving
 the library's intentional raw diagnostics and the worker's useful fixed metadata.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* The two actual neighboring projections, generic RPC errors and health events in worker_protocol, already reject unknown text. This authentication branch is the uncovered instance. A canonical-name rule at the existing worker boundary gives the required reach without migrating ordinary library error fields or changing their diagnostic contract.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -257,7 +257,7 @@ wrappers/transports instead of each consumer deciding which strings are publisha
 
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* A typed diagnostic representation is useful if another actual public transport needs it. It would touch existing library error construction/consumers beyond this worker boundary; the robust projection would remain necessary and can survive that later change. No present blocker forces a lesser remedy.
 
 ## Probe evidence and limits
 

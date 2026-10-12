@@ -2,39 +2,54 @@
 model: gpt-6-astra
 effort: max
 ---
-# #10 handoff — offline implementation complete
+# #10 handoff — PR27 rejected; revision3 re-planning next
 
-2026-10-11. Branch `feat/10-reading-jobs`, worktree
-`/private/tmp/tgdata-10-reading-jobs`, base dev `68f6bbd`.
-**Product: `6ee146c`.** Work/evidence is committed separately after that product.
+2026-10-12. Branch `feat/10-reading-jobs`, worktree
+`/private/tmp/tgdata-10-reading-jobs`, unchanged current dev `68f6bbd`.
+**Product remains `6ee146c`; no product edits during review.**
 
-The user's task-impl request is implemented: a serial JSON-line process with an
-explicit account for bounded reads, group lookup/access/join jobs, existing
-allowances and sessions, fresh ownership, exact batches/IDs, source-owned health
-and conservative cleanup/output shutdown. See public `docs/worker.md` and
-`examples/reading_worker.py`. No account routing dependency on #17.
+The user-requested merge check → PR → fresh critique is complete:
 
-Formal chain: feature-heavy triage → full traverse → desc → plan → critic REORDER
-→ required prebuild PASS → folded revision2 → implementation and verification.
-Planning/fold checkpoints are already on the branch; selected remedies implemented.
-The stdin/stdout transport default was stated after an unanswered optional question,
-not described as a user-approved HTTP service.
+- Fidelity check **PASS**, commit `85c0455`, posted at
+  https://github.com/karaposu/tgdata/pull/27#issuecomment-6118444113.
+- PR https://github.com/karaposu/tgdata/pull/27 targets dev with Closes #10.
+- Fresh critic-d prompt `d6d3e7d`; Phase2 critique/probes `837d06f`.
+- **Gate REJECTED: 0 High, 2 Medium, 0 Low.** PR is draft. Read `pr-critic.md`;
+  Phase3 selects both robust remedies, without editing the Phase2 findings.
 
-**Verified:** 24 offline suites,612 actual passes,3 live skips. New25 core+14 actual
-process groups. Compile/3.7 grammar, isolated installed module/console and worker,
-daily, new/restarted-backfill examples pass. Test12 requires local loopback access;
-pass a deliberately missing config so its live cases stay skipped. Evidence and all
-local fixes/tooling corrections are recorded in implementation.md/verification.md.
+The findings are reproducible, not hypothetical:
 
-**Next:** separately requested merge check → PR into dev with Closes #10 → fresh
-same-session critic-d diff/plan review and probes. Those gates are NOT completed
-by implementation verification. Do not merge #10 or mark its issue closed yet.
-Live qualification needs separately approved account/group resources and ownership.
+1. Active SIGINT/SIGTERM calls Task.cancel without waking the selector. Without
+   the test's10 ms polling helper, native cleanup has not begun until unrelated
+   loop activity occurs. Both signals/repeats fail; an explicit self-pipe wake
+   permits real SDK cleanup and exit130/143. The long native-cleanup allowance
+   does not explain a failure to start cleanup.
+2. Unknown SDK401/406 raw text passes through AuthRequiredError.reason into JSON.
+   The regex checks spelling, not trusted origin. SDK-decoded403 and canonical
+   AUTH_KEY_UNREGISTERED controls show the intended neighboring behavior.
 
-**Prior task #17:** PR26 is DRAFT/REJECTED with2 Medium findings; revision3 re-plan
-under CONTRIBUTING7.4 is next. It is saved at `71502e5` in
-`/private/tmp/tgdata-17-account-pool`. Do not treat #10 completion as a repair of17.
+Probes: `probes/pr_lifetime.py/.txt`, `probes/pr_diagnostics.py/.txt` (9 histories).
+All25 existing core and14 process groups passed again. Prior24-suite612-pass/3-live-
+skip and packaging records remain accurate for their coverage; neither is evidence
+that these new findings are safe. No live Telegram or real credential was used.
 
-Original checkout remains `feat/7-group-operations` at `8a43d23` with the user's
-untracked HANDOFF/todo unchanged. Duncan and unrelated work stay out. No deployment,
-live Telegram operation, existing allowance reset or dev merge occurred here.
+**Next under CONTRIBUTING7.4:** revision3 re-plan using the whole critique and
+desc; fresh plan critic; fold into revision4; required prebuild; implementation;
+renew merge check and fresh PR critique on the same PR. Do not apply isolated
+findings as patches in this review run. The skill verdict REORDER preserves the
+existing plan as history and requires a candidate experiment before rebuilding;
+no meaning-gap deprecation was triggered. Do not merge or close #10.
+
+The worker remains explicit-account, serial JSON lines over caller-owned pipes,
+with temporary verified clients and existing budgets. These findings do not justify
+a queue, HTTP service or pool redesign. Live deployment remains separately pending.
+
+Formal first-cycle history: feature-heavy triage, traverse, desc, plan, planning
+critic/prebuild, folded revision2, product6ee146c, verification6c60832. The transport
+default was a declared engineering choice after an unanswered optional question.
+Current §9 metadata confirms GPT-6 Astra/max; both review gates ran in-session.
+
+**Prior #17:** PR26 remains draft/rejected, revision3 re-plan next, at `71502e5` in
+`/private/tmp/tgdata-17-account-pool`. It is independent and no runtime was copied.
+Original checkout at `8a43d23`, untracked HANDOFF/todo, duncan and other worktrees
+remain untouched. No dev merge, live action, existing allowance reset or deployment.
