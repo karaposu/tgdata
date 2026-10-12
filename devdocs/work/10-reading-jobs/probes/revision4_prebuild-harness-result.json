@@ -1,0 +1,163 @@
+{
+  "status": "FAIL",
+  "completed": [
+    {
+      "case": "quiet.SIGINT",
+      "status": "PASS",
+      "detail": {
+        "mode": "quiet",
+        "signal": "SIGINT",
+        "clients": 1,
+        "charge": 2,
+        "exit": 130,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "quiet.SIGTERM",
+      "status": "PASS",
+      "detail": {
+        "mode": "quiet",
+        "signal": "SIGTERM",
+        "clients": 1,
+        "charge": 2,
+        "exit": 143,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "held.SIGINT",
+      "status": "PASS",
+      "detail": {
+        "mode": "held",
+        "signal": "SIGINT",
+        "clients": 1,
+        "charge": 2,
+        "exit": 130,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "held.SIGTERM",
+      "status": "PASS",
+      "detail": {
+        "mode": "held",
+        "signal": "SIGTERM",
+        "clients": 1,
+        "charge": 2,
+        "exit": 143,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "before_task.SIGINT",
+      "status": "PASS",
+      "detail": {
+        "mode": "before_task",
+        "signal": "SIGINT",
+        "clients": 0,
+        "charge": 0,
+        "exit": 130,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "before_task.SIGTERM",
+      "status": "PASS",
+      "detail": {
+        "mode": "before_task",
+        "signal": "SIGTERM",
+        "clients": 0,
+        "charge": 0,
+        "exit": 143,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "publication.SIGINT",
+      "status": "PASS",
+      "detail": {
+        "mode": "publication",
+        "signal": "SIGINT",
+        "clients": 0,
+        "charge": 0,
+        "exit": 130,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "publication.SIGTERM",
+      "status": "PASS",
+      "detail": {
+        "mode": "publication",
+        "signal": "SIGTERM",
+        "clients": 0,
+        "charge": 0,
+        "exit": 143,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "finalize.SIGINT",
+      "status": "PASS",
+      "detail": {
+        "mode": "finalize",
+        "signal": "SIGINT",
+        "clients": 1,
+        "charge": 2,
+        "exit": 130,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "finalize.SIGTERM",
+      "status": "PASS",
+      "detail": {
+        "mode": "finalize",
+        "signal": "SIGTERM",
+        "clients": 1,
+        "charge": 2,
+        "exit": 143,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "caller_cancel.repeated",
+      "status": "PASS",
+      "detail": {
+        "mode": "caller_cancel",
+        "signal": "SIGTERM",
+        "clients": 1,
+        "charge": 2,
+        "exit": 3,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "empty_inventory.eof",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "case": "startup.refusals",
+      "status": "PASS",
+      "detail": {
+        "refusals": 7,
+        "clients": 0
+      }
+    }
+  ],
+  "processes": 20,
+  "error_type": "AssertionError"
+}

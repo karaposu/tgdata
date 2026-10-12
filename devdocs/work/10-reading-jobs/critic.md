@@ -27,11 +27,22 @@ Passing result: every listed observation holds in the same candidate, with real
 request/charge/cleanup/restoration evidence, empty unexpected stderr and no product
 edits used to manufacture the result.
 
-**Experiment status: PENDING — the complete combined prebuild has not run.**
-The targeted review below is not a passing result for that experiment. No planning/external execution
-blocker is open for offline work; the local prebuild remains a binding gate.
+Result: PASS — 2026-10-12. The complete combined prebuild ran82 groups across67
+controlled Python subprocesses with both frozen candidate functions installed.
+Quiet/held/creation/finalization, startup/EOF, raw-pipe faults, cleanup failures,
+SDK authentication and terminal/delivery/fatal projections all satisfied the matrix.
+Candidate and source fingerprints were unchanged. See `prebuild-result.md` and
+`probes/revision4_prebuild_result.json`; candidate frozen at2cc9995 before execution.
+
+**Experiment status: PASSED.** No product files were edited. The targeted review
+below remains its original, narrower record; the new result above discharges the
+gate through the full matrix, not by re-labeling those22 earlier observations.
 
 ## High-level summary
+
+The sections below retain the plan-review record from before the combined run.
+Its pending-test statements describe that review checkpoint; the Result above
+is the current experiment state. No risk severity or selection was changed.
 
 Revision3 at9ce9ae3 has a suitable shape and test-before-build order. **No additional
 High, Medium or Low plan risks found.** The two original Medium PR findings remain
@@ -217,8 +228,8 @@ either this selection pass or the fold marker. Phase2 findings/verdict are uncha
 
 ## Disposition
 
-Plan content is suitable for the explicit prebuild-first path. Preserve the live
-plan under REORDER, fold the completed review into revision4 with an honest count
-of zero additional remedies, and keep the combined experiment gate pending. Do
-not reinterpret this plan review as a new PR pass: PR27 remains draft/rejected
-until implementation and both renewed gates. No product edits or merge in this run.
+The review required the prebuild-first path and a zero-additional-remedy revision4
+fold. Both are now complete: the full experiment Result above is PASS. Proceed to
+implementation under that plan; this is not a new PR pass. PR27 remains draft/
+rejected until implementation and both renewed gates. No product edits or merge
+were made while qualifying the candidate.

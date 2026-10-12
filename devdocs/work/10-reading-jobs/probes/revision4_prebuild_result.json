@@ -1,0 +1,761 @@
+{
+  "status": "PASS",
+  "groups": 82,
+  "processes": 67,
+  "candidate_sha256": {
+    "revision4_candidate_serve.py": "7b5258e255960ac67c4b3143d4e9b7c7dd983bc6844d3392fd10a39e890c7b96",
+    "revision4_candidate_diagnostics.py": "74ef82a6fb672fdbf8bd2bd2f94a31eb5a8a195a5c1077e16a822ba61c94b0aa"
+  },
+  "results": [
+    {
+      "case": "quiet.SIGINT",
+      "status": "PASS",
+      "detail": {
+        "mode": "quiet",
+        "signal": "SIGINT",
+        "clients": 1,
+        "charge": 2,
+        "exit": 130,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "quiet.SIGTERM",
+      "status": "PASS",
+      "detail": {
+        "mode": "quiet",
+        "signal": "SIGTERM",
+        "clients": 1,
+        "charge": 2,
+        "exit": 143,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "held.SIGINT",
+      "status": "PASS",
+      "detail": {
+        "mode": "held",
+        "signal": "SIGINT",
+        "clients": 1,
+        "charge": 2,
+        "exit": 130,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "held.SIGTERM",
+      "status": "PASS",
+      "detail": {
+        "mode": "held",
+        "signal": "SIGTERM",
+        "clients": 1,
+        "charge": 2,
+        "exit": 143,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "before_task.SIGINT",
+      "status": "PASS",
+      "detail": {
+        "mode": "before_task",
+        "signal": "SIGINT",
+        "clients": 0,
+        "charge": 0,
+        "exit": 130,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "before_task.SIGTERM",
+      "status": "PASS",
+      "detail": {
+        "mode": "before_task",
+        "signal": "SIGTERM",
+        "clients": 0,
+        "charge": 0,
+        "exit": 143,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "publication.SIGINT",
+      "status": "PASS",
+      "detail": {
+        "mode": "publication",
+        "signal": "SIGINT",
+        "clients": 0,
+        "charge": 0,
+        "exit": 130,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "publication.SIGTERM",
+      "status": "PASS",
+      "detail": {
+        "mode": "publication",
+        "signal": "SIGTERM",
+        "clients": 0,
+        "charge": 0,
+        "exit": 143,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "finalize.SIGINT",
+      "status": "PASS",
+      "detail": {
+        "mode": "finalize",
+        "signal": "SIGINT",
+        "clients": 1,
+        "charge": 2,
+        "exit": 130,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "finalize.SIGTERM",
+      "status": "PASS",
+      "detail": {
+        "mode": "finalize",
+        "signal": "SIGTERM",
+        "clients": 1,
+        "charge": 2,
+        "exit": 143,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "caller_cancel.repeated",
+      "status": "PASS",
+      "detail": {
+        "mode": "caller_cancel",
+        "signal": "SIGTERM",
+        "clients": 1,
+        "charge": 2,
+        "exit": 3,
+        "settled": true,
+        "restored": true
+      }
+    },
+    {
+      "case": "empty_inventory.eof",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "case": "startup.refusals",
+      "status": "PASS",
+      "detail": {
+        "refusals": 7,
+        "clients": 0
+      }
+    },
+    {
+      "case": "test_all_four_operations_two_accounts_and_eof",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "case": "test_partial_batch_health_correlation_and_charge_survive_json",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "case": "test_webview_identifiers_survive_javascript_exactly",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "case": "test_wrong_identity_and_missing_auth_never_read_or_login",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "case": "test_bad_complete_frames_and_reused_ids_are_local",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "case": "test_truncated_and_oversized_frames_never_execute",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "case": "test_session_store_bootstrap_does_not_create_session_files",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "case": "test_broken_stdout_stops_without_retry_flush_or_next_job",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "case": "test_signals_while_idle_do_not_need_stdin_eof",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "case": "test_signal_under_output_pressure_does_not_need_reader_drain",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "case": "cleanup_failure",
+      "status": "PASS",
+      "detail": {
+        "mode": "cleanup_failure",
+        "outcome": "returned",
+        "charge": 2,
+        "cleanup_failed": true,
+        "next_client": false,
+        "exit": 3
+      }
+    },
+    {
+      "case": "body_cleanup",
+      "status": "PASS",
+      "detail": {
+        "mode": "body_cleanup",
+        "outcome": "ChannelPrivateError",
+        "charge": 2,
+        "cleanup_failed": true,
+        "next_client": false,
+        "exit": 3
+      }
+    },
+    {
+      "case": "setup_cleanup",
+      "status": "PASS",
+      "detail": {
+        "mode": "setup_cleanup",
+        "outcome": "LookupError",
+        "charge": 0,
+        "cleanup_failed": true,
+        "next_client": false,
+        "exit": 3
+      }
+    },
+    {
+      "case": "internal_cleanup_cancel",
+      "status": "PASS",
+      "detail": {
+        "mode": "internal_cleanup_cancel",
+        "outcome": "returned",
+        "charge": 2,
+        "cleanup_failed": true,
+        "next_client": false,
+        "exit": 3
+      }
+    },
+    {
+      "case": "partial_cleanup",
+      "status": "PASS",
+      "detail": {
+        "mode": "partial_cleanup",
+        "outcome": "FloodWaitError",
+        "charge": 200,
+        "cleanup_failed": true,
+        "next_client": false,
+        "exit": 3
+      }
+    },
+    {
+      "case": "auth_unknown401.read_batch",
+      "status": "PASS",
+      "detail": {
+        "operation": "read_batch",
+        "error": "AuthRequiredError",
+        "reason": null,
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_unknown406.read_batch",
+      "status": "PASS",
+      "detail": {
+        "operation": "read_batch",
+        "error": "AuthRequiredError",
+        "reason": null,
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_generic403.read_batch",
+      "status": "PASS",
+      "detail": {
+        "operation": "read_batch",
+        "error": "ForbiddenError",
+        "reason": null,
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_unregistered.read_batch",
+      "status": "PASS",
+      "detail": {
+        "operation": "read_batch",
+        "error": "AuthRequiredError",
+        "reason": "AUTH_KEY_UNREGISTERED",
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_revoked.read_batch",
+      "status": "PASS",
+      "detail": {
+        "operation": "read_batch",
+        "error": "AuthRequiredError",
+        "reason": "SESSION_REVOKED",
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_banned.read_batch",
+      "status": "PASS",
+      "detail": {
+        "operation": "read_batch",
+        "error": "AuthRequiredError",
+        "reason": "USER_DEACTIVATED_BAN",
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_unknown401.lookup_group",
+      "status": "PASS",
+      "detail": {
+        "operation": "lookup_group",
+        "error": "AuthRequiredError",
+        "reason": null,
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_unknown406.lookup_group",
+      "status": "PASS",
+      "detail": {
+        "operation": "lookup_group",
+        "error": "AuthRequiredError",
+        "reason": null,
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_generic403.lookup_group",
+      "status": "PASS",
+      "detail": {
+        "operation": "lookup_group",
+        "error": "ForbiddenError",
+        "reason": null,
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_unregistered.lookup_group",
+      "status": "PASS",
+      "detail": {
+        "operation": "lookup_group",
+        "error": "AuthRequiredError",
+        "reason": "AUTH_KEY_UNREGISTERED",
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_revoked.lookup_group",
+      "status": "PASS",
+      "detail": {
+        "operation": "lookup_group",
+        "error": "AuthRequiredError",
+        "reason": "SESSION_REVOKED",
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_banned.lookup_group",
+      "status": "PASS",
+      "detail": {
+        "operation": "lookup_group",
+        "error": "AuthRequiredError",
+        "reason": "USER_DEACTIVATED_BAN",
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_unknown401.check_group_access",
+      "status": "PASS",
+      "detail": {
+        "operation": "check_group_access",
+        "error": "AuthRequiredError",
+        "reason": null,
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_unknown406.check_group_access",
+      "status": "PASS",
+      "detail": {
+        "operation": "check_group_access",
+        "error": "AuthRequiredError",
+        "reason": null,
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_generic403.check_group_access",
+      "status": "PASS",
+      "detail": {
+        "operation": "check_group_access",
+        "error": "ForbiddenError",
+        "reason": null,
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_unregistered.check_group_access",
+      "status": "PASS",
+      "detail": {
+        "operation": "check_group_access",
+        "error": "AuthRequiredError",
+        "reason": "AUTH_KEY_UNREGISTERED",
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_revoked.check_group_access",
+      "status": "PASS",
+      "detail": {
+        "operation": "check_group_access",
+        "error": "AuthRequiredError",
+        "reason": "SESSION_REVOKED",
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_banned.check_group_access",
+      "status": "PASS",
+      "detail": {
+        "operation": "check_group_access",
+        "error": "AuthRequiredError",
+        "reason": "USER_DEACTIVATED_BAN",
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_unknown401.join_group",
+      "status": "PASS",
+      "detail": {
+        "operation": "join_group",
+        "error": "AuthRequiredError",
+        "reason": null,
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_unknown406.join_group",
+      "status": "PASS",
+      "detail": {
+        "operation": "join_group",
+        "error": "AuthRequiredError",
+        "reason": null,
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_generic403.join_group",
+      "status": "PASS",
+      "detail": {
+        "operation": "join_group",
+        "error": "ForbiddenError",
+        "reason": null,
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_unregistered.join_group",
+      "status": "PASS",
+      "detail": {
+        "operation": "join_group",
+        "error": "AuthRequiredError",
+        "reason": "AUTH_KEY_UNREGISTERED",
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_revoked.join_group",
+      "status": "PASS",
+      "detail": {
+        "operation": "join_group",
+        "error": "AuthRequiredError",
+        "reason": "SESSION_REVOKED",
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "auth_banned.join_group",
+      "status": "PASS",
+      "detail": {
+        "operation": "join_group",
+        "error": "AuthRequiredError",
+        "reason": "USER_DEACTIVATED_BAN",
+        "charge": 0,
+        "closed": true
+      }
+    },
+    {
+      "case": "delivery_projection",
+      "status": "PASS",
+      "detail": {
+        "mode": "delivery_projection",
+        "raw_text": false,
+        "exit": 3
+      }
+    },
+    {
+      "case": "fatal_unknown401",
+      "status": "PASS",
+      "detail": {
+        "mode": "fatal_unknown401",
+        "raw_text": false,
+        "exit": 2
+      }
+    },
+    {
+      "case": "fatal_unknown406",
+      "status": "PASS",
+      "detail": {
+        "mode": "fatal_unknown406",
+        "raw_text": false,
+        "exit": 2
+      }
+    },
+    {
+      "case": "fatal_unregistered",
+      "status": "PASS",
+      "detail": {
+        "mode": "fatal_unregistered",
+        "raw_text": false,
+        "exit": 2
+      }
+    },
+    {
+      "case": "fatal_banned",
+      "status": "PASS",
+      "detail": {
+        "mode": "fatal_banned",
+        "raw_text": false,
+        "exit": 2
+      }
+    },
+    {
+      "case": "core.test_ready_is_local_and_inventory_is_exclusive",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_strict_decoder_and_consumed_request_ids",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_two_accounts_real_pagination_and_exact_batch",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_group_lookup_access_and_invite_qualification",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_join_outcomes_and_real_allowance_claims",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_join_webview_ids_and_refusal_preserve_meaning",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_missing_join_policy_is_local",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_original_wait_partial_batch_and_health_survive",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_unknown_rpc_text_and_metadata_fault_do_not_escape",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_missing_authentication_never_requests_code",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_wrong_owner_and_changed_admission_send_nothing",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_bounded_resolution_and_secret_invite",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_dates_and_max_cursor_do_not_invent_access_recovery",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_cleanup_failure_preserves_outcome_and_refuses_next_job",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_repeated_cancellation_waits_for_actual_cleanup",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_overlap_and_callback_child_close_refuse_without_cycle",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_observer_owned_cancellation_does_not_cancel_source",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_delivery_limit_is_explicit_and_keeps_source_metadata",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_budget_refusal_and_factory_policy_are_preserved",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_budget_exhaustion_keeps_the_completed_prefix",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_mutation_named_error_from_identity_is_not_join_success",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_notification_capacity_is_counted_without_changing_source",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_store_clients_create_no_session_files_or_suffixes",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_serialization_failure_keeps_known_source_outcome",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    },
+    {
+      "case": "core.test_one_large_health_event_is_counted_as_dropped",
+      "status": "PASS",
+      "detail": {
+        "actual_sdk": true
+      }
+    }
+  ]
+}

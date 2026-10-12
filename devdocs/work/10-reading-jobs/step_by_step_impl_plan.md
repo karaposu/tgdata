@@ -6,9 +6,10 @@ effort: max
 
 **Critic folded:** 2026-10-12 — 0 additional mitigations (0 implementation steps
 changed, 0 added). The two robust PR remedies already encoded in revision3 remain.
-**Review state: critique and fold complete; combined Step1 prebuild PENDING;
-product implementation not started.** The REORDER experiment in critic.md must
-pass before any runtime edit; this fold marker does not discharge that gate.
+**Review state: critique/fold complete; combined Step1 prebuild PASSED;
+product integration not started.** The REORDER experiment in critic.md passed
+82 groups across67 controlled subprocesses on2026-10-12. See `prebuild-result.md`.
+Its frozen candidate at2cc9995, not the fold marker, supplies the qualification.
 
 Revision3 at9ce9ae3 was reviewed under the new dynamic prompt at1d6cac7, with
 Phase2 at08ee0f2 and Phase3 selection atd49f8a0 in critic.md. No additional
@@ -257,6 +258,10 @@ safe fatal/startup diagnostics. Message bodies/group data/intended labels are st
 application data; do not claim all protocol content is safe to publish publicly.
 
 ## Step 1 — Qualify the combined boundary before product edits [PR-R1, PR-R2]
+
+**Completed:** full combined prebuild PASS on2026-10-12,82 groups/67 subprocesses.
+The two candidate snapshots and source fingerprints were frozen at2cc9995; product
+files remain unchanged. `prebuild-result.md` maps every requirement below to evidence.
 
 ### Proposed changes
 

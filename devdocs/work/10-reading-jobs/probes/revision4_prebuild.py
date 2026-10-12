@@ -72,7 +72,10 @@ def child(root, mode, stock, stop_signal):
     old_handlers = {s: signal.getsignal(s) for s in (signal.SIGINT, signal.SIGTERM)}
     old_logging = logging.root.manager.disable
     def trace(kind, detail):
-        with (root/'trace.jsonl').open('a') as stream:
+        # Legacy source assertions must keep seeing only actual transport work.
+        # Provenance/lifecycle observations are separate, never discarded.
+        name = 'trace.jsonl' if kind in ('client','request','cleanup') else 'evidence.jsonl'
+        with (root/name).open('a') as stream:
             stream.write(json.dumps([kind, detail])+'\n')
     trace('candidate', FINGERPRINT['candidates'])
     def release_on_command(event):
@@ -197,11 +200,22 @@ class Process(original.Process):
 
     def wait(self,code=0,timeout=15):
         super().wait(code,timeout)
-        rows=self.trace()
+        rows=self.observations()
         assert ['candidate',FINGERPRINT['candidates']] in rows
         assert ['restored',True] in rows
         assert all(row[1]['pending']==0 and row[1]['closed'] for row in rows if row[0]=='loop')
         assert not self.stderr and SENTINEL.encode() not in self.buffer
+
+    def observations(self):
+        path=self.root/'evidence.jsonl'
+        metadata=[] if not path.exists() else [json.loads(line) for line in path.read_bytes().split(b'\n')[:-1]]
+        return self.trace()+metadata
+
+    def until(self,predicate,timeout=15):
+        deadline=time.monotonic()+timeout
+        while not predicate(self.observations()):
+            assert self.p.poll() is None and time.monotonic()<deadline, 'trace timed out'
+            time.sleep(.01)
 
 
 AUTH = {
@@ -232,10 +246,10 @@ def lifecycle(mode,sig):
             process.p.send_signal(signal.SIGUSR2 if mode=='caller_cancel' else sig)
             time.sleep(.15)  # Parent observation only; no child polling timer.
             assert process.p.poll() is None
-            assert [ 'finalize' if mode=='finalize' else 'cleanup','finished'] not in process.trace()
+            assert [ 'finalize' if mode=='finalize' else 'cleanup','finished'] not in process.observations()
             process.p.send_signal(signal.SIGUSR1)  # Release held native/event boundary only now.
         process.wait(3 if mode=='caller_cancel' else 128+sig,timeout=5)
-        rows=process.trace();clients=[r[1] for r in rows if r[0]=='client']
+        rows=process.observations();clients=[r[1] for r in rows if r[0]=='client']
         expected=0 if mode in ('before_task','publication') else 1
         assert len(clients)==expected and budget.status(111).used==2*expected
         assert budget.status(222).used==join.status(111).used==0
@@ -284,7 +298,7 @@ def cleanup(mode):
             assert value['error']['wait_seconds']==7200
             assert len(MessageBatch(value['partial_result']).messages)==100
         p.wait(3)
-        rows=p.trace();final=next(r[1] for r in rows if r[0]=='clients_final')
+        rows=p.observations();final=next(r[1] for r in rows if r[0]=='clients_final')
         assert len(final)==1 and final[0]['disconnect_attempts']==1 and not final[0]['closed']
         assert budget.status(222).used==0
         assert budget.status(111).used==(0 if mode=='setup_cleanup' else 200 if mode=='partial_cleanup' else 2)

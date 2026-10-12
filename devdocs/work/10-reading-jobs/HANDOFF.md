@@ -2,7 +2,7 @@
 model: gpt-6-astra
 effort: max
 ---
-# #10 handoff — revision4 folded; combined prebuild next
+# #10 handoff — combined prebuild passed; integration next
 
 2026-10-12. Branch `feat/10-reading-jobs`, worktree
 `/private/tmp/tgdata-10-reading-jobs`, unchanged current dev `68f6bbd`.
@@ -15,17 +15,32 @@ were found; zero new remedies were folded. The two original robust PR remedies
 were already present in revision3. Exact revision3 is archived in
 `step_by_step_impl_plan_r3.md`.
 
-**Next: the complete combined Step1 prebuild**, as required by critic.md's REORDER
-verdict. It has NOT passed yet. Only after it passes may implementation begin.
-The fold marker must not bypass the pending experiment in a task-impl resume.
-No runtime changes, live actions, PR approval or merge occurred in this review/fold.
+**The complete combined Step1 prebuild has now PASSED:**82 groups across67
+controlled Python subprocesses, both candidate functions installed together.
+Candidate/source fingerprints were frozen at2cc9995 before execution and remain
+unchanged. See `prebuild-result.md`, `probes/revision4_fingerprint.json` and the
+full log/machine results `probes/revision4_prebuild.txt` and
+`probes/revision4_prebuild_result.json`.
+
+**Next: implement Step2 onward.** Integrate the tested process phase policy and
+known-auth diagnostic vocabulary; install permanent regressions and run full
+offline/package verification before renewed PR gates. The critic's REORDER result
+is now PASS; do not repeat the unchanged prebuild or re-critique the already folded
+plan without a new change/concern. Product files are still unchanged at this checkpoint.
+No live action, PR approval or merge occurred.
+
+The first combined attempt hit a harness-only mismatch: provenance was mixed into
+a trace the existing tests define as source activity. It is retained separately.
+Moving bookkeeping into a separate evidence file preserved every original assertion;
+the candidate did not change, and the complete82-group matrix then passed.
 
 Fresh review evidence: `probes/revision3_critic.py/.txt`,8 actual process histories
 (quiet, held disconnect, creation/publication and held finalization, both signals)
 and14 diagnostic histories (all four verbs, delivery-error and fatal projections).
 All22 passed with real Worker/SDK/SQLite and OS signals, candidates compiled in
 memory, no child polling helper and no live network. These targeted observations
-do not replace the full startup/EOF/raw-pipe/cleanup-fault composition in Step1.
+did not replace the full startup/EOF/raw-pipe/cleanup-fault composition; that matrix
+has now been run separately and is the basis of the PASS above.
 
 The plan has six steps: qualify the complete boundary; implement one process stop
 policy; restrict authentication diagnostic vocabulary; add permanent regressions;
@@ -38,12 +53,12 @@ two quiet worker subprocesses, two native asyncio ordering controls and six actu
 SDK/Worker authentication cases. Candidates were compiled in memory only. Immediate
 cancellation marking plus loop wake works; merely queuing cancellation can let a
 ready Task step first. Known authentication metadata survives without raw text.
-The full creation/held-cleanup/finalization/pipe matrix remains Step1's mandatory
-prebuild, not a claimed PASS from these narrower experiments.
+The full creation/held-cleanup/finalization/pipe matrix was subsequently qualified
+in Step1; the narrower planning experiments are retained as earlier evidence.
 
 Archived without altering their contents: plans r2/r3, `critic_r1.md`,
 `dynamic_critic_prompt_r1.md`. The live `critic.md` now holds the new revision3
-review; read its pending experiment before resuming implementation. `pr-critic.md`
+review; its experiment now carries the full prebuild PASS. `pr-critic.md`
 remains the first rejected PR review and has not been overwritten.
 
 The user-requested merge check → PR → fresh critique is complete:
@@ -71,7 +86,7 @@ All25 existing core and14 process groups passed again. Prior24-suite612-pass/3-l
 skip and packaging records remain accurate for their coverage; neither is evidence
 that these new findings are safe. No live Telegram or real credential was used.
 
-**Next under CONTRIBUTING7.4:** required combined prebuild; implementation; renew
+**Next under CONTRIBUTING7.4:** implementation; renew
 merge check and fresh PR critique on the same PR. Do not re-critique the folded
 plan just because it is revision4. Old plans are archived as history, not marked
 as meaning-gap deprecations. This is the first rejected PR round; a second PR
