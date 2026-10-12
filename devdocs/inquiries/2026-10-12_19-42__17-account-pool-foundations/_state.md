@@ -5,18 +5,18 @@ articulated-surfacing-routed
 A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
-- [x] Surfacing
-- [x] Sensemaking
-- [x] Decomposition
-- [x] Innovation
-- [x] Critique
-- [x] Routelister
+- [ ] Surfacing
+- [ ] Sensemaking
+- [ ] Decomposition
+- [ ] Innovation
+- [ ] Critique
+- [ ] Routelister
 ## Iteration
-2
+3
 ## Status
 ACTIVE
 ## Next Discipline
-Iteration evaluation
+Surfacing
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -81,6 +81,10 @@ Iteration evaluation
   manifestations, preserved first-seen/log;0 new/stale. Both outputs, manual12/12 PASS.
   Next: iteration evaluation from saved critique2.
 
+- 2026-10-12_20-44: Iteration2 evaluated. Same architectural regions; clarify local drain
+  during active work/close, then confirm the complete contract. Six outputs renamed
+  *_iter2.md, original framing/index retained. Next: Surfacing3.
+
 ## Iteration 2 focus
 
 What is the smallest complete observation/control contract that removes the measured
@@ -90,3 +94,10 @@ and loss semantics, application observer ownership and storage-only provider rol
 Retain original causal history, identity, durable permission, quota, progress and
 persistent-client findings. This refines considered articulation3 while maintaining
 coverage of all five; it does not ask for production implementation.
+
+## Iteration 3 focus
+
+Confirm passive retrieval is independent of active operation/close, preserving original
+errors and cancellation. Retain the same role separation and finite advisory capture;
+no new scope, API implementation or general architecture search. Verify this last
+contract choice against concrete consumer behavior, then assess stable convergence.
