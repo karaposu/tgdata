@@ -7,7 +7,7 @@ A → Su → S → D → I → C → R (always)
 - [x] Articulate-Simple
 - [x] Surfacing
 - [x] Sensemaking
-- [ ] Decomposition
+- [x] Decomposition
 - [ ] Innovation
 - [ ] Critique
 - [ ] Routelister
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Decomposition
+Innovation
 ## Relationships
 - RELATED: ../../work/17-account-pool/traverse/ (prior inquiry; commitments re-tested)
 - RELATED: ../../work/17-account-pool/retirement-rework/ (scoped continuation)
@@ -88,6 +88,8 @@ Decomposition
 - 2026-10-12_20-45: Surfacing3 complete: four core anchors, two cycles; manual10/10 PASS (checker unavailable). Next: Sensemaking.
 
 - 2026-10-12_20-47: Sensemaking3 complete: two real-source/close comparisons distinguish access rules; SV1–SV6, all inherited groups re-tested; manual10/10 PASS. Next: Decomposition.
+
+- 2026-10-12_20-49: Decomposition3 complete: one atomic access question, four explicit interfaces, all seven quality checks PASS. Next: Innovation.
 
 ## Iteration 2 focus
 
