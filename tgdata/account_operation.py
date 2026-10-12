@@ -101,12 +101,14 @@ class _AccountOperation:
         return self._account_id
 
 
-async def _disconnect_owned(client):
+async def _disconnect_owned(client, failures=None):
     """Settle one SDK disconnect attempt, then deliver caller cancellation.
 
     Telethon shields its own disconnect task. Shielding a retained outer
     task too prevents cancelling its returned Future and losing the ability
     to await completion. There is deliberately no shutdown timeout promise.
+    The optional private receipt records a failure before cancellation escapes;
+    it lets a process consumer refuse reuse without changing caller outcomes.
     """
     async def close():
         try:
@@ -125,6 +127,8 @@ async def _disconnect_owned(client):
             cancelled = exc
     failure = completion.result()
     if failure is not None:
+        if failures is not None:
+            failures.append(failure)
         try:
             logger.error('Account operation cleanup failed (%s)', failure)
         except (Exception, asyncio.CancelledError):
