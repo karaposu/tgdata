@@ -1,54 +1,77 @@
-# Fresh critic prompt — #17 restart
+---
+model: gpt-6-astra
+effort: max
+subject_plan_revision: 6
+---
+# Dynamic critic — #17 public read ownership
 
-Review desc.md and step_by_step_impl_plan.md from scratch against actual pool/source,
-health, store, daily/backfill and batch implementations, plus current-dev worker.
-Use all archived failures as counterexamples. Do not treat r3's 36 passing groups
-as proof of the replacement. Review in this warmed session, never a subagent.
+Read desc.md revision5, step_by_step_impl_plan.md revision6, the public-outcome inquiry
+finding/evidence, both rejected PR critiques and the previous failed storage prebuild.
+Read actual AccountPool, pool_lifecycle, pool_source, BatchEngine, MessageBatch,
+SyncEngine, BackfillEngine, ProgressFacade, ReadBudget, state stores and the pool/worker
+fixtures. Judge the new plan as a stranger: an earlier traverse is input, not proof.
+Do this in the current session; no delegation. Product a63099e, current dev2ddb852.
 
-First read declared blockers: distinguish factual CLOSED failures from behavioral
-qualification and E1 execution access. Compute premises before risks, ranked by waste
-if false. For each: premise, first dependent step, waste, scheduled test, cheapest
-earlier real-component test/cost, existing coverage and non-covering stand-ins.
+Challenge these concepts together:
+- Is the owned invocation's completion independent of arbitrary caller continuation,
+  without releasing actual source/provider work or native retirement prematurely?
+- Can direct, late, repeated, shield/gather and timeout consumers retrieve actual data
+  through a capture held before invocation, even when cancellation objects differ?
+- Is early data actual fully validated/media-complete source data, including pagination
+  and monitor-finalization stalls? Does a borrowed record buffer remain coherent,
+  bounded and detached from Task/client/error graphs? Does snapshot cost grow per read
+  rather than quadratically per record?
+- Are one-shot binding, failed validation, missing/wrong type, same/different-pool
+  reuse, prestart cancellation, finality and immutable snapshots defined operationally?
+- Does no-prefix failover keep data/account/error provenance consistent for each actual
+  attempt? Can an empty later value erase a known prefix or stale metadata survive?
+- Can the private engine adapter carry one already-bound writer without rebinding,
+  recursive public calls, global context capture or leaking the new calling convention
+  into ordinary TgData and the worker?
+- Can close finish while public progress publication continues under its caller,
+  without a false finalized snapshot? Do replay/ack remain source-free after close?
+- Do real before/after account and group CAS, paired store failures, charges, waits,
+  exact receipt hashes and recovery remain independent of available data?
+- Are provider I/O-only roles, bounded passive health, native retirement quarantine,
+  repeated caller stop and original error precedence retained in the complete composition?
+- Are changes limited to the actual missing boundary? Name concrete existing instances
+  before proposing any shared supervisor, universal result store or wider API rewrite.
 
-Challenge these specific boundaries:
-- Can the caller and a component cancel independently, concurrently, before start,
-  during source finalization, or during a store's late actual commit? Does repeated
-  cancellation retain the actual child and busy ownership without cancelling cleanup?
-- Does a provider task get cancellation meaning at every invocation, including
-  attribute lookup/call, load/CAS, pool/daily/backfill and synchronous session loading?
-- Does a failed admission refuse traffic even if committed? Does non-admission
-  backfill reconciliation still use exact real state? Are retries, quotas, tokens,
-  progress and receipts unchanged? No canceled reply proves rollback.
-- Can a complete source batch be retrieved after pool settlement or progress save
-  fails? Are invalid batches excluded? Is an error prefix distinguishable from
-  durable pending data, end evidence and an acknowledgment receipt?
-- Which operations can a same-pool provider reenter, particularly state-only reads
-  with no active source task? Test lifecycle mutations as well as close. Can guards
-  survive task hops and then expire without blocking legitimate external control?
-- Does passive reporting eliminate user callbacks/tasks/log-mirror dependencies,
-  bound count/encoded bytes/types/loss, and drain during close without I/O?
-- Does source outcome survive every secondary completion path? Does unexpected
-  source cancellation remain unresolved? Does native failed retirement quarantine?
-- Does the common helper serve real repeated instances without becoming a global
-  supervisor or changing ordinary TgData/#7/#10 cancellation? Preserve Python3.7 API
-  compatibility and Telethon1.45, current worker resolver and cleanup receipts.
+Create `critic.md` in the same directory as the plan. First include model/effort
+frontmatter derived from current metadata, then one document verdict: IMPLEMENT AS
+WRITTEN; IMPLEMENT AFTER FOLDING THESE IN; REORDER — TEST BEFORE BUILD; or DO NOT
+IMPLEMENT — MEANING GAP (WRONG LAYER if established failures are not addressed).
+Immediately below, give Falsifier and Affordable now lines. An affordable unexecuted
+falsifier requires REORDER; name real-component experiment/cost/first dependent step/
+passing and disqualifying observations. If the proposed order already puts it first,
+say so and retain that gate rather than inventing a late-test defect.
 
-Create critic.md beside the plan. Frontmatter: actual model/effort (unknown if not
-available). Then verdict: IMPLEMENT AS WRITTEN / IMPLEMENT AFTER FOLDING THESE IN /
-REORDER — TEST BEFORE BUILD / DO NOT IMPLEMENT — MEANING GAP (or WRONG LAYER).
-Immediately give Falsifier and Affordable now (cost/access). Affordable falsifier
-means REORDER. Specify full real-component experiment, cost, first dependent step,
-passing/disqualifying observations; no targeted probe substitutes for combined P0.
+Put a high-level summary on top, then Premise Inventory before risks. For each premise,
+rank waste-if-false and state first dependent step, waste, test location, cheapest
+actual earlier test/cost, current coverage and non-covering simulations. Synthetic
+wire may stimulate the real SDK but is not live two-account evidence. A fake result,
+receipt or cleanup flag cannot close the corresponding behavioural premise.
 
-Then high-level summary, Premise Inventory, Restart Check (each observed failure,
-established mechanism, addressing design element), and Inherited Lessons (lesson,
-step/order that satisfies it). Empty addressing cells are findings; most empty
-means WRONG LAYER. Execution blockers are preconditions, not severity-rated risks.
+Include Restart Check (observed failure / established mechanism / addressing design)
+and Inherited Lessons mapped to the plan's ordering. Carry E1 as an execution
+precondition without severity. If an open planning gap invalidates steps, use critic-d
+Phase2.5: deprecate the plan, record the blocker only in desc Known Blockers, and stop.
 
-For each real risk use sections, not a risks table: two-paragraph Risk (plain,
-self-contained consequence first; precise paths/symbols/triggers second), Severity,
-Category, Impact, NoobEng and Affected areas. For Medium/High supply quick/robust/
-long-term mitigations, robust justification and long-term justification. Every
-proposal has empty selected/elegant/last_resort boxes and Note with Why chosen/For
-future blank. Do not pad risk counts. Phase3 only selects/annotates, using actual
-other instances, one-mechanism validity and reach/extent, never tier prestige.
+For each real risk use subsections, not a risk table. Risk is two paragraphs: first
+plain/self-contained without symbols/paths, then precise paths/call sequence/trigger.
+Include Severity Low/Medium/High, Category, Impact, NoobEng and Affected areas. Medium/
+High risks each get Quick, Robust and Long-term mitigation proposals. Robust includes
+'Why this is robust'; Long-term includes 'Why this is long term effective'. Under
+EACH proposal initially emit:
+
+- [ ] selected   - [ ] elegant   - [ ] last_resort
+
+**Note**
+*Why chosen:* —
+*For future:* —
+
+Do not pad findings or call known test limitations new risks. Unsupported detail in a
+complex step is Medium when it would change behavior. Separate written contract,
+experimental candidate feasibility and production qualification. After saving Phase2,
+run Phase3 selection separately: only tick boxes and fill notes, using actual-class,
+one-mechanism, reach/extent, size and delicacy gates. Do not alter findings while choosing.
