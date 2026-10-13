@@ -203,10 +203,15 @@ keep exact source/ledger/cleanup and caller cancellation behavior. This is an in
 to the required upstream requalification, not permission for a patch in this review.
 **Why this is robust:** addresses the actual shared close entry for all three affected
 public readers, with no additional result store or global task supervisor.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* Raw AccountPool.read and daily/backfill preparation are actual
+affected public readers sharing this one close coordinator. One non-consuming join
+can address them without altering their receipt/store contracts. The worker has its
+own explicit result protocol, not evidence that a new shared public handle is needed.
+Robust has greater reach per changed interface; the larger handle would add an
+unrequested multi-consumer contract. This recommendation is not a production patch.
 *For future:* —
 
 ### Mitigation — Long-term
