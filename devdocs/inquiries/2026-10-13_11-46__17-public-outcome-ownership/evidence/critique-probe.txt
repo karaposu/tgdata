@@ -1,0 +1,29 @@
+[
+  {
+    "mode": "daily",
+    "close_done_before_publication": true,
+    "recipient_running_before_release": true,
+    "provisional_data_visible": false,
+    "final_records": 1,
+    "pending": true,
+    "charge": 1
+  },
+  {
+    "mode": "backfill",
+    "close_done_before_publication": true,
+    "recipient_running_before_release": true,
+    "provisional_data_visible": false,
+    "final_records": 1,
+    "pending": true,
+    "charge": 1
+  },
+  {
+    "task_cancelled": true,
+    "recipient_state": "new",
+    "io": false,
+    "inference": "no started invocation; not a finished read with an empty batch"
+  }
+]
+PASS: three adversarial concept observations; early-data publication not implemented by the adapter.
+
+exit=0
