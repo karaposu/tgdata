@@ -26,7 +26,10 @@ from .sync_engine import SyncEngine
 from .sync_store import SyncStorageError
 from .backfill import BackfillStorageError
 from .message_batch import _interrupted_prefix
-from .pool_lifecycle import _scope, _inside, _call_store, _StoreBoundary
+from .pool_lifecycle import _scope, _inside, _call_store, _StoreBoundary, _Invocation
+from .pool_result import _capture_call
+from .backfill_engine import BackfillEngine
+from .backfill import BackfillPrepareContext
 from .pool_observation import ObservationBuffer
 from .progress_facade import ProgressFacade
 from .pool_source import _OwnedSource, _await_cleanup
@@ -203,18 +206,23 @@ class AccountPool(ProgressFacade):
         self._observations = ObservationBuffer()
         self._sources = {a.account_id: _OwnedSource(a, read_budget, self.policy, self.groups, self._observations)
                          for a in accounts}
-        self._active_task = None
+        self._active_invocation = None
         self._closed = False
         self._closing = False
         self._wall_clock = time.time
         self._monotonic = time.monotonic
         self._last_time = 0.0
         self._wait_ticks = {}
-        self.sync_engine = SyncEngine(self.get_message_batch,
+        self.sync_engine = SyncEngine(self._read_batch,
             _StoreBoundary(self, sync_store, SyncStorageError, 'Sync') if sync_store is not None else None)
         self._backfill_store = (_StoreBoundary(self, backfill_store, BackfillStorageError, 'Backfill')
                                 if backfill_store is not None else None)
         self._backfill_engines = {}
+
+    @property
+    def _active_task(self):
+        record = self._active_invocation
+        return record.caller if record is not None else None
 
     @contextmanager
     def _operation(self):
@@ -222,14 +230,15 @@ class AccountPool(ProgressFacade):
             raise PoolBusyError('Cannot control this pool from its live operation/provider scope')
         if self._closed:
             raise PoolClosedError('Account pool is closed')
-        if self._active_task is not None:
+        if self._active_invocation is not None:
             raise PoolBusyError('Another account-pool operation is active')
-        self._active_task = asyncio.current_task()
+        record = self._active_invocation = _Invocation()
         try:
             with _scope(self):
                 yield
         finally:
-            self._active_task = None
+            self._active_invocation = None
+            record.finish()
 
     def _now(self, document=None):
         try:
@@ -458,8 +467,8 @@ class AccountPool(ProgressFacade):
                 local.read_error = source_error
             raise local from None
 
-    async def read(self, chat_id, *, after_id=0, limit=200, download_media_to=None,
-                   start_date=None, end_date=None):
+    async def _read(self, chat_id, *, after_id=0, limit=200, download_media_to=None,
+                    start_date=None, end_date=None, _capture=None):
         """Read once through the first successful eligible account, with provenance."""
         chat_id = self._group(chat_id)
         after_id = _batch_integer(after_id, 'after_id', 0, MAX_MESSAGE_ID)
@@ -487,8 +496,10 @@ class AccountPool(ProgressFacade):
                 tried.add(aid)
                 expected, ident = await self._admit(raw, document, aid, chat_id, 'read')
                 batch = source_error = None
+                if _capture is not None:
+                    _capture.attempt(aid)
                 try:
-                    batch = await self._sources[aid].run(chat_id, **options)
+                    batch = await self._sources[aid].run(chat_id, _capture=_capture, **options)
                 except asyncio.CancelledError:
                     raise
                 except Exception as error:
@@ -508,12 +519,59 @@ class AccountPool(ProgressFacade):
             retry_after = max(0, math.ceil(min(deadlines) - now)) if deadlines else None
             raise PoolUnavailable(statuses.accounts, attempts, retry_after) from None
 
-    async def get_message_batch(self, group_id, *, after_id=0, limit=200,
-                                download_media_to=None, start_date=None, end_date=None):
-        """The existing bounded-reader signature, returning MessageBatch only."""
-        result = await self.read(group_id, after_id=after_id, limit=limit,
-                    download_media_to=download_media_to, start_date=start_date, end_date=end_date)
+    async def read(self, chat_id, *, capture, after_id=0, limit=200,
+                   download_media_to=None, start_date=None, end_date=None):
+        """Read with a caller-retained, single-use data destination."""
+        with _capture_call(capture) as writer:
+            result = await self._read(chat_id, after_id=after_id, limit=limit,
+                download_media_to=download_media_to, start_date=start_date,
+                end_date=end_date, _capture=writer)
+            writer.offer(result.batch)
+            return result
+
+    async def _read_batch(self, group_id, *, after_id=0, limit=200,
+                          download_media_to=None, start_date=None, end_date=None, _capture=None):
+        result = await self._read(group_id, after_id=after_id, limit=limit,
+            download_media_to=download_media_to, start_date=start_date,
+            end_date=end_date, _capture=_capture)
         return result.batch
+
+    async def get_message_batch(self, group_id, *, capture, after_id=0, limit=200,
+                                download_media_to=None, start_date=None, end_date=None):
+        """Return a bounded batch; keep capture to inspect data after a stop."""
+        with _capture_call(capture) as writer:
+            batch = await self._read_batch(group_id, after_id=after_id, limit=limit,
+                download_media_to=download_media_to, start_date=start_date,
+                end_date=end_date, _capture=writer)
+            writer.offer(batch)
+            return batch
+
+    async def sync_group(self, chat_id, *, capture, limit=200, download_media_to=None):
+        """Prepare/replay daily delivery with a new caller-retained capture.
+
+        Only the saved pending batch's receipt can acknowledge progress. The
+        capture remains useful if publication fails, but grants no receipt.
+        """
+        with _capture_call(capture) as writer:
+            batch = await self.sync_engine.prepare(chat_id, limit=limit,
+                download_media_to=download_media_to, _capture=writer)
+            writer.offer(batch)
+            return batch
+
+    def _new_backfill_engine(self, collection):
+        return BackfillEngine(self._backfill_store, collection, read_batch=self._read_batch)
+
+    async def prepare_backfill(self, context, *, capture, download_media_to=None):
+        """Prepare/replay one historical turn with a new retained capture.
+
+        Source closure and progress publication have separate lifetimes; this
+        call finalizes its capture only after its own preparation ends.
+        """
+        with _capture_call(capture) as writer:
+            engine, context = self._backfill_for(context, BackfillPrepareContext)
+            turn = await engine.prepare(context, download_media_to=download_media_to, _capture=writer)
+            writer.offer(turn.batch)
+            return turn
 
     async def recover_account(self, account_id, *, attempt_id, previous_reader_stopped,
                               retry_not_before):
@@ -589,15 +647,10 @@ class AccountPool(ProgressFacade):
         self._closing = True
 
         async def finish():
-            active = self._active_task
-            if active is not None and not active.done():
-                active.cancel()
-                try:
-                    await active
-                except asyncio.CancelledError:
-                    pass  # Expected reader cancellation; this worker is retained.
-                except Exception:
-                    pass  # the source caller retains its own exception
+            active = self._active_invocation
+            if active is not None:
+                active.stop(self._active_invocation)
+                await active.done
             first = None
             for source in self._sources.values():
                 try:

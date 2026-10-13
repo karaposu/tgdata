@@ -151,7 +151,7 @@ class BatchEngine:
         self._retain_cancelled_prefix = _retain_cancelled_prefix
 
     async def fetch_batch(self, group_id, *, after_id=0, limit=200, download_media_to=None,
-                          start_date=None, end_date=None):
+                          start_date=None, end_date=None, _capture=None):
         group_id = _group_argument(group_id)
         after_id = _integer(after_id, 'after_id', 0, MAX_MESSAGE_ID)
         limit = _integer(limit, 'limit', 1, MAX_BATCH_MESSAGES)
@@ -181,6 +181,8 @@ class BatchEngine:
                 resolved_id = tl_utils.get_peer_id(entity)
                 _identifier(str(resolved_id), 'chat_id', MIN_LONG, -1)
                 chat_id = resolved_id
+                if _capture is not None:
+                    _capture.attach(chat_id, after_id, mode, records)
                 if after_id == MAX_MESSAGE_ID:
                     # No representable message ID can follow this cursor. The
                     # SDK's reverse iterator otherwise increments it past int32.

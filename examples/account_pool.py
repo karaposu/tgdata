@@ -17,6 +17,7 @@ import tempfile
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from tgdata import PoolReadCapture
 from telethon import errors, functions, types
 from telethon.crypto import AuthKey
 from tgdata import (AccountPool, PoolAccount, PoolGroup, ReadBudget,
@@ -118,18 +119,25 @@ async def demo(directory):
         client._mb_entity_cache.set_self_user(aid, False, aid)
         client._sender = wires[aid] = SyntheticWire(aid, deny=aid == 111)
     receiver = Receiver(directory / 'receiver.sqlite3')
+    read_capture = PoolReadCapture()
     try:
-        result = await pool.read(CHAT, after_id=100, limit=2)
+        result = await pool.read(CHAT, capture=read_capture, after_id=100, limit=2)
         receiver.accept(result.batch)
         print('Selected account:', result.account_id)
         print('Attempts:', ', '.join(a.outcome for a in result.attempts))
         # Import only the position the receiver just durably accepted.
         await pool.initialize_sync(CHAT, after_id=result.batch.next_after_id)
-        pending = await pool.sync_group(CHAT, limit=2)
+        pending_capture = PoolReadCapture()
+        pending = await pool.sync_group(CHAT, capture=pending_capture, limit=2)
         before = sum(w.reads for w in wires.values())
-        replay = await pool.sync_group(CHAT, limit=1)
+        replay_capture = PoolReadCapture()
+        replay = await pool.sync_group(CHAT, capture=replay_capture, limit=1)
         assert replay.batch_id == pending.batch_id
         assert sum(w.reads for w in wires.values()) == before
+        assert read_capture.snapshot().account_id == result.account_id == 222
+        assert read_capture.snapshot().read_error_type is None
+        assert pending_capture.snapshot().batch.batch_id == pending.batch_id
+        assert replay_capture.snapshot().account_id is None  # Stored replay has no new source account.
         receiver.accept(replay)
         await pool.acknowledge_sync(CHAT, replay.batch_id)
         print('Replay source reads: 0')
@@ -140,6 +148,9 @@ async def demo(directory):
         try:
             await pool.close()
         finally:
+            snapshot = read_capture.snapshot()
+            print('Retained read:', snapshot.state,
+                  len(snapshot.batch.messages) if snapshot.batch is not None else 0)
             observations = pool.drain_health_events()
             print('Health observations:', len(observations['events']))
             print('Dropped observations:', observations['dropped'])

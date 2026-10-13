@@ -120,3 +120,18 @@ class _StoreBoundary:
 
     async def compare_and_swap(self, *args):
         return await _call_store(self.pool, self.store, 'compare_and_swap', args, self.error_type, self.label)
+
+
+class _Invocation:
+    """Completion of one library-owned span, not its containing caller Task."""
+    def __init__(self):
+        self.caller = asyncio.current_task()
+        self.done = asyncio.get_running_loop().create_future()
+
+    def stop(self, active):
+        if active is self and not self.done.done() and self.caller is not None:
+            self.caller.cancel()
+
+    def finish(self):
+        self.caller = None
+        self.done.set_result(None)

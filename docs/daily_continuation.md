@@ -81,6 +81,9 @@ treated as the same source.
 The optional [AccountPool](account_pool.md) selects among existing accounts while
 reusing these same progress methods. Pending replay and acknowledgment stay local;
 account selection happens only when a new source read is needed.
+Pool `sync_group` additionally requires a new caller-retained `PoolReadCapture`
+passed as `capture=` for each call; see the [pool capture contract](account_pool.md#retain-data-through-cancellation).
+The signatures below describe ordinary `TgData`.
 
 ## Prepare, replay and acknowledge
 

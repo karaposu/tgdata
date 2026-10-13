@@ -140,21 +140,25 @@ class _OwnedSource(ConnectionEngine):
             raise PoolConfigurationError('Group reference does not resolve to its canonical chat ID') from None
         return entity
 
-    async def run(self, chat_id=None, **options):
+    async def run(self, chat_id=None, *, _capture=None, **options):
         outcome = {}
 
         async def observed():
             async with self.monitor.call('account_pool_read' if chat_id is not None else 'account_pool_recheck',
                                          group=chat_id):
                 try:
-                    value = (await self.batch_reader.fetch_batch(chat_id, **options)
+                    value = (await self.batch_reader.fetch_batch(chat_id, _capture=_capture, **options)
                              if chat_id is not None else await self._verify())
                 except BaseException as error:
                     outcome['error'] = error
+                    if _capture is not None:
+                        _capture.source_error(error)
                     outcome['done'] = not isinstance(error, asyncio.CancelledError)
                     raise
                 else:
                     outcome['value'], outcome['done'] = value, True
+                    if _capture is not None:
+                        _capture.offer(value)
                     return value
 
         await asyncio.sleep(0)

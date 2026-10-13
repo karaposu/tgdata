@@ -1,4 +1,5 @@
 """Actual SQLite/SDK histories at every pool-owned provider boundary."""
+from tgdata import PoolReadCapture
 import asyncio
 from datetime import datetime, timezone
 import json
@@ -53,8 +54,8 @@ async def setup(mode):
 
 async def read(e, mode, context, limit):
     if mode == 'raw': return await t.read(e, limit=limit)
-    if mode == 'daily': return await e.pool.sync_group(t.CHAT, limit=limit)
-    return await e.pool.prepare_backfill(context)
+    if mode == 'daily': return await e.pool.sync_group(t.CHAT, capture=PoolReadCapture(), limit=limit)
+    return await e.pool.prepare_backfill(context, capture=PoolReadCapture())
 
 def source(e, failed):
     if failed:
@@ -124,7 +125,7 @@ async def progress_load_start_admission():
     for after in (False, True):
         e, _, provider, context = await setup('backfill')
         provider.arm('compare_and_swap', 1, after)
-        result = await capture(e.pool.prepare_backfill(context))
+        result = await capture(e.pool.prepare_backfill(context, capture=PoolReadCapture()))
         assert isinstance(result, BackfillStorageError)
         row = json.loads(await provider.actual.load(t.CHAT))['current']
         assert (row['attempt'] is not None) is after
@@ -356,7 +357,7 @@ async def backfill_recovery():
     for after in (False, True):
         e, state, provider, context = await setup('backfill')
         e.senders[111].script = [t.f.response([t.f.message(n) for n in reversed(range(101, 201))]), t.f.PENDING]
-        reader = asyncio.create_task(e.pool.prepare_backfill(context))
+        reader = asyncio.create_task(e.pool.prepare_backfill(context, capture=PoolReadCapture()))
         await t.d.until(lambda: bool(e.senders[111].pending))
         reader.cancel(); assert isinstance(await capture(reader), asyncio.CancelledError)
         saved = await e.pool.get_backfill_status(context.run)

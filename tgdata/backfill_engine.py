@@ -384,7 +384,7 @@ class BackfillEngine:
                 return self._turn(state)
         raise BackfillConflictError('source settlement kept conflicting; inspect the authoritative attempt')
 
-    async def prepare(self, context, *, download_media_to=None):
+    async def prepare(self, context, *, download_media_to=None, _capture=None):
         """Prepare/replay one exact delivery using current run/cursor/control intent.
 
         Early pacing returns a wait without sleeping or reading. Pending replay
@@ -408,6 +408,8 @@ class BackfillEngine:
                 root = self._directory(row['request']['media_mode'], download_media_to, needed=True)
                 batch = MessageBatch(row['pending'])
                 self._verify_media(batch, root)
+                if _capture is not None:
+                    _capture.offer(batch)
                 return self._turn(state, previous=key == 'previous', replayed=True)
             if row['terminal_outcome'] is not None or row['operator_intent'] == 'paused':
                 return self._turn(state, previous=key == 'previous')
@@ -429,6 +431,8 @@ class BackfillEngine:
                            download_media_to=root,
                            start_date=_decode_date(admitted['window']['start_date']),
                            end_date=_decode_date(admitted['window']['end_date']))
+            if _capture is not None:
+                options['_capture'] = _capture
             try:
                 result = await self._read_batch(chat_id, **options)
             except asyncio.CancelledError as error:

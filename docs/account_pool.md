@@ -88,10 +88,11 @@ provider; the pool cannot turn a deadline into proof a write has stopped.
 ## Read and select accounts
 
 ```python
-from tgdata import PoolUnavailable
+from tgdata import PoolReadCapture, PoolUnavailable
 
+capture = PoolReadCapture()
 try:
-    result = await pool.read(-1001234567890, after_id=500, limit=100)
+    result = await pool.read(-1001234567890, capture=capture, after_id=500, limit=100)
     print(result.account_id, result.attempts)
     await destination_accepts_durably(result.batch)  # your application's receiver
 except PoolUnavailable as error:
@@ -99,13 +100,15 @@ except PoolUnavailable as error:
         print(account.account_id, account.reasons, account.retry_at)
     print(error.retry_after)  # None: no finite automatic retry is known
 finally:
+    snapshot = capture.snapshot()
     await pool.close()
 ```
 
 `read` returns immutable `PoolReadResult(batch, account_id, attempts)`. The batch
-retains MessageBatch v1 and its hash. `get_message_batch` has the existing bounded
-reader signature and returns only that batch. Both accept fixed date boundaries
-and an optional media directory.
+retains MessageBatch v1 and its hash. `get_message_batch` returns only that batch.
+Both require `capture=` and accept fixed date boundaries and an optional media
+directory. The pool's own progress methods use an internal reader that shares the
+outer call's capture; it does not bind that capture a second time.
 
 `drain` selects the first eligible account in inventory order. `spread` selects the
 largest remaining allowance, breaking ties by inventory order. There is no hidden
@@ -127,11 +130,78 @@ include `waiting`, `budget`, `warmup`, `unresolved_attempt`, repair conditions a
 denials. An attempt cap can leave an eligible untried candidate, yielding retry_after
 zero. Another call may spend allowance before retry. Unavailable never means empty history.
 
+## Retain data through cancellation
+
+Create a `PoolReadCapture` before starting a pool read and keep a reference where
+your application can inspect it after the awaited operation stops. Pass it as the
+required `capture=` argument to `read`, `get_message_batch`, `sync_group` or
+`prepare_backfill`. Allocate a new capture for every call, including replay. Existing
+pool call sites must add this argument; ordinary `TgData` APIs are unchanged.
+
+```python
+import asyncio
+
+capture = PoolReadCapture()
+reader = asyncio.create_task(
+    pool.read(chat_id, capture=capture, after_id=500, limit=100)
+)
+try:
+    result = await asyncio.wait_for(reader, timeout=30)
+finally:
+    snapshot = capture.snapshot()
+    # snapshot.batch holds any available complete records. Keep it for your receiver.
+    # Do not acknowledge a daily/backfill delivery from this snapshot alone.
+```
+
+`snapshot()` is synchronous, performs no I/O and returns an immutable
+`PoolReadSnapshot`. Reading it does not consume the data. Earlier snapshots remain
+unchanged when more messages arrive, and a final snapshot remains unchanged after
+pool closure or another read. Keeping the capture outside the reader Task makes
+its data accessible even when a timeout, `shield`, `gather` or another waiter
+replaces the cancellation exception.
+
+| State | Meaning | `batch` |
+|---|---|---|
+| `unbound` | The public coroutine has not entered | `None` |
+| `running` | The call is still running, including owned cleanup or progress publication | Complete available records with `stop_reason="interrupted"`, or `None` |
+| `succeeded` | The public call returned normally | Its actual batch, if any, preserving its stop reason |
+| `failed` | The public call raised an ordinary error | Complete interrupted prefix, or `None` |
+| `cancelled` | Cancellation propagated from the public call after its owned work ended | Complete interrupted prefix, or `None` |
+
+A successful raw empty read retains its actual empty batch. A successful daily or
+backfill call can retain a known empty source observation even when no delivery is
+owed. Local wait/paused results have no batch. Available data never proves that a
+progress write committed or that the receiver accepted a delivery.
+
+`account_id` identifies the verified source for a retained observation. It is `None`
+for stored replay or when no batch is available. `error_type` names the public
+failure/interruption; `read_error_type` separately names the latest actual source
+failure/interruption. They contain bounded type names, never exception messages or
+tracebacks. Changing accounts after an empty attempt clears the previous source
+metadata. These fields are observations, not health, retry or acknowledgment authority.
+
+A capture binds once at coroutine entry, before argument-dependent I/O. Missing or
+invalid captures refuse before I/O; attempting to bind an already-used capture also
+refuses without altering its original data. A bound capture remains used after a
+validation failure. Cancellation before the coroutine starts leaves it `unbound`.
+If a shielded outer waiter is cancelled, the inner read may still be `running`;
+the waiter's cancellation does not prove that the read has ended.
+
+Only fully validated records are available, including completed downloads when media
+is requested. An unfinished next message or download is excluded. Snapshot creation
+copies the available batch on access; avoid repeatedly copying a large batch in a
+tight loop. Retention is one current batch per capture under the existing
+10,000-message limit, without a separate universal byte limit. Keeping older snapshots
+is the application's memory responsibility. Drop references to release them. Captures
+are in memory and do not add persistence across process death; durable progress stores
+keep their existing replay guarantees.
+
 ## Preserve partial data and uncertainty
 
 The first nonempty completed prefix ends failover. Ordinary source errors retain
 their type/object and `partial_result`, plus safe `pool_account_id`/`pool_attempts`
-metadata. Handle those complete records before deciding to read again.
+metadata. Use the retained capture to obtain records independently of exception
+identity, and handle those records before deciding to read again.
 
 An internal timeout cancels and awaits its task. `PoolTimeoutError` carries any
 complete interrupted prefix. If only internal health finalization was delayed after
@@ -143,8 +213,9 @@ while its predecessor's source task runs. Caller cancellation, including repeate
 cancellation, waits for that task to end before propagating. If it interrupts an
 admitted source, the account attempt remains unresolved. If it interrupts later
 settlement, inspect the store: the write may already have committed. Already-known
-complete records are retained on `partial_result`, but cancellation starts no new
-publication just to save them. Uncertain quota charges remain. Local input/configuration/
+complete records remain in the caller's capture. An exception's `partial_result` is
+a convenience, not the cancellation-safe delivery channel. Cancellation starts no
+new publication just to save a prefix. Uncertain quota charges remain. Local input/configuration/
 media/format and unknown errors stop without failover.
 
 An unexpected source-internal cancellation with no completed result raises a local
@@ -160,9 +231,9 @@ complete records as an interrupted `partial_result`, and a source error separate
 `read_error`. It is not Telegram health evidence. Never treat a lost write response
 as proof of rollback or automatically recreate pool state.
 
-Daily/backfill publication failures also retain validated complete records on the
-local error's `partial_result`; `read_error` retains an earlier source failure when
-there was one. This interrupted batch is available data, **not a durable pending
+Daily/backfill publication failures retain validated complete records in the capture
+and on the local error's `partial_result`; `read_error` retains an earlier source
+failure when there was one. This interrupted batch is available data, **not a durable pending
 receipt**. Its hash can differ from a successfully committed full batch because its
 stop reason is interrupted. Reload/replay saved pending data and use its actual
 receipt before acknowledgment. Backfill may confirm a non-admission write by reading
@@ -175,11 +246,13 @@ back the exact candidate state; an uncertain admission never uses that to start 
 `{"events": [...], "dropped": N}`. Ordinary `TgData` health callbacks keep their behavior.
 
 ```python
+capture = PoolReadCapture()
 try:
-    result = await pool.read(chat_id, after_id=500, limit=100)
+    result = await pool.read(chat_id, capture=capture, after_id=500, limit=100)
 finally:
     observations = pool.drain_health_events()
-# Your application owns handling observations and retaining result/error data.
+    snapshot = capture.snapshot()
+# Your application owns handling health observations and the separately retained data.
 ```
 
 Draining works while reading, while closing, in a caller's finally block and after
@@ -188,7 +261,7 @@ and loss count. Later captures belong to a later drain. It does no source, store
 quota I/O. The pool neither awaits a consumer nor creates observer tasks or mirrors
 these observations to the application health logger.
 
-Capture retains at most 128 events, 4,096 encoded bytes per event and 65,536 total encoded
+The health buffer retains at most 128 events, 4,096 encoded bytes per event and 65,536 total encoded
 bytes (compact ASCII JSON). New events are dropped on overflow; malformed/capture
 failures count as losses. `dropped` saturates at 2**63-1. Existing health event fields
 include account/session identifiers, verdict/scope/request and wait/error type, never
@@ -199,18 +272,36 @@ non-durable observations are not a complete audit, account permission or group a
 
 ```python
 await pool.initialize_sync(-1001234567890, after_id=500)  # deliberate enrollment
-batch = await pool.sync_group(-1001234567890, limit=100)
+capture = PoolReadCapture()
+batch = await pool.sync_group(-1001234567890, capture=capture, limit=100)
 if batch is not None:
     await destination_accepts_durably(batch)
     await pool.acknowledge_sync(-1001234567890, batch.batch_id)
 ```
 
 The [daily](daily_continuation.md) and [backfill](backfill_runs.md) contracts apply
-unchanged. All their public progress methods are available. Pending replay, valid
+unchanged to stored progress and acknowledgment. The pool's `sync_group` and
+`prepare_backfill` additionally require a new capture on every call. For example:
+
+```python
+capture = PoolReadCapture()
+turn = await pool.prepare_backfill(context, capture=capture)
+if turn.batch is not None:
+    await destination_accepts_durably(turn.batch)
+    await pool.acknowledge_backfill(turn.delivery)
+```
+
+All state-only methods keep their signatures. Pending replay, valid
 acknowledgment, control and status bypass account selection/state/credentials and
 remain local after `pool.close()`. A source-error prefix is saved by the progress
 engine before re-raising when publication succeeds. For backfill, replay to obtain
 the complete scoped delivery reference; a bare batch hash is not sufficient.
+
+Source/account work can finish before the public preparation finishes saving group
+progress. Pool closure may therefore finish while publication remains active under
+its caller. That call's capture stays `running` until the public call ends. Pool
+closure, a final capture, a saved pending delivery and acknowledgment are different
+facts; none substitutes for the others.
 
 Account recovery cannot acknowledge or recover a group run. If both attempts remain
 unresolved, each needs its own exact recovery after the old reader has stopped.
@@ -266,11 +357,14 @@ permission; same-process monotonic timing also protects known account waits. The
 is not a distributed lease. A process disappearing does not establish another worker's
 quiescence automatically.
 
-`close()` blocks new pool work, cancels/awaits active work and retires every client.
+`close()` blocks new pool source/control work, stops the active owned invocation,
+waits for its completion and retires every client. It does not await the containing
+application Task or consume its result. Application cleanup after the library call
+ends can continue independently, including waiting for that close to finish.
 Calling it from a live same-pool operation/provider scope refuses before changing
 flags, including inherited child-task calls. Expired and foreign-pool scopes do not
 block ordinary application control.
-Cancellation waits for the active reader and cleanup attempts to settle, then
+Cancellation of close waits for the owned invocation and cleanup attempts to settle, then
 propagates; another close while this is pending refuses busy. A failed or cancelled
 close is not proof every retirement succeeded; retry cleanup as needed. The pool
 stays closed to new source work. There is no shutdown deadline for SDK work that
@@ -287,13 +381,17 @@ Source reads on a closed pool refuse.
 python examples/account_pool.py --demo
 python -m tgdata.smoke_tests.test_31_account_pool
 python -m tgdata.smoke_tests.test_39_pool_lifecycle
+python -m tgdata.smoke_tests.test_40_pool_outcomes
 ```
 
 The demo opens no Telegram sockets and reads no real config. Test 31 exercises routing,
 identity, real overlapping tasks, native teardown, uncertain writes and process exits.
 Test 39 adds 48 lifecycle groups, including cancellation before/after actual commits,
 held provider finalization, available data versus pending delivery, exact recovery,
-provider control refusal and bounded passive observations. Delayed finalizers and
+provider control refusal and bounded passive observations. Test 40 adds 25 groups
+for early and final captures, one-shot binding, wrappers and late observers,
+post-call application cleanup, progress publication after close, exact receipts,
+paired store failures, attempt metadata and completed media retention. Delayed finalizers and
 wire replies are explicit test instrumentation. Tests run on Python 3.11/Telethon 1.45;
 Python 3.7 grammar checks are not a native 3.7 run. These are not disk power-loss or
 live-account tests.

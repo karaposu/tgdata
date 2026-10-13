@@ -491,3 +491,24 @@ with sockets blocked. Cancellation-count instrumentation is test-only, not a run
 compatibility dependency. A parent watchdog is used by the recorded prebuild/full
 verification runners; an unresponsive child is failure, not proof of cleanup.
 Two-account live qualification remains pending.
+
+### Test 40: caller-owned pool data and invocation completion (offline)
+
+```bash
+python -m tgdata.smoke_tests.test_40_pool_outcomes
+```
+
+25 groups exercise the real pool, Telethon 1.45, SQLite stores, ReadBudget, downloads
+and progress engines with controlled replies and blocked sockets. They preserve the
+17 public-ownership prebuild groups and eight earlier review controls. Cases cover
+required one-shot captures, prestart and repeated cancellation, immutable snapshots,
+early page/media/monitor/store visibility, direct/shield/gather/timeout and late
+observers, application continuation after the library call, stale stop requests,
+progress publication after source closure, paired write failures, exact receipts,
+source-free replay, attempt identity/error metadata and bounded retained diagnostics.
+
+Data, signals, real task/client termination, quota and durable state are asserted
+separately. A retained capture never supplies a fabricated batch or receipt. Running
+snapshots contain complete interrupted data; finalization belongs to the outer public
+call. A parent watchdog bounds the complete verification run. These are offline tests
+on Python 3.11, not two-account live qualification or native Python 3.7 execution.

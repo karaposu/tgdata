@@ -16,6 +16,7 @@ import traceback
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from tgdata import PoolReadCapture
 from tgdata.smoke_tests import test_31_account_pool as t
 from tgdata import health
 from tgdata import pool_observation as observations
@@ -40,10 +41,10 @@ async def source_call(e, mode, limit=200):
         return t.read(e, limit=limit), None
     if mode == 'daily':
         await e.pool.initialize_sync(t.CHAT, after_id=100)
-        return e.pool.sync_group(t.CHAT, limit=limit), None
+        return e.pool.sync_group(t.CHAT, capture=PoolReadCapture(), limit=limit), None
     started = await e.pool.start_backfill(t.d.request(batch_size=limit), submission='new')
     context = t.BackfillPrepareContext.from_status(started.status)
-    return e.pool.prepare_backfill(context), context
+    return e.pool.prepare_backfill(context, capture=PoolReadCapture()), context
 
 async def replay_after_close(e, mode, context, error):
     count = sum(len(s.reads) for s in e.senders.values())
@@ -56,13 +57,13 @@ async def replay_after_close(e, mode, context, error):
         Path(account.config_path).unlink()
     with patch.object(e.budget, 'status', side_effect=AssertionError('replay accessed source budget')):
         if mode == 'daily':
-            batch = await e.pool.sync_group(t.CHAT, limit=200)
+            batch = await e.pool.sync_group(t.CHAT, capture=PoolReadCapture(), limit=200)
             assert batch.to_json() == error.partial_result.to_json()
             await e.pool.acknowledge_sync(t.CHAT, batch.batch_id)
             assert (await e.pool.get_sync_status(t.CHAT)).after_id == 200
         elif mode == 'backfill':
             status = await e.pool.get_backfill_status(context.run)
-            replay = await e.pool.prepare_backfill(t.BackfillPrepareContext.from_status(status))
+            replay = await e.pool.prepare_backfill(t.BackfillPrepareContext.from_status(status), capture=PoolReadCapture())
             assert replay.replayed and replay.batch.to_json() == error.partial_result.to_json()
             status = await e.pool.acknowledge_backfill(replay.delivery)
             assert status.after_id == 200
@@ -402,7 +403,7 @@ async def backend_internal_cancel_after_source():
         e.pool._store = Backend()
         failure = t.errors.FloodWaitError(request=None, capture=7200)
         e.senders[111].script = [t.f.response([t.f.message(n) for n in reversed(range(101, 201))]), failure]
-        reader = asyncio.create_task(e.pool.sync_group(t.CHAT, limit=200))
+        reader = asyncio.create_task(e.pool.sync_group(t.CHAT, capture=PoolReadCapture(), limit=200))
         result = await capture(reader)
         row = json.loads(await actual.load())['accounts']['111']
         pending = (await e.pool.get_sync_status(t.CHAT)).pending_batch_id

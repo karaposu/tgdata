@@ -408,7 +408,10 @@ groups and persistent pool state. It supports raw batches and existing daily/bac
 operations. Plain `TgData` connection pooling still means sessions of one account.
 
 ```python
-from tgdata import AccountPool, PoolAccount, PoolGroup, ReadBudget, SQLiteAccountPoolStore
+from tgdata import (
+    AccountPool, PoolAccount, PoolGroup, PoolReadCapture,
+    ReadBudget, SQLiteAccountPoolStore,
+)
 
 pool = AccountPool(
     [PoolAccount(111111, "account-a.ini"), PoolAccount(222222, "account-b.ini")],
@@ -416,12 +419,22 @@ pool = AccountPool(
     read_budget=ReadBudget("existing-read-budgets.sqlite3"),
     state_store=SQLiteAccountPoolStore("existing-pool.sqlite3", create=False),
 )
+capture = PoolReadCapture()  # Keep this reference outside the awaited read.
 try:
-    result = await pool.read(-1001234567890, after_id=500, limit=100)
+    result = await pool.read(-1001234567890, capture=capture, after_id=500, limit=100)
     print(result.account_id, result.batch.batch_id)
 finally:
+    snapshot = capture.snapshot()  # Available complete records also survive failure/cancellation.
     await pool.close()
 ```
+
+Pool `read`, `get_message_batch`, `sync_group` and `prepare_backfill` require a new
+`capture=` for each call, including stored replay. Its synchronous `snapshot()` returns
+immutable state and available data independently of exceptions or asyncio wrappers.
+While the call is running, its batch contains only complete records with an
+`interrupted` stop reason. Final success preserves the actual batch; errors and
+cancellation preserve the complete interrupted prefix. A snapshot is not an
+acknowledgment receipt. Ordinary `TgData` calls keep their signatures.
 
 For first provisioning, create a new pool store and explicitly call `initialize()`;
 do not recreate missing known state on restart. Completed partial batches stop failover
@@ -430,9 +443,13 @@ No eligible account raises structured `PoolUnavailable`, not empty history.
 
 The adapter requires Telethon **1.45.0**, one owning process and exclusive sessions.
 It never joins or prompts. Results describe the selected account's visible history.
-Cancellation waits for owned source/storage work and client cleanup to settle.
+Cancellation waits for the call's owned source/storage work to settle. Closing the
+pool joins its own operation and retires clients without waiting for unrelated
+application work after that operation ends. A daily/backfill publication can still
+be running under its caller; its capture becomes final when that public call ends.
 Provider-owned interruption is a local storage error, not caller cancellation.
-Completed data remains available on errors without implying a durable receipt.
+Completed data remains available through the retained capture without implying a
+durable receipt. Captures are kept in memory; existing progress stores govern replay.
 Failed client retirement blocks reuse until an explicit recheck or close succeeds.
 Use synchronous `pool.drain_health_events()` for bounded passive health observations;
 AccountPool does not accept application health callbacks.

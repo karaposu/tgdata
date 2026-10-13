@@ -15,6 +15,8 @@ from .account_pool import (
     PoolClosedError, PoolIdentityError, PoolTimeoutError, PoolUnavailable
 )
 
+from .pool_result import PoolReadCapture, PoolReadSnapshot
+
 # Errors
 from .message_engine import GroupAccessError
 from .group_operations import (
@@ -81,6 +83,8 @@ __all__ = [
     "PoolAccountStatus",
     "PoolStatus",
     "PoolReadResult",
+    "PoolReadCapture",
+    "PoolReadSnapshot",
     "SQLiteAccountPoolStore",
     "PoolError",
     "PoolConfigurationError",

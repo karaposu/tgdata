@@ -18,6 +18,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from tgdata import PoolReadCapture
 from telethon import errors, functions, types
 from telethon.crypto import AuthKey
 import telethon
@@ -103,7 +104,7 @@ async def restart(e):
 
 
 async def read(e, **kwargs):
-    return await e.pool.read(CHAT, after_id=100, limit=kwargs.pop('limit', 1), **kwargs)
+    return await e.pool.read(CHAT, capture=kwargs.pop('capture', PoolReadCapture()), after_id=100, limit=kwargs.pop('limit', 1), **kwargs)
 
 
 class FaultStore:
@@ -213,7 +214,7 @@ async def test_group_denial_does_not_disable_other_groups():
     response = d.finite_response([message])
     response.chats = [room8()]
     e.senders[111].script = [response]
-    result = await e.pool.read(OTHER, after_id=100, limit=1)
+    result = await e.pool.read(OTHER, capture=PoolReadCapture(), after_id=100, limit=1)
     assert result.account_id == 111 and result.batch.chat_id == OTHER
     assert 'no_access' in (await e.pool.get_pool_status(CHAT)).accounts[0].reasons
 
@@ -248,7 +249,7 @@ async def test_duplicate_auth_keys_refuse_before_admission():
 
 async def test_alias_redirect_and_missing_entity_do_not_scan_dialogs():
     e = await setup(groups=[PoolGroup(OTHER, '@synthetic_room')])
-    await f.expect(PoolConfigurationError, e.pool.read(OTHER, limit=1))
+    await f.expect(PoolConfigurationError, e.pool.read(OTHER, capture=PoolReadCapture(), limit=1))
     assert not any(s.reads for s in e.senders.values())
     e = await setup()
     for client in e.clients.values():
@@ -424,12 +425,12 @@ async def test_settlement_failure_preserves_data_and_daily_replay():
         await e.pool.initialize_sync(CHAT, after_id=100)
         faults = backend.after if after_commit else backend.before
         faults[backend.calls + 2] = RuntimeError(SECRET)
-        error = await f.expect(PoolStorageError, e.pool.sync_group(CHAT, limit=1))
+        error = await f.expect(PoolStorageError, e.pool.sync_group(CHAT, capture=PoolReadCapture(), limit=1))
         assert len(error.partial_result.messages) == 1 and error.partial_result.stop_reason == 'interrupted'
         assert SECRET not in str(error) and health.classify(error) is None
         count = len(e.senders[111].reads)
         backend.load_error = RuntimeError('pool backend offline during local replay')
-        batch = await e.pool.sync_group(CHAT, limit=1)
+        batch = await e.pool.sync_group(CHAT, capture=PoolReadCapture(), limit=1)
         assert batch.batch_id == error.partial_result.batch_id and len(e.senders[111].reads) == count
         await e.pool.acknowledge_sync(CHAT, batch.batch_id)
         assert (await e.pool.get_sync_status(CHAT)).after_id == 101
@@ -508,7 +509,7 @@ async def test_recheck_reloads_repaired_stored_credential():
     e.senders[111].script = [errors.ChannelPrivateError(request=None)]
     await f.expect(PoolUnavailable, read(e))
     e.senders[111].auth_error = True
-    await f.expect(PoolUnavailable, e.pool.read(OTHER, after_id=100, limit=1))
+    await f.expect(PoolUnavailable, e.pool.read(OTHER, capture=PoolReadCapture(), after_id=100, limit=1))
     source = e.pool._sources[111]
     name = source._config.session_file
     replacement = StoredSession(source.session_store, name)
@@ -537,12 +538,12 @@ async def test_backfill_failover_replay_ack_are_public_and_source_free():
     started = await e.pool.start_backfill(request, submission='new')
     e.senders[111].script = [errors.ChannelPrivateError(request=None)]
     e.senders[222].script = [d.finite_response([f.message(102), f.message(101)])]
-    turn = await e.pool.prepare_backfill(BackfillPrepareContext.from_status(started.status))
+    turn = await e.pool.prepare_backfill(BackfillPrepareContext.from_status(started.status), capture=PoolReadCapture())
     assert len(turn.batch.messages) == 2
     counts = [len(s.reads) for s in e.senders.values()]
     backend.load_error = RuntimeError(SECRET)
     await e.pool.close()
-    replay = await e.pool.prepare_backfill(BackfillPrepareContext.from_status(turn.status))
+    replay = await e.pool.prepare_backfill(BackfillPrepareContext.from_status(turn.status), capture=PoolReadCapture())
     assert replay.delivery == turn.delivery and replay.replayed
     status = await e.pool.acknowledge_backfill(replay.delivery)
     assert status.after_id == 102 and [len(s.reads) for s in e.senders.values()] == counts
@@ -575,8 +576,8 @@ async def test_local_state_error_does_not_inherit_handled_rpc():
 async def test_input_refusal_and_unsupported_sdk_are_source_free():
     e = await setup()
     for kwargs in (dict(limit=True), dict(after_id=-1), dict(limit=10001)):
-        await f.expect(BatchFormatError, e.pool.read(CHAT, **kwargs))
-    await f.expect(PoolConfigurationError, e.pool.read(-1000000000099))
+        await f.expect(BatchFormatError, e.pool.read(CHAT, capture=kwargs.pop('capture', PoolReadCapture()), **kwargs))
+    await f.expect(PoolConfigurationError, e.pool.read(-1000000000099, capture=PoolReadCapture()))
     with patch.object(telethon, '__version__', 'unqualified'):
         await f.expect(PoolConfigurationError, read(e))
         assert (await e.pool.get_pool_status(CHAT)).accounts[0].eligible
@@ -980,7 +981,7 @@ async def crash_child(manifest, phase, mode, trace):
     pool._wall_clock = f.Clock()
     for aid, source in pool._sources.items():
         _, sources[aid] = wire(source)
-    await pool.read(CHAT, after_id=100, limit=1)
+    await pool.read(CHAT, capture=PoolReadCapture(), after_id=100, limit=1)
     raise AssertionError('crash boundary was not reached')
 
 
