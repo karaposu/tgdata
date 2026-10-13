@@ -1,0 +1,620 @@
+{
+  "runtime": "3.11.10",
+  "experiments": [
+    {
+      "lifetime": {
+        "mode": "raw",
+        "join": "caller",
+        "app_still_running": true,
+        "close_done": false,
+        "clients_retired": false,
+        "actual_records": 1
+      }
+    },
+    {
+      "lifetime": {
+        "mode": "raw",
+        "join": "invocation",
+        "app_still_running": true,
+        "close_done": true,
+        "clients_retired": true,
+        "actual_records": 1
+      }
+    },
+    {
+      "delivery": {
+        "mode": "raw",
+        "wrapper": "direct",
+        "close_first": false,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 1,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "raw",
+        "wrapper": "direct",
+        "close_first": true,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 1,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "raw",
+        "wrapper": "shield",
+        "close_first": false,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "raw",
+        "wrapper": "shield",
+        "close_first": true,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 1,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "raw",
+        "wrapper": "gather_values",
+        "close_first": false,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "raw",
+        "wrapper": "gather_values",
+        "close_first": true,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "raw",
+        "wrapper": "gather_values",
+        "close_first": true,
+        "source_failed": true,
+        "committed": false,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 100,
+        "charge": 200,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "raw",
+        "wrapper": "gather_values",
+        "close_first": true,
+        "source_failed": true,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 100,
+        "charge": 200,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "storage": {
+        "mode": "raw",
+        "progress": false,
+        "source_failed": false,
+        "committed": false,
+        "signal": "failed",
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false
+      }
+    },
+    {
+      "storage": {
+        "mode": "raw",
+        "progress": false,
+        "source_failed": false,
+        "committed": true,
+        "signal": "failed",
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false
+      }
+    },
+    {
+      "storage": {
+        "mode": "raw",
+        "progress": false,
+        "source_failed": true,
+        "committed": false,
+        "signal": "failed",
+        "retained_records": 100,
+        "charge": 200,
+        "pending": false
+      }
+    },
+    {
+      "storage": {
+        "mode": "raw",
+        "progress": false,
+        "source_failed": true,
+        "committed": true,
+        "signal": "failed",
+        "retained_records": 100,
+        "charge": 200,
+        "pending": false
+      }
+    },
+    {
+      "lifetime": {
+        "mode": "daily",
+        "join": "caller",
+        "app_still_running": true,
+        "close_done": false,
+        "clients_retired": false,
+        "actual_records": 1
+      }
+    },
+    {
+      "lifetime": {
+        "mode": "daily",
+        "join": "invocation",
+        "app_still_running": true,
+        "close_done": true,
+        "clients_retired": true,
+        "actual_records": 1
+      }
+    },
+    {
+      "delivery": {
+        "mode": "daily",
+        "wrapper": "direct",
+        "close_first": false,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 1,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "daily",
+        "wrapper": "direct",
+        "close_first": true,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 1,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "daily",
+        "wrapper": "shield",
+        "close_first": false,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "daily",
+        "wrapper": "shield",
+        "close_first": true,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 1,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "daily",
+        "wrapper": "gather_values",
+        "close_first": false,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "daily",
+        "wrapper": "gather_values",
+        "close_first": true,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "daily",
+        "wrapper": "gather_values",
+        "close_first": true,
+        "source_failed": true,
+        "committed": false,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 100,
+        "charge": 200,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "daily",
+        "wrapper": "gather_values",
+        "close_first": true,
+        "source_failed": true,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 100,
+        "charge": 200,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "storage": {
+        "mode": "daily",
+        "progress": false,
+        "source_failed": false,
+        "committed": false,
+        "signal": "failed",
+        "retained_records": 1,
+        "charge": 1,
+        "pending": true
+      }
+    },
+    {
+      "storage": {
+        "mode": "daily",
+        "progress": false,
+        "source_failed": false,
+        "committed": true,
+        "signal": "failed",
+        "retained_records": 1,
+        "charge": 1,
+        "pending": true
+      }
+    },
+    {
+      "storage": {
+        "mode": "daily",
+        "progress": false,
+        "source_failed": true,
+        "committed": false,
+        "signal": "failed",
+        "retained_records": 100,
+        "charge": 200,
+        "pending": true
+      }
+    },
+    {
+      "storage": {
+        "mode": "daily",
+        "progress": false,
+        "source_failed": true,
+        "committed": true,
+        "signal": "failed",
+        "retained_records": 100,
+        "charge": 200,
+        "pending": true
+      }
+    },
+    {
+      "lifetime": {
+        "mode": "backfill",
+        "join": "caller",
+        "app_still_running": true,
+        "close_done": false,
+        "clients_retired": false,
+        "actual_records": 1
+      }
+    },
+    {
+      "lifetime": {
+        "mode": "backfill",
+        "join": "invocation",
+        "app_still_running": true,
+        "close_done": true,
+        "clients_retired": true,
+        "actual_records": 1
+      }
+    },
+    {
+      "delivery": {
+        "mode": "backfill",
+        "wrapper": "direct",
+        "close_first": false,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 1,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "backfill",
+        "wrapper": "direct",
+        "close_first": true,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 1,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "backfill",
+        "wrapper": "shield",
+        "close_first": false,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "backfill",
+        "wrapper": "shield",
+        "close_first": true,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 1,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "backfill",
+        "wrapper": "gather_values",
+        "close_first": false,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "backfill",
+        "wrapper": "gather_values",
+        "close_first": true,
+        "source_failed": false,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 1,
+        "charge": 1,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "backfill",
+        "wrapper": "gather_values",
+        "close_first": true,
+        "source_failed": true,
+        "committed": false,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 100,
+        "charge": 200,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "delivery": {
+        "mode": "backfill",
+        "wrapper": "gather_values",
+        "close_first": true,
+        "source_failed": true,
+        "committed": true,
+        "task_cancelled": true,
+        "signal_records": 0,
+        "retained_records": 100,
+        "charge": 200,
+        "pending": false,
+        "clients_retired": true
+      }
+    },
+    {
+      "storage": {
+        "mode": "backfill",
+        "progress": false,
+        "source_failed": false,
+        "committed": false,
+        "signal": "failed",
+        "retained_records": 1,
+        "charge": 1,
+        "pending": true
+      }
+    },
+    {
+      "storage": {
+        "mode": "backfill",
+        "progress": false,
+        "source_failed": false,
+        "committed": true,
+        "signal": "failed",
+        "retained_records": 1,
+        "charge": 1,
+        "pending": true
+      }
+    },
+    {
+      "storage": {
+        "mode": "backfill",
+        "progress": false,
+        "source_failed": true,
+        "committed": false,
+        "signal": "failed",
+        "retained_records": 100,
+        "charge": 200,
+        "pending": true
+      }
+    },
+    {
+      "storage": {
+        "mode": "backfill",
+        "progress": false,
+        "source_failed": true,
+        "committed": true,
+        "signal": "failed",
+        "retained_records": 100,
+        "charge": 200,
+        "pending": true
+      }
+    },
+    {
+      "storage": {
+        "mode": "daily",
+        "progress": true,
+        "source_failed": true,
+        "committed": false,
+        "signal": "failed",
+        "retained_records": 100,
+        "charge": 200,
+        "pending": false
+      }
+    },
+    {
+      "storage": {
+        "mode": "daily",
+        "progress": true,
+        "source_failed": true,
+        "committed": true,
+        "signal": "failed",
+        "retained_records": 100,
+        "charge": 200,
+        "pending": true
+      }
+    },
+    {
+      "storage": {
+        "mode": "backfill",
+        "progress": true,
+        "source_failed": true,
+        "committed": false,
+        "signal": "failed",
+        "retained_records": 100,
+        "charge": 200,
+        "pending": false
+      }
+    },
+    {
+      "storage": {
+        "mode": "backfill",
+        "progress": true,
+        "source_failed": true,
+        "committed": true,
+        "signal": "failed",
+        "retained_records": 100,
+        "charge": 200,
+        "pending": true
+      }
+    }
+  ]
+}
+PASS: 46 concept histories; observations only, no production implementation.
+
+exit=0

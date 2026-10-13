@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-17-replan/devdocs/inquiries/2026-10-13_11-46__17-public-outcome-ownership/evidence/concept_probe.py", line 240, in <module>
+    asyncio.run(main(Path(directory)))
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-17-replan/devdocs/inquiries/2026-10-13_11-46__17-public-outcome-ownership/evidence/concept_probe.py", line 219, in main
+    rows.append(dict(lifetime=await lifetime(mode, join)))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-17-replan/devdocs/inquiries/2026-10-13_11-46__17-public-outcome-ownership/evidence/concept_probe.py", line 135, in lifetime
+    assert finished is (join == 'invocation') and retired is finished
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+exit=1
