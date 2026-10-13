@@ -1,10 +1,13 @@
 ---
 model: gpt-6-astra
 effort: max
-status: PASS_OFFLINE_SCOPE_PR_CRITIC_PENDING
+status: PASS_FIDELITY_PR_REJECTED
 round: 2
 ---
 # Renewed merge check — #17
+
+> Later in this review: pr-critic.md rejects the product with one Medium. This
+> fidelity PASS at1c04cf4 remains historical evidence, not permission to merge.
 
 **PASS for renewed PR review of the selected offline delivery.** Subject:
 producta63099e/evidence379a949 against current dev2ddb852, confirmed unchanged on

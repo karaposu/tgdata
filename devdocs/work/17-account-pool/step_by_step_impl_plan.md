@@ -2,8 +2,15 @@
 model: gpt-6-astra
 effort: max
 revision: 5
+review_status: REJECTED_PR_ROUND_2
 ---
 # #17 — explicit ownership across source and storage
+
+> **Rejected at PR round2,2026-10-13. Do not resume this implementation.**
+> This remains the blueprint of producta63099e. The fresh review found that shutdown
+> can consume the public cancellation payload before its caller. Per CONTRIBUTING
+> §7.4 return to desc/traverse before another plan; see pr-critic.md. The original
+> steps below are retained as evidence, not silently patched around the finding.
 
 **Critic folded:** 2026-10-13 — 1 mitigation (1 step changed, 0 added).
 P0 completed before step1; prebuild.md records48/48 plus both worker suites.

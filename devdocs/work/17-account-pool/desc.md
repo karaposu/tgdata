@@ -115,6 +115,30 @@ lose an already-observed batch from delivery even while account safety checks ho
 
 ## Known Blockers
 
+### PR round2 — public outcome consumption — OPEN for description requalification
+
+The fresh PR review reproduced a new boundary omitted from the ownership contract:
+close needs to observe task termination, but directly awaiting the cancelled public
+reader can consume its saved CancelledError. A later application waiter receives a
+fresh exception without the completed-message payload. This holds for raw, daily and
+backfill: six cases lose the payload; six caller-first controls retain it. Actual
+storage settlement, charges and client retirement still hold. This behavior is measured,
+not an unanswered vendor question; see pr-critic.md and evidence/review2/cancel-payload.txt.
+
+The description/foundation inquiry must establish who owns consuming the public result,
+separately from who may stop or await quiescence, and which caller-delivery guarantee is
+required. The current requirement to preserve known data stands; do not weaken it to
+make the review pass. The selected review guidance is to make internal shutdown observe
+completion without taking the application's cancellation payload. No extra public
+result store or global supervisor is established as a prerequisite by this evidence.
+
+CONTRIBUTING §7.4 requires this upstream return after the second rejected PR round.
+Do not resume the folded revision5 implementation or immediately write another plan.
+Qualification must include late application waiters and external close, before any
+replacement implementation. No human access is needed for this offline design work;
+E1 remains a separate later live gate. Production is unchanged at a63099e.
+
+
 ### Prior storage-cancellation premise — CLOSED, measured false
 
 Revision3 P0 failed36/37 pool groups; worker33/33+25/25 held. Before/after settlement

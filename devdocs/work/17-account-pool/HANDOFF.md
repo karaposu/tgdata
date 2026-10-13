@@ -1,46 +1,60 @@
 ---
 model: gpt-6-astra
 effort: max
-status: OFFLINE_IMPLEMENTED
+status: PR_ROUND_2_REJECTED
 ---
-# #17 — next: renewed merge check and fresh PR critique
+# #17 — return to description/foundation inquiry before another plan
 
-The user requested a from-scratch task-impl restart with cancellation ownership
-covering storage too. That chain is complete through offline implementation/verification.
-Do not resume the deprecated revision3 plan or the old rejected PR implementation.
+The requested renewed merge check and fresh PR critique are complete. Merge check
+1c04cf4 passes fidelity for the selected offline scope. Fresh PR review7d3172e,
+selectionfb4623d, **rejects with one Medium**. PR26 remains draft; nothing merged.
 
-- Worktree: `/private/tmp/tgdata-17-replan`, branch `feat/17-account-pool`.
-- Product:a63099e; dev2ddb852 integrated atceda2bf using the exact P0 union.
-- Active plan:step_by_step_impl_plan.md revision5; description revision4.
-- Fresh plan critic:6c81299; one Medium, robust selected52f31c9; folded after P0 at3f535d1.
-- P0:48/48 pool +33/33 worker +25/25 process tests, no watchdog or runtime candidate fix.
-- Full regression:725 executed offline checks passed;3 explicit legacy live skips;
-  all3 examples, compilation,86 Python3.7 grammar checks and package imports passed.
-- All8 changed runtime modules exactly match the passed candidate. See
-  verification_restart.md and evidence/restart/final-summary.json.
+This is the second rejected PR round on this branch. CONTRIBUTING §7.4 says:
+“If the second round is rejected too, stop re-planning.” Return to desc.md and the
+foundation/traverse work before another plan. The skill's separate three-rejection
+PARKED threshold is not reached; do not claim three PR rejections or invent a pause.
 
-The pool now distinguishes component interruption from actual caller cancellation
-across source and pool/daily/backfill storage. It joins actual work before releasing
-its caller, preserves known batches without inventing receipts, retains uncertain
-admission safeguards and replaces application callbacks with bounded passive health
-observations. Same-pool provider control refuses at both operation entry and close.
-Routing, budgets, durable account permissions and progress engines are reused.
+## Measured missing distinction
 
-One local P0 fixture correction and one collector-format correction are recorded;
-neither changes a runtime premise or weakens an expected outcome. Original failed
-r3 probes/artifacts and the one rejected PR review are preserved. The first foundation
-inquiry points to the archived failed report so its historical note is not misleading.
+**Observing task completion is different from consuming its public outcome.**
 
-**Next authorized workflow when requested:** renewed merge-check against triage/
-desc/plan/critic plus current dev, then refresh draft PR26 and run a fresh in-session
-PR critique. Keep PR26 draft until gates pass. No new PR is needed. Do not mistake
-this plan critique or full regression for the required fresh PR critique.
+The rebuilt source/store boundary preserves data on CancelledError. External close
+then directly awaits the cancelled public reader and can receive that object first.
+Python's actual Task gives a later application waiter a fresh cancellation exception
+with no attached data. No daily/backfill pending delivery was published during genuine
+cancellation. The user gets no already-complete records even though account settlement,
+quota and physical retirement succeeded.
 
-**E1 pending:** two approved logged-in accounts, a shared group and their existing
-bounded allowance. User chose one account/offline-first; no live calls, login, joining
-or budget reset occurred. Plan step8 is stopped at task-impl's execution gate.
-#7 being merged does not add automatic joining to this selected delivery.
+Eight fresh groups:7 pass,1 fails, reproduced twice with unchanged runtime/expectations.
+A separate actual-pool diagnostic spans raw/daily/backfill, caller-first versus close-
+first waiting, and ordinary versus repeatedly cancelled close:6 lost-prefix cases and
+6 positive controls. It observes prefix1 inside the reader before Task termination,
+then prefix0 for close-first callers. All retain charge1 and complete actual SQLite
+settlement/native retirement. The `_asyncio.Task` control reproduces saved cancellation
+exception consumption directly. See pr-critic.md and evidence/review2/.
 
-Merge still needs user go-ahead and must exclude work/inquiry/archaeology documents
-from dev, preserve this branch as archive, and keep #17's broader automatic-joining
-scope explicit. Main checkout, duncan and unrelated work remain untouched.
+Selected guidance: the internal shutdown coordinator should observe quiescence without
+taking the application's cancellation payload. This is not a qualified fix or license
+to patch. A new public result store/global supervisor is not justified by the evidence.
+Keep completed-data retention; do not redefine success to allow the lost payload.
+
+## Branch and preserved work
+
+Worktree `/private/tmp/tgdata-17-replan`, branch `feat/17-account-pool`.
+Product remainsa63099e; current dev2ddb852 integrated atceda2bf. No runtime, public doc,
+test-suite or example patch followed review. Source and all candidate comparisons remain
+unchanged. Original725 checks/3 demos and48-group prebuild still describe their coverage,
+not merge approval. Current plan revision5 is marked rejected and kept as the reviewed
+blueprint; do not resume its folded steps. Original PR critique is pr-critic_r1.md;
+critic.md still records the plan critique. Exactly2 rejected PR artifacts,1 failed
+design prebuild. Historical failed r3 evidence remains preserved.
+
+Description Known Blockers and foundation finding's impact note now record this newer
+boundary. No new plan or full traverse is claimed in this review-only run. The next
+work must requalify outcome consumption at the description/foundation level, then run
+the appropriate plan/critic/prebuild/implementation and renewed PR gates.
+
+E1 remains separate: two approved logged-in accounts/shared readable group/existing
+bounded allowance. User chose offline-first; no live traffic, joining, login or quota
+reset. Main checkout, duncan and unrelated files are untouched. Any eventual merge
+needs user go-ahead, excludes work/inquiry/archaeology documents and retains this branch.

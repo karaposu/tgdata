@@ -3,7 +3,7 @@ status: active
 model: gpt-6-astra
 effort: max
 refines: devdocs/work/17-account-pool/traverse/finding.md
-impacted_by: devdocs/work/17-account-pool/prebuild_r3.md
+impacted_by: devdocs/work/17-account-pool/pr-critic.md
 ---
 # Finding: #17 needs a clearer operation boundary before further implementation
 
@@ -13,6 +13,14 @@ impacted_by: devdocs/work/17-account-pool/prebuild_r3.md
 > semantics as well as control restrictions. [Read the failed prebuild](../../work/17-account-pool/prebuild_r3.md)
 > before using this finding for implementation; revision3 was deprecated. The
 > original inquiry below is preserved as the record that produced that candidate.
+
+> **Further evidence,2026-10-13:** PR round2 found a public outcome-consumption
+> boundary after the source/storage ownership fixes: an internal close waiter can
+> consume the saved cancellation exception before the application receives its
+> complete-message payload. [Fresh review and twelve isolating histories](../../work/17-account-pool/pr-critic.md)
+> require returning to the description/foundation inquiry before another plan.
+> This is later evidence; the completed inquiry below is not rewritten as if it
+> had already established that contract.
 
 ## Changes from Prior
 

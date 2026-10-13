@@ -2,8 +2,13 @@
 model: gpt-6-astra
 effort: max
 status: OFFLINE_PASS
+impacted_by: pr-critic.md
 ---
 # #17 whole-operation restart — implementation verification
+
+> Later PR review found a shutdown/cancellation-payload defect outside these tested
+> histories. The725 passing checks remain valid, but do not qualify the PR for merge;
+> see pr-critic.md and its fresh actual-component probes.
 
 **Product:** a63099e. **Integrated dev:**2ddb852 via ceda2bf.
 **Plan:** revision5, folded1 robust mitigation after full P0 PASS at3f535d1.
