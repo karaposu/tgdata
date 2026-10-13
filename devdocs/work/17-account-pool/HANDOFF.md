@@ -1,60 +1,73 @@
 ---
 model: gpt-6-astra
 effort: max
-status: PR_ROUND_2_REJECTED
+status: DESCRIPTION_REQUALIFIED_NEW_PLAN_PENDING
 ---
-# #17 — return to description/foundation inquiry before another plan
+# #17 — upstream ownership contract saved; implementation remains rejected
 
-The requested renewed merge check and fresh PR critique are complete. Merge check
-1c04cf4 passes fidelity for the selected offline scope. Fresh PR review7d3172e,
-selectionfb4623d, **rejects with one Medium**. PR26 remains draft; nothing merged.
+The user requested “return to the description/traverse before another plan. , do it”.
+That upstream work is complete. No new implementation plan or production patch was
+written. PR26 stays draft, unmerged and rejected on the current product `a63099e`.
 
-This is the second rejected PR round on this branch. CONTRIBUTING §7.4 says:
-“If the second round is rejected too, stop re-planning.” Return to desc.md and the
-foundation/traverse work before another plan. The skill's separate three-rejection
-PARKED threshold is not reached; do not claim three PR rejections or invent a pause.
+## Read before continuing
 
-## Measured missing distinction
+- [New finding](../../inquiries/2026-10-13_11-46__17-public-outcome-ownership/finding.md):
+  full sequential Articulate → Surfacing → Sensemaking → Decomposition → Innovation →
+  Critique → Routelister, saved with evidence and archived discipline outputs.
+- [Description revision5](desc.md): the current requirements. Revision4 is desc_r4.md.
+- [PR round2 critique](pr-critic.md): actual rejected implementation, unchanged.
+- [Old handoff](HANDOFF_pr_round2.md): exact state before the upstream return.
+- Rejected `step_by_step_impl_plan.md` revision5, plan `critic.md`, prebuild_r3.md and
+  verification_restart.md remain historical artifacts. Do not resume old folded steps.
 
-**Observing task completion is different from consuming its public outcome.**
+## What was missing
 
-The rebuilt source/store boundary preserves data on CancelledError. External close
-then directly awaits the cancelled public reader and can receive that object first.
-Python's actual Task gives a later application waiter a fresh cancellation exception
-with no attached data. No daily/backfill pending delivery was published during genuine
-cancellation. The user gets no already-complete records even though account settlement,
-quota and physical retirement succeeded.
+The application Task is a stop address, not the lifetime of a tgdata invocation and
+not a reliable data envelope. Ordinary shield/gather composition can replace its
+cancellation payload even without close. Waiting non-destructively for the whole
+Task still waits for unrelated application cleanup after tgdata has returned.
 
-Eight fresh groups:7 pass,1 fails, reproduced twice with unchanged runtime/expectations.
-A separate actual-pool diagnostic spans raw/daily/backfill, caller-first versus close-
-first waiting, and ordinary versus repeatedly cancelled close:6 lost-prefix cases and
-6 positive controls. It observes prefix1 inside the reader before Task termination,
-then prefix0 for close-first callers. All retain charge1 and complete actual SQLite
-settlement/native retirement. The `_asyncio.Task` control reproduces saved cancellation
-exception consumption directly. See pr-critic.md and evidence/review2/.
+The revised contract separates a private completion fact for actual owned work from
+an explicit caller-retained, single-use destination for data. Capturing/retrieving
+data is local; true cancellation stays cancellation. Account permission, quota,
+progress receipts and acknowledgment remain separate. No new global supervisor,
+result database, automatic joining or whole-pool rewrite is justified.
 
-Selected guidance: the internal shutdown coordinator should observe quiescence without
-taking the application's cancellation payload. This is not a qualified fix or license
-to patch. A new public result store/global supervisor is not justified by the evidence.
-Keep completed-data retention; do not redefine success to allow the lost payload.
+Pool close ends source/control work and retires clients; a public daily/backfill call
+can still be publishing progress under its own caller. Its recipient is not final
+until that public call ends. Provisional data must never imply final success or a
+receipt. Reuse, prestart cancellation, disposal and early retention are explicit
+requirements, not features implemented by the small adapter.
 
-## Branch and preserved work
+## Evidence and limits
 
-Worktree `/private/tmp/tgdata-17-replan`, branch `feat/17-account-pool`.
-Product remainsa63099e; current dev2ddb852 integrated atceda2bf. No runtime, public doc,
-test-suite or example patch followed review. Source and all candidate comparisons remain
-unchanged. Original725 checks/3 demos and48-group prebuild still describe their coverage,
-not merge approval. Current plan revision5 is marked rejected and kept as the reviewed
-blueprint; do not resume its folded steps. Original PR critique is pr-critic_r1.md;
-critic.md still records the plan critique. Exactly2 rejected PR artifacts,1 failed
-design prebuild. Historical failed r3 evidence remains preserved.
+- Current product:6 wrapper histories,3 post-call application histories,6 retained
+  regression controls observed with actual SDK/SQLite/ReadBudget.
+- Isolated concept:46 histories pass, including6 lifetime contrasts,24 genuine
+  cancellation deliveries and16 actual provider-fault settlement/publication cases.
+- Fresh boundary critique:3 observations pass (daily/backfill publication past close,
+  cancellation before coroutine entry). Early-data publication is NOT implemented
+  by the exit-only concept adapter.
+- First concept probe's eight-turn timing assertion failed; preserved log and corrected
+  bounded completion observation are in the inquiry. No data expectation was reduced.
+- One full traverse iteration. Upstream answer accepted; stronger cross-SIC convergence
+  explicitly unclaimed. All skills ran sequentially in this session, no delegation.
+- Sockets blocked; Python3.11.10 / Telethon1.45.0. No live traffic or new native3.7 claim.
 
-Description Known Blockers and foundation finding's impact note now record this newer
-boundary. No new plan or full traverse is claimed in this review-only run. The next
-work must requalify outcome consumption at the description/foundation level, then run
-the appropriate plan/critic/prebuild/implementation and renewed PR gates.
+## Next authorized phase, when resumed
 
-E1 remains separate: two approved logged-in accounts/shared readable group/existing
-bounded allowance. User chose offline-first; no live traffic, joining, login or quota
-reset. Main checkout, duncan and unrelated files are untouched. Any eventual merge
-needs user go-ahead, excludes work/inquiry/archaeology documents and retains this branch.
+A new task plan from description revision5, fresh critic-d, fold, then **the full
+combined real-component prebuild before production edits**. The plan must qualify
+public recipient binding/early retention/finality, actual store phases and uncertainty,
+stop provenance, native cleanup, wrappers/observer order, application continuation,
+all existing regressions and current-dev integration. Only then implementation,
+renewed merge-check and fresh PR critique. No piecemeal patch to the rejected plan.
+
+CONTRIBUTING §7.4's required description/traverse return is now recorded; this does not
+reset or erase review history. Exactly two rejected PR rounds and one failed design
+prebuild. Current integrated dev is2ddb852; check for newer dev before later design.
+
+E1 still needs two approved accounts/shared group/existing bounded allowance after
+offline verification. User selected offline-first. Any merge needs user go-ahead,
+excludes work/inquiry/archaeology docs, and keeps the feature branch as the archive.
+Main checkout, duncan and unrelated files remain untouched.

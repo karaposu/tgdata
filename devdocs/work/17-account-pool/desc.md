@@ -1,164 +1,171 @@
 ---
 model: gpt-6-astra
 effort: max
-revision: 4
+revision: 5
+status: DESCRIPTION_REQUALIFIED_IMPLEMENTATION_REJECTED
 ---
-# Account routing with explicit operation outcomes
+# Account routing with explicit invocation and data ownership
 
 > Session warm by other means at ancestor09e0277 (2026-10-13): complete foundation
-> traverse and module reads carried forward, with full source/controller/store/
-> daily/backfill implementations refreshed. See triage.md. No new architecture
-> skill run claimed. Model/effort verified from current turn metadata.
+> traverse and module reads carried forward; source, controller, store and progress
+> paths refreshed. This revision additionally consumes the full failure history,
+> current code, Python task behavior and real-component inquiry probes. No new
+> architecture warming skill run claimed. GPT-6 Astra/max verified in turn metadata.
 
-**Issue:** #17, feature-heavy; same draft PR26 and feature branch.
-**Restart:** this description replaces the prior design. It is derived from the
-original routing goal, the rejected PR, completed traverse and failed real-component
-prebuild. Earlier descriptions/plans/critics and exact probes remain preserved.
+**Issue:** #17, feature-heavy; branch `feat/17-account-pool`, draft PR26.
+**Authority:** [public outcome ownership finding](../../inquiries/2026-10-13_11-46__17-public-outcome-ownership/finding.md).
+This description replaces revision4, preserved in desc_r4.md. It does not replace
+or rehabilitate the rejected revision5 implementation plan. Production remains
+`a63099e`; no runtime repair is claimed.
 
 ## Problem Statement
 
-A caller needs bounded group reads without selecting and repairing the account for
-every request. Existing routing can do that, but its completion boundary is wrong:
-an exception named CancelledError is treated as a caller stop even when it came
-from a health observer or storage provider. A completed Telegram batch can therefore
-vanish from the public error and durable pending delivery. Callback-driven shutdown
-can also make the reader wait for shutdown while shutdown waits for that reader.
+Applications need bounded group reads without choosing and repairing an account for
+every request. Existing pool routing covers much of that need, but its ownership
+contract was incomplete. Earlier observer/provider cancellation could obscure a real
+source result. The replacement then preserved messages on CancelledError, while an
+internal close waiter or ordinary asyncio wrapper could consume/replace that signal
+before the application received the messages.
 
-The last prebuild removed callbacks from source execution but missed storage. It
-observed a real 100-message prefix and FloodWait7200, followed by provider-owned
-cancellation before/after an actual SQLite commit. The caller had no cancellation
-requests; both cases returned cancellation with no data. The right boundary covers
-all awaited work, including pool state and daily/backfill state, while preserving
-uncertain-write refusal and actual caller cancellation.
+There is a second independent mistake: the containing application Task can continue
+after the tgdata call ends. Waiting for that whole Task makes pool shutdown wait for
+unrelated application work even after owned source/provider work has stopped.
+
+The missing contract distinguishes the owned invocation, the caller's stop signal,
+the destination for completed data, and the durable facts permitting a retry or ack.
+Changing one await or adding another exception handler does not establish that contract.
 
 ## User Value Proposition
 
-Applications register already-authorized accounts/groups, keep their existing
-account quota and progress stores, and request a bounded read. The pool selects an
-eligible account and fails over only when safe. Completed messages remain available
-when later local persistence fails. A stopped request finishes its owned work before
-returning, so another read cannot reuse something still being retired or written.
+Applications supply already-authorized accounts and groups and retain their existing
+quota/progress stores. tgdata selects an eligible account and fails over only when
+safe. Actual completed messages remain accessible to the caller through cancellation
+and later local failure, without depending on exception-object identity.
 
-Applications own scheduling, login/repair, receiver storage and health reactions.
-The pool provides bounded passive health observations, explicit uncertain-attempt
-recovery and existing daily/backfill acknowledgment contracts.
+The application owns scheduling, login/repair, receiver storage and health reactions.
+It also owns the lifetime of a per-call result recipient: a local destination retained
+before the call, independent of the Task used to await it. The pool closes its own work
+and clients without acquiring ownership of arbitrary application continuation.
 
 ## Success Criteria
 
-1. Preserve numeric expected-account verification, deterministic drain/spread,
-   actual ledger reservations, warm-up, stored restrictions and safe no-prefix
-   failover. No duplicate credentials, login requests, hidden retry sleeps or quota
-   reset. Known waits are never cleared by local failure or diagnostic data.
-2. Distinguish completed source value/error, component-internal interruption,
-   pool timeout, caller cancellation and cleanup completion. Component cancellation
-   is a local error; actual caller cancellation remains cancellation, including
-   repeated stop requests and cancellation concurrent with component completion.
-3. Apply that distinction to source work and every configured async pool/sync/
-   backfill store method. A provider is invoked/awaited once per engine call, and
-   its actual task is retained until it ends. Caller stop cannot leave a write
-   running after that caller's ownership is released. Providers must settle their
-   own I/O before returning; detaching subordinate I/O is outside their contract.
-4. Only a definite successful admission reply authorizes a source call. Failed,
-   cancelled or malformed replies never imply rollback or permission. Preserve
-   existing exact-state backfill reconciliation for non-admission writes; no new
-   generic CAS retries or inferred receipts. Pool permission, quota and group ack
-   remain distinct authorities and retain their schemas.
-5. Once complete messages exist, preserve them as an interrupted MessageBatch on
-   later local persistence failure (and cancellation after that known result).
-   Retain an original read error separately. This is available data, not a promise
-   of durable pending delivery or a receipt. Reload/replay the authoritative store
-   before acknowledgment. Never invent history-end evidence from an error prefix.
-6. Preserve source body outcome on every secondary reporting termination path.
-   Unexpected source-internal cancellation retains complete prefix but leaves
-   account admission unresolved; no automatic failover or normal settlement.
-   True caller stop starts no new persistence just to save an error prefix.
-7. Cleanup is retained through repeated cancellation; actual SDK disconnect must
-   finish before client reuse. Failed cleanup quarantines the client until explicit
-   successful retry and does not replace the primary body result/error.
-8. Pool health reporting runs no application callback and creates no observer task.
-   Bounded, detached plain data is drained synchronously in all states, including
-   during reads/close and after close. Overflow/loss is visible and never changes
-   account permission. Ordinary TgData/#7/#10 health behavior stays as merged.
-9. Detectable lifecycle reentry from live same-pool operations/providers refuses
-   before close mutation. Scope ownership expires and is pool-specific. Providers
-   do I/O only: no dependency on controlling their own pool, including via existing
-   outside tasks. No claim of complete arbitrary wait-graph detection.
-10. Daily/backfill state-only operations and replay/ack remain independent of pool
-    source lifetime. They work after close without credentials, pool state or quota
-    reads. Their caller owns their I/O; close does not become a global task manager.
-11. Pass a fresh combined real-component prebuild before runtime edits, then the
-    applicable complete offline suite on Telethon1.45.0/current dev. Exercise raw,
-    daily and backfill results, actual SQLite commits, native SDK cleanup, retained
-    caller/provider cancellation and current worker compatibility.
+1. Preserve verified numeric account identity at admission/send, deterministic
+   drain/spread, actual ReadBudget reservations, warm-up and saved restrictions.
+   Fail over only on eligible, safe no-prefix outcomes. No duplicate credentials,
+   login requests, hidden retry sleeps, quota refunds/resets or shortened known waits.
+2. Distinguish actual source value/error, component-internal interruption, pool
+   timeout, true caller cancellation and cleanup completion. True stop remains
+   cancellation; a provider's cancelled I/O with no caller stop is a local failure.
+   Completed source data cannot be replaced by later reporting or storage status.
+3. Give every accepted source/control invocation an exact completion fact independent
+   of its containing application Task. Publish completion only after its owned work
+   actually ends and exclusive ownership is released. Close may stop that invocation
+   and wait for this fact without consuming its public result or waiting for the
+   application's post-call cleanup. A stale stop cannot affect a successor or later
+   application work. Exact private representation is a later design choice.
+4. The canonical data-producing pool calling form requires an explicit caller-retained,
+   single-use result recipient before execution. Bind it to that invocation before
+   I/O; invalid or already-bound reuse refuses before I/O. A coroutine cancelled before
+   entry performs no I/O and leaves no started invocation/data. No hidden private
+   holder, exception attribute or optional weaker form claims the same guarantee.
+5. Record actual complete validated data in that recipient locally before later awaits
+   can obscure it. Distinguish unbound/no data, running with available data, and ended
+   success/failure/cancellation. Provisional or interrupted data never invents final
+   success, end-of-history or a delivery receipt. Final content is stable, read-only
+   and retrievable without re-awaiting the Task; later close/calls/drains cannot consume
+   it. Normal return/error/cancellation remains observable through the awaited call.
+6. Retain at most one current batch under existing batch limits per recipient, not an
+   unbounded operation history. Store safe diagnostic facts rather than live Tasks,
+   clients, credentials or exception traceback graphs. Keep the original read error
+   distinguishable from a later local error. Caller-held snapshots/disposal are caller
+   owned. No new universal byte-size or process-crash durability promise is implied.
+7. Apply cancellation provenance/retained ownership to every configured async pool,
+   sync and backfill store method. Invoke each provider once per engine call and retain
+   the actual task until it ends. Providers settle their own I/O before returning;
+   detached writes are outside their contract. Caller stop cannot release its owned
+   write early, including when the actual commit completes during cancellation.
+8. Only definite successful account admission authorizes source work. Failed/cancelled/
+   malformed replies imply neither rollback nor permission. Preserve exact existing
+   non-admission backfill reconciliation; no generic CAS retry or inferred receipt.
+   Account permission, quota and group ack keep their distinct authority and schemas.
+9. Completed error/cancellation data is available data, not proof of durable delivery.
+   Reload/replay the authoritative progress store before using its existing ack contract.
+   True caller stop begins no new persistence just to save a prefix. Source-internal
+   interruption retains actual data but leaves admission unresolved, without automatic
+   failover or normal settlement. A completed success is not downgraded by later close.
+10. Retain native SDK cleanup through repeated cancellation. Disconnect must finish
+    before reuse. Failed cleanup quarantines the client until explicit successful
+    retry; secondary cleanup must not replace the primary body result/error.
+11. Keep bounded passive health observations, synchronously drainable in every state.
+    No pool observer callback/task; loss is visible and cannot alter permission or
+    erase recipient data. Existing ordinary TgData/#7/#10 behavior remains as merged.
+12. Refuse detectable same-pool operation/provider lifecycle reentry before mutation.
+    Scope expires and is pool-specific. Providers perform I/O only, without depending
+    on control of their own pool through any task. No arbitrary wait-graph guarantee.
+13. Preserve the distinction between the pool source/control span and public progress
+    calls. Daily/backfill publication may continue under its caller after source work
+    and pool closure; its recipient finalizes when that public call ends. State-only
+    replay/ack/status remains usable after close without credentials, pool state or
+    quota reads. Close does not become a global manager of progress-store calls.
+14. Qualify the complete proposed contract in a fresh combined real-component prebuild
+    before production edits, then run complete relevant offline/current-dev checks
+    with Telethon1.45.0. Cover raw/daily/backfill, actual store commit phases, native
+    cleanup, recipient lifecycle, early data retention, wrapper/observer order,
+    post-call application work and existing worker compatibility. Small concept
+    experiments do not replace that gate or the later fresh PR critique.
+
+Key observable acceptance cases:
+
+| History | Required observation |
+|---|---|
+| One or100 complete records, then true cancellation; close receives stop first | Caller-retained records remain accessible; Task remains cancelled; actual charge persists |
+| shield/gather replaces the cancellation exception | Recipient still carries actual data independently of the signal |
+| tgdata returns/raises, application continues unrelated cleanup | Pool close finishes its clients without waiting for that continuation |
+| Provider cancellation before/after actual CAS | Local failure versus caller stop is accurate; durable uncertainty and completed data stay separate |
+| Daily/backfill publication held after source completion | Close may finish; recipient remains unfinished until its public call ends; no invented receipt |
+| Recipient reused, cancelled before entry, or read after finalization | No overwrite or unintended I/O; unstarted and finalized states are distinguishable |
 
 ## Scope Boundaries
 
 Existing-access first delivery, one owning process/event loop, exclusive sessions,
 trustworthy UTC, one source reader per group across progress stores [ASSUMPTION:
-unchanged deployment contract]. No automatic joining, scheduler, distributed leases,
-new login flow, affinity, union-history guarantee or general health-system redesign.
+unchanged deployment contract]. Retain tested routing, quota, restrictions, recovery,
+progress and retirement mechanisms where they satisfy this contract.
 
-Restart the design around these requirements; retain proven router, quota, state
-and progress mechanisms where they satisfy them. A new private cancellation owner
-may serve the actual repeated source/provider instances; do not impose pool lifetime
-policy on temporary #7 operations or the worker. Shared progress changes are limited
-to retaining already-validated data on errors, not new cursor/receipt semantics.
+No automatic joining, scheduler, background-job supervisor, global result registry,
+new durable raw-result store, distributed leases, login flow, affinity or union-history
+guarantee. Do not impose pool lifetime policy on temporary #7 operations or #10 workers.
+Shared progress changes must preserve existing cursor/receipt semantics.
 
-**Authorized endpoint:** fresh plan/critic/prebuild/fold, implementation and complete
-offline verification. Two-account live E1 remains a later execution gate. Renewed
-merge check/PR critique and merge remain subsequent work; no automatic merge.
+**Current authorized endpoint:** upstream traverse and revised description/handoff.
+No new implementation plan or product patch in this task. Later work requires a new
+plan, fresh plan critique, fold and full combined prebuild before implementation.
+Two-account live qualification and renewed merge/PR gates remain separate; no merge.
 
 ## Priority Level
 
-**High correctness priority within P2 feature #17.** Misclassified cancellation can
-lose an already-observed batch from delivery even while account safety checks hold.
+**High correctness priority within P2 feature #17.** An application can otherwise lose
+already-observed data or have shutdown depend on work the library does not own.
 
-## Known Blockers
+## Known Blockers and Evidence Limits
 
-### PR round2 — public outcome consumption — OPEN for description requalification
+**Upstream ownership question — answered at description level.** The completed traverse
+reproduced public wrapper loss without close and application lifetime extending beyond
+the owned call. Its concept experiments support separate completion and data ownership.
+The finding records the limits, including one full traverse iteration and no claim of
+repeated-cycle architectural convergence. No further factual/vendor question blocks
+writing a new plan from this description.
 
-The fresh PR review reproduced a new boundary omitted from the ownership contract:
-close needs to observe task termination, but directly awaiting the cancelled public
-reader can consume its saved CancelledError. A later application waiter receives a
-fresh exception without the completed-message payload. This holds for raw, daily and
-backfill: six cases lose the payload; six caller-first controls retain it. Actual
-storage settlement, charges and client retirement still hold. This behavior is measured,
-not an unanswered vendor question; see pr-critic.md and evidence/review2/cancel-payload.txt.
+**Implementation/qualification — still pending.** The current product still has the
+second-review defect. Inquiry adapters are not production code and do not implement
+all recipient states or early publication. The rejected plan and old passing725 checks
+remain historical evidence, not acceptance of this revision. Full new prebuild required.
 
-The description/foundation inquiry must establish who owns consuming the public result,
-separately from who may stop or await quiescence, and which caller-delivery guarantee is
-required. The current requirement to preserve known data stands; do not weaken it to
-make the review pass. The selected review guidance is to make internal shutdown observe
-completion without taking the application's cancellation payload. No extra public
-result store or global supervisor is established as a prerequisite by this evidence.
+**Earlier storage-cancellation false premise — preserved history.** prebuild_r3.md
+records the failed provider-boundary experiment; the later implementation fixed that
+measured path but did not establish public outcome delivery. Keep both lessons.
 
-CONTRIBUTING §7.4 requires this upstream return after the second rejected PR round.
-Do not resume the folded revision5 implementation or immediately write another plan.
-Qualification must include late application waiters and external close, before any
-replacement implementation. No human access is needed for this offline design work;
-E1 remains a separate later live gate. Production is unchanged at a63099e.
-
-
-### Prior storage-cancellation premise — CLOSED, measured false
-
-Revision3 P0 failed36/37 pool groups; worker33/33+25/25 held. Before/after settlement
-commit, independently cancelled provider I/O yielded caller requests0, prefix0 and
-no daily pending despite actual prefix100/charge200. See prebuild_r3.md and exact
-replan-r3 evidence. DEPRECATED_step_by_step_impl_plan.md must not be resumed.
-The missing requirement is now explicit across source and all state-provider work.
-The replacement passed its mandatory fresh experiment at3f535d1 and was implemented
-in a63099e with full offline verification (verification_restart.md). This preserves
-the historical false premise without marking the replacement live-qualified.
-
-### E1 — two-account live qualification — OPEN, execution only
-
-User has one account and selected offline-first. Requires two approved logged-in
-accounts, a shared readable group and their existing bounded allowance. Gates only
-the later live step. No live traffic, budget reset or joining is authorized here.
-
-## Inherited lessons
-
-Task termination is not source outcome. Cancellation is not rollback. Completed data
-is not durable acknowledgment. Retained cleanup needs acyclic ownership. Context
-ancestry is a guard, not a global dependency graph. Passing isolated cases does not
-qualify their composition. Use the whole prebuild before the first production step.
+**E1 — two-account live qualification — OPEN, execution only.** User chose one account
+and offline-first. Requires two approved logged-in accounts, a shared readable group
+and their existing bounded allowance. No live calls, joining, login or budget reset.
+Only Python3.11.10/Telethon1.45.0 ran in this inquiry; native3.7 is not newly qualified.

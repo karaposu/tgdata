@@ -22,6 +22,15 @@ impacted_by: devdocs/work/17-account-pool/pr-critic.md
 > This is later evidence; the completed inquiry below is not rewritten as if it
 > had already established that contract.
 
+> **Upstream return completed,2026-10-13:** the new
+> [public outcome ownership finding](../2026-10-13_11-46__17-public-outcome-ownership/finding.md)
+> extends this record. It disproves using the containing application Task as the
+> library operation lifetime and using cancellation attributes as the sole public
+> data carrier. Description revision5 now requires distinct invocation completion
+> and caller-retained data ownership. Production remains rejected; no new plan or
+> runtime implementation is claimed by that inquiry. The original body below is
+> retained as historical evidence.
+
 ## Changes from Prior
 
 **Prior path:** `devdocs/work/17-account-pool/traverse/finding.md`, the original
