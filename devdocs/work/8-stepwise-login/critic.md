@@ -117,9 +117,9 @@ may close retry start a fresh attempt. Test native migration cancellation, repea
 caller cancellation and no pending owned task after the invocation finishes.
 **why this is robust:** every disconnect origin in this auth client shares the same
 actual completion boundary; it does not guess from is_connected or one waiter.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 **Note**
-*Why chosen:* —
+*Why chosen:* one native completion owner closes this auth instance with minimal extent. Other engine/pool clients exist but their reuse/reconnect policy needs separate qualification; a universal adapter is not established as one interchangeable mechanism.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -130,8 +130,10 @@ this mechanism, one adapter could centralize all native retirement observations.
 - [ ] selected   - [ ] elegant   - [ ] last_resort
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* revisit only after an independent audit demonstrates the same missing native boundary in ordinary/pool clients; keep outside this credential feature.
 
 ## Gate record
 Phase2 completed with mitigation boxes empty. No known planning blocker or wrong
 layer; no execution blocker carried. No production code before the full prebuild.
+
+Phase3: robust selected/elegant; no last_resort. No risk/proposal rewritten.
