@@ -1,0 +1,287 @@
+FAIL test_roundtrip_and_consumer
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 254, in test_roundtrip_and_consumer
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_password_real_srp_and_restart
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 280, in test_password_real_srp_and_restart
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_local_refusals_and_invalid_code
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 295, in test_local_refusals_and_invalid_code
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_config_binding_and_device_defaults
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 312, in test_config_binding_and_device_defaults
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_malformed_state_and_configuration
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 332, in test_malformed_state_and_configuration
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_wait_retained_and_no_implicit_retry
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 360, in test_wait_retained_and_no_implicit_retry
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_expired_challenge_requires_restart
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 371, in test_expired_challenge_requires_restart
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_unsupported_interactions
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 387, in test_unsupported_interactions
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_sent_code_success_and_setup_flag
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 402, in test_sent_code_success_and_setup_flag
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_native_migration_and_proxy
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 414, in test_native_migration_and_proxy
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_native_migration_cancellation_joins_original_close
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 434, in test_native_migration_cancellation_joins_original_close
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_cancel_before_work_and_during_connect
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 454, in test_cancel_before_work_and_during_connect
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_unknown_send_and_authorization_only_check
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 481, in test_unknown_send_and_authorization_only_check
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_unknown_signin_recovers_authorization
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 494, in test_unknown_signin_recovers_authorization
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_unknown_signin_not_authorized_allows_explicit_input
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 512, in test_unknown_signin_not_authorized_allows_explicit_input
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_known_challenge_retained_during_cancelled_cleanup
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 528, in test_known_challenge_retained_during_cancelled_cleanup
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_known_auth_retained_after_cleanup_failure_and_retry
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 550, in test_known_auth_retained_after_cleanup_failure_and_retry
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_component_cancellation_is_not_caller_stop
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 573, in test_component_cancellation_is_not_caller_stop
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_known_auth_survives_later_self_failure
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 580, in test_known_auth_survives_later_self_failure
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_live_slot_untouched_and_save_failure_retry
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 603, in test_live_slot_untouched_and_save_failure_retry
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_identity_mismatch_before_auth_mutation
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 620, in test_identity_mismatch_before_auth_mutation
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+FAIL test_safe_observations_logs_and_health
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 664, in main
+    await asyncio.wait_for(fn(), 20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/test_login.py", line 638, in test_safe_observations_logs_and_health
+    flow = LoginFlow(config)
+           ^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-8-stepwise-login/devdocs/work/8-stepwise-login/prebuild/candidate.py", line 158, in __init__
+    raise failure from None
+tgdata.login.LoginError: Telegram login: invalid_configuration
+Passed: 0/22

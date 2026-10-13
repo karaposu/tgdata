@@ -19,7 +19,8 @@ Disqualifying result: a semantic assertion above fails with a correctly construc
 real-component fixture; stop/deprecate, do not patch around the false premise.
 Passing result: every combined history passes with actual local components and no
 socket use; observation scope excludes Telegram server delivery/acceptance.
-Result: PENDING.
+Result: PASS — 23/23 full combined local-component groups, 2026-10-14.
+Evidence: prebuild/REPORT.md, full-result.txt and manifest.json; all attempts retained.
 
 ## High-level summary
 The bounded conversation and caller publication contract survive. No broader auth
@@ -137,3 +138,12 @@ Phase2 completed with mitigation boxes empty. No known planning blocker or wrong
 layer; no execution blocker carried. No production code before the full prebuild.
 
 Phase3: robust selected/elegant; no last_resort. No risk/proposal rewritten.
+
+## Experiment call-site correction
+The precise Risk1 text above incorrectly names public disconnect as `_switch_dc`'s
+callee. Installed1.45 actually awaits private `_disconnect`; public disconnect's
+shielded flush is a separate boundary. The full candidate applies the selected
+completion-owner rule at BOTH boundaries. The initial public-only implementation
+caused the unchanged duplicate-close assertion to fail; the named feasibility
+falsifier (lost progress/unsettled work/unloadable credential) was not observed.
+See prebuild/REPORT.md for the complete correction history, not an assumed PASS.

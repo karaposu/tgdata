@@ -1,0 +1,10 @@
+{
+  "runtime": "Telethon 1.45.0 / Python3.11",
+  "scope": "native SDK/SRP/codec with controlled wire; no live provider qualification",
+  "sha256": {
+    "candidate.py": "c35a09c4c99b081860be08c01b48b7605f353d37bf848ddd875c38e8b6365560",
+    "test_login.py": "67bed85794842ae7dd415ab8bce90a911cb5cb2a7efcc8c7d05d9634d51d6cba",
+    "run.py": "966d0c8475623b475954990fc1b0134e4d63b1ed296a87d24a016a398a9e6753"
+  },
+  "factory_source_sha256": "95ddd9d6f6736140fe3c559315abdaed9230f8b6faa9a58385017535ba85330f"
+}

@@ -2,7 +2,10 @@
 model: gpt-6-astra
 effort: max
 ---
-# #8 implementation plan — revision 1
+# #8 implementation plan — revision 2
+
+**Critic folded:** 2026-10-14 — 1 robust mitigation (steps1/3 changed,0 added).
+Full prebuild: PASS23/23, prebuild/REPORT.md; production work can begin.
 
 ## What is the task
 Provide an explicit existing-account LoginFlow for independent phone, code and 2FA
@@ -74,6 +77,7 @@ supported; killed-process mid-call replay safety is not. New code delivery requi
 a fresh, deliberate flow after restart_required/unsupported; no resend API in scope.
 
 ## Step 1 — State and owned lifetime
+[folded: Risk1, robust]
 ### Proposed changes
 Add `tgdata/login.py` with public safe values/errors and private codec/memory sink.
 Use the actual StoredSession for isolated state, never the configured session row.
@@ -94,6 +98,12 @@ health.isolate_call. Always call existing `_disconnect_owned` with its failure r
 on failure retain the client and block admission/export until `close()` retries it.
 No task-wide caller join, detached task, timeout-as-retirement or global registry.
 Copy actual session state after all exits, including native migration and cleanup.
+Retain the auth subclass's actual private `_disconnect` transport completion as well
+as public disconnect's flush completion; new connection resets settled handles.
+Native `_switch_dc` uses the private method (corrected by the full prebuild trace).
+Explicit failed-close retry resets those settled failed handles. Keep native SDK
+child loggers on the same private disabled logger instance. These are the qualified
+candidate's concrete call sites for the already selected ownership/privacy rules.
 ### Output
 One validated private state owner and one authoritative configured construction path.
 ### Safe in nature
@@ -150,6 +160,7 @@ Native connect, SRP, DC migration, account ownership, headless auth policy, fina
 5
 
 ## Step 3 — Focused regression suite
+[folded: Risk1, robust]
 ### Proposed changes
 Add test_41_stepwise_login.py using the complete prebuild's cases against production.
 Exercise native SDK client, wire serialization and disconnection, not three fake auth
