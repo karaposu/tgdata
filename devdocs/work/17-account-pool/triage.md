@@ -32,3 +32,18 @@ This supersedes the earlier preparation-only endpoint. E1 two-account live acces
 is still unavailable; it gates later live qualification only. PR publication/review
 renewal and merging are later gates. Preserve main checkout, duncan, historical
 artifacts and unrelated work. No automatic joining, login or budget reset.
+
+## Current public-outcome re-plan — 2026-10-13
+
+Description revision5 and the public-outcome finding are authoritative for the next
+plan. Runtime a63099e; current dev2ddb852 confirmed unchanged. Added touched regions:
+new pool_result.py; private invocation record in pool_lifecycle.py; opt-in source buffer
+transport through BatchEngine/_OwnedSource and SyncEngine/BackfillEngine; AccountPool
+public read/prepare overrides and internal reader; package exports, pool fixtures and
+new test40, README/pool guide/demo. These all serve public ownership, not routing or
+state-schema redesign. Current actual modules supersede the older proposed-home wording.
+
+Current user authorizes plan, fresh in-session critic-d, fold and full isolated
+prebuild only. Two rejected PR rounds, one earlier failed prebuild; no PARKED block.
+No production implementation, live traffic or merge in this task. Full source/controller/
+batch/progress/lifecycle/prebuild runner interfaces refreshed; model Astra/max verified.

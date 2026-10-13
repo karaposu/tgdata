@@ -1,361 +1,362 @@
 ---
 model: gpt-6-astra
 effort: max
-revision: 5
-review_status: REJECTED_PR_ROUND_2
+revision: 6
+status: PROPOSED_PREBUILD_REQUIRED
 ---
-# #17 — explicit ownership across source and storage
+# #17 — owned invocation completion and caller-retained data
 
-> **Rejected at PR round2,2026-10-13. Do not resume this implementation.**
-> This remains the blueprint of producta63099e. The fresh review found that shutdown
-> can consume the public cancellation payload before its caller. Per CONTRIBUTING
-> §7.4 return to desc/traverse before another plan; see pr-critic.md. The original
-> steps below are retained as evidence, not silently patched around the finding.
-
-**Critic folded:** 2026-10-13 — 1 mitigation (1 step changed, 0 added).
-P0 completed before step1; prebuild.md records48/48 plus both worker suites.
-**Implementation:** steps1–7 complete at producta63099e; verification_restart.md.
-Step8 remains gated by E1; renewed PR gates are separate.
+**Source:** desc.md revision5 and the completed public-outcome ownership inquiry.
+**Subject:** product a63099e on feature head f1cae2c; dev2ddb852 is already integrated
+and was verified unchanged on GitHub in this turn. This is a new plan, not a patch to
+rejected plan revision5 (preserved as step_by_step_impl_plan_r5.md).
+**Current authorization:** new plan, fresh in-session critic-d, selected mitigation
+fold, and full combined prebuild. Production implementation and live work are later.
+Exactly two PR reviews are rejected; the task is not PARKED. No subagent delegation.
 
 ### What is the task
 
-Complete existing-access account routing from the new desc.md requirements, using
-all rejected/failed history as evidence. Rebuild completion ownership across source
-and async storage, retain actual messages through local failure, and remove arbitrary
-health observers from the pool's source lifetime. Keep proven routing/quota/progress
-rules and persistent clients. This is a fresh plan, not amendments to deprecated r3.
+Complete the existing-access account pool without treating the caller's Task as the
+library's lifetime or its cancellation exception as the only data carrier. The caller
+must keep actual complete records through normal async cancellation composition,
+while pool shutdown waits only for owned work, preserves native cleanup, and leaves
+quota, permission and progress receipts governed by their existing records.
 
 ### Huge Hard Blockers
 
 #### Planning Blockers
 
-None identified. The inherited storage premise is CLOSED: it was false, measured
-in prebuild_r3.md. Full source/store/progress implementations show where both outcomes
-and data must be retained; no human product decision is missing. Behavioral confidence
-in the proposed replacement is not inferred from those reads: P0 below must run
-before step1, and a disqualifying result kills this plan.
+None OPEN. Inherited public-ownership question is **CLOSED at contract level** by the
+new finding: a task-wide non-consuming join still waits for application continuation,
+and exception attributes still lose data under shield/gather without close. Independent
+completion and a caller-retained data destination are required. Actual candidate
+composition remains a behavioural premise for P0, not an assumption marked confirmed.
+
+The data destination and progress transport can be specified from the actual code:
+BatchEngine owns a list containing only validated complete records; AccountPool owns
+source/account settlement; SyncEngine/BackfillEngine own caller-scoped publication.
+No inaccessible service fact or human-only design choice prevents writing the steps.
+Native Python3.7 behaviour is not inferred from grammar checks. The proposed runtime
+uses 3.7-era asyncio/contextmanager/dataclass APIs; only installed3.11.10 is executable
+here, so native3.7 qualification remains an explicitly unclaimed compatibility limit.
 
 #### Execution Blockers
 
-**E1 — OPEN.** Two approved logged-in accounts that can already read the same group,
-plus their existing bounded ledger allowance. **Who:** user supplies access/approval.
-**Blocks:** step8 only. User selected one-account/offline-first; steps1–7 are authorized.
-No reset, new joins or login codes in chat. PR review and merge remain separate gates.
+**E1 — OPEN, inherited from desc.md:** two-account live qualification needs two approved
+logged-in accounts, a shared readable group and their existing bounded allowance.
+**Who:** maintainer supplies/approves resources. **Blocks:** step7 only. The user chose
+one-account/offline-first; no login, join or allowance reset in P0 or this task.
 
 ### How this implementation moves toward desired state
 
-Use one private ownership primitive for interruptible async source/provider work:
-the child's value/error is data returned to its waiter, while cancellation delivered
-to the waiter is a stop request. Stop the child once, retain its actual completion,
-then propagate caller cancellation. Cleanup retains its different policy: do not
-cancel native disconnect. Both use the existing retained-join technique; neither
-uses Task.cancelling/uncancel or a global supervisor.
+Use two small owners for two different spans. A private invocation record tracks when
+exclusive pool source/control work ends; its caller Task is only a stop address. A
+public PoolReadCapture holds one caller-owned read observation through the longer
+public call, including daily/backfill publication. It does not own Tasks or perform
+I/O. Keep existing component outcome capture, provider boundaries and retirement.
 
-Source body outcome remains separate from the health context's finalization.
-Synchronous passive capture replaces pool callbacks. Scoped provider calls extend
-ownership through every async store; local internal cancellation takes existing
-storage-error paths, leaving authoritative write/recovery rules intact. Shared
-progress publication errors carry known data without claiming durable publication.
+Transport the data writer explicitly through private parameters. Do not add a global
+ContextVar result registry, use health diagnostics for payloads, or retain a callback.
+The four data-producing AccountPool entry points require `capture=`. Ordinary TgData
+APIs and state-only pool operations keep their signatures. The pool's injected internal
+batch reader receives the already-bound private writer; it never allocates/rebinds a
+public capture for the inner read. Shared engines receive an opt-in private parameter
+whose absence preserves existing ordinary-client behavior.
 
 ### High-Level Summary
 
-| Step | Description | Expected output |
+| Step | Description | Expected Output |
 |---|---|---|
-| 1 | Integrate current dev | Worker/source union identical to P0 baseline |
-| 2 | Own interruptible work and provider scopes | Private lifecycle primitives |
-| 3 | Separate source outcome and passive observations | Source result survives secondary failure |
-| 4 | Apply ownership to pool and progress stores | Provider cancellation has local meaning |
-| 5 | Retain completed data through persistence failure | Error prefix without invented receipt |
-| 6 | Add regression cases and public contract | Tests/docs/examples match behavior |
-| 7 | Full offline verification and scoped commits | Reproducible evidence and pushed branch |
-| 8 | Two-account live qualification | E1 report; blocked pending access |
+| P0 | Full isolated candidate composition before any production step | One qualifying report, hashes, raw logs and negative controls |
+| 1 | Define caller-owned data capture and immutable snapshots | Explicit one-shot public data destination with bounded retention |
+| 2 | Separate exclusive invocation completion from caller Task lifetime | Close joins only owned completion, with retained native retirement |
+| 3 | Retain complete records at the source boundary | Running capture sees actual prefix before subsequent source/store awaits |
+| 4 | Wire canonical raw and progress public calls | One capture per public call, local replay and independent publication lifetime |
+| 5 | Migrate docs/examples and permanent adversarial tests | Public calling pattern and preserved historical regression expectations |
+| 6 | Verify final implementation and commit separately | Full offline evidence and exact comparison with the qualified candidate |
+| 7 | Run live two-account gate when E1 is satisfied | Real account/access/proxy/failover evidence, without overstating offline proof |
 
-## Required prebuild P0 — before step1
+## Decisions the implementation must preserve
 
-Create a fresh isolated export of product71502e5 + dev2ddb852 (one batch_engine
-conflict, explicit union). Prototype steps2–5 only in that export/private probe
-material. Use real Telethon1.45 methods, native disconnect, ReadBudget, SQLite pool/
-sync/backfill state, actual progress engines and event-loop task scheduling. Synthetic
-wire may supply replies; fault adapters must execute actual SQLite CAS when a commit
-is claimed. Never manufacture batches, charges, tokens, waits or receipts as outcomes.
-Block socket connect; parent subprocess watchdog prevents an actual deadlock hanging
-the agent. Watchdog termination is failure, not cleanup success.
+### Public data shape and use
 
-Retain all37 r3 groups and their exact semantic expectations (including the failed
-storage group), current-dev worker37/38, then add the following complete matrix:
+New `tgdata/pool_result.py`, exported from tgdata.__init__:
 
-- Pool state load and admission: provider-owned cancellation, before/after actual
-  commit; no caller stop, no source request/charge, unresolved token only if stored.
-- Pool settlement: raw/daily/backfill × successful batch / prefix+FloodWait ×
-  before/after commit; local storage error, available data retained, wait/token agree
-  with actual state, no failover. Daily/backfill retain pending if their store works.
-- Daily/backfill stores: load, admission where applicable, publication/settlement,
-  ack and local controls; provider-owned cancellation before/after commit. Admission
-  never reconciles into source permission; non-admission backfill exact-state
-  reconciliation remains allowed. Errors retain data; replay/ack reload actual state.
-- True caller stop during source or provider work, including repeated cancellation
-  while the provider's finalizer performs a held actual SQLite CAS. Caller/busy owner
-  remains until I/O finishes, no new source admission, no false rollback assumption.
-  Pre-start cancellation starts no provider or source. Cancellation after a known
-  batch retains that prefix but starts no new saving just for cancellation.
-- Provider reentry through direct call, child task and wait_for after the new task
-  boundary; pool/sync/backfill scopes, external/foreign/expired positive controls.
-- Source-internal cancellation stays local/unresolved, native failed cleanup stays
-  quarantined, source-free progress after close, bounded detached observation/drain,
-  no application callback or observer task, ordinary health callbacks unchanged.
-- Synchronous session load cancellation is a local configuration failure, not caller
-  stop (no await point there); session save/disconnect interruption remains inside
-  the owned source/retirement boundary. Secrets stay out of public errors/events.
+```python
+capture = PoolReadCapture()             # no I/O, no task
+try:
+    result = await pool.read(chat_id, capture=capture, after_id=cursor, limit=200)
+finally:
+    observation = capture.snapshot()    # synchronous, nondestructive, no I/O
+```
 
-PASS requires every matrix assertion, all37 retained groups and both worker suites
-in one combined run. A wrong ownership/data/permission result or watchdog is FAIL;
-record/deprecate/stop under task-impl. Minor fixture/name/import errors may be corrected
-and recorded; semantic expectations cannot be weakened. Passing targeted probes alone
-is not P0. Record exact candidate/source hashes and commands. Prototype is evidence,
-not product completion; runtime remains unchanged until P0 passes.
+`PoolReadSnapshot` is an immutable value with `state`, `batch`, `account_id`,
+`error_type`, `read_error_type`. States: `unbound`, `running`, `succeeded`, `failed`,
+`cancelled`. `batch` is None or an immutable MessageBatch. `account_id` denotes the
+verified source that produced retained records, not a guessed identity from session
+names; replay has no newly verified account, so it is None. Error fields are validated
+ASCII type names up to128 characters or a fixed fallback; never exception messages,
+instances, traceback chains, Tasks or credentials. `read_error_type` records the source
+failure separately from a later public error. Existing exception return semantics are
+kept as convenience; the capture is authoritative for in-memory data availability.
 
-## Step 1 — integrate current dev
+The public object exposes only constructor/snapshot. Use private state plus a private
+writer; callers cannot assign public state/batch fields. Require exact PoolReadCapture
+rather than an arbitrary callback/duck-typed object. A local binding context manager
+marks it running once on accepted coroutine entry, before argument-dependent I/O.
+Invalid/missing/reused captures refuse before I/O; reuse leaves the original untouched.
+Concurrent attempts to bind the same capture have one winner, never two writers.
+A Task cancelled before coroutine entry leaves it unbound. Cancellation queued at entry
+may bind and then cancel at the existing pre-I/O checkpoint; neither starts store/source
+I/O. A bound capture is never reset/reused, including after validation failure.
 
-### Proposed changes
+`snapshot()` during execution exposes only complete validated records, always with
+`stop_reason='interrupted'`; zero available records means batch=None. Successful final
+return preserves its actual full/end/limit batch (including a real empty batch). Empty
+sync/wait/control returns do not invent a batch; a known source empty-end observation
+may remain a real source fact, but provides no receipt. Failure/cancellation freezes
+only the interrupted complete prefix. No final snapshot is later downgraded by close.
+Snapshots are copies in meaning: later capture changes cannot mutate an earlier one.
 
-Merge current dev2ddb852 into this issue branch after P0. Preserve all worker cleanup
-receipts and merged #7 behavior. Resolve only the known batch_engine constructor seam:
-keep `_resolve_entity` and `_retain_cancelled_prefix=False`; pool opts in. Use the
-P0 tree as the comparison, not guessed resolution. If dev moved, inspect and repeat
-combined P0 for its changed composition before implementation. Keep work docs on the
-feature branch and unrelated main-checkout changes untouched.
-### Output
+Avoid rebuilding/copying the entire prefix for each message. The private writer can
+retain BatchEngine's internal complete-record list plus its validated chat/cursor/mode
+while that one source runs. This list contains only validated plain records, no SDK
+objects, and is not exposed publicly. `snapshot()` materializes an immutable batch on
+demand, with no await; finalization seals a single MessageBatch and releases the list.
+The shared source list may grow only after validation/media completion. A later
+no-prefix failover may install a new empty record list; once nonempty data exists,
+no further account is eligible for this call. Never lose a nonempty prefix because a
+later error carries None/empty data. Existing10,000-message bounds apply; no new universal
+byte limit or lossless process-crash guarantee. Caller-retained older snapshots remain
+caller-owned memory. No public discard protocol: release references to release data.
 
-Feature branch contains current dev with the same runtime union used in P0.
-### Safe in nature
+### Private invocation lifetime
 
-False — shared source seam.
-### Peripheral concepts
+An `_Invocation` in pool_lifecycle.py contains caller stop address and a private
+normal-result completion Future. AccountPool has one `_active_invocation` reference.
+Keep `_active_task` as a derived private read-only compatibility property for existing
+invariant probes; it is not a second mutable source of truth.
 
-BatchEngine, temporary owner, worker receipts, historical work docs.
-### Hardness Lvl
+`_operation()` establishes the invocation only after scope/closed/busy refusal. Its
+finally exits the live scope, clears the exact active slot, clears the record's caller
+reference and signals completion, without an intervening await. All retained source
+and provider tasks already settle before this finally under the existing ownership
+helpers. Never turn a source/control invocation into the whole public progress call.
 
-2
+`close()` sets closed/closing as before and retains its cleanup worker. That worker
+stops only an invocation still equal to the active record and not completed; perform
+the identity check and cancel synchronously. Await the record's completion Future,
+never the caller Task. Then retire all native clients with existing quarantine/error
+rules. Multiple close/reentry behavior remains unchanged. A completed/stale invocation
+is harmless and cannot cancel later application code. No waiter consumes public data.
 
-## Step 2 — explicit interruptible ownership and scoped providers
+### Explicit transport, including source-free progress
 
-### Proposed changes
+Public AccountPool.read/get_message_batch/sync_group/prepare_backfill require capture.
+Use one binding context at the outer public boundary. Move raw routing body into a
+private `_read(..., _capture)`; its existing admission, selection, classification,
+settlement and failover rules remain. Public get_message_batch calls that private
+body directly, not public read. Provide a private bounded-reader adapter for engines.
 
-New private `tgdata/pool_lifecycle.py` holds: (a) retained cleanup join moved unchanged
-from pool_source (re-export privately there for current users); (b) child capture and
-wait primitives; (c) expiring per-pool ContextVar scope; (d) pool-only async store
-adapter. No public supervisor/task registry.
+AccountPool's SyncEngine and `_new_backfill_engine` bind to the private adapter.
+Add opt-in `_capture=None` to shared SyncEngine.prepare and BackfillEngine.prepare;
+forward it to the configured reader only when supplied. Ordinary TgData creates no
+capture and passes no extra reader keyword. State-only methods retain their signatures.
+No shared ProgressFacade signature change is necessary: override only the two
+pool-specific public preparation methods and its engine factory.
 
-For each interruptible call, checkpoint caller cancellation before creating the child.
-Invoke the component inside that child, capture Exception/CancelledError as value/error,
-observe child completion via asyncio.wait, catch caller cancellation only around the
-wait/retained stop, cancel child once and retain completion through further stop
-requests. Child.cancelled before capture starts is internal terminal data, not an
-uncaught caller exception. Return completion plus timeout indication; consumers
-interpret it. Process-control BaseExceptions are not normalized into ordinary errors.
+`_OwnedSource.run(..., _capture=None)` forwards the private writer to BatchEngine.
+BatchEngine.fetch_batch's private parameter attaches the local complete-record list
+after actual identity/entity resolution, before awaiting more source work. Capture only
+records appended after complete media preparation and validation. Record source
+completion/error in the writer before monitor finalization; later secondary failures
+cannot obscure known data. No capturing from an invented batch or reread.
 
-No storage timeout is invented. Providers own their timeout and must finish subordinate
-I/O before returning. Python3.7-compatible syntax/APIs; no cancellation-count heuristic.
-Scope direct and descendant same-pool close before mutation, expire it in finally and
-remove pool references so inherited stale context is harmless. Guards supplement the
-I/O-only provider role; they do not detect arbitrary outside-task dependencies.
+For daily/backfill replay, offer the actual validated pending batch after media checks
+and before returning. For newly obtained batches, preserve running interrupted data
+through account settlement and group publication. Only outer public-call exit marks the
+capture terminal; inner source completion does not. Publication may remain active after
+pool close retires clients. Do not send a synthetic ack or clear an uncertain token from
+capture state. Native helper/store/receipt schemas and reconciliation stay unchanged.
 
-The store adapter invokes exactly once, awaits the real provider through the same
-primitive and maps only provider-internal CancelledError to the supplied local error
-class with type-only text and suppressed context. Actual caller cancellation passes
-through after joining. Ordinary engine/provider error translation remains in its
-existing engine. Optional stores retain None semantics; reject malformed configured
-pool progress adapters locally. Do not mutate adapters used by other consumers.
-### Output
+## Mandatory combined prebuild P0 — before step1
 
-One small private outcome mechanism shared by source and three storage paths;
-cleanup remains a separate retained policy.
-### Safe in nature
+**Location:** new `probes/outcome/` and `evidence/outcome/` in this work folder. Preserve
+all older inquiry/restart/review scripts and exact failed outputs. Export tracked code,
+docs and examples at f1cae2c to a fresh owned /private/tmp directory with no .git. It
+already contains dev2ddb852. Record source-tree/SDK/Python/hash manifests. Apply the
+candidate only in that export; do not change the branch's production files.
 
-False — lifetime semantics.
-### Peripheral concepts
+The candidate must implement the complete interaction in steps1–4, including early
+record retention and required capture arguments, not the inquiry's exit-only adapter.
+Use actual Telethon1.45.0 client/iterator/native disconnect, ReadBudget, SQLite account
+and progress stores, batch serialization, sync and backfill engines. Synthetic wire
+controls replies and fault wrappers control timing but delegate actual writes. No
+helper supplies a manufactured result, receipt, allowance or client-completion flag.
 
-asyncio cancellation, contextvars, async store protocols, Python3.7.
-### Hardness Lvl
+Migrate existing pool fixture calls in the export to pass fresh captures without
+changing existing assertions. New qualification cases retain and inspect those captures
+explicitly. Compare/assert the old test oracles remain intact. No default capture is
+silently added to the actual API. Run the whole combined command on one candidate/hash
+set; targeted passes or concatenated results from different candidates cannot pass P0.
 
-5
+Coverage groups (individual histories parameterize each group):
 
-## Step 3 — source outcome and passive observations
+- Binding/state: all four APIs, missing/wrong type, same/different-pool reuse, concurrent
+  same-capture calls, prestart/queued stop, validation errors, source-free empty/wait,
+  successful and failing finalization, immutable old/final snapshots, bounded diagnostics,
+  capture retention after GC/close and no retained Task/client/traceback graph.
+- Early visibility: actual first page100 then blocked second RPC; complete prior media
+  records then blocked/failing next download; completed source held in monitor cleanup;
+  pool settlement held before/after actual commit; progress publication held; snapshot
+  before release must show all and only actual complete records as interrupted data.
+- Public composition: raw/daily/backfill plus batch-only adapter; direct Task wait,
+  wait-for timeout, shield, gather return_exceptions, first/late/repeated observers;
+  read-first/close-first plus repeated reader/closer cancellation. Prefix1 or100 must
+  persist in the explicit recipient while the actual public Task remains cancelled.
+- Lifetime: application catches tgdata cancellation then waits for close/unrelated
+  cleanup; close must retire without waiting for that continuation. Internal source/
+  store/native cleanup remains held until actual completion. Stale completion/stop
+  cannot cancel unrelated work or a subsequent operation. Positive no-close cases remain.
+- Authoritative effects: genuine and provider-owned cancellation at account/progress
+  load/admission/settlement/publication/ack/recovery, before/after actual commit; paired
+  account+progress faults; exact receipts versus interrupted hashes; no rollback,
+  synthetic receipt, refunded charge, shortened wait or second source after a prefix.
+- Source-free daily/backfill replay and ack after close with removed credentials and
+  poisoned pool-state/quota access; capture finalization follows the public prepare,
+  not pool source closure. Receipt/cursor assertions remain independently observed.
+- All48 existing lifecycle groups, full test31 pool suite, worker37+38, and complete
+  supported offline12–19/22–39 suites plus the three offline demos. This wider combined
+  run protects the shared optional parameter seams and ordinary TgData/#7/#10 behavior.
+  Explicit legacy live skips are excluded from executed counts, never marked as tests.
 
-### Proposed changes
+Each process has a parent watchdog and per-case bounds where meaningful. If forced
+termination is needed, report FAIL; never equate a timeout/cancelled waiter with actual
+quiescence. Record exact SDK requests, available records, signal/Task state, source/
+provider termination, native retirement, quota and stored token/wait/pending/cursor
+separately. Compile and check new runtime modules against3.7 grammar, not a native3.7
+claim. Assert candidate hashes unchanged during execution and branch runtime unchanged.
 
-New `pool_observation.py`: private bounded buffer and HealthMonitor subclass. Capture
-only the existing eleven event keys/three account keys, exact plain dict/scalar types,
-signed64 ints/None/strings with pre-encoding length bound; detached values. Limits:
-128 events,4096 encoded bytes/event,65536 total bytes, drop incoming on overflow and
-saturate dropped at2**63-1. Catch capture Exception/CancelledError locally as one loss.
-No health log mirror, user callback, consumer await, background task or dependence
-on the legacy callback-delivery ContextVar. Ordinary HealthMonitor unchanged.
+**PASS:** every required group, regression suite and demo on that single candidate
+passes with the expected real observations and no watchdog. **FAIL:** any unresolved
+semantic mismatch in data, lifetime, authority or compatibility. Preserve evidence;
+stop before implementation and apply task-impl's failed-experiment procedure. A local
+syntax/import/fixture wiring error may be corrected only if it changes no design or
+expected semantic outcome; record it and rerun the full combined gate. Do not replace
+expected data or silently alter the design to make a test pass.
 
-Pool rejects non-None health_callback with migration guidance. `drain_health_events()`
-synchronously returns `{events: [...], dropped: N}`, resets capture, works in every
-pool state and performs no source/state/quota I/O. It is best-effort diagnostics.
-
-Source.run uses step2 owned child while retaining a separate source body holder.
-Always prefer a completed body result/error over secondary monitor failure, internal
-cancellation or timeout. Genuine caller stop takes precedence after joining and carries
-any already-known complete prefix. Source-internal cancellation without completed body
-becomes private `_SourceInterrupted(PoolStateError)` with prefix and no normal account
-settlement/failover. Owned timeout uses existing PoolTimeoutError rules after quiescence.
-Keep self.task accurate until child finishes. Preflight sync session/config CancelledError
-is local configuration failure; native retirement/quarantine/retry stays unchanged.
-### Output
-
-Source outcome survives secondary termination; passive bounded health API.
-### Safe in nature
-
-False — unmerged pool callback API changes.
-### Peripheral concepts
-
-HealthMonitor attribution/recovery, credential loading, native SDK disconnect.
-### Hardness Lvl
-
-4
-
-## Step 4 — controller and every configured async store [folded: Risk1, robust]
-
-### Proposed changes
-
-AccountPool._operation first refuses a live same-pool scope before changing ownership,
-then enters the expiring scope while retaining its existing exclusive caller task.
-This covers initialize/read/recheck/recover invoked from state-only providers, even
-when no source is active. P0 covers all five exclusive controls (including close)
-from pool/daily/backfill providers through direct/task/wait_for paths; state, clients
-and quota stay unchanged. Foreign/expired scopes and local progress remain usable. _backend uses owned provider invocation for load/CAS and preserves existing
-PoolError translation. SyncEngine receives an owned wrapper of sync_store; backfill_store
-uses its own wrapper/namespace. State-only methods are scoped during provider work but
-do not acquire exclusive source ownership; they remain usable after close.
-
-close refuses a live same-pool scope before changing flags. Ordinary external close
-keeps existing cancel/await-active/retire-all behavior; it does not track independent
-state-only progress calls. Those calls' own waiters retain their I/O. Keep pool admission
-strictly definite True, recovery exact-token and conservative waits. No CAS retries or
-schema changes. SourceInterrupted skips settlement and retains actual durable token.
-Normal local settlement failure and true cancellation attach already-known interrupted
-prefix; read_error retains original source failure where one exists. No failover on
-local storage failure; no persistence started merely to service a cancelled caller.
-### Output
-
-Independent provider interruption cannot look like caller stop, at any store seam.
-### Safe in nature
-
-False — async provider execution changes task, documented as an extension contract.
-### Peripheral concepts
-
-Admission, CAS, status, recovery, progress lifetime, observer reentry.
-### Hardness Lvl
-
-5
-
-## Step 5 — retain available data when progress publication fails
+## Step 1 — caller-retained data destination
 
 ### Proposed changes
-
-Extract the existing AccountPool._prefix logic as private `_interrupted_prefix` in
-message_batch.py and reuse it without changing serialization/hashes. None/empty stays
-None; known nonempty records become interrupted (never history-end proof).
-
-SyncEngine._publish validates first, then on SyncError/CancelledError from persistence
-attaches that batch as interrupted partial_result before rethrowing. Existing read_error
-assignment stays. BackfillEngine settlement similarly retains its already validated
-batch on BackfillError/CancelledError; no reader fabrication, new write/retry or receipt.
-A successful backfill exact-state reconciliation still returns confirmed original data.
-Neither shared engine converts its direct caller's cancellation; only the pool adapter
-classifies provider-owned cancellation. Failed validation must not advertise untrusted
-data. Ordinary direct TgData gains only error data retention, not new lifetime policy.
+Implement PoolReadCapture/PoolReadSnapshot and the private writer/binding context in
+`tgdata/pool_result.py`; export only the two public values in `tgdata/__init__.py`.
+Implement the state, snapshot, bounded-error, exact-type, one-shot and reference-release
+rules above. Keep the writer separate from the public value, with no user callback.
 ### Output
-
-Known records remain inspectable across publication failure, without implying durability.
+One explicit destination survives wrapper cancellation and has a documented lifecycle.
 ### Safe in nature
-
-False — shared progress error payload adds information.
+False — introduces a required public calling contract on the unmerged pool.
 ### Peripheral concepts
-
-MessageBatch hashes, interrupted semantics, SyncError.read_error, backfill reconcile.
+MessageBatch immutability and validation, error provenance, caller-owned memory.
 ### Hardness Lvl
+4/5.
 
-3
-
-## Step 6 — regression coverage and public contract
+## Step 2 — library invocation completion
 
 ### Proposed changes
-
-Promote P0 assertions to a standalone pool lifecycle smoke suite reusing actual test31
-SDK/SQLite fixtures. Update test31 callback-specific expectations only for the planned
-passive API, keeping all existing source/permission/retirement expectations. Avoid
-using tests that simply mirror the helper; assert observable source traffic, SQLite
-snapshots, charges, data/receipts and task termination. Cover full P0 matrix and ordinary
-source success/SDK errors/current worker composition. Network blocked.
-
-Update docs/account_pool.md, examples/account_pool.py, README and smoke README:
-passive drain in app-owned finally, no background consumer promise; provider task/lifetime
-contract; source/caller/provider cancellation distinctions; prefix is data not receipt;
-ambiguous writes require inspection/existing exact retries; state-only use after close;
-limits and dropped counts; offline qualification versus pending E1. Preserve scope.
+Add private _Invocation to pool_lifecycle.py; replace the mutable task slot in
+account_pool.py with the exact invocation record and derived task property. Change
+_operation and close only as specified. Preserve retained cleanup/reentry/quarantine.
 ### Output
-
-Permanent regression runner and accurate app-facing docs/example.
+Shutdown stops/joins actual library work without awaiting the caller's whole Task.
 ### Safe in nature
-
-True — tests/docs; intentional old expectations change only where plan changes API.
+False — changes cancellation and lifetime coordination.
 ### Peripheral concepts
-
-Examples, offline suite inventory, user-facing recovery workflow.
+Provider scopes, repeated cancellation, persistent clients, application continuation.
 ### Hardness Lvl
+4/5.
 
-3
-
-## Step 7 — verify, record and commit
+## Step 3 — complete source records available before later awaits
 
 ### Proposed changes
-
-Compile all runtime/examples, check Python3.7 grammar, run new suite and full supported
-offline suites12–19 and22–38, plus offline examples and package exports using existing
-Telethon1.45 environment. Tests20/21 and E1 live cases stay gated; record any actual
-skip. Use the real runners; PROJECT_SPECIFICS absent is not a reason to invent commands.
-Compare final runtime with P0 candidate and explain deliberate test/docs deltas.
-
-Small local slips may be fixed with recorded reason/retest; architecture failures stop
-under task-impl. Run diff whitespace/status checks. Commit product/tests/docs separately
-from work notes; push the existing feature branch and update #17 pipeline with exact
-committed evidence. Keep PR26 draft: renewed merge check/fresh PR critique remain next.
-Preserve unrelated files/history; never stage duncan or user main-checkout changes.
+Add the opt-in private writer argument in batch_engine.py and pool_source.py. Attach
+the real complete-record buffer after identity/entity resolution; never expose its
+mutable list or an incomplete media record. Record body value/error before monitor
+exit. Use the existing source outcome and cancellation helpers unchanged otherwise.
 ### Output
-
-Full offline verification record, scoped commits and accurate issue/handoff.
+Actual running data is retrievable through later source, monitor and account-store work.
 ### Safe in nature
-
-True — verification and feature-branch records.
+False — shared batch code changes, with opt-in behavior absent for ordinary callers.
 ### Peripheral concepts
-
-CONTRIBUTING gates, model stamp, issue status, E1 qualification.
+Media completion, MessageBatch hashing, SDK pagination, source error precedence.
 ### Hardness Lvl
+4/5.
 
-2
-
-## Step 8 — live qualification [execution gate E1 OPEN]
+## Step 4 — outer public calls and progress transport
 
 ### Proposed changes
-
-Only after the user supplies the two-account/shared-group/allowance preconditions,
-run bounded read-only live routing/failover as originally scoped, record real identity,
-visibility, proxy and quota observations. No joining/reset or invented equivalence
-between offline synthetic wire and live Telegram. Renewed merge/PR review gates remain
-necessary regardless of this result; merge requires user go-ahead.
+Bind captures at all four public AccountPool data entry points; move routing into the
+private raw reader and route engine adapters directly to it. Pass the existing private
+writer through SyncEngine/BackfillEngine.prepare and pool-only engine construction.
+Capture validated replay results without source access. Terminal state is set only on
+the outer call's exit; existing store/provider/receipt semantics remain authoritative.
 ### Output
-
-Live evidence or explicit pending status. This run stops here if E1 remains open.
+One capture spans exactly one public read/prepare, including local replay and publication.
 ### Safe in nature
-
-False — actual Telegram reads spend allowance.
+False — changes pool public signatures and shared optional engine transport.
 ### Peripheral concepts
-
-Real accounts, network/proxy, visibility, read quota.
+ProgressFacade, scope expiry, pending replay, durable acknowledgment, local media checks.
 ### Hardness Lvl
+5/5.
 
-3
+## Step 5 — permanent qualification and user-facing contract
+
+### Proposed changes
+Promote P0 public-ownership cases to `tgdata/smoke_tests/test_40_pool_outcomes.py` and
+migrate pool callers in test31/test39/pool_storage_cases and examples/account_pool.py.
+Retain previous oracles; add assertions through the explicit recipient. Update README,
+docs/account_pool.md and smoke-test README with capture use, wrapper-safe retrieval,
+early/final snapshot meanings, required one-shot binding, normal cancellation, memory
+limits and data-versus-receipt rules. Inspect actual doc filenames before editing.
+### Output
+A canonical working example and permanent tests protect all ownership boundaries.
+### Safe in nature
+False — fixtures/examples/public call sites migrate with the new pool contract.
+### Peripheral concepts
+Documentation migration, package exports, raw/daily/backfill user workflows.
+### Hardness Lvl
+4/5.
+
+## Step 6 — verify and commit the implementation
+
+### Proposed changes
+Run compile/grammar, complete supported offline suites and demos on the integrated
+branch; compare runtime with the passing P0 candidate, accounting for only deliberate
+packaging/test/doc organization differences. Commit production/tests/public docs apart
+from work/inquiry evidence. Update #17 honestly, keep PR26 draft until renewed merge
+check and fresh PR critique pass. Any eventual merge needs user's go-ahead and excludes
+work/inquiry/archaeology docs while preserving the feature branch as archive.
+### Output
+Auditable implementation verification; no accidental merge or claimed live readiness.
+### Safe in nature
+True — verification/recording after functional changes; it does not deploy or merge.
+### Peripheral concepts
+Current dev, worker compatibility, source hashes, PR soundness gates.
+### Hardness Lvl
+3/5.
+
+## Step 7 — live qualification [E1 OPEN]
+
+### Proposed changes
+With confirmed resources/authorization, run bounded read-only failover observations
+using two approved accounts and one shared group, sharing their real read allowances.
+Verify expected identity/proxy/access/history assumptions; do not manufacture bans or
+resets. Preserve differences in visible history and make no union-history guarantee.
+### Output
+Separate actual service qualification with explicit resource/visibility limits.
+### Safe in nature
+False — contacts real Telegram and consumes approved allowance.
+### Peripheral concepts
+Account inventory, proxy identity, live read budget and visibility.
+### Hardness Lvl
+3/5.

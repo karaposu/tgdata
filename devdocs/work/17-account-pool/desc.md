@@ -137,10 +137,10 @@ new durable raw-result store, distributed leases, login flow, affinity or union-
 guarantee. Do not impose pool lifetime policy on temporary #7 operations or #10 workers.
 Shared progress changes must preserve existing cursor/receipt semantics.
 
-**Current authorized endpoint:** upstream traverse and revised description/handoff.
-No new implementation plan or product patch in this task. Later work requires a new
-plan, fresh plan critique, fold and full combined prebuild before implementation.
-Two-account live qualification and renewed merge/PR gates remain separate; no merge.
+**Current authorized endpoint (2026-10-13 follow-up):** a new plan from this
+requalified description, fresh plan critique/fold and full combined prebuild. The
+upstream traverse is complete. No production implementation in this run; two-account
+live qualification and renewed merge/PR gates remain separate; no merge.
 
 ## Priority Level
 
