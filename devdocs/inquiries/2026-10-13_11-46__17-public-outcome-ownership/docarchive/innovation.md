@@ -1,3 +1,7 @@
+---
+model: gpt-6-astra
+effort: max
+---
 # Innovation: separate stopping, completion and delivery
 
 ## User Input

@@ -1,3 +1,7 @@
+---
+model: gpt-6-astra
+effort: max
+---
 # State: #17 public outcome ownership
 ## Flow-type
 articulated-surfacing-routed
@@ -14,9 +18,9 @@ A → Su → S → D → I → C → R (always)
 ## Iteration
 1
 ## Status
-ACTIVE
+COMPLETE
 ## Next Discipline
-CONCLUDE
+—
 ## Relationships
 - CONTINUES FROM: devdocs/inquiries/2026-10-12_19-42__17-account-pool-foundations (second PR rejection adds public result consumption)
 - RELATED: devdocs/work/17-account-pool/traverse (original feature contract)
@@ -31,3 +35,5 @@ CONCLUDE
 - 2026-10-13_12-42: Critique complete;17 candidates+assembly,8 weighted dimensions,3 fresh boundary probes,5 surviving components,10 kills,2 deferred. Contract answers4 articulations; production remains rejected. Stronger cross-SIC stability FLAG explicitly retained (one traverse iteration). Checker absent after attempt; manual14/14 structure pass. Next: Routelister.
 
 - 2026-10-13_12-45: Routelister complete;20 identities (3 teleological/17 epistemic),17 core; fresh within-concept index saved. Three sweeps reach no-new-identity state; no route selected. Checker absent after attempt; manual10/10 checks pass. Next: answeredness audit and CONCLUDE.
+
+- 2026-10-13_12-50: CONCLUDE complete. All4 articulation variants answered; the owned invocation needs its own completion fact and the caller needs an independent result recipient. Finding retests or explicitly bounds12 inherited commitments; prior action drift explained. Six discipline outputs archived; route-map/index stay at root. No new plan or runtime patch. Stronger cross-cycle convergence remains explicitly unclaimed. Status COMPLETE.

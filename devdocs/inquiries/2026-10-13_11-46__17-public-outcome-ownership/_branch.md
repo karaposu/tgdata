@@ -1,3 +1,7 @@
+---
+model: gpt-6-astra
+effort: max
+---
 # Branch: #17 public outcome ownership
 
 ## Source Input

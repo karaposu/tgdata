@@ -1,3 +1,7 @@
+---
+model: gpt-6-astra
+effort: max
+---
 # Critique: qualify the ownership contract, not the rejected implementation
 
 ## User Input

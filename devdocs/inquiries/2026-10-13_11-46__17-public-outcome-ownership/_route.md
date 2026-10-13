@@ -1,4 +1,10 @@
+---
+model: gpt-6-astra
+effort: max
+---
 # Concept-map: public outcome ownership
+
+Discipline filenames below refer to docarchive/ after conclusion.
 
 Territory: this inquiry’s framing, discipline artifacts and cited evidence.
 Goal: evidence-backed upstream understanding and requirements for #17 public outcome ownership.

@@ -1,6 +1,12 @@
+---
+model: gpt-6-astra
+effort: max
+---
 # Route-map: public outcome ownership
 
 ## User Input
+Discipline filenames below refer to docarchive/ after conclusion.
+
 Territory: this inquiry’s _branch.md and six completed discipline outputs, with their cited evidence.
 Goal received verbatim from _branch.md:
 
