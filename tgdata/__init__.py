@@ -7,6 +7,16 @@ A production-grade Python library for extracting and processing Telegram group a
 # Main class
 from .tgdata import TgData
 
+from .account_pool import (
+    AccountPool, PoolAccount, PoolGroup, PoolPolicy,
+    PoolAttempt, PoolAccountStatus, PoolStatus, PoolReadResult,
+    SQLiteAccountPoolStore, PoolError, PoolConfigurationError, PoolStateError,
+    PoolStorageError, PoolConflictError, PoolClockError, PoolBusyError,
+    PoolClosedError, PoolIdentityError, PoolTimeoutError, PoolUnavailable
+)
+
+from .pool_result import PoolReadCapture, PoolReadSnapshot
+
 # Errors
 from .message_engine import GroupAccessError
 from .group_operations import (
@@ -64,6 +74,30 @@ from .progress import ProgressTracker
 __version__ = "0.0.8"
 
 __all__ = [
+    # Account routing
+    "AccountPool",
+    "PoolAccount",
+    "PoolGroup",
+    "PoolPolicy",
+    "PoolAttempt",
+    "PoolAccountStatus",
+    "PoolStatus",
+    "PoolReadResult",
+    "PoolReadCapture",
+    "PoolReadSnapshot",
+    "SQLiteAccountPoolStore",
+    "PoolError",
+    "PoolConfigurationError",
+    "PoolStateError",
+    "PoolStorageError",
+    "PoolConflictError",
+    "PoolClockError",
+    "PoolBusyError",
+    "PoolClosedError",
+    "PoolIdentityError",
+    "PoolTimeoutError",
+    "PoolUnavailable",
+
     # Main class
     "TgData",
 

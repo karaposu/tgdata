@@ -24,7 +24,7 @@ from .batch_files import prepare_directory, _verify_existing, BatchStorageError
 from .backfill_state import _BackfillState, initial_record, SCHEMA, VERSION
 from .history_window import _HistoryWindow, _utc, _encode_date, _decode_date
 from .health import WAIT_ERRORS
-from .message_batch import MessageBatch, MAX_LONG
+from .message_batch import MessageBatch, MAX_LONG, _interrupted_prefix
 from .read_budget import ReadBudgetExceeded, ReadBudgetError, ReadBudgetStorageError
 
 
@@ -348,6 +348,13 @@ class BackfillEngine:
             row['terminal_outcome'] = 'completed'
 
     async def _settle(self, admitted, batch, timing, failure=None):
+        try:
+            return await self._settle_state(admitted, batch, timing, failure)
+        except (BackfillError, asyncio.CancelledError) as error:
+            error.partial_result = _interrupted_prefix(batch)
+            raise
+
+    async def _settle_state(self, admitted, batch, timing, failure=None):
         run = BackfillRunRef.from_dict(admitted['ref'])
         ended, deadline = timing
         value = batch.to_dict() if batch is not None else None
@@ -377,7 +384,7 @@ class BackfillEngine:
                 return self._turn(state)
         raise BackfillConflictError('source settlement kept conflicting; inspect the authoritative attempt')
 
-    async def prepare(self, context, *, download_media_to=None):
+    async def prepare(self, context, *, download_media_to=None, _capture=None):
         """Prepare/replay one exact delivery using current run/cursor/control intent.
 
         Early pacing returns a wait without sleeping or reading. Pending replay
@@ -401,6 +408,8 @@ class BackfillEngine:
                 root = self._directory(row['request']['media_mode'], download_media_to, needed=True)
                 batch = MessageBatch(row['pending'])
                 self._verify_media(batch, root)
+                if _capture is not None:
+                    _capture.offer(batch)
                 return self._turn(state, previous=key == 'previous', replayed=True)
             if row['terminal_outcome'] is not None or row['operator_intent'] == 'paused':
                 return self._turn(state, previous=key == 'previous')
@@ -422,6 +431,8 @@ class BackfillEngine:
                            download_media_to=root,
                            start_date=_decode_date(admitted['window']['start_date']),
                            end_date=_decode_date(admitted['window']['end_date']))
+            if _capture is not None:
+                options['_capture'] = _capture
             try:
                 result = await self._read_batch(chat_id, **options)
             except asyncio.CancelledError as error:

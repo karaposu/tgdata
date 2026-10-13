@@ -294,3 +294,14 @@ class MessageBatch:
     @property
     def media_mode(self):
         return self.to_dict()['media_mode']
+
+
+def _interrupted_prefix(value):
+    """Available complete records, never a durable receipt or history-end proof."""
+    if not isinstance(value, MessageBatch) or not value.messages:
+        return None
+    if value.stop_reason == 'interrupted':
+        return value
+    wire = value.to_dict()
+    return MessageBatch._from_records(int(wire['chat_id']), int(wire['after_id']),
+                wire['messages'], wire['media_mode'], 'interrupted')

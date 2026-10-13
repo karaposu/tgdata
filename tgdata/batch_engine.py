@@ -1,5 +1,6 @@
 """Bounded raw-message preparation through tgdata's existing guarded client."""
 
+import asyncio
 from datetime import datetime, timezone
 import operator
 import os
@@ -144,12 +145,13 @@ def _record(message, client):
 
 
 class BatchEngine:
-    def __init__(self, connection_engine, *, _resolve_entity=None):
+    def __init__(self, connection_engine, *, _resolve_entity=None, _retain_cancelled_prefix=False):
         self.connection_engine = connection_engine
         self._resolve_entity = _resolve_entity
+        self._retain_cancelled_prefix = _retain_cancelled_prefix
 
     async def fetch_batch(self, group_id, *, after_id=0, limit=200, download_media_to=None,
-                          start_date=None, end_date=None):
+                          start_date=None, end_date=None, _capture=None):
         group_id = _group_argument(group_id)
         after_id = _integer(after_id, 'after_id', 0, MAX_MESSAGE_ID)
         limit = _integer(limit, 'limit', 1, MAX_BATCH_MESSAGES)
@@ -179,6 +181,8 @@ class BatchEngine:
                 resolved_id = tl_utils.get_peer_id(entity)
                 _identifier(str(resolved_id), 'chat_id', MIN_LONG, -1)
                 chat_id = resolved_id
+                if _capture is not None:
+                    _capture.attach(chat_id, after_id, mode, records)
                 if after_id == MAX_MESSAGE_ID:
                     # No representable message ID can follow this cursor. The
                     # SDK's reverse iterator otherwise increments it past int32.
@@ -223,7 +227,9 @@ class BatchEngine:
                     # progress past the last completely prepared record.
             reason = 'limit' if len(records) == limit else 'end'
             return MessageBatch._from_records(chat_id, after_id, records, mode, reason)
-        except Exception as error:
+        except (Exception, asyncio.CancelledError) as error:
+            if isinstance(error, asyncio.CancelledError) and not self._retain_cancelled_prefix:
+                raise
             if chat_id is not None:
                 error.partial_result = MessageBatch._from_records(chat_id, after_id, records, mode, 'interrupted')
             raise

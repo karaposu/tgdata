@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 import os
 
 from .batch_files import prepare_directory, _verify_existing
-from .message_batch import MessageBatch, BatchFormatError, MAX_BATCH_MESSAGES, MAX_MESSAGE_ID
+from .message_batch import MessageBatch, BatchFormatError, MAX_BATCH_MESSAGES, MAX_MESSAGE_ID, _interrupted_prefix
 from .history_window import _HistoryWindow
 from .sync_store import (
     SyncError, SyncConfigurationError, SyncNotInitializedError,
@@ -120,10 +120,14 @@ class SyncEngine:
                                 window=state.window)
         if not value['messages']:
             return None
-        await self._replace(state.chat_id, raw, replace(state, pending=batch))
+        try:
+            await self._replace(state.chat_id, raw, replace(state, pending=batch))
+        except (SyncError, asyncio.CancelledError) as error:
+            error.partial_result = _interrupted_prefix(batch)
+            raise
         return batch
 
-    async def prepare(self, chat_id, *, limit=200, download_media_to=None):
+    async def prepare(self, chat_id, *, limit=200, download_media_to=None, _capture=None):
         chat_id = _chat_id(chat_id)
         limit = _integer(limit, 'limit', 1, MAX_BATCH_MESSAGES)
         self._require_store()
@@ -136,11 +140,15 @@ class SyncEngine:
             if state.pending is not None:
                 if state.media_mode == 'download':
                     self._verify_media(state.pending, directory)
+                if _capture is not None:
+                    _capture.offer(state.pending)
                 return state.pending
             try:
                 options = dict(after_id=state.after_id, limit=limit, download_media_to=directory)
                 if state.window is not None:
                     options.update(start_date=state.window.start_date, end_date=state.window.end_date)
+                if _capture is not None:
+                    options['_capture'] = _capture
                 batch = await self._read_batch(chat_id, **options)
             except asyncio.CancelledError:
                 raise

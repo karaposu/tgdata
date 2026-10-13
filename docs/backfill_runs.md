@@ -3,7 +3,12 @@
 Use a backfill run when you need a fixed historical window, bounded turns, durable
 replay, explicit acceptance, pacing and operator controls. The caller chooses accounts,
 owns the receiver and schedules **one source reader per group**, including daily and
-historical jobs. tgdata does not run a background scheduler or choose another account.
+historical jobs. Plain `TgData` does not run a scheduler or choose another account.
+The optional [AccountPool](account_pool.md) supplies existing-access account routing
+through the same progress engines; it does not change acknowledgment or recovery.
+Its `prepare_backfill` additionally requires a caller-retained `PoolReadCapture` passed
+as `capture=`; see the [pool capture contract](account_pool.md#retain-data-through-cancellation).
+The signatures below describe ordinary `TgData`.
 
 The public API is available through `TgData(backfill_store=...)`. Existing daily
 continuation, fixed-window calls and MessageBatch v1 keep their behavior. This interface

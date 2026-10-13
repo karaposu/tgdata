@@ -447,3 +447,68 @@ Sockets are forbidden. These process tests do not simulate a disk power failure 
 certify another backend. Mandatory real public Gate D passed on 2026-10-07 with the
 selected SQLite/receiver composition; its feature-branch evidence is recorded in
 `devdocs/work/19-backfill-run-lifecycle/validation/gate-d.md`.
+
+### Test 31: existing-access account routing (offline)
+
+```bash
+python -m tgdata.smoke_tests.test_31_account_pool
+python examples/account_pool.py --demo
+```
+
+Forty-six groups exercise the actual Telethon 1.45 factory/request path, budget
+ledger, SQLite pool state and daily/backfill facades over synthetic wire replies.
+They cover drain/spread, scoped failure/restart, stale identity and changed identity
+at admission, duplicate credentials, quota races, canonical groups, timeout prefixes,
+secondary health-finalization faults, real overlap/cancellation, uncertain writes, owned process
+exits around admission/settlement, exact recovery retries, login reload and source-free
+delivery. Native SDK teardown is held to verify repeated cancellation, failed/internal-
+cancelled retirement, blocked reuse, successful retry and credential preservation.
+Controlled reader-finalizer faults check actual child settlement before another
+source or shutdown; context-exit tests distinguish caller cancellation from cleanup
+errors. An older cancellation-hierarchy fixture is not a native Python3.7 run.
+Sockets are blocked. Three legacy live skips elsewhere are not evidence
+for this suite; #17's two-account live gate remains pending.
+
+
+### Test 39: account-pool operation and storage lifetime (offline)
+
+```bash
+python -m tgdata.smoke_tests.test_39_pool_lifecycle
+```
+
+48 groups use the actual pool, Telethon 1.45, ReadBudget and SQLite progress stores.
+They retain the prior 37 counterexample/control groups and add source/pool/daily/
+backfill storage histories before and after real commits, held provider finalizers
+under repeated caller cancellation, source-free replay/ack, exact account/backfill
+recovery, 45 same-pool provider control refusals, pre-start cancellation and synchronous
+session load interruption. They assert data, durable state, charges, source traffic
+and task completion separately. Bounded passive event capture and ordinary TgData
+callback controls are included. `pool_storage_cases.py` supplies the additional
+actual-component histories; no helper supplies source results or permission receipts.
+
+The suite is the permanent form of the full prebuild composition, run on Python 3.11
+with sockets blocked. Cancellation-count instrumentation is test-only, not a runtime
+compatibility dependency. A parent watchdog is used by the recorded prebuild/full
+verification runners; an unresponsive child is failure, not proof of cleanup.
+Two-account live qualification remains pending.
+
+### Test 40: caller-owned pool data and invocation completion (offline)
+
+```bash
+python -m tgdata.smoke_tests.test_40_pool_outcomes
+```
+
+25 groups exercise the real pool, Telethon 1.45, SQLite stores, ReadBudget, downloads
+and progress engines with controlled replies and blocked sockets. They preserve the
+17 public-ownership prebuild groups and eight earlier review controls. Cases cover
+required one-shot captures, prestart and repeated cancellation, immutable snapshots,
+early page/media/monitor/store visibility, direct/shield/gather/timeout and late
+observers, application continuation after the library call, stale stop requests,
+progress publication after source closure, paired write failures, exact receipts,
+source-free replay, attempt identity/error metadata and bounded retained diagnostics.
+
+Data, signals, real task/client termination, quota and durable state are asserted
+separately. A retained capture never supplies a fabricated batch or receipt. Running
+snapshots contain complete interrupted data; finalization belongs to the outer public
+call. A parent watchdog bounds the complete verification run. These are offline tests
+on Python 3.11, not two-account live qualification or native Python 3.7 execution.
