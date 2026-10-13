@@ -1,137 +1,162 @@
 ---
 model: gpt-6-astra
 effort: max
-revision: 4
+plan_revision: 6
 ---
 **Verdict: REORDER — TEST BEFORE BUILD**
 
-Falsifier: the combined actual source/SQLite/progress composition either treats
-provider interruption as caller stop, releases a live write, loses completed data,
-infers permission from an uncertain admission, or allows same-pool provider control.
-Affordable now: yes — local synthetic sessions/SQLite/blocked sockets, minutes of
-execution plus bounded candidate construction; no live credentials required.
+Falsifier: the complete candidate loses actual data under source/provider cancellation
+or ordinary public wrappers, waits for application work after its own invocation ends,
+or changes admission/charge/receipt facts when preserving the data.
+Affordable now: yes — one isolated export, actual Telethon1.45/SQLite/ReadBudget,
+synthetic wire, no network/account access or money; local preparation and execution.
 
-Experiment: execute the plan's full P0 using a fresh dev2ddb852/product71502e5 export,
-prototype steps2–5 and selected Risk1. Retain all37 earlier groups, add the complete
-source/pool/progress storage matrix, and run worker37/38 in the same parent-controlled
-attempt. Actual SDK pagination/native cleanup, ledger and SQLite create the outcomes;
-fault adapters may cancel their own awaited I/O before/after real CAS, not fabricate
-permission, data or receipt state. Include caller cancellation while a real provider
-finalizer waits to commit, and synchronous session load interruption.
-Cost: offline; no service spend; bounded parent watchdog per process.
-Must precede: step1 (the plan already lists P0 there; execute it, do not waive it).
-Disqualifying result: any semantic assertion fails or watchdog fires. A released
-live child, changed expected data loss, invented rollback or stand-in outcome is not
-an acceptable repair. Minor fixture slips are recorded separately.
-Passing result: every retained/new case and both workers pass in one combined run,
-with hashes/commands recorded and working-branch runtime unchanged. Then fold/implement.
+Experiment: implement the plan's complete ownership interaction plus selected Risk1
+inside an isolated export, then run the new public-outcome histories, all existing
+pool/lifecycle groups, both worker suites, all supported offline suites and demos as
+one combined attempt. This replaces neither real storage/SDK work nor test oracles.
+Cost: local candidate/test preparation; minutes for the complete bounded run; no live
+requests. Must precede: step1 and every production edit. The plan already places P0
+first; REORDER here enforces the unexecuted affordable falsifier, not an alleged late
+placement. No speculative production step is authorized by this critique.
+Disqualifying result: any unresolved semantic loss/early release/incorrect durable
+fact or compatibility change, or a watchdog kill counted as termination. A candidate
+that requires a different ownership mechanism invalidates the plan rather than being
+silently repaired. Passing result: all required cases/suites/demos on the same candidate
+hash set pass; actual data, genuine cancellation, owned work and durable authorities
+match the defined observations. Local nonarchitectural fixture/import corrections must
+be recorded, preserve expected semantics, and precede a full combined rerun.
 
-Result: PASS — combined48/48, worker33/33 and25/25; all actual ownership/data/
-permission assertions held, no watchdog, 2026-10-13. See prebuild.md. A local added
-fixture input correction is recorded; no runtime candidate change or weakened
-expectation. Branch runtime remained identical to71502e5 throughout P0.
+## High-level summary and subject
 
-## High-level summary
+Fresh in-session review of plan revision6 at41a6c59, desc revision5, actual product
+a63099e/dev2ddb852 and the full recorded observer/storage/public-consumer failure chain.
+Model Astra/max verified. No delegation, product patch or new PR critique. Old plan
+critic/prebuild are preserved under revision4 filenames; PR critique artifacts unchanged.
 
-Reviewed plan7872998 against actual current implementations and accumulated history,
-in this warmed session. One Medium content risk; no High/Low padding. The proposed
-ownership mechanism serves real repeated source/provider instances. Cleanup retains
-a deliberately different policy. No replacement router, cursor engine or global
-supervisor is justified. The passive observation design has prior positive evidence,
-but source/store ownership and data preservation require the full fresh composition.
-This is a plan review, not another rejected PR review.
+The new plan addresses the missing boundary with separate private completion and
+caller-owned data. Its required capture arguments and explicit private transport avoid
+silently promising impossible exception-payload behavior. It keeps real progress
+publication distinct from source closure. One Medium detail needs folding: the
+capture's source-attempt metadata transition is underspecified across no-prefix
+failover. This is a confined contract detail, not a new meaning gap or prerequisite.
 
-## Premise Inventory
+The inquiry's exit-only adapter does not qualify early visibility, one-shot binding,
+metadata or all combined histories. P0 must run the complete proposed interaction.
+Two-account E1 remains an unchanged execution precondition on step7, not a risk.
 
-### P1 — One interruptible owner can distinguish all cancellation origins
+## Premise Inventory — ranked by waste if false
 
-First dependent step2; if false, steps2–6 lifetime/data work needs redesign.
-Test scheduled P0 before1, repeated6/7. Cheapest earlier test is P0: actual SDK plus
-SQLite provider I/O before/after commit, caller interruption while finalizing, all
-three progress modes. Prior source-only success is non-covering for store ownership;
-r3's failed37th group proves that. Task counts and documentation are non-covering.
-No use of Python3.11-only cancellation counters in runtime may supply the answer.
+### P1 — one public recipient can carry real data across every awaited boundary
 
-### P2 — Data retention does not become permission or a receipt
+First dependent step:1, then3/4. Waste if false: the entire capture/transport change
+and migration. Test scheduled: full P0 before step1. Cheapest earlier test: actual
+page/media/source completion followed by held monitor/account/progress work, plus
+wrapper cancellation and replay, in the isolated candidate; affordable locally.
+Coverage: inquiry proves exit-only capture in24 cancellation histories and real
+before/after storage effects, but is **non-covering** for early buffer retention,
+required arguments, one-shot states and production engine transport. A fake batch
+returned by a stand-in cannot cover this premise. Actual BatchEngine/MessageBatch
+and SQLite must create the observed records/receipts. P0 outstanding.
 
-First dependent steps4–5; false would invalidate admission/ack claims. P0 precedes
-build,6/7 regress. Cheapest test: actual CAS and lost reply at admission, settlement,
-publication and acknowledgment, inspect stored bytes and source traffic; minutes.
-Existing pool prefix/error behavior and backfill exact reconciliation provide reuse
-points, not coverage of new CancelledError paths. Success/end batch and failed-read
-prefix both needed. Check same saved payload/hash on replay; error data alone is not
-acknowledgeable and cannot prove end-of-history.
+### P2 — owned invocation completion excludes application continuation
 
-### P3 — Source-free storage calls still reject provider-driven source control
+First dependent step:2. Waste if false: close/witness mechanism and its claimed
+independence. Test scheduled:P0. Cheapest earlier test: real SDK/store work settles,
+application catches stop then waits for close/unrelated cleanup, and a repeatedly
+cancelled closer retires clients; plus stale invocation stop controls. Inquiry's three
+real-component witness contrasts cover the core boundary, but not the complete new
+API. Awaiting the Task without consuming its exception is **non-covering**, demonstrated
+by negative controls. All physical cleanup still must finish under the real SDK.
 
-First dependent step4; false permits I/O role reversal or recursive ownership during
-status calls. Cheap real-component probe ran in probes/restart/reentry_recon.py:
-get_pool_status's provider awaited recheck_account, actual verification and SQLite
-verified_at update succeeded. P0 must test refusal for all exclusive operation entry
-points after the proposed task/scope hop. Risk1 below is a local content amendment,
-not a new abstraction or premise requiring different steps.
+### P3 — explicit transport leaves ordinary engines and authoritative effects intact
 
-### P4 — Combined compatibility and actual live service behavior
+First dependent step:3/4. Waste if false: shared seams and integration. Test scheduled:
+P0 complete pool+supported offline+worker/demos, before production. Cheapest earlier
+observation: actual optional-parameter absence paths plus account/group double faults,
+pre/post CAS, source-free replay, interrupted hash vs actual receipt. Existing code
+establishes separate roles, but mocks supplying a pending receipt are non-covering.
+The unchanged full old assertions remain valuable; mechanically adding capture input
+does not establish the new receiver property, so new explicit-capture checks are required.
 
-First dependent step1 for current-dev union; P0 workers plus step7 full suite close
-that local composition. Previous workers pass on union, not new helper. Ordinary
-TgData health/cancellation must keep existing behavior except added error data.
-For real account/proxy/visibility behavior first dependent step8, E1 OPEN; user must
-supply two approved accounts/group/allowance. Synthetic wire is non-covering for live
-service behavior. Earlier real live test is not affordable with one account.
+### P4 — plain complete-record retention is safe and bounded
+
+First dependent step:1/3. Waste if false: capture representation. Test scheduled:P0.
+Cheapest earlier test: actual pagination/media produces a valid prefix while a later
+step blocks; inspect immutable snapshots before/after growth/finalization and exercise
+GC/reference checks with retained captures. Code inspection confirms records are
+appended only after validation/download and contain plain schema values. This is
+not proof that a candidate releases temporary error/task references. Snapshot cost
+must be on access/finalization, not a whole-prefix copy for each appended record.
+P0 must measure actual semantics and include source-attempt transitions (Risk1).
+
+### P5 — SDK/live identity behavior
+
+First dependent step:7 for actual two-account service qualification. Waste if false:
+operational readiness, not the local ownership design. Test scheduled:step7/E1. The
+cheapest real service test needs approved second-account/group/allowance resources;
+not currently available. Synthetic wire is **non-covering** for live proxy/access/
+visibility. Native3.7 runtime is also not established by source/grammar; the plan
+explicitly withholds that claim rather than pretending local3.11 execution proves it.
 
 ## Restart Check
 
-| Observed failure | Established mechanism | Addressing design |
+| Observed failure | Established mechanism | Addressing design / order |
 |---|---|---|
-| Client reused during cancelled native disconnect | SDK shield outlived waiter | Steps2/3 retain existing physical retirement, P0 native controls |
-| Repeated cancellation released source child | Interruptible cancellation waiter | Step2 owned cancel-and-join, P0 held finalizer |
-| Callback cancellation hid completed prefix/wait | Child status substituted for source outcome | Step3 body holder all paths + passive capture |
-| Callback child/outside actor deadlocked shutdown | Reader/observer/close wait cycle; ancestry incomplete | Step3 removes observer dependency, step2 scopes/provider role |
-| Drain during closing replaced reader cancellation | Busy policy applied to local observation | Step3 drain synchronous in every state |
-| Store cancellation hid real source data | Inline _backend CancelledError bypassed settlement/error publication | Steps2/4 owned provider, step5 known data retention |
-| Status provider can reenter administrative control | No _active_task during state-only load | Risk1 guard at step4 _operation as well as close |
+| Read reused during actual native retirement | Waiter cancellation outlived physical SDK disconnect | Existing retained retirement/quarantine preserved; P0 before step2 |
+| Observer cancellation hid source result | Composite task status used for source outcome | Actual body holder/passive reporting retained; early capture tested before step3 |
+| Observer/provider shutdown cycle | Arbitrary awaited reactions controlled their own pool | Passive observations/provider I/O-only roles retained; all old controls in P0 |
+| Busy report access masked cancellation | Local accessor wrongly gated on close state | Existing synchronous all-state drain unchanged; P0 regression |
+| Provider-owned cancellation hid prefix100 | Inline provider exception mistaken for caller stop | Existing owned provider capture retained; actual before/after and paired faults in P0 |
+| Close consumed public cancellation payload | Whole caller Task awaited for its signal | Required capture independent of signal; private normal-result completion; steps1/2/4 after P0 |
+| Wrappers lose payload even without close | Runtime wrappers replace cancellation exceptions | Explicit recipient present before invocation; direct/shield/gather/timeout tests in P0 |
+| Close waits for unrelated app continuation | Caller Task lifetime exceeds library call | Per-invocation completion and stale-stop guard; application continuation history before step2 |
+| Progress publication remains active after source closure | Separate callers own distinct spans | Only outer prepare finalizes capture; held actual publication and local replay tested before step4 |
 
 ## Inherited Lessons
 
-Task termination/source outcome: steps2/3 and P0 beforebuild. Cancellation/rollback:
-step4 definite admission and exact existing reconciliation, P0 both commit sides.
-Data/durability/ack: step5 interrupted errors, P0 actual pending/replay. Acyclic retained
-cleanup: steps2–4 provider role plus guarded control, P0 external/foreign/expired
-controls. Ancestry is not a wait graph: callback dependency removed, no general claim.
-Composition precedes bulk implementation: full P0 mandatory before step1; neither
-recon nor the earlier36 successes substitute. Existing mechanisms retained only where
-their authority contract is unchanged; no schema/protocol redesign hidden in helper.
+Task status is not source outcome: actual source recording remains before monitor exit,
+and P0 observes early data before step3. Task lifetime is not owned-invocation lifetime:
+P0 application-continuation negative/positive cases precede step2. Cancellation is not
+rollback: pre/post real CAS and retained-child assertions precede step4. Data is not a
+receipt: actual stored hash/ack tests precede step4. More passing internal examples
+do not prove public delivery: the full new receiver matrix and complete old suite
+must pass before any build step. Ancestry is only a bounded guard: callback removal
+and provider role restrictions remain, rather than claiming arbitrary cycle detection.
 
-## Risk1 — Status providers can enter account administration
+## Risk1 — No-prefix failover can leave the new recipient with stale source metadata
 
 **Risk**
 
-An application-supplied storage method can run while the pool is only reporting
-status. If that method tries to repair or initialize the same pool, there may be no
-active reader for the usual busy check to detect. The supposedly storage-only call
-can then verify an account or change its permission record, and a provider that
-repeats the dependency can recurse or wait on its own work. Rejecting shutdown alone
-does not enforce the promised separation between providers and lifecycle control.
+A group read can try one account, receive no messages and a temporary failure, then
+succeed through another account. The new object that keeps data for the caller may
+still describe the earlier failure if changing accounts only replaces its message
+buffer. The caller could receive a successful batch alongside an unrelated source
+error, or retain an account identity before that account was actually verified.
+The object then mixes facts from different attempts even though routing itself works.
 
-`AccountPool.get_pool_status` awaits `_backend` outside `_operation`. Step4 adds a
-scope but only specifies a refusal at `close`; `_operation` still checks closed and
-`_active_task`. A provider can invoke `initialize`, `recheck_account`, `recover_account`
-or `read` while `_active_task is None`. The actual baseline probe made a status-load
-provider call recheck_account and observed a real verified_at SQLite update. The same
-scope predicate must also be checked before entering `_operation`, not only recorded
-inside it. P0 must cover status-originated pool/sync/backfill provider calls.
+In proposed `tgdata/pool_result.py`, plan1 defines `account_id/read_error_type`; plan3
+allows a new complete-record list on no-prefix failover, and plan4 retains the existing
+`AccountPool._read` attempt loop. The plan does not yet name the atomic per-attempt
+reset of source diagnostics/verification state before `_OwnedSource.run`, or distinguish
+that from the moment actual verified source data attaches. Existing
+`test_31_account_pool.test_flood_failover_and_restart_wait` establishes this real control
+path, and `test_changed_identity_at_admission_never_sends_history` establishes a failed
+verification path. Neither old test has the proposed recipient fields to assert.
 
 **Severity:** Medium
-**Category:** Lifecycle reentry / extension contract
-**Impact:** hidden source/admin mutation and possible recursive provider dependency.
-**NoobEng:** state reports deliberately remain usable without claiming a source slot;
-that is why the existing one-active-reader check is insufficient for their providers.
-**Affected areas:** account_pool._operation, pool_lifecycle scope, provider reentry tests.
+**Category:** Provenance / public contract detail
+**Impact:** misleading source metadata in a successful or failed capture; potential
+consumer decisions based on a previous attempt. Existing durable permission is unchanged.
+**NoobEng:** a single public read can contain several account attempts, but only an
+attempt with no completed records may fail over. The new capture spans the whole read;
+its source facts still need an explicitly defined current-attempt boundary. The result's
+existing attempt history is separate from the provenance of the retained batch.
+**Affected areas:** pool_result, AccountPool private attempt loop, pool_source capture
+attachment and snapshot assertions for raw/daily/backfill.
 
 ### Mitigation — Quick
-
-Document the provider prohibition and rely on applications to honor it.
+Clear read_error_type only when a successful public result returns.
 - [ ] selected   - [ ] elegant   - [ ] last_resort
 
 **Note**
@@ -139,37 +164,38 @@ Document the provider prohibition and rely on applications to honor it.
 *For future:* —
 
 ### Mitigation — Robust
-
-Check the existing live same-pool scope predicate before _operation changes ownership,
-as well as before close changes flags. Preserve state-only status/replay/ack and foreign/
-expired scope behavior. P0 uses actual pool/daily/backfill load providers to try each
-exclusive administrative/source entry and asserts local refusal with unchanged state,
-clients and quota; direct/task/wait_for paths must agree.
-**Why this is robust:** closes all existing exclusive controls at their shared entry,
-using the scope already needed by the plan. No new owner or task registry.
-- [x] selected   - [x] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* Existing read/initialize/recheck/recover share one actual entry point,
-so one scope check covers the class. Temporary #7 operations and worker/standalone
-progress have different ownership policies; a common cross-library mechanism is not
-established. Robust has the best reach/extent and survives later capability work.
-*For future:* —
-
-### Mitigation — Long-term
-
-A repository-wide provider capability layer for pool, temporary account operations,
-worker and standalone progress stores.
-**Why this is long term effective:** explicit capabilities could prevent provider
-control inversion across public components if a common ownership contract is established.
+At each admitted source attempt, reset empty source observation/diagnostics together
+and record the expected account privately. Publish account_id only when BatchEngine
+attaches after actual verification/entity resolution. Forbid a new source attempt once
+complete data exists. Clear old source failure at that attempt boundary; terminal
+failure records the current public error separately. Replay has no verified account.
+Test first-account wait/denial followed by second-account success or failure, including
+snapshot while the second request is held and first-identity refusal with no source.
+**Why this is robust:** the actual one-writer attempt boundary owns these fields and
+can keep them consistent without another observer, registry or stored schema.
 - [ ] selected   - [ ] elegant   - [ ] last_resort
 
 **Note**
 *Why chosen:* —
 *For future:* —
 
-## Execution preconditions
+### Mitigation — Long-term
+Introduce a public immutable observation stream for every account attempt, with
+attempt IDs, lifecycle records and explicit selection of the batch-producing attempt.
+**Why this is long term effective:** consumers could retain a full multi-attempt
+provenance history if such a consumer is later required.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
 
-E1 unchanged: step8 needs two approved accounts/shared group/existing allowance.
-No live access/joins/budget reset were used in this review. PROJECT_SPECIFICS absent;
-commands must come from existing runners. PR26 stays draft until renewed later gates.
+**Note**
+*Why chosen:* —
+*For future:* —
+
+## Evidence boundaries and disposition
+
+Risk1 is a specified-behavior gap in the new plan, not a claimed reproduced defect in
+an unwritten implementation. The actual multi-attempt source path and refusal cases
+are present and previously executed; P0 must observe the selected correction in the
+real composition. No other High/Medium is established by reading this plan. Neither
+this absence nor the prior inquiry pass is a substitute for the affordable falsifier.
+Full P0 is mandatory before step1. E1 stays OPEN on step7; no live test is needed to
+complete this planning/prebuild task. Production remains unchanged and PR26 draft.
