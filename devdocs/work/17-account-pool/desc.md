@@ -2,7 +2,7 @@
 model: gpt-6-astra
 effort: max
 revision: 5
-status: IMPLEMENTED_OFFLINE_REVIEW_PENDING
+status: OFFLINE_PR_REVIEW_PASS_LIVE_E1_PENDING
 ---
 # Account routing with explicit invocation and data ownership
 
@@ -17,7 +17,8 @@ status: IMPLEMENTED_OFFLINE_REVIEW_PENDING
 This description replaces revision4, preserved in desc_r4.md. It does not replace
 or rehabilitate the rejected revision5 implementation plan. The replacement is now
 implemented in `007c2e4` under folded plan7; verification_outcomes.md records its
-passing offline checks. Renewed PR review and two-account live qualification remain.
+passing offline checks. Renewed merge check and round3 PR critique now PASS for the
+offline scope (pr-critic.md); two-account live qualification remains pending.
 
 ## Problem Statement
 
@@ -140,8 +141,8 @@ Shared progress changes must preserve existing cursor/receipt semantics.
 
 **Current authorized endpoint (implementation follow-up):** implementation under
 folded revision7 after the passed prebuild, with permanent tests, public docs and full
-offline verification. This is complete at007c2e4. Two-account live qualification and
-renewed merge/PR gates remain separate; no merge is authorized by this implementation.
+offline verification. This is complete at007c2e4. The later authorized review completed renewed merge/PR
+gates; two-account live qualification remains separate. No merge is authorized.
 
 ## Priority Level
 
@@ -157,12 +158,13 @@ The finding records the limits, including one full traverse iteration and no cla
 repeated-cycle architectural convergence. No further factual/vendor question blocks
 writing a new plan from this description.
 
-**Production implementation — OFFLINE PASS; renewed review pending.** Product007c2e4
+**Production implementation — OFFLINE PASS; renewed PR review PASS.** Product007c2e4
 implements folded plan7. All750 executed offline groups and3 demos pass on the actual
 branch, with3 live skips excluded. Its runtime matches the passing prebuild's executable
 code; new public method docstrings and permanent test organization are recorded in
-verification_outcomes.md. This is not a fresh PR approval. The two previous rejected
-reviews remain historical; new merge-check and PR critique are required.
+verification_outcomes.md. The subsequent round3 PR critique passes with0 High/Medium/Low
+and26 fresh histories; see pr-critic.md. The two previous rejected reviews remain
+historical. E1 and explicit merge approval remain separate.
 
 **Earlier storage-cancellation false premise — preserved history.** prebuild_r3.md
 records the failed provider-boundary experiment; the later implementation fixed that
