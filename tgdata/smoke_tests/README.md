@@ -512,3 +512,22 @@ separately. A retained capture never supplies a fabricated batch or receipt. Run
 snapshots contain complete interrupted data; finalization belongs to the outer public
 call. A parent watchdog bounds the complete verification run. These are offline tests
 on Python 3.11, not two-account live qualification or native Python 3.7 execution.
+
+### Test 41: explicit step-by-step login (offline)
+
+```bash
+python -m tgdata.smoke_tests.test_41_stepwise_login
+python examples/stepwise_login.py --demo
+```
+
+23 test groups run the actual Telethon 1.45 client, raw auth requests, SRP proof
+generation/independent verification, native migration and cleanup, and StoredSession
+round-trips with controlled wire replies. Sockets and console input are blocked.
+The cases cover restored code/password calls, wrong input, waits, unsupported
+interactions, uncertain-result checks without code resend, configured proxy/device
+continuity, cancellation at connect/request/cleanup, failed cleanup retention/retry,
+native diagnostics, health isolation and explicit final credential publication.
+The example keeps all credentials private and performs no real login.
+
+This is offline SDK-composition evidence, not live code-delivery or real-account 2FA
+acceptance. Execution uses Python 3.11; native Python 3.7 is not qualified.
