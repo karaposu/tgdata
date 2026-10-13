@@ -2,285 +2,232 @@
 model: gpt-6-astra
 effort: max
 status: REJECTED
+round: 2
 ---
 **Verdict: REORDER — TEST BEFORE BUILD**
 
-Falsifier: the source/observer composition cannot distinguish cancellation of an
-observer's own awaited work from cancellation of the source caller, or cannot
-refuse callback-descendant shutdown before entering a circular owned wait.
-Affordable now: yes — seconds offline with actual pool/Telethon/SQLite and explicit
-callback tasks. Current-code falsifiers ran and exposed both gaps below. A candidate
-of the revised boundary must pass the experiment before replacement implementation.
+Falsifier: an internal shutdown waiter consumes a cancelled public read's completed
+data before its actual caller receives the cancellation. Affordable now: yes — actual
+SDK/SQLite/task composition, no network/access cost; executed below.
 
-Experiment: retain a source FloodWait7200 with 100 completed records while the
-observer awaits an independently cancelled future; preserve the original outcome,
-stored wait and daily pending prefix when the caller has zero cancellation requests.
-Separately let an observer create/await a shutdown task; require an immediate local
-reentry refusal without setting the pool closed or waiting on the caller. Combine
-both with external repeated cancellation and ordinary external close/recheck.
-Cost: local synthetic sessions/SQLite, no Telegram traffic, seconds.
-Must precede: lifecycle/observer implementation in the revision-3 re-plan (then
-its freshly critiqued/folded revision 4), rather than testing the premise afterward.
-Disqualifying result: the candidate needs to discard an owned live child or ignore
-caller cancellation to avoid the cycle, or cannot retain the completed source result.
-Passing result: original source outcomes settle normally; true caller cancellation
-still waits for owned work then propagates; callback descendants cannot enter close.
+Experiment: complete an actual source batch, hold its pool-store settlement, initiate
+external close, and release an actual SQLite commit from provider finalization. Compare
+a caller already waiting on the read with a caller awaiting it after close's waiter
+registered. Repeat for raw/daily/backfill and with/without repeated close cancellation.
+Cost: seconds offline with actual Telethon1.45, native disconnect, ReadBudget and SQLite.
+Must precede: PR acceptance and any replacement implementation; in this implemented-diff
+review this is a soundness gate, not authorization to patch the product.
+Disqualifying result: data exists on cancellation before the public task ends, but is
+missing from the caller's exception, while no pending delivery can supply it.
+Passing result: shutdown only observes quiescence and the public caller retains the
+promised completed records independently of internal-waiter ordering; genuine caller
+cancellation, physical cleanup, charges and uncertain writes remain conservative.
+Result: **FAIL on the reviewed implementation**,2026-10-13. Two full probe runs pass7/8
+groups. Twelve isolation histories reproduce6 lost-payload cases and6 positive controls.
+No candidate fix was implemented or qualified; the next design must pass this history.
 
-**PR decision: REJECTED — zero High, two Medium, zero Low.** CONTRIBUTING §7.3
-rejects even one Medium. Section 7.4 requires revision-3 re-planning, fresh plan
-critique/fold, implementation and renewed gates; no runtime patch was made here.
+**PR decision: REJECTED — zero High, one Medium, zero Low.** Any Medium rejects under
+CONTRIBUTING §7.3. This is the **second rejected PR round** on this branch, so §7.4
+requires returning to desc/traverse before another plan. Do not apply a piecemeal
+patch or mark the earlier fidelity PASS as merge approval. PR26 stays draft.
 
 ## High-level summary and subject
 
-The full existing-access feature was reviewed in this warmed session, not a
-subagent: product `4854464`, original implementation/plan and scoped lifecycle
-plan, against dev `68f6bbd`. PR #26 opened at `cdcfd63`; prompt `2643eb7` changes
-work documentation only. The 14-file product diff is unchanged throughout review.
+Reviewed the entire21-file product diff dev2ddb852...a63099e with folded plan revision5,
+desc revision4, original feature/retirement artifacts and the failed r3 evidence.
+Same warmed session; no delegated review. Prompt9cc5909 follows renewed merge check
+1c04cf4. These heads change work documents only; product remainsa63099e throughout.
+Current dev and model/effort were verified; GPT-6 Astra/max meets §9.
 
-The targeted implementation fixes hold, and fresh checks also preserve changed
-identity after a completed page, pre-proof neutral health, remote-CAS cancellation,
-known waits, simultaneous close/recheck, local-I/O provenance and source-free
-daily/backfill replay. However, the observer remains inside the owned child without
-a complete observer-versus-caller cancellation rule, and close tests only exact task
-identity when deciding whether it was called from its own operation. Both omissions
-are reproduced, not inferred from a hypothetical vendor behavior.
+The source/store interruption solution holds in the new races and double-store faults.
+The failure is at the next boundary: **observing a public task's completion is not the
+same as consuming its cancellation outcome**. The implementation preserves data on a
+CancelledError inside the reader, but close awaits and discards that object. Python's
+actual Task can deliver a fresh cancellation exception to a later waiter. The caller
+then receives no completed data. No unsafe source retry or quota release was observed;
+this is an outcome-delivery defect, rated Medium.
 
-The 619 implementation passes/three live skips and merge-check fidelity PASS remain
-valid evidence of their coverage. They do not answer these new histories. The
-two-account live E1 remains an execution precondition, not a new review finding.
+The725 implementation checks and48-group prebuild remain valid for their tested cases.
+They did not combine external shutdown, completed data and public-waiter ordering.
+This finding does not justify replacing routing, budget storage or the progress engines.
 
 ## Premise Inventory
 
-### P1 — Cancellation of a completed observer is source-caller cancellation
+### P1 — Joining a cancelled public task leaves its attached data available
 
-**First dependent step:** original owned source Step 2 and scoped lifetime Step 2.
-**Waste if false:** cleanup, routing and progress qualification built around an
-incomplete outcome boundary. **Test scheduled at:** original Step 6/scoped Step 3
-test external cancellation and internal observer timeout, not observer-owned
-cancellation. **Cheapest earlier test:** an actual callback awaits its own cancelled
-future after a real batch error; seconds, no access requirement. **Coverage:** fresh
-probe ran both raw and daily calls: actual source prefix100/FloodWait7200, caller
-cancel requests0, returned CancelledError, no returned/pending prefix and no stored
-wait. Current behavior fails; a candidate must be tested before rebuilding.
+**First dependent step:** plan3/4, source/caller result retention and close's retained
+`await active`. **Waste if false:** the public cancelled-result guarantee and its
+shutdown qualification. **Test scheduled:** P0/steps6–7 retained repeated cancellation
+and shutdown, but did not vary which waiter consumes the public task first.
+**Cheapest earlier observation:** actual public read plus external close during actual
+store finalization; executed here. **Coverage:** baselineFAIL; first-waiter controls
+prove the difference. Tests that await a cancelled read only once without close are
+non-covering for this combination. Python3.11's installed pure-Python Task/Future source
+explains the mechanism; the `_asyncio.Task` probe confirms the runtime actually used.
 
-### P2 — Exact task checks cover callback-initiated shutdown
+### P2 — Component interruption stays local while genuine caller stop wins
 
-**First dependent step:** original administration Step 4/scoped shutdown Step 2.
-**Waste if false:** shutdown safety and subsequent lifetime claims. **Test scheduled
-at:** direct same-task callback close is covered, descendant-task close is not.
-**Cheapest earlier test:** actual callback creates/awaits `pool.close()` as a task;
-seconds in an owned offline subprocess. **Coverage:** current callback child waits
-for close, close's retained cleanup waits for the reader, and the reader waits for
-that source child. Both automatic cancellation requests occur, yet none can end.
-The probe records the actual task links and terminates only its owned subprocess.
+**First dependent step:**2. **Waste if false:** source/provider ownership abstraction.
+**Test scheduled:** P0 before runtime; permanent suite39; fresh PR probes now add
+commit-then-parent-cancel with/without a simultaneous provider-internal cancellation.
+**Cheapest earlier test:** actual CAS/SDK with independently scheduled cancellation;
+seconds, executed. **Coverage:** holds at admission and settlement. Cancelled admission
+sends0 source reads/charges; cancelled settlement retains data until the separate P1
+consumer boundary. Source-internal interruption before identity stays local/unresolved.
 
-### P3 — Identity, quota, persistence and delivery separation
+### P3 — Data, permission, receipt and cleanup remain separate in composition
 
-**First dependent steps:** original Steps 1–5. **Waste if false:** the reusable
-core would need revision. **Tests scheduled at:** prebuild primitives and Step 6,
-then full integrated verification. **Cheapest earlier tests:** actual SDK/SQLite
-composition already available and executed. **Coverage:** six new probe groups
-held these boundaries, including identity switching after the first 100 records,
-cancelled admission replies before/after commit, known wait committed before a
-cancelled reply, and replay with credentials removed/pool backend unavailable/
-budget access forbidden. No replacement router is justified by these findings.
+**First dependent steps:**4–5. **Waste if false:** account and group recovery semantics.
+**Test scheduled:** full P0 and regressions; fresh paired-store failures/receipt probes.
+**Coverage:** eight actual double-store combinations retain100 messages and the original
+FloodWait through read_error chains, charge200, no second account. Stored token/wait
+matches real commit history. Two receipt probes refuse the interrupted-error hash and
+accept only the actual pending full/end batch receipt, source-free after close.
+Actual late commits and native retirement finish even under repeated close cancellation.
+The quiescence guarantee holds; P1 shows its implementation consumes something else too.
 
-### P4 — Deployment and live two-account behavior
+### P4 — Passive observations, compatibility and live service qualification
 
-**First dependent step:** parent Step 9/live deployment qualification. **Waste if
-false:** a real deployment claim, not the authorized offline development.
-**Test scheduled at:** Step 9/E1 after resources are supplied. **Cheapest earlier
-test:** two approved logged-in distinct accounts/shared readable group/bounded
-allowance, unavailable under the one-account offline-first choice. **Coverage:**
-synthetic wire is non-covering for real account/proxy/visibility behavior. E1 stays
-pending exactly as declared; no live access or quota reset occurred.
+**First dependent steps:**3/6; actual live qualification8. **Waste if false:** reporting
+or deployment claims, not a new reason to redesign the router. **Test scheduled:**
+P0/39 and full existing suite, then E1. **Coverage:** fresh full-buffer loss still leaves
+actual wait7200/data100/charge200 unchanged. Existing malformed/alias/legacy callback
+controls remain;15 adjacent modules are byte-identical to dev and86 Python hashes match
+verification. E1 is still unavailable under one-account/offline-first; synthetic wire
+is explicitly non-covering for live two-account/proxy/visibility claims.
 
 ## Restart Check
 
-| Observed failure | Established mechanism | Design element/result |
+| Observed failure | Established mechanism | Design element and review result |
 |---|---|---|
-| Old client usable while cancelled retirement still runs | SDK disconnect shield outlives the old public await | Retained retirement and reuse block; current checks hold |
-| Repeated read cancellation releases live source child | Interruptible wait_for cancellation waiter | Retained cancel-and-join; current checks hold |
-| Observer timeout hides completed wait/prefix | Reporting awaits after source outcome | Outcome holder handles timeout, but not independent observer cancellation: Risk 1 |
-| Repaired login ignored/overwritten | Cached client outlives external session repair | Explicit settled retirement/reload; original mitigation holds |
-| Callback shutdown creates a wait cycle | Reentry check covers only exact parent/source tasks | Descendant closure bypasses it: Risk 2 |
+| Reuse during cancelled native retirement | SDK shield outlived public await | Retained physical retirement/quarantine; still holds |
+| Repeated cancellation released source work | Interruptible cancellation waiter | Private captured child and retained join; still holds |
+| Observer cancellation/timeout hid source result | Composite task status substituted for body outcome | Body holder and passive observations; still holds |
+| Callback shutdown formed a cycle | Reader/observer/close dependencies | Arbitrary observer execution removed; provider scopes/role remain |
+| Drain during shutdown hid cancellation | Busy gate on local data | Synchronous all-state drain; retained tests hold |
+| Provider cancellation hid completed data | Inline storage CancelledError looked like caller stop | Owned provider boundary; fresh paired-store failures hold |
+| Status provider performed account control | Source-only busy check | Same-pool scope checked at operation entry/close;45 retained controls |
+| Caller loses cancellation payload during close | Close consumes public Task's saved CancelledError | **Not addressed**: Risk1; task completion and outcome consumption conflated |
 
 ## Inherited Lessons
 
-Waiting is not quiescence: native disconnect and source-child checks remain, but
-wait graphs must also be acyclic before entering retained cleanup. Completed source
-work is distinct from observers: hold that result on every observer completion,
-not only timer expiry. Cached identity is not ownership: fresh second-page admission
-refuses before wrong-owner traffic/charge. Pool state is not delivery state: removal
-of source resources leaves both replay/ack protocols operational. More passing
-tests do not close an untested composition: these callback histories must precede
-replacement lifecycle work. No generic framework is justified solely by these two
-local boundaries.
+The plan correctly moved from task-status-as-source-outcome to captured component
+outcomes and tested storage before building. It preserved no-rollback/no-receipt rules,
+kept retained cleanup and removed observer cycles. The latest evidence extends the
+same ownership lesson to **who is entitled to consume the public task's outcome**.
+The next upstream description must express that distinction; its counterexample must
+precede any replacement implementation. More passing internal-boundary tests cannot
+establish a caller-delivery property they never observe.
 
-## Risk 1 — An observer's cancelled future discards a completed source result
+## Risk1 — Shutdown consumes the read's completed-data cancellation payload
 
 **Risk**
 
-A health notification callback can await a task or future that was independently
-cancelled. The pool then reports that the read itself was cancelled, even though
-the application never cancelled it and Telegram already returned messages and a
-two-hour wait. Those completed messages do not reach the normal return/error path
-or the saved daily delivery, and the known wait is not recorded. The account is
-left with an unresolved attempt that needs manual recovery.
+An application can stop the pool after Telegram has returned messages but while the
+account's status is still being saved. The read correctly attaches those complete
+messages to its cancellation exception. Shutdown also waits for that read, however,
+and can receive the exception first. A caller that awaits the read afterward receives
+a different cancellation exception with no messages. Daily and backfill calls have
+not saved a pending delivery on this genuine cancellation path, so replay cannot supply
+the already-observed data either. Availability depends on which waiter happens to run
+first, despite the new promise to preserve known records through cancellation.
 
-`tgdata/pool_source.py:203–209` calls `child.result()` whenever the observed child
-ends before timeout. If `HealthMonitor._deliver` (`health.py:532–546`) receives
-CancelledError from its callback's awaited future, it propagates through the child.
-`run` treats that as caller cancellation without examining the already-complete
-`outcome` stored at lines178–186; that holder is only used on the timeout fallthrough
-at214–217. `AccountPool.read` then skips `_settle`, and `SyncEngine.prepare` skips
-prefix publication because it sees cancellation. The actual probe recorded zero
-caller cancellation requests, original FloodWaitError/prefix100, but returned
-CancelledError/prefix0, daily pending=False, stored wait0 and unresolved=True.
+`AccountPool.close.finish` at `tgdata/account_pool.py:594–600` cancels then directly
+awaits `_active_task`, discarding CancelledError. `_settle` at446–451 and `_OwnedSource.run`
+at `tgdata/pool_source.py:164–167` attach `partial_result` to that cancellation instance.
+On actual Python3.11 `_asyncio.Task`, the saved cancellation exception is consumed by
+the first waiter; a later waiter gets a fresh instance without attributes. The library's
+own close task becomes that first consumer when the app has not yet awaited its read.
+`SyncEngine.prepare:149–150` and the corresponding backfill cancellation branch correctly
+avoid fresh publication, leaving no durable pending fallback. This is not a bad provider:
+the provider performs and settles actual storage only; external application code closes.
 
 **Severity:** Medium
 **Category:** Outcome ownership / cancellation / delivery
-**Impact:** completed observations and known retry facts are withheld, source calls
-appear cancelled for the wrong reason, and avoidable operator recovery is required.
-The unresolved token prevents automatic unsafe retry, so this is not rated High.
-**NoobEng:** the source read and the reporting callback share a child task, but a
-cancelled resource awaited by that callback is not cancellation of the parent call.
-**Affected areas:** `_OwnedSource.run`, pool settlement, daily/backfill error delivery.
-The underlying legacy HealthMonitor propagation is inherited; the new pool's result
-holder/settlement composition introduces the reviewed contract failure. A global
-HealthMonitor redesign is not required to repair this instance.
+**Impact:** completed records are withheld from the public caller during normal shutdown;
+re-fetch may be necessary and need not see identical history. Stored permission, quota,
+cleanup and unadvanced group progress remain conservative, so this is not rated High.
+**NoobEng:** CancelledError is both a control signal and, here, a temporary data carrier.
+Python does not promise that every await of a cancelled Task raises the same object.
+An internal component waiting only for termination must not consume the payload whose
+owner is the application. The private child helper already avoids that ambiguity, but
+the public reader task remains a separate boundary.
+**Affected areas:** AccountPool.close, raw reads, daily/backfill prepares, documented
+completed-data retention and the cancellation/shutdown acceptance matrix.
 
-### Mitigation — Quick
+### Reproduction and evidence
 
-Require callbacks never to await cancellable work or disable callback use.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+Fresh full probes: `probes/review2/run.py` →7/8; twice, no watchdog. The failed group
+had real source_reads1, charge1, settled account state and public_prefix0. No runtime
+patch or changed assertion. The second run only added observation fields; the first
+exact probe is preserved with its SHA256.
 
-**Note**
-*Why chosen:* —
-*For future:* —
-
-### Mitigation — Robust
-
-Define source result, observer completion and external caller cancellation as
-separate outcomes. Once the source body completed, preserve that exact result/error
-when only observer work is cancelled, including child completion before timeout.
-External caller cancellation must still settle the child then propagate. Prove raw,
-daily, successful-source recovery callback, and simultaneous caller cancellation
-cases on the actual composition before implementation.
-**Why this is robust:** uses the existing source outcome holder at the missing
-boundary; it neither changes routing nor suppresses genuine caller cancellation.
-- [x] selected   - [x] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* The pool's existing holder closes this instance with local outcome rules. TgData reporting and scheduled HealthMonitor callbacks are real adjacent instances, but their different lifetime policies do not justify a shared dispatch redesign inside this repair; the local remedy survives such later work.
-*For future:* —
-
-### Mitigation — Long-term
-
-Decouple health delivery from source execution across TgData, listeners and pools
-using a shared outcome/event lifetime protocol.
-**Why this is long term effective:** other asynchronous observers could share
-explicit delivery outcomes independent of source completion.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* Revisit shared observer delivery only with separately specified caller/observer cancellation policies for TgData, listeners and the pool. It would touch unchanged consumers and add coupling beyond this instance.
-
-## Risk 2 — Callback shutdown in a child task deadlocks the pool
-
-**Risk**
-
-If a health callback creates and awaits a task that closes its pool, shutdown is
-allowed to begin instead of refusing the callback's reentrant request. Closing
-cancels the read and waits for it; the read waits for the callback to finish; the
-callback waits for closing. Cleanup retains all those waits despite cancellation,
-so the pool remains stuck without starting client disconnects.
-
-`tgdata/account_pool.py:572–574` detects only exact identity with `_active_task` or
-`source.task`. A callback-created task (including the task created by `wait_for`)
-is neither. It sets `_closed/_closing` at577–578, then the retained worker at580–602
-cancels and awaits `_active_task`. `_OwnedSource.run` waits for the source child
-under `_await_cleanup`; that child awaits the callback's close task, which retains
-the worker waiting for the reader. The probe uses unmodified source/close/SDK code,
-records the actual waiter links, one cancellation request each on read and close,
-all three tasks pending, and zero SDK disconnects started.
-
-**Severity:** Medium
-**Category:** Reentrancy / asynchronous ownership / deadlock
-**Impact:** a documented refused callback-close pattern instead hangs reads and
-shutdown permanently; ordinary cancellation does not break the dependency cycle.
-**NoobEng:** checking a task's identity does not identify work that it starts and
-awaits. Retaining cleanup safely assumes its wait graph does not point back to itself.
-**Affected areas:** `AccountPool.close`, callback-descendant operation ownership,
-source-child settlement and shutdown tests. Direct same-task callback close remains
-correctly refused; the missing descendant case is not a failure of SDK disconnect.
-
-### Mitigation — Quick
-
-Document that callbacks may never create tasks which call close.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* —
-
-### Mitigation — Robust
-
-Carry pool-specific active-operation provenance into descendants and refuse close
-from that operation's observer/child context before mutating shutdown state or
-waiting. Keep external close functional and invalidate stale context when the
-operation ends. Test direct/create_task/wait_for callback calls, another pool's
-callback, stale descendant context and repeated external cancellation.
-**Why this is robust:** prevents the cycle at shutdown admission while retaining
-the actual source/SDK settlement guarantees; it does not release live children.
-- [x] selected   - [x] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* Operation provenance at this pool's admission boundary closes the demonstrated descendant case while preserving settled cleanup. The proposed generic supervisor has no second consumer with the same ownership/close policy: temporary account operations do not expose this callback-to-pool close cycle, so the wider class is unestablished.
-*For future:* —
-
-### Mitigation — Long-term
-
-Introduce an operation supervisor shared by temporary account operations, persistent
-pools and observer dispatch, with explicit dependency/reentrancy policies.
-**Why this is long term effective:** could standardize task provenance for several
-owners if a common policy is established by separate design work.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* Consider a shared supervisor only after another concrete owner needs the same reentrancy and lifetime policy. Do not turn these two local findings into a cross-library cleanup framework.
-
-## Executed evidence and limits
-
-`pr-critic-probes.py` ran with Python3.11.10/Telethon1.45.0, actual SDK/SQLite and
-synthetic wire; both socket connection entry points were forbidden. Eight fresh
-groups completed: six boundaries held and two defects reproduced. Exact output is
-`pr-critic-probes.txt`; the two strongest observations are:
+`probes/review2/cancel_payload.py` further records:
 
 ```text
-observer_cancel_masks_source (raw and daily): caller_cancel_requests=0,
-actual_source_error=FloodWaitError, completed_prefix=100, returned_error=CancelledError,
-returned_prefix=0, daily_pending=false, actual_wait=7200, stored_wait=0, unresolved=true
-callback_close_wait_cycle: child_waits_for_close=true, cleanup_waits_for_reader=true,
-reader_done=false, source_child_done=false, close_done=false, sdk_disconnects_started=0
+_asyncio.Task: first waiter has payload; second waiter does not; different objects.
+raw/daily/backfill, close waiter first: inner prefix1, caller prefix0, no pending.
+raw/daily/backfill, caller waiter first: inner prefix1, caller prefix1, same exception.
 ```
 
-The intentional deadlock was isolated in an owned subprocess and exited42 after
-recording the waiter graph; its parent enforced a ten-second outer bound. This is
-not a Telegram outage or a test that merely sleeps and calls it deadlock.
+Each mode runs with and without cancelling close repeatedly:6 failures and6 positive
+controls. In all12, real SQLite settlement completes, charge1 remains and both native
+clients retire. An instrumented caller wrapper sees the actual prefix before Task
+termination; it supplies no batch or receipt. Installed asyncio source corroborates
+its saved cancellation exception being cleared on retrieval; no Python3.7 behavior
+is inferred from a grammar check.
 
-An initial media probe incorrectly replaced `_publish`, bypassing the local-I/O
-provenance wrapper being examined. Its failed assertion is retained in
-`pr-critic-probes-fixture.txt`. The corrected injection fails `os.link` inside the
-real wrapper, without changing expectations or product code, and passes. It is
-fixture evidence, not a third finding or a silently repaired implementation.
+- [Fresh complete probe output](evidence/review2/pr-attempt-2.txt)
+- [Exact source/probe hash and failed group](evidence/review2/pr-attempt-2.json)
+- [First probe before added logging](evidence/review2/pr-probes-attempt1.py)
+- [Twelve isolating histories and actual Task control](evidence/review2/cancel-payload.txt)
 
-No finding is assigned to known live E1, cooperative timeout/no cleanup deadline,
-exclusive ownership, account-visible history or deferred automatic joining. Those
-are explicit accepted boundaries. No runtime file changed during this critique.
+### Mitigation — Quick
 
-**Next for #17:** draft PR; revision-3 re-plan required before further implementation.
-The user has queued #10 after this review, so save this result and handoff rather
-than beginning #17 re-planning or merging either branch implicitly.
+Require callers to wrap every pool read, capture cancellation data inside that wrapper,
+and register the public receiver before another task can close the pool.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
+
+**Note**
+*Why chosen:* —
+*For future:* —
+
+### Mitigation — Robust
+
+Make the internal close coordinator observe reader termination without consuming its
+cancelled public outcome. Define which component owns result consumption independently
+of who may stop/join work. Handle ordinary unobserved failures without retrieving and
+swallowing the saved cancellation payload. Qualify late public waiters in raw/daily/
+backfill, source and storage phases, both commit outcomes and repeated cancellation;
+keep exact source/ledger/cleanup and caller cancellation behavior. This is an input
+to the required upstream requalification, not permission for a patch in this review.
+**Why this is robust:** addresses the actual shared close entry for all three affected
+public readers, with no additional result store or global task supervisor.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
+
+**Note**
+*Why chosen:* —
+*For future:* —
+
+### Mitigation — Long-term
+
+Introduce a stable public operation/outcome handle with separately retrievable data,
+independent of Task exception consumption, across queued/raw/progress operations.
+**Why this is long term effective:** supports multiple independent consumers and later
+retrieval if those become explicit product requirements, rather than transporting data
+through cancellation exceptions. It expands the public lifecycle/delivery contract.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
+
+**Note**
+*Why chosen:* —
+*For future:* —
+
+## Preconditions and procedural result
+
+E1 remains pending exactly as before: two approved logged-in accounts, shared group,
+existing bounded allowance. No live access or quota reset occurred. Main checkout,
+duncan and unrelated files are untouched; product remainsa63099e.
+
+Per CONTRIBUTING §7.4 this second rejection returns to the description/foundation
+inquiry before another plan. The first plan critique, this PR review and their evidence
+stay distinct. No new implementation, re-plan or production patch is performed here.

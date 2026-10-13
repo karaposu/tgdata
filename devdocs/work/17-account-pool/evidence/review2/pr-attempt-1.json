@@ -1,0 +1,18 @@
+{
+  "result": "FAIL",
+  "exit_code": 1,
+  "watchdog_killed": false,
+  "elapsed": 1.712,
+  "summary": {
+    "groups": 8,
+    "passed": 7,
+    "failed": [
+      "close_during_late_provider_commit"
+    ]
+  },
+  "product": "a63099e",
+  "base": "2ddb852",
+  "head": "9cc5909017aa7a2a6eebd6357563014b61aa688c",
+  "probe_sha256": "e1c898485e005f1acbf22c3e0b47e63ca6b02369403bd0339bd90ba894c96609",
+  "log": "pr-attempt-1.txt"
+}

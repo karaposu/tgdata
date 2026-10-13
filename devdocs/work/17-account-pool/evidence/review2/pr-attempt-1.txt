@@ -1,0 +1,28 @@
+{"start": "committed_reply_races_caller_stop"}
+{"case": "committed_reply_races_caller_stop", "result": "PASS", "observation": [{"phase": "admission", "component_cancel": false, "caller_stop": true, "records": 0, "source_reads": 0}, {"phase": "admission", "component_cancel": true, "caller_stop": true, "records": 0, "source_reads": 0}, {"phase": "settlement", "component_cancel": false, "caller_stop": true, "records": 1, "source_reads": 1}, {"phase": "settlement", "component_cancel": true, "caller_stop": true, "records": 1, "source_reads": 1}], "error_type": null}
+{"start": "close_during_late_provider_commit"}
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-17-replan/devdocs/work/17-account-pool/probes/review2/pr_probes.py", line 248, in main
+    try:observation=await asyncio.wait_for(case(),10)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-17-replan/devdocs/work/17-account-pool/probes/review2/pr_probes.py", line 82, in close_during_late_provider_commit
+    assert (row['active'] is None) is settled and prefix(read_error)==int(settled)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+{"case": "close_during_late_provider_commit", "result": "FAIL", "observation": null, "error_type": "AssertionError"}
+{"start": "state_only_ack_owns_io_after_close"}
+{"case": "state_only_ack_owns_io_after_close", "result": "PASS", "observation": {"close_did_not_own_ack": true, "caller_joined_write": true, "actual_after_id": 101, "charge": 1}, "error_type": null}
+{"start": "independent_store_failures_compose"}
+{"case": "independent_store_failures_compose", "result": "PASS", "observation": [{"mode": "daily", "pool_commit": false, "progress_commit": false, "error_chain": ["SyncStorageError", "PoolStorageError", "FloodWaitError"], "records": 100, "charge": 200}, {"mode": "daily", "pool_commit": false, "progress_commit": true, "error_chain": ["SyncStorageError", "PoolStorageError", "FloodWaitError"], "records": 100, "charge": 200}, {"mode": "daily", "pool_commit": true, "progress_commit": false, "error_chain": ["SyncStorageError", "PoolStorageError", "FloodWaitError"], "records": 100, "charge": 200}, {"mode": "daily", "pool_commit": true, "progress_commit": true, "error_chain": ["SyncStorageError", "PoolStorageError", "FloodWaitError"], "records": 100, "charge": 200}, {"mode": "backfill", "pool_commit": false, "progress_commit": false, "error_chain": ["BackfillStorageError", "PoolStorageError", "FloodWaitError"], "records": 100, "charge": 200}, {"mode": "backfill", "pool_commit": false, "progress_commit": true, "error_chain": ["PoolStorageError", "FloodWaitError"], "records": 100, "charge": 200}, {"mode": "backfill", "pool_commit": true, "progress_commit": false, "error_chain": ["BackfillStorageError", "PoolStorageError", "FloodWaitError"], "records": 100, "charge": 200}, {"mode": "backfill", "pool_commit": true, "progress_commit": true, "error_chain": ["PoolStorageError", "FloodWaitError"], "records": 100, "charge": 200}], "error_type": null}
+{"start": "error_prefix_is_not_the_stored_receipt"}
+{"case": "error_prefix_is_not_the_stored_receipt", "result": "PASS", "observation": [{"mode": "daily", "different_hashes": true, "error_receipt_refused": true, "real_receipt_accepted": true, "after_id": 101}, {"mode": "backfill", "different_hashes": true, "error_receipt_refused": true, "real_receipt_accepted": true, "after_id": 101}], "error_type": null}
+{"start": "invocation_and_preidentity_interruptions"}
+{"case": "invocation_and_preidentity_interruptions", "result": "PASS", "observation": [{"mode": "pool", "local_error": "PoolStorageError", "caller_requests": 0}, {"mode": "daily", "local_error": "SyncStorageError", "caller_requests": 0}, {"mode": "backfill", "local_error": "BackfillStorageError", "caller_requests": 0}, {"mode": "preidentity-source", "unresolved": true, "charge": 0, "caller_requests": 0}], "error_type": null}
+{"start": "caller_stop_after_source_before_reporting_end"}
+{"case": "caller_stop_after_source_before_reporting_end", "result": "PASS", "observation": [{"source_failed": false, "caller_stop": true, "known_records": 1, "unresolved": true, "charge": 1}, {"source_failed": true, "caller_stop": true, "known_records": 100, "unresolved": true, "charge": 200}], "error_type": null}
+{"start": "reporting_loss_does_not_change_wait_or_data"}
+{"case": "reporting_loss_does_not_change_wait_or_data", "result": "PASS", "observation": {"events": 128, "dropped": 1, "known_wait": 7200, "records": 100, "charge": 200}, "error_type": null}
+{"summary": {"groups": 8, "passed": 7, "failed": ["close_during_late_provider_commit"]}}
