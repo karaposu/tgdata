@@ -1,0 +1,54 @@
+{
+  "result": "PASS",
+  "groups": 5,
+  "observations": [
+    {
+      "case": "convenience_repeated_start",
+      "requests": [
+        "SendCodeRequest",
+        "ResendCodeRequest"
+      ],
+      "implicit_resend": true
+    },
+    {
+      "case": "credential_is_not_challenge",
+      "key_retained": true,
+      "challenge_map_lost": true,
+      "stored_format_differs": true
+    },
+    {
+      "case": "post_auth_failure",
+      "method_raised": true,
+      "SDK_authorized": true,
+      "credential_and_self_row_retained": true,
+      "requests": [
+        "GetUsersRequest",
+        "SignInRequest",
+        "GetStateRequest",
+        "GetDifferenceRequest"
+      ]
+    },
+    {
+      "case": "zero_retry_migration",
+      "method_raised": true,
+      "dc_changed": true,
+      "key_changed": true,
+      "auth_requests": 1,
+      "proxy_retained": true,
+      "requests": [
+        "SendCodeRequest",
+        "GetStateRequest",
+        "GetConfigRequest",
+        "GetConfigRequest",
+        "GetUsersRequest"
+      ]
+    },
+    {
+      "case": "save_is_not_publication_receipt",
+      "save_raised": false,
+      "stored": false,
+      "dump_available": true
+    }
+  ],
+  "scope": "actual SDK/serializer with synthetic wire; no server qualification"
+}
