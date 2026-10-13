@@ -1,0 +1,4 @@
+After phone: code
+After code: password
+After password: complete
+Finished session retained privately; no live Telegram connection.
