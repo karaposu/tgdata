@@ -1,10 +1,14 @@
 ---
 model: gpt-6-astra
 effort: max
-revision: 6
-status: PROPOSED_PREBUILD_REQUIRED
+revision: 7
+status: PREBUILD_PASSED_IMPLEMENTATION_PENDING
 ---
 # #17 — owned invocation completion and caller-retained data
+
+**Critic folded:** 2026-10-13 — 1 mitigation (3 steps changed, 0 added).
+Risk1 robust selected; full combined P0 passed before any production step.
+Production steps1–7 remain unstarted in this preparation-only run.
 
 **Source:** desc.md revision5 and the completed public-outcome ownership inquiry.
 **Subject:** product a63099e on feature head f1cae2c; dev2ddb852 is already integrated
@@ -179,7 +183,29 @@ capture terminal; inner source completion does not. Publication may remain activ
 pool close retires clients. Do not send a synthetic ack or clear an uncertain token from
 capture state. Native helper/store/receipt schemas and reconciliation stay unchanged.
 
+### Source-attempt provenance [folded: Risk1, robust]
+
+After definite account admission and before its actual source call, the one private
+writer starts an attempt. When no complete records exist, reset its record buffer,
+known batch, source diagnostics and verified account together; retain the expected
+account privately. Publish account_id only from attachment after actual verified
+identity/entity resolution, and expose no account with absent data. Once any complete
+records exist, refuse a new source attempt; do not erase them. An ordinary replay has
+no newly verified account. The terminal public error and last actual source failure
+remain separate bounded facts. This corrects snapshot provenance without adding a
+public attempt stream or changing PoolReadResult.attempts.
+
+The full P0 tested first-account wait then second-account success/failure, a held
+second-account settlement with running capture metadata, and identity refusal with
+no data. Selected correction affects steps1 (writer transition),3 (verified attach),
+and4 (attempt-loop call). Each remains Safe in nature=False, hardness unchanged.
+
 ## Mandatory combined prebuild P0 — before step1
+
+**Qualification:** PASS at the exact candidate in evidence/outcome/candidate-manifest.json;
+full attempt2 passed750 executed groups+3 demos, with3 explicit live skips. Baseline
+negative controls reproduced the rejected product's defects. prebuild.md records
+commands, limits and local preparation/environment corrections. No production edits.
 
 **Location:** new `probes/outcome/` and `evidence/outcome/` in this work folder. Preserve
 all older inquiry/restart/review scripts and exact failed outputs. Export tracked code,
@@ -245,73 +271,94 @@ syntax/import/fixture wiring error may be corrected only if it changes no design
 expected semantic outcome; record it and rerun the full combined gate. Do not replace
 expected data or silently alter the design to make a test pass.
 
-## Step 1 — caller-retained data destination
+## Step 1 — caller-retained data destination [folded: Risk1, robust]
 
 ### Proposed changes
+
 Implement PoolReadCapture/PoolReadSnapshot and the private writer/binding context in
 `tgdata/pool_result.py`; export only the two public values in `tgdata/__init__.py`.
 Implement the state, snapshot, bounded-error, exact-type, one-shot and reference-release
 rules above. Keep the writer separate from the public value, with no user callback.
 ### Output
+
 One explicit destination survives wrapper cancellation and has a documented lifecycle.
 ### Safe in nature
+
 False — introduces a required public calling contract on the unmerged pool.
 ### Peripheral concepts
+
 MessageBatch immutability and validation, error provenance, caller-owned memory.
 ### Hardness Lvl
+
 4/5.
 
 ## Step 2 — library invocation completion
 
 ### Proposed changes
+
 Add private _Invocation to pool_lifecycle.py; replace the mutable task slot in
 account_pool.py with the exact invocation record and derived task property. Change
 _operation and close only as specified. Preserve retained cleanup/reentry/quarantine.
 ### Output
+
 Shutdown stops/joins actual library work without awaiting the caller's whole Task.
 ### Safe in nature
+
 False — changes cancellation and lifetime coordination.
 ### Peripheral concepts
+
 Provider scopes, repeated cancellation, persistent clients, application continuation.
 ### Hardness Lvl
+
 4/5.
 
-## Step 3 — complete source records available before later awaits
+## Step 3 — complete source records available before later awaits [folded: Risk1, robust]
 
 ### Proposed changes
+
 Add the opt-in private writer argument in batch_engine.py and pool_source.py. Attach
 the real complete-record buffer after identity/entity resolution; never expose its
 mutable list or an incomplete media record. Record body value/error before monitor
 exit. Use the existing source outcome and cancellation helpers unchanged otherwise.
 ### Output
+
 Actual running data is retrievable through later source, monitor and account-store work.
 ### Safe in nature
+
 False — shared batch code changes, with opt-in behavior absent for ordinary callers.
 ### Peripheral concepts
+
 Media completion, MessageBatch hashing, SDK pagination, source error precedence.
 ### Hardness Lvl
+
 4/5.
 
-## Step 4 — outer public calls and progress transport
+## Step 4 — outer public calls and progress transport [folded: Risk1, robust]
 
 ### Proposed changes
+
 Bind captures at all four public AccountPool data entry points; move routing into the
 private raw reader and route engine adapters directly to it. Pass the existing private
 writer through SyncEngine/BackfillEngine.prepare and pool-only engine construction.
 Capture validated replay results without source access. Terminal state is set only on
 the outer call's exit; existing store/provider/receipt semantics remain authoritative.
 ### Output
+
 One capture spans exactly one public read/prepare, including local replay and publication.
 ### Safe in nature
+
 False — changes pool public signatures and shared optional engine transport.
 ### Peripheral concepts
+
 ProgressFacade, scope expiry, pending replay, durable acknowledgment, local media checks.
 ### Hardness Lvl
+
 5/5.
 
 ## Step 5 — permanent qualification and user-facing contract
 
 ### Proposed changes
+
 Promote P0 public-ownership cases to `tgdata/smoke_tests/test_40_pool_outcomes.py` and
 migrate pool callers in test31/test39/pool_storage_cases and examples/account_pool.py.
 Retain previous oracles; add assertions through the explicit recipient. Update README,
@@ -319,17 +366,22 @@ docs/account_pool.md and smoke-test README with capture use, wrapper-safe retrie
 early/final snapshot meanings, required one-shot binding, normal cancellation, memory
 limits and data-versus-receipt rules. Inspect actual doc filenames before editing.
 ### Output
+
 A canonical working example and permanent tests protect all ownership boundaries.
 ### Safe in nature
+
 False — fixtures/examples/public call sites migrate with the new pool contract.
 ### Peripheral concepts
+
 Documentation migration, package exports, raw/daily/backfill user workflows.
 ### Hardness Lvl
+
 4/5.
 
 ## Step 6 — verify and commit the implementation
 
 ### Proposed changes
+
 Run compile/grammar, complete supported offline suites and demos on the integrated
 branch; compare runtime with the passing P0 candidate, accounting for only deliberate
 packaging/test/doc organization differences. Commit production/tests/public docs apart
@@ -337,26 +389,35 @@ from work/inquiry evidence. Update #17 honestly, keep PR26 draft until renewed m
 check and fresh PR critique pass. Any eventual merge needs user's go-ahead and excludes
 work/inquiry/archaeology docs while preserving the feature branch as archive.
 ### Output
+
 Auditable implementation verification; no accidental merge or claimed live readiness.
 ### Safe in nature
+
 True — verification/recording after functional changes; it does not deploy or merge.
 ### Peripheral concepts
+
 Current dev, worker compatibility, source hashes, PR soundness gates.
 ### Hardness Lvl
+
 3/5.
 
 ## Step 7 — live qualification [E1 OPEN]
 
 ### Proposed changes
+
 With confirmed resources/authorization, run bounded read-only failover observations
 using two approved accounts and one shared group, sharing their real read allowances.
 Verify expected identity/proxy/access/history assumptions; do not manufacture bans or
 resets. Preserve differences in visible history and make no union-history guarantee.
 ### Output
+
 Separate actual service qualification with explicit resource/visibility limits.
 ### Safe in nature
+
 False — contacts real Telegram and consumes approved allowance.
 ### Peripheral concepts
+
 Account inventory, proxy identity, live read budget and visibility.
 ### Hardness Lvl
+
 3/5.

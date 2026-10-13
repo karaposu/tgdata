@@ -156,10 +156,13 @@ The finding records the limits, including one full traverse iteration and no cla
 repeated-cycle architectural convergence. No further factual/vendor question blocks
 writing a new plan from this description.
 
-**Implementation/qualification — still pending.** The current product still has the
-second-review defect. Inquiry adapters are not production code and do not implement
-all recipient states or early publication. The rejected plan and old passing725 checks
-remain historical evidence, not acceptance of this revision. Full new prebuild required.
+**Production implementation — pending; new prebuild PASSED.** The current product
+still has the second-review defect. A complete isolated candidate passed the fresh
+combined P0 at prebuild.md:750 executed offline groups+3 demos,3 live skips excluded,
+with early visibility, recipient states and the public/progress lifetime boundaries.
+This is stronger evidence than the inquiry adapter, but is not a production patch or
+PR approval. Folded plan revision7 is now the implementation authority. The older
+rejected plan and725-check report remain historical; do not resume their steps.
 
 **Earlier storage-cancellation false premise — preserved history.** prebuild_r3.md
 records the failed provider-boundary experiment; the later implementation fixed that

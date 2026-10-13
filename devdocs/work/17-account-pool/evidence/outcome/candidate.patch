@@ -1,0 +1,391 @@
+--- a/examples/account_pool.py
++++ b/examples/account_pool.py
+@@ -5,0 +6 @@
++from tgdata import PoolReadCapture
+@@ -122 +123 @@
+-        result = await pool.read(CHAT, after_id=100, limit=2)
++        result = await pool.read(CHAT, capture=PoolReadCapture(), after_id=100, limit=2)
+@@ -128 +129 @@
+-        pending = await pool.sync_group(CHAT, limit=2)
++        pending = await pool.sync_group(CHAT, capture=PoolReadCapture(), limit=2)
+@@ -130 +131 @@
+-        replay = await pool.sync_group(CHAT, limit=1)
++        replay = await pool.sync_group(CHAT, capture=PoolReadCapture(), limit=1)
+--- a/tgdata/__init__.py
++++ b/tgdata/__init__.py
+@@ -16,0 +17,2 @@
++
++from .pool_result import PoolReadCapture, PoolReadSnapshot
+@@ -83,0 +86,2 @@
++    "PoolReadCapture",
++    "PoolReadSnapshot",
+--- a/tgdata/account_pool.py
++++ b/tgdata/account_pool.py
+@@ -29 +29,4 @@
+-from .pool_lifecycle import _scope, _inside, _call_store, _StoreBoundary
++from .pool_lifecycle import _scope, _inside, _call_store, _StoreBoundary, _Invocation
++from .pool_result import _capture_call
++from .backfill_engine import BackfillEngine
++from .backfill import BackfillPrepareContext
+@@ -206 +209 @@
+-        self._active_task = None
++        self._active_invocation = None
+@@ -213 +216 @@
+-        self.sync_engine = SyncEngine(self.get_message_batch,
++        self.sync_engine = SyncEngine(self._read_batch,
+@@ -217,0 +221,5 @@
++
++    @property
++    def _active_task(self):
++        record = self._active_invocation
++        return record.caller if record is not None else None
+@@ -225 +233 @@
+-        if self._active_task is not None:
++        if self._active_invocation is not None:
+@@ -227 +235 @@
+-        self._active_task = asyncio.current_task()
++        record = self._active_invocation = _Invocation()
+@@ -232 +240,2 @@
+-            self._active_task = None
++            self._active_invocation = None
++            record.finish()
+@@ -461,2 +470,2 @@
+-    async def read(self, chat_id, *, after_id=0, limit=200, download_media_to=None,
+-                   start_date=None, end_date=None):
++    async def _read(self, chat_id, *, after_id=0, limit=200, download_media_to=None,
++                    start_date=None, end_date=None, _capture=None):
+@@ -489,0 +499,2 @@
++                if _capture is not None:
++                    _capture.attempt(aid)
+@@ -491 +502 @@
+-                    batch = await self._sources[aid].run(chat_id, **options)
++                    batch = await self._sources[aid].run(chat_id, _capture=_capture, **options)
+@@ -511 +522,18 @@
+-    async def get_message_batch(self, group_id, *, after_id=0, limit=200,
++    async def read(self, chat_id, *, capture, after_id=0, limit=200,
++                   download_media_to=None, start_date=None, end_date=None):
++        """Read with a caller-retained, single-use data destination."""
++        with _capture_call(capture) as writer:
++            result = await self._read(chat_id, after_id=after_id, limit=limit,
++                download_media_to=download_media_to, start_date=start_date,
++                end_date=end_date, _capture=writer)
++            writer.offer(result.batch)
++            return result
++
++    async def _read_batch(self, group_id, *, after_id=0, limit=200,
++                          download_media_to=None, start_date=None, end_date=None, _capture=None):
++        result = await self._read(group_id, after_id=after_id, limit=limit,
++            download_media_to=download_media_to, start_date=start_date,
++            end_date=end_date, _capture=_capture)
++        return result.batch
++
++    async def get_message_batch(self, group_id, *, capture, after_id=0, limit=200,
+@@ -513,4 +541,23 @@
+-        """The existing bounded-reader signature, returning MessageBatch only."""
+-        result = await self.read(group_id, after_id=after_id, limit=limit,
+-                    download_media_to=download_media_to, start_date=start_date, end_date=end_date)
+-        return result.batch
++        with _capture_call(capture) as writer:
++            batch = await self._read_batch(group_id, after_id=after_id, limit=limit,
++                download_media_to=download_media_to, start_date=start_date,
++                end_date=end_date, _capture=writer)
++            writer.offer(batch)
++            return batch
++
++    async def sync_group(self, chat_id, *, capture, limit=200, download_media_to=None):
++        with _capture_call(capture) as writer:
++            batch = await self.sync_engine.prepare(chat_id, limit=limit,
++                download_media_to=download_media_to, _capture=writer)
++            writer.offer(batch)
++            return batch
++
++    def _new_backfill_engine(self, collection):
++        return BackfillEngine(self._backfill_store, collection, read_batch=self._read_batch)
++
++    async def prepare_backfill(self, context, *, capture, download_media_to=None):
++        with _capture_call(capture) as writer:
++            engine, context = self._backfill_for(context, BackfillPrepareContext)
++            turn = await engine.prepare(context, download_media_to=download_media_to, _capture=writer)
++            writer.offer(turn.batch)
++            return turn
+@@ -592,9 +639,4 @@
+-            active = self._active_task
+-            if active is not None and not active.done():
+-                active.cancel()
+-                try:
+-                    await active
+-                except asyncio.CancelledError:
+-                    pass  # Expected reader cancellation; this worker is retained.
+-                except Exception:
+-                    pass  # the source caller retains its own exception
++            active = self._active_invocation
++            if active is not None:
++                active.stop(self._active_invocation)
++                await active.done
+--- a/tgdata/backfill_engine.py
++++ b/tgdata/backfill_engine.py
+@@ -387 +387 @@
+-    async def prepare(self, context, *, download_media_to=None):
++    async def prepare(self, context, *, download_media_to=None, _capture=None):
+@@ -410,0 +411,2 @@
++                if _capture is not None:
++                    _capture.offer(batch)
+@@ -431,0 +434,2 @@
++            if _capture is not None:
++                options['_capture'] = _capture
+--- a/tgdata/batch_engine.py
++++ b/tgdata/batch_engine.py
+@@ -154 +154 @@
+-                          start_date=None, end_date=None):
++                          start_date=None, end_date=None, _capture=None):
+@@ -183,0 +184,2 @@
++                if _capture is not None:
++                    _capture.attach(chat_id, after_id, mode, records)
+--- a/tgdata/pool_lifecycle.py
++++ b/tgdata/pool_lifecycle.py
+@@ -122,0 +123,15 @@
++
++
++class _Invocation:
++    """Completion of one library-owned span, not its containing caller Task."""
++    def __init__(self):
++        self.caller = asyncio.current_task()
++        self.done = asyncio.get_running_loop().create_future()
++
++    def stop(self, active):
++        if active is self and not self.done.done() and self.caller is not None:
++            self.caller.cancel()
++
++    def finish(self):
++        self.caller = None
++        self.done.set_result(None)
+--- a/tgdata/pool_result.py
++++ b/tgdata/pool_result.py
+@@ -0,0 +1,132 @@
++"""Caller-owned, single-use data capture for AccountPool reads; no task ownership."""
++import asyncio
++from contextlib import contextmanager
++from dataclasses import dataclass, field
++import re
++from typing import Optional
++
++from .message_batch import MessageBatch, _interrupted_prefix
++from .pool_state import PoolConfigurationError, PoolStateError
++
++
++@dataclass(frozen=True)
++class PoolReadSnapshot:
++    state: str
++    batch: Optional[MessageBatch] = field(repr=False)
++    account_id: Optional[int]
++    error_type: Optional[str]
++    read_error_type: Optional[str]
++
++
++class _CaptureState:
++    def __init__(self):
++        self.phase = 'unbound'
++        self.batch = None
++        self.records = None
++        self.address = None
++        self.account_id = None
++        self.expected_account = None
++        self.error_type = None
++        self.read_error_type = None
++
++    def available(self):
++        if self.batch is not None:
++            return _interrupted_prefix(self.batch)
++        if self.records:
++            chat, after, mode = self.address
++            return MessageBatch._from_records(chat, after, self.records, mode, 'interrupted')
++        return None
++
++
++class PoolReadCapture:
++    """Keep this object before awaiting one pool read/prepare.
++
++    snapshot() never awaits or performs I/O. A running snapshot's batch is only
++    available data, with interrupted semantics; it is never an ack receipt.
++    Reuse is refused. Drop references to release data. No process-crash promise.
++    """
++    __slots__ = ('__state', '__weakref__')
++
++    def __init__(self):
++        object.__setattr__(self, '_PoolReadCapture__state', _CaptureState())
++
++    def __setattr__(self, name, value):
++        raise AttributeError('PoolReadCapture exposes read-only observations')
++
++    def snapshot(self):
++        state = object.__getattribute__(self, '_PoolReadCapture__state')
++        batch = state.available() if state.phase == 'running' else state.batch
++        return PoolReadSnapshot(state.phase, batch, state.account_id if batch is not None else None,
++                                state.error_type, state.read_error_type)
++
++
++def _error_name(error):
++    name = type(error).__name__
++    return name if re.fullmatch(r'[A-Za-z_][A-Za-z_0-9]{0,127}', name) else 'Exception'
++
++
++class _CaptureWriter:
++    def __init__(self, state):
++        self.state = state
++
++    def attempt(self, account_id):
++        state = self.state
++        # Risk1: a new attempt has no inherited data or source diagnostics.
++        if state.records or (state.batch is not None and state.batch.messages):
++            raise PoolStateError('Cannot switch source after complete data is available')
++        state.records = state.address = state.batch = state.account_id = None
++        state.read_error_type = None
++        state.expected_account = account_id
++
++    def attach(self, chat_id, after_id, mode, records):
++        # Called by the real batch engine only after verified source resolution.
++        state = self.state
++        state.address, state.records = (chat_id, after_id, mode), records
++        state.batch = None
++        state.account_id = state.expected_account
++
++    def offer(self, batch):
++        if batch is None:
++            return
++        if not isinstance(batch, MessageBatch):
++            raise PoolStateError('Read capture requires validated MessageBatch data')
++        state = self.state
++        if not batch.messages and (state.records or (state.batch is not None and state.batch.messages)):
++            return
++        state.batch = batch
++        state.records = state.address = None
++
++    def source_error(self, error):
++        self.state.read_error_type = _error_name(error)
++
++    def finish(self, error=None):
++        state = self.state
++        if error is None:
++            # A completed source's offer is final only when the public call ends.
++            if state.batch is None:
++                state.batch = state.available()
++            state.phase = 'succeeded'
++        else:
++            state.batch = state.available()
++            state.error_type = _error_name(error)
++            state.phase = 'cancelled' if isinstance(error, asyncio.CancelledError) else 'failed'
++        state.records = state.address = state.expected_account = None
++        self.state = None
++
++
++@contextmanager
++def _capture_call(capture):
++    if type(capture) is not PoolReadCapture:
++        raise PoolConfigurationError('capture must be a new PoolReadCapture')
++    state = object.__getattribute__(capture, '_PoolReadCapture__state')
++    if state.phase != 'unbound':
++        raise PoolConfigurationError('PoolReadCapture is single-use; allocate one per call')
++    state.phase = 'running'
++    writer = _CaptureWriter(state)
++    try:
++        yield writer
++    except BaseException as error:
++        writer.finish(error)
++        raise
++    else:
++        writer.finish()
+--- a/tgdata/pool_source.py
++++ b/tgdata/pool_source.py
+@@ -143 +143 @@
+-    async def run(self, chat_id=None, **options):
++    async def run(self, chat_id=None, *, _capture=None, **options):
+@@ -150 +150 @@
+-                    value = (await self.batch_reader.fetch_batch(chat_id, **options)
++                    value = (await self.batch_reader.fetch_batch(chat_id, _capture=_capture, **options)
+@@ -153,0 +154,2 @@
++                    if _capture is not None:
++                        _capture.source_error(error)
+@@ -157,0 +160,2 @@
++                    if _capture is not None:
++                        _capture.offer(value)
+--- a/tgdata/smoke_tests/pool_storage_cases.py
++++ b/tgdata/smoke_tests/pool_storage_cases.py
+@@ -1,0 +2 @@
++from tgdata import PoolReadCapture
+@@ -56,2 +57,2 @@
+-    if mode == 'daily': return await e.pool.sync_group(t.CHAT, limit=limit)
+-    return await e.pool.prepare_backfill(context)
++    if mode == 'daily': return await e.pool.sync_group(t.CHAT, capture=PoolReadCapture(), limit=limit)
++    return await e.pool.prepare_backfill(context, capture=PoolReadCapture())
+@@ -127 +128 @@
+-        result = await capture(e.pool.prepare_backfill(context))
++        result = await capture(e.pool.prepare_backfill(context, capture=PoolReadCapture()))
+@@ -359 +360 @@
+-        reader = asyncio.create_task(e.pool.prepare_backfill(context))
++        reader = asyncio.create_task(e.pool.prepare_backfill(context, capture=PoolReadCapture()))
+--- a/tgdata/smoke_tests/test_31_account_pool.py
++++ b/tgdata/smoke_tests/test_31_account_pool.py
+@@ -1,0 +2 @@
++from tgdata import PoolReadCapture
+@@ -106 +107 @@
+-    return await e.pool.read(CHAT, after_id=100, limit=kwargs.pop('limit', 1), **kwargs)
++    return await e.pool.read(CHAT, capture=kwargs.pop('capture', PoolReadCapture()), after_id=100, limit=kwargs.pop('limit', 1), **kwargs)
+@@ -216 +217 @@
+-    result = await e.pool.read(OTHER, after_id=100, limit=1)
++    result = await e.pool.read(OTHER, capture=PoolReadCapture(), after_id=100, limit=1)
+@@ -251 +252 @@
+-    await f.expect(PoolConfigurationError, e.pool.read(OTHER, limit=1))
++    await f.expect(PoolConfigurationError, e.pool.read(OTHER, capture=PoolReadCapture(), limit=1))
+@@ -427 +428 @@
+-        error = await f.expect(PoolStorageError, e.pool.sync_group(CHAT, limit=1))
++        error = await f.expect(PoolStorageError, e.pool.sync_group(CHAT, capture=PoolReadCapture(), limit=1))
+@@ -432 +433 @@
+-        batch = await e.pool.sync_group(CHAT, limit=1)
++        batch = await e.pool.sync_group(CHAT, capture=PoolReadCapture(), limit=1)
+@@ -511 +512 @@
+-    await f.expect(PoolUnavailable, e.pool.read(OTHER, after_id=100, limit=1))
++    await f.expect(PoolUnavailable, e.pool.read(OTHER, capture=PoolReadCapture(), after_id=100, limit=1))
+@@ -540 +541 @@
+-    turn = await e.pool.prepare_backfill(BackfillPrepareContext.from_status(started.status))
++    turn = await e.pool.prepare_backfill(BackfillPrepareContext.from_status(started.status), capture=PoolReadCapture())
+@@ -545 +546 @@
+-    replay = await e.pool.prepare_backfill(BackfillPrepareContext.from_status(turn.status))
++    replay = await e.pool.prepare_backfill(BackfillPrepareContext.from_status(turn.status), capture=PoolReadCapture())
+@@ -578,2 +579,2 @@
+-        await f.expect(BatchFormatError, e.pool.read(CHAT, **kwargs))
+-    await f.expect(PoolConfigurationError, e.pool.read(-1000000000099))
++        await f.expect(BatchFormatError, e.pool.read(CHAT, capture=kwargs.pop('capture', PoolReadCapture()), **kwargs))
++    await f.expect(PoolConfigurationError, e.pool.read(-1000000000099, capture=PoolReadCapture()))
+@@ -983 +984 @@
+-    await pool.read(CHAT, after_id=100, limit=1)
++    await pool.read(CHAT, capture=PoolReadCapture(), after_id=100, limit=1)
+--- a/tgdata/smoke_tests/test_39_pool_lifecycle.py
++++ b/tgdata/smoke_tests/test_39_pool_lifecycle.py
+@@ -5,0 +6 @@
++from tgdata import PoolReadCapture
+@@ -43 +44 @@
+-        return e.pool.sync_group(t.CHAT, limit=limit), None
++        return e.pool.sync_group(t.CHAT, capture=PoolReadCapture(), limit=limit), None
+@@ -46 +47 @@
+-    return e.pool.prepare_backfill(context), context
++    return e.pool.prepare_backfill(context, capture=PoolReadCapture()), context
+@@ -59 +60 @@
+-            batch = await e.pool.sync_group(t.CHAT, limit=200)
++            batch = await e.pool.sync_group(t.CHAT, capture=PoolReadCapture(), limit=200)
+@@ -65 +66 @@
+-            replay = await e.pool.prepare_backfill(t.BackfillPrepareContext.from_status(status))
++            replay = await e.pool.prepare_backfill(t.BackfillPrepareContext.from_status(status), capture=PoolReadCapture())
+@@ -405 +406 @@
+-        reader = asyncio.create_task(e.pool.sync_group(t.CHAT, limit=200))
++        reader = asyncio.create_task(e.pool.sync_group(t.CHAT, capture=PoolReadCapture(), limit=200))
+--- a/tgdata/sync_engine.py
++++ b/tgdata/sync_engine.py
+@@ -130 +130 @@
+-    async def prepare(self, chat_id, *, limit=200, download_media_to=None):
++    async def prepare(self, chat_id, *, limit=200, download_media_to=None, _capture=None):
+@@ -142,0 +143,2 @@
++                if _capture is not None:
++                    _capture.offer(state.pending)
+@@ -147,0 +150,2 @@
++                if _capture is not None:
++                    options['_capture'] = _capture

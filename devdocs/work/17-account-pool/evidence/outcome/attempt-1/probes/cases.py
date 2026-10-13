@@ -1,0 +1,474 @@
+"""Actual public ownership histories for the full isolated #17 prebuild.
+Synthetic wire controls service replies; SDK, ledgers, stores, media and receipts are real.
+"""
+import argparse
+import asyncio
+from dataclasses import FrozenInstanceError
+import gc
+import json
+import logging
+from pathlib import Path
+import socket
+import sys
+import tempfile
+import traceback
+from unittest.mock import patch
+
+parser=argparse.ArgumentParser();parser.add_argument('--source',type=Path,required=True)
+args=parser.parse_args();sys.path.insert(0,str(args.source))
+from tgdata import PoolReadCapture, PoolReadSnapshot, BackfillDeliveryRef
+from tgdata.smoke_tests import test_31_account_pool as t
+from tgdata.smoke_tests import pool_storage_cases as s
+from tgdata.smoke_tests import test_39_pool_lifecycle as old
+from tgdata.pool_lifecycle import _Invocation
+assert Path(t.__file__).resolve().is_relative_to(args.source.resolve())
+MODES=('raw','batch','daily','backfill');MISSING=object();RESULTS=[]
+
+async def observed(work):
+    try:return await work
+    except BaseException as error:return error
+
+def count(cap):
+    snap=cap.snapshot() if isinstance(cap,PoolReadCapture) else cap
+    return len(snap.batch.messages) if snap.batch is not None else 0
+
+async def until(predicate,task=None):
+    for _ in range(2000):
+        if predicate():return
+        if task is not None and task.done():
+            raise AssertionError(('call ended before expected boundary',await observed(task)))
+        await asyncio.sleep(0)
+    raise AssertionError('expected boundary was not reached in bounded loop turns')
+
+async def setup(mode):return await s.setup('raw' if mode=='batch' else mode)
+
+def call(e,mode,context,cap,limit=1,**kwargs):
+    options={} if cap is MISSING else {'capture':cap}
+    options.update(kwargs)
+    if mode=='raw':return e.pool.read(t.CHAT,after_id=100,limit=limit,**options)
+    if mode=='batch':return e.pool.get_message_batch(t.CHAT,after_id=100,limit=limit,**options)
+    if mode=='daily':return e.pool.sync_group(t.CHAT,limit=limit,**options)
+    return e.pool.prepare_backfill(context,**options)
+
+async def pending(e,mode,context):
+    return await s.pending(e,mode,context) if mode in ('daily','backfill') else None
+
+async def held_settlement(mode,failed=False,after=True):
+    e,state,provider,context=await setup(mode);original,size,charge=s.source(e,failed)
+    entered,ending,release=asyncio.Event(),asyncio.Event(),asyncio.Event()
+    calls,tasks=[0],[];actual=state.compare_and_swap
+    async def held(*arguments):
+        calls[0]+=1
+        if calls[0]!=2:return await actual(*arguments)
+        tasks.append(asyncio.current_task());entered.set()
+        try:await asyncio.Event().wait()
+        finally:
+            ending.set();await release.wait()
+            if after:await actual(*arguments)
+    state.compare_and_swap=held
+    return e,state,context,entered,ending,release,tasks,size,charge
+
+async def binding_states():
+    rows=[]
+    for mode in MODES:
+        e,state,_,context=await setup(mode)
+        before=dict(state.counts)
+        for bad in (MISSING,None,object()):
+            try:work=call(e,mode,context,bad)
+            except TypeError:assert bad is MISSING
+            else:
+                error=await observed(work)
+                assert isinstance(error,t.PoolConfigurationError),(mode,bad,error)
+        assert state.counts==before and not any(sender.calls for sender in e.senders.values())
+        cap=PoolReadCapture();assert cap.snapshot().state=='unbound'
+        s.source(e,False);result=await call(e,mode,context,cap)
+        snap=cap.snapshot();assert snap.state=='succeeded' and count(snap)==1 and snap.error_type is None
+        assert snap.account_id==111 and snap.batch.stop_reason in ('end','limit')
+        try:snap.state='changed'
+        except FrozenInstanceError:pass
+        else:raise AssertionError('mutable snapshot')
+        try:cap.state='changed'
+        except AttributeError:pass
+        else:raise AssertionError('mutable public capture')
+        altered=snap.batch.messages;altered[0]['text']='altered';assert snap.batch.messages!=altered
+        total=sum(len(sender.reads) for sender in e.senders.values())
+        assert isinstance(await observed(call(e,mode,context,cap)),t.PoolConfigurationError)
+        foreign,_,_,fc=await setup(mode)
+        assert isinstance(await observed(call(foreign,mode,fc,cap)),t.PoolConfigurationError)
+        assert cap.snapshot()==snap and not any(sender.calls for sender in foreign.senders.values())
+        await e.pool.close();assert cap.snapshot()==snap
+        assert sum(len(sender.reads) for sender in e.senders.values())==total
+        rows.append(dict(mode=mode,state=snap.state,records=count(snap),single_use=True))
+    e,state,_,_=await setup('raw');cap=PoolReadCapture();before=dict(state.counts)
+    error=await observed(e.pool.read(t.CHAT,capture=cap,limit=0))
+    assert isinstance(error,t.BatchFormatError) and cap.snapshot().state=='failed' and state.counts==before
+    return rows
+
+async def prestart_and_concurrent_binding():
+    rows=[]
+    for mode in MODES:
+        e,state,_,ctx=await setup(mode);before=dict(state.counts);cap=PoolReadCapture()
+        task=asyncio.create_task(call(e,mode,ctx,cap));task.cancel()
+        assert isinstance(await observed(task),asyncio.CancelledError)
+        assert cap.snapshot().state=='unbound' and state.counts==before
+        async def queued():
+            asyncio.current_task().cancel();return await call(e,mode,ctx,cap)
+        task=asyncio.create_task(queued());assert isinstance(await observed(task),asyncio.CancelledError)
+        assert cap.snapshot().state=='cancelled' and count(cap)==0 and state.counts==before
+        assert not any(sender.calls for sender in e.senders.values())
+        e,state,_,ctx=await setup(mode);e.senders[111].script=[t.f.PENDING];cap=PoolReadCapture()
+        reader=asyncio.create_task(call(e,mode,ctx,cap))
+        try:
+            await until(lambda:bool(e.senders[111].pending),reader)
+            assert isinstance(await observed(call(e,mode,ctx,cap)),t.PoolConfigurationError)
+            assert cap.snapshot().state=='running' and not reader.done()
+            reader.cancel();await observed(reader);assert cap.snapshot().state=='cancelled'
+        finally:
+            reader.cancel();await observed(reader)
+        rows.append(dict(mode=mode,prestart_no_io=True,queued_stop=True,one_writer=True))
+    return rows
+
+async def early_page():
+    rows=[]
+    for mode in MODES:
+        e,state,_,ctx=await setup(mode)
+        e.senders[111].script=[t.f.response([t.f.message(n) for n in reversed(range(101,201))]),t.f.PENDING]
+        cap=PoolReadCapture();reader=asyncio.create_task(call(e,mode,ctx,cap,limit=200))
+        try:
+            await until(lambda:bool(e.senders[111].pending),reader)
+            first=cap.snapshot();assert first.state=='running' and count(first)==100
+            assert first.batch.stop_reason=='interrupted' and first.account_id==111
+            reader.cancel();reader.cancel();signal=await observed(reader)
+            assert isinstance(signal,asyncio.CancelledError) and reader.cancelled()
+            final=cap.snapshot();assert final.state=='cancelled' and count(final)==100
+            assert final.batch.to_json()==first.batch.to_json() and first.state=='running'
+            assert e.budget.status(111).used==200 and not e.senders[222].reads
+            assert (await e.pool.get_pool_status()).accounts[0].attempt_id is not None
+            assert await pending(e,mode,ctx) is None
+            rows.append(dict(mode=mode,early_records=100,final_records=100,charge=200))
+        finally:
+            reader.cancel();await observed(reader)
+    return rows
+
+async def settlement_stops():
+    rows=[]
+    for mode in MODES:
+        for failed in (False,True):
+            for after in (False,True):
+                for external in (False,True):
+                    e,state,ctx,entered,ending,release,tasks,size,charge=await held_settlement(mode,failed,after)
+                    cap=PoolReadCapture();reader=asyncio.create_task(call(e,mode,ctx,cap,200 if failed else 1));closer=None
+                    try:
+                        await entered.wait();initial=cap.snapshot()
+                        assert initial.state=='running' and count(initial)==size and initial.batch.stop_reason=='interrupted'
+                        if external:closer=asyncio.create_task(e.pool.close())
+                        else:reader.cancel()
+                        await ending.wait()
+                        reader.cancel();reader.cancel()
+                        if closer is not None:closer.cancel();closer.cancel()
+                        await t.turns();assert not reader.done() and not tasks[0].done()
+                        assert e.pool._active_task is reader and cap.snapshot().state=='running'
+                        release.set()
+                        if closer is not None:await observed(closer)
+                        signal=await observed(reader)
+                        assert isinstance(signal,asyncio.CancelledError) and reader.cancelled()
+                        final=cap.snapshot();assert final.state=='cancelled' and count(final)==size
+                        assert final.batch.to_json()==initial.batch.to_json()
+                        if failed:assert final.read_error_type=='FloodWaitError'
+                        row=json.loads(await state.actual.load())['accounts']['111']
+                        assert (row['active'] is None) is after
+                        assert row['not_before']==(t.f.NOW+7200 if failed and after else 0)
+                        assert e.budget.status(111).used==charge and not e.senders[222].reads
+                        assert await pending(e,mode,ctx) is None
+                        assert tasks[0].done() and e.pool._active_task is None
+                        await e.pool.close();await observed(reader)
+                        assert cap.snapshot()==final and all(src._primary_client is None for src in e.pool._sources.values())
+                        rows.append(dict(mode=mode,failed_source=failed,committed=after,external_close=external,records=size,charge=charge))
+                    finally:
+                        release.set();reader.cancel()
+                        await asyncio.gather(reader,*([closer] if closer else []),return_exceptions=True)
+    return rows
+
+async def wrapper_retrieval():
+    rows=[]
+    for mode in MODES:
+        for wrapper in ('direct','shield','gather_values','wait_for'):
+            e,state,ctx,entered,ending,release,tasks,size,charge=await held_settlement(mode)
+            cap=PoolReadCapture();reader=asyncio.create_task(call(e,mode,ctx,cap))
+            async def observe():
+                if wrapper=='shield':return await asyncio.shield(reader)
+                if wrapper=='gather_values':return (await asyncio.gather(reader,return_exceptions=True))[0]
+                if wrapper=='wait_for':return await asyncio.wait_for(reader,0.01)
+                return await reader
+            waiter=None
+            try:
+                await entered.wait();waiter=asyncio.create_task(observed(observe()))
+                await t.turns()
+                if wrapper!='wait_for':reader.cancel()
+                await ending.wait();release.set();signal=await waiter
+                assert isinstance(signal,TimeoutError if wrapper=='wait_for' else asyncio.CancelledError)
+                assert reader.cancelled() and cap.snapshot().state=='cancelled' and count(cap)==1
+                await observed(reader);await observed(reader);await e.pool.close()
+                assert count(cap)==1 and e.budget.status(111).used==1 and tasks[0].done()
+                rows.append(dict(mode=mode,wrapper=wrapper,signal=type(signal).__name__,retained=1))
+            finally:
+                release.set();reader.cancel()
+                await asyncio.gather(reader,*([waiter] if waiter else []),return_exceptions=True)
+    return rows
+
+async def application_continuation():
+    rows=[]
+    for mode in MODES:
+        e,state,ctx,entered,ending,release,tasks,_,_=await held_settlement(mode)
+        cap=PoolReadCapture();handled,app_release=asyncio.Event(),asyncio.Event();holder={}
+        async def application():
+            try:return await call(e,mode,ctx,cap)
+            except asyncio.CancelledError:
+                handled.set()
+                await holder['closer']  # This would cycle with a whole-Task join.
+                await app_release.wait()
+                raise
+        reader=asyncio.create_task(application());closer=None
+        try:
+            await entered.wait();closer=holder['closer']=asyncio.create_task(e.pool.close())
+            await ending.wait();release.set();await handled.wait()
+            await until(closer.done);await closer
+            assert not reader.done() and tasks[0].done() and e.pool._active_task is None
+            assert all(src._primary_client is None for src in e.pool._sources.values())
+            assert cap.snapshot().state=='cancelled' and count(cap)==1
+            app_release.set();assert isinstance(await observed(reader),asyncio.CancelledError)
+            rows.append(dict(mode=mode,close_done=True,unrelated_app_work_not_joined=True))
+        finally:
+            release.set();app_release.set()
+            await asyncio.gather(reader,*([closer] if closer else []),return_exceptions=True)
+    return rows
+
+async def stale_completion():
+    e,_,_,_=await setup('raw')
+    with e.pool._operation():old_record=e.pool._active_invocation
+    assert old_record.done.done() and old_record.caller is None
+    requests=asyncio.current_task().cancelling()
+    with e.pool._operation():
+        new=e.pool._active_invocation;old_record.stop(new)
+        assert asyncio.current_task().cancelling()==requests and not new.done.done()
+    old_record.stop(None);assert asyncio.current_task().cancelling()==requests
+    cap=PoolReadCapture();s.source(e,False);await call(e,'raw',None,cap)
+    final=cap.snapshot();await e.pool.close();assert cap.snapshot()==final
+    return dict(stale_stop_harmless=True,success_not_downgraded=True)
+
+async def progress_publication():
+    rows=[]
+    for mode in ('daily','backfill'):
+        for cancel in (False,True):
+            e,state,provider,ctx=await setup(mode);s.source(e,False)
+            entered,ending,release=asyncio.Event(),asyncio.Event(),asyncio.Event();calls=[0];tasks=[]
+            actual=provider.compare_and_swap
+            async def held(*arguments):
+                calls[0]+=1
+                if calls[0]!=(1 if mode=='daily' else 2):return await actual(*arguments)
+                tasks.append(asyncio.current_task());entered.set()
+                try:await release.wait()
+                finally:
+                    ending.set();await release.wait();result=await actual(*arguments)
+                return result
+            provider.compare_and_swap=held
+            cap=PoolReadCapture();reader=asyncio.create_task(call(e,mode,ctx,cap))
+            try:
+                await entered.wait();assert e.pool._active_task is None
+                early=cap.snapshot();assert early.state=='running' and count(early)==1 and early.batch.stop_reason=='interrupted'
+                await e.pool.close();assert not reader.done() and cap.snapshot()==early
+                assert all(src._primary_client is None for src in e.pool._sources.values())
+                if cancel:
+                    reader.cancel();await ending.wait();reader.cancel();await t.turns()
+                    assert not reader.done() and not tasks[0].done()
+                release.set();result=await observed(reader)
+                assert cap.snapshot().state==('cancelled' if cancel else 'succeeded') and count(cap)==1
+                if cancel:assert isinstance(result,asyncio.CancelledError) and reader.cancelled()
+                assert await pending(e,mode,ctx) is not None and tasks[0].done() and e.budget.status(111).used==1
+                assert early.state=='running' and early.batch.stop_reason=='interrupted'
+                rows.append(dict(mode=mode,cancelled=cancel,early=1,pending=True,close_preceded_public_end=True))
+            finally:
+                release.set();reader.cancel();await observed(reader)
+    return rows
+
+async def paired_faults():
+    rows=[]
+    for mode in ('daily','backfill'):
+        for account_commit in (False,True):
+            for progress_commit in (False,True):
+                e,state,provider,ctx=await setup(mode);s.source(e,True)
+                state.arm('compare_and_swap',2,account_commit)
+                provider.arm('compare_and_swap',1 if mode=='daily' else 2,progress_commit)
+                cap=PoolReadCapture();reader=asyncio.create_task(call(e,mode,ctx,cap,200))
+                error=await observed(reader);snap=cap.snapshot()
+                assert isinstance(error,Exception) and not reader.cancelled() and reader.cancelling()==0
+                assert snap.state=='failed' and count(snap)==100 and snap.read_error_type=='FloodWaitError'
+                assert snap.batch.stop_reason=='interrupted'
+                row=json.loads(await state.actual.load())['accounts']['111']
+                assert (row['active'] is None) is account_commit
+                assert row['not_before']==(t.f.NOW+7200 if account_commit else 0)
+                assert bool(await pending(e,mode,ctx)) is progress_commit
+                assert e.budget.status(111).used==200 and not e.senders[222].reads
+                provider.armed=None
+                rows.append(dict(mode=mode,account_commit=account_commit,progress_commit=progress_commit,records=100))
+    return rows
+
+async def exact_receipts_and_local_replay():
+    rows=[]
+    for mode in ('daily','backfill'):
+        e,state,provider,ctx=await setup(mode);s.source(e,False)
+        actual_write,actual_load=provider.compare_and_swap,provider.load
+        calls=[0];unknown=[False]
+        async def write(*arguments):
+            calls[0]+=1;result=await actual_write(*arguments)
+            if calls[0]==(1 if mode=='daily' else 2):
+                unknown[0]=True;own=asyncio.get_running_loop().create_future();own.cancel();await own
+            return result
+        async def load(*arguments):
+            if unknown[0]:raise OSError(t.SECRET)
+            return await actual_load(*arguments)
+        provider.compare_and_swap=write;provider.load=load
+        cap=PoolReadCapture();error=await observed(call(e,mode,ctx,cap));unknown[0]=False
+        assert isinstance(error,Exception) and cap.snapshot().state=='failed' and count(cap)==1
+        stored=await pending(e,mode,ctx);assert stored is not None and stored!=cap.snapshot().batch.batch_id
+        if mode=='daily':wrong=e.pool.acknowledge_sync(t.CHAT,cap.snapshot().batch.batch_id)
+        else:wrong=e.pool.acknowledge_backfill(BackfillDeliveryRef(ctx.run,(await e.pool.get_backfill_status(ctx.run)).destination_id,cap.snapshot().batch.batch_id))
+        assert isinstance(await observed(wrong),Exception) and await pending(e,mode,ctx)==stored
+        await e.pool.close()
+        class NoStore:
+            async def load(self):raise AssertionError('local replay accessed account state')
+            async def compare_and_swap(self,*arguments):raise AssertionError('local replay wrote account state')
+        e.pool._store=NoStore()
+        for account in e.pool.accounts:Path(account.config_path).unlink()
+        replay_cap=PoolReadCapture()
+        with patch.object(e.budget,'status',side_effect=AssertionError('local replay accessed budget')):
+            replay=await call(e,mode,ctx,replay_cap)
+            snap=replay_cap.snapshot();assert snap.state=='succeeded' and count(snap)==1 and snap.account_id is None
+            assert snap.batch.batch_id==stored
+            snap.batch.save(t.path('delivered'))  # actual receiver artifact before ack
+            if mode=='daily':await e.pool.acknowledge_sync(t.CHAT,replay.batch_id)
+            else:await e.pool.acknowledge_backfill(replay.delivery)
+            assert await pending(e,mode,ctx) is None
+        rows.append(dict(mode=mode,wrong_hash_refused=True,local_replay_records=1,acknowledged=True))
+    return rows
+
+async def attempt_provenance():
+    rows=[]
+    for mode in MODES:
+        e,state,_,ctx=await setup(mode)
+        e.senders[111].script=[t.errors.FloodWaitError(request=None,capture=7200)]
+        e.senders[222].script=[t.d.finite_response([t.f.message(101)])]
+        actual=state.compare_and_swap;calls=[0];entered,release=asyncio.Event(),asyncio.Event()
+        async def held(*arguments):
+            calls[0]+=1
+            if calls[0]==4:entered.set();await release.wait()
+            return await actual(*arguments)
+        state.compare_and_swap=held
+        cap=PoolReadCapture();reader=asyncio.create_task(call(e,mode,ctx,cap))
+        try:
+            await entered.wait();snap=cap.snapshot()
+            assert snap.state=='running' and snap.account_id==222 and snap.read_error_type is None and count(snap)==1
+            release.set();await reader;assert cap.snapshot().read_error_type is None and cap.snapshot().account_id==222
+            rows.append(dict(mode=mode,first_failure='FloodWaitError',batch_account=222,stale_error_cleared=True))
+        finally:release.set();await observed(reader)
+        e,_,_,ctx=await setup(mode)
+        e.senders[111].script=[t.errors.FloodWaitError(request=None,capture=7200)]
+        e.senders[222].script=[t.errors.ChannelPrivateError(request=None)]
+        cap=PoolReadCapture();error=await observed(call(e,mode,ctx,cap))
+        assert isinstance(error,t.PoolUnavailable) and count(cap)==0
+        assert cap.snapshot().read_error_type=='ChannelPrivateError' and cap.snapshot().account_id is None
+        e,_,_,ctx=await setup(mode);e.senders[111].identities=[222];cap=PoolReadCapture()
+        error=await observed(call(e,mode,ctx,cap))
+        assert isinstance(error,t.PoolIdentityError) and count(cap)==0 and cap.snapshot().account_id is None
+        assert not any(sender.reads for sender in e.senders.values())
+    return rows
+
+async def monitor_finalization():
+    rows=[]
+    for failed in (False,True):
+        e,_,_,ctx=await setup('raw');await old.seed_report(e);e.pool.drain_health_events();s.source(e,failed)
+        entered=asyncio.Event();actual=e.pool._sources[111].monitor._safely
+        async def held(*arguments):
+            await actual(*arguments);entered.set();await asyncio.Event().wait()
+        e.pool._sources[111].monitor._safely=held
+        cap=PoolReadCapture();reader=asyncio.create_task(call(e,'raw',ctx,cap,200 if failed else 1))
+        try:
+            await entered.wait();early=cap.snapshot();assert early.state=='running' and count(early)==(100 if failed else 1)
+            reader.cancel();signal=await observed(reader)
+            assert isinstance(signal,asyncio.CancelledError) and count(cap)==count(early)
+            if failed:assert cap.snapshot().read_error_type=='FloodWaitError'
+            rows.append(dict(source_failed=failed,early_records=count(early),terminal=cap.snapshot().state))
+        finally:reader.cancel();await observed(reader)
+    return rows
+
+async def media_early():
+    e,_,_,ctx=await setup('raw')
+    first=t.f.message(101);second=t.b.document(102)
+    e.senders[111].script=[t.d.finite_response([second,first])]
+    e.senders[111].file_script=[t.f.PENDING]
+    cap=PoolReadCapture();root=t.path('media-capture')
+    reader=asyncio.create_task(call(e,'raw',ctx,cap,2,download_media_to=root))
+    try:
+        await until(lambda:bool(e.senders[111].pending),reader)
+        snap=cap.snapshot();assert snap.state=='running' and count(snap)==1
+        assert snap.batch.messages[0]['id']=='101' and snap.batch.media_mode=='download'
+        reader.cancel();await observed(reader)
+        assert cap.snapshot().state=='cancelled' and count(cap)==1 and not e.senders[222].reads
+        assert not list(root.glob('.tgdata-*.tmp'))
+        return dict(complete_records=1,incomplete_media_record_excluded=True)
+    finally:reader.cancel();await observed(reader)
+
+async def retention_and_empty_results():
+    rows=[]
+    for mode in MODES:
+        e,_,_,ctx=await setup(mode);e.senders[111].script=[t.d.finite_response([])]
+        cap=PoolReadCapture();await call(e,mode,ctx,cap)
+        assert cap.snapshot().state=='succeeded' and count(cap)==0
+        await e.pool.close()
+        rows.append(dict(mode=mode,state=cap.snapshot().state,records=0))
+    e,state,_,ctx=await setup('raw');s.source(e,True);cap=PoolReadCapture()
+    error=await observed(call(e,'raw',ctx,cap,200));snap=cap.snapshot()
+    assert snap.read_error_type=='FloodWaitError' and snap.error_type=='FloodWaitError'
+    saved=snap.batch.to_json();del error;await e.pool.close();gc.collect()
+    assert cap.snapshot().batch.to_json()==saved
+    private=object.__getattribute__(cap,'_PoolReadCapture__state')
+    assert private.records is None and private.address is None and private.expected_account is None
+    for value in vars(private).values():
+        assert value is None or isinstance(value,(str,int,t.MessageBatch)),type(value)
+    assert t.SECRET not in repr(snap) and t.SECRET not in repr(cap)
+    # New data/diagnostic acquisition on another call cannot mutate this capture.
+    foreign,_,_,_=await setup('raw');await call(foreign,'raw',None,PoolReadCapture())
+    assert cap.snapshot()==snap
+    return dict(empty=rows,terminal_state_plain=True,retained_records=100)
+
+CASES=[('binding_states',binding_states),('prestart_concurrent_binding',prestart_and_concurrent_binding),
+       ('early_pagination',early_page),('settlement_stops',settlement_stops),
+       ('public_wrappers',wrapper_retrieval),('application_continuation',application_continuation),
+       ('stale_completion',stale_completion),('progress_publication',progress_publication),
+       ('paired_faults',paired_faults),('receipts_local_replay',exact_receipts_and_local_replay),
+       ('attempt_provenance',attempt_provenance),('monitor_finalization',monitor_finalization),
+       ('early_media',media_early),('retention_empty',retention_and_empty_results)]
+
+async def main(directory):
+    t.f.TMP=t.d.TMP=directory
+    for name,fn in CASES:
+        print(json.dumps(dict(start=name)),flush=True)
+        try:details=await asyncio.wait_for(fn(),25)
+        except BaseException as error:
+            traceback.print_exc();RESULTS.append(dict(name=name,passed=False,error=type(error).__name__))
+        else:RESULTS.append(dict(name=name,passed=True,details=details))
+        finally:
+            for pool in t.POOLS:await pool.close()
+            t.POOLS.clear()
+        print(json.dumps(RESULTS[-1]),flush=True)
+    total=sum(row['passed'] for row in RESULTS)
+    print(json.dumps(dict(summary=dict(passed=total,total=len(CASES)))),flush=True)
+    print('Passed: {}/{}'.format(total,len(CASES)),flush=True)
+    return 0 if total==len(CASES) else 1
+
+if __name__=='__main__':
+    logging.disable(logging.CRITICAL)
+    with tempfile.TemporaryDirectory(prefix='tgdata17-outcome-case-') as directory, \
+         patch.object(socket.socket,'connect',side_effect=AssertionError('network forbidden')), \
+         patch.object(socket.socket,'connect_ex',side_effect=AssertionError('network forbidden')):
+        sys.exit(asyncio.run(main(Path(directory))))

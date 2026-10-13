@@ -27,6 +27,14 @@ hash set pass; actual data, genuine cancellation, owned work and durable authori
 match the defined observations. Local nonarchitectural fixture/import corrections must
 be recorded, preserve expected semantics, and precede a full combined rerun.
 
+Result: **PASS — full combined prebuild**, 2026-10-13. One candidate/hash set passed
+750 executed offline groups (725 retained regression groups,17 new ownership groups,
+8 prior PR-review groups),3 demos and the separate baseline negative controls. Three
+legacy live skips excluded. No watchdog; candidate/probes and branch production hashes
+unchanged. Candidate compile and87 Python3.7 grammar checks pass; no native3.7 claim.
+See prebuild.md and evidence/outcome/attempt-2/summary.json. Attempt1's sole failed
+suite was the sandbox-blocked local proxy test; no candidate runtime correction.
+
 ## High-level summary and subject
 
 Fresh in-session review of plan revision6 at41a6c59, desc revision5, actual product
@@ -156,6 +164,7 @@ existing attempt history is separate from the provenance of the retained batch.
 attachment and snapshot assertions for raw/daily/backfill.
 
 ### Mitigation — Quick
+
 Clear read_error_type only when a successful public result returns.
 - [ ] selected   - [ ] elegant   - [ ] last_resort
 
@@ -164,6 +173,7 @@ Clear read_error_type only when a successful public result returns.
 *For future:* —
 
 ### Mitigation — Robust
+
 At each admitted source attempt, reset empty source observation/diagnostics together
 and record the expected account privately. Publish account_id only when BatchEngine
 attaches after actual verification/entity resolution. Forbid a new source attempt once
@@ -180,6 +190,7 @@ can keep them consistent without another observer, registry or stored schema.
 *For future:* —
 
 ### Mitigation — Long-term
+
 Introduce a public immutable observation stream for every account attempt, with
 attempt IDs, lifecycle records and explicit selection of the batch-producing attempt.
 **Why this is long term effective:** consumers could retain a full multi-attempt
