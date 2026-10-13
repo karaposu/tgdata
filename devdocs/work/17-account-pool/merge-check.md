@@ -2,172 +2,136 @@
 model: gpt-6-astra
 effort: max
 status: PASS_OFFLINE_SCOPE_PR_CRITIC_PENDING
+round: 2
 ---
-# Merge check — #17 existing-access account pool
+# Renewed merge check — #17
 
-**PASS for PR publication of the selected offline delivery.** Reviewed product
-`4854464`, evidence head `67ffb2c`, against dev `68f6bbd`, confirmed unchanged on
-the remote on 2026-10-11. This is the fidelity check; the PR critic and user merge
-decision remain separate. Two-account live qualification is pending, as expressly
-allowed by the original plan's E1/Step 9 and the user's offline-first selection.
+**PASS for renewed PR review of the selected offline delivery.** Subject:
+producta63099e/evidence379a949 against current dev2ddb852, confirmed unchanged on
+GitHub on2026-10-13. This is fidelity, not the fresh PR soundness verdict or merge
+authorization. Two-account live E1 stays pending under the user's offline-first choice.
 
-The subject is the full 14-file product diff, not just the latest cleanup patch,
-read with the parent description, triage, revision-2
-`step_by_step_impl_plan.md`, selected `critic.md`, and the scoped
-`retirement-rework/{triage,desc,plan,critic,verification}.md`. Current public
-documentation, all new pool modules, the shared facade/batch changes, the full
-1,038-line pool test suite, the example and adjacent budget/delivery boundaries
-were examined. Same warmed session; no delegated review.
+Read together: triage.md, desc.md revision4, folded step_by_step_impl_plan.md revision5,
+critic.md, prebuild.md, verification_restart.md, archived first PR rejection and failed
+r3 report, and the complete21-file product diff. Original routing description/plan and
+scoped retirement work remain relevant to retained behavior. Same warmed session;
+no delegated review. The old merge check is preserved as merge-check_r1.md.
 
-## 0 — Warmth, weight and model
+## 0 — Warmth, weight and §9
 
-The original description records same-session warmth at `95ed4c7`, an ancestor of
-this branch. Original triage `03d02c7` weighs feature-heavy; GitHub labels are
-`enhancement` and `heavy`. The original two-iteration traverse was completed at
-`d1daa84`. The scoped triage `bacde95` retains that structure and records the actual
-SDK retirement reproduction and current-dev integration assessment. Its decision
-not to repeat traverse is explicit and appropriate for the established violation.
+Desc/triage name warmth at09e0277, an ancestor verified by the audit, backed by the
+completed foundation traverse and full relevant module reads. The current session
+carries that context and refreshed the complete controller, source, lifecycle,
+observations, pool state, shared facade and sync engine, plus shared/current-dev diffs
+and actual SDK/storage/progress failure paths. Triage remains feature-heavy and matches
+GitHub enhancement/heavy. No unrecorded new architecture-skill run is claimed.
 
-The retained probe verifies 19 named artifact/base commits are ancestors. Current
-session metadata at `2026-10-11T11:02:04.423Z` confirms `gpt-6-astra`, effort `max`;
-this satisfies CONTRIBUTING §9's feature-path Astra/xhigh minimum. No inferred
-model selection or switch is claimed. Both implementation and review artifacts
-record their provenance.
+Current turn metadata confirms **gpt-6-astra / max**, satisfying CONTRIBUTING §9's
+feature-path Astra/xhigh minimum. Model/effort are recorded here and in the prior
+plan/critic. PROJECT_SPECIFICS remains absent; actual repository test runners were used.
+All13 issue titles were refreshed. #7/#10 are merged; #17 remains open.
 
-## 0b — Surface and scope
+## 0b — Diff scope
 
-The 14 product paths are README, `docs/account_pool.md`, the daily/backfill guide
-amendments, `examples/account_pool.py`, package exports, `account_pool.py`,
-`pool_source.py`, `pool_state.py`, `progress_facade.py`, `batch_engine.py`,
-`tgdata.py`, test31 and the smoke-test README. All belong to the ownership,
-selection, budget, source, persistence and delivery interfaces surfaced by triage
-and refined in the plan. No newly discovered product region requires reweighing;
-feature-heavy was and remains appropriate.
+The product diff has21 files: README, account-pool guide/example, small daily/backfill
+guide integration notes, package exports, AccountPool, pool_source/state/lifecycle/
+observation, shared progress facade, TgData delegation, batch/message values, sync/
+backfill error-data retention, test31/test39/storage cases and smoke README.
+All are within current and inherited triage territory. Feature-heavy is appropriate;
+no unreported product subsystem or automatic joining was introduced.
 
-Current #7 factory, account operations, health ownership, group operations and join
-allowance/client code are byte-identical to dev, as are the read-budget and progress
-engines. The first-parent integration commit contains incoming #7 files, but those
-are not additions in this PR's product diff against dev. Original checkout,
-untracked todo/handoff, duncan and unrelated work are outside this diff.
+The audit confirms15 adjacent modules are byte-identical to dev: connection engine,
+account operation, owned health, group operations, join budget/client, budget client,
+worker/protocol/engine, read budget, sync store, backfill state/values and legacy health.
+The10 moved public progress method bodies/signatures are AST-identical excluding
+explanatory docstrings. TgData retains its module-local backfill factory seam.
 
-Work records stay on the feature archive. The later integrator must exclude
-`devdocs/work` and branch archaeology changes under §7.6 while retaining dev's
-existing copies. Publishing this branch does not authorize merging those records.
+All additional changed paths are devdocs. Under §7.6 they stay on this feature archive
+and must be excluded from any later merge, preserving dev's existing copies. The
+GitHub branch diff includes those archive commits; they are not part of the21-file
+product landing. Main checkout, duncan and unrelated user files remain untouched.
 
-## 1 — Fidelity and deviations
+## 1 — Implementation fidelity
 
-Parent Steps 1–8 are implemented: strict values/errors and opaque CAS state;
-owned SDK source with fixed expected identity and actual-send budget admission;
-deterministic drain/spread and bounded attempts; scoped restrictions and explicit
-unknown-attempt recovery; credential reload/cleanup; shared daily/backfill facade;
-actual-composition tests; public documentation/example and verification.
-Parent Step 9 is deliberately pending, not silently marked complete.
+- Step1: ceda2bf integrates exact dev2ddb852 after P0. The sole batch conflict retains
+  current worker resolver plus pool-only cancellation-prefix option defaultFalse.
+- Step2: pool_lifecycle owns component outcomes, checkpoint/start/wait, retained joins,
+  expiring scopes and pool-only provider wrapping. No cancellation-count heuristic or
+  global supervisor. Native cleanup retains its separate non-cancelling policy.
+- Step3: pool_source keeps the source body holder on every completion path; unexpected
+  source cancellation stays local/unresolved. ObservationBuffer/PoolMonitor provide
+  bounded passive capture, loss count and all-state synchronous drain. Non-None pool
+  callbacks are explicitly refused; ordinary TgData health code is unchanged.
+- Step4: account controller and all configured async stores use that boundary; exclusive
+  operation entry and close reject live same-pool scopes before changing ownership.
+  State-only progress callers retain their own I/O independently of source lifetime.
+  Admission still needs definiteTrue, recovery exact tokens, and errors do not fail over.
+- Step5: shared interrupted-prefix conversion preserves already-validated records on
+  settlement/publication error or cancellation. Backfill exact-state reconciliation
+  remains unchanged; error data supplies no receipt or history-end proof.
+- Step6: test39 and storage cases are the permanent48-group composition; test31's
+  callback expectations change only for the planned API. Documentation explains
+  cancellation origin, provider roles, prefix/durability and passive event limits.
+- Step7: product/tests/docs a63099e separated from evidence379a949;725 executed offline
+  groups,3 demos, compilation/86 grammar checks pass. Full report and current files match.
+- Step8: E1 explicitly pending. No live qualification or account allowance reset is claimed.
 
-All five scoped rework steps are implemented: merge current dev, settle cleanup
-and source children before releasing ownership, actual-SDK lifetime regressions,
-current contract/handoff, and separate product/work commits with verification.
+No structural deviation. The reported local corrections are a P0 recovery fixture
+missing its first page and a verification collector that initially did not recognize
+three existing summary formats. Both retained semantic assertions and are documented;
+no runtime candidate repair occurred after P0. This audit corrected its own initial
+filename typo join_guard→join_client before passing, with no product change.
 
-Explicit differences from the original blueprint:
+## 2 — Does the rationale still hold?
 
-- The obsolete base `_client_options()` hook is replaced by current dev's
-  `_new_client(..., **client_options)` seam. This is specified by the scoped plan,
-  keeps ordinary clients unchanged and gives controlled pool policy precedence.
-- `asyncio.wait_for` is replaced by non-cancelling timeout observation plus retained
-  cancel-and-join. The scoped critic reproduced the missed repeated-cancellation
-  case; revision 2 names this change. The original outcome holder remains intact.
-- Async context exit now distinguishes caller cancellation from ordinary secondary
-  cleanup failure. This is an explicit scoped contract clarification, with real
-  cleanup tests, rather than accidental swallowing of cancellation.
-- Shared pool exceptions are defined with the state codec and re-exported through
-  `account_pool`/the package. The public taxonomy stays as planned; colocating the
-  definitions avoids a source/controller import cycle.
-- Python 3.7 was checked at the grammar level on Python 3.11.10, not claimed as an
-  executed native runtime. Telethon 1.45.0 is the opt-in pool's exact qualification.
+The full prebuild preceded integration/implementation and exercised actual SDK/SQLite/
+ledger/progress composition. A component's cancelled I/O and a caller stop now enter
+different paths; uncertainty remains in authoritative state. Data preservation no
+longer claims receipt durability. One private mechanism serves actual repeated pool
+source/provider instances while cleanup stays distinct. The original router and
+progress protocols remain appropriate under exclusive ownership and one source reader
+per group. A general distributed owner or automatic-join redesign is outside scope.
 
-No unplanned public API, new quota authority, progress protocol, automatic joining
-or distributed ownership was introduced. AST comparison confirms all 10 public
-progress delegators and all 36 retained TgData methods have unchanged executable
-bodies. `_backfill_for` differs only by its planned factory extraction; TgData
-retains its module-local factory. Constructor order includes current dev's trailing
-`join_budget=None`.
+E1 remains a real qualification limit, not a risk disguised as completed testing.
+Cooperative providers must settle subordinate work before returning. Passive events
+are bounded diagnostics, not authority. These limits are explicit in the public guide.
 
-## 2 — Does the plan still hold?
+## 3 — Critic findings answered
 
-Yes for the selected boundary. Separate persisted source permission and existing
-group delivery state preserve different responsibilities. Source-free replay/ack
-does not require a healthy pool or live credentials. Unknown source attempts remain
-blocked until explicit quiescent recovery; completed prefixes prevent failover.
-The shared ledger remains the accounting authority. Cleanup needed a stronger
-local lifetime boundary, not a replacement router or generic health framework.
+The fresh plan critic's sole Medium (status-provider administrative reentry) is folded
+and implemented at AccountPool._operation and close. The actual48-group prebuild and
+permanent suite include45 refusal combinations across pool/daily/backfill providers,
+direct/task/wait_for control and positive foreign/expired-scope controls.
 
-The plan does not promise equal history across accounts, a scheduler, automatic
-login/repair/joining, multiple competing owners or a hard shutdown deadline. Those
-limits appear in the public contract. Historical text saying #7 was paused remains
-historical; the current handoff and issue block state that #7 is now merged.
+The original PR's two Mediums were also answered: source outcome no longer comes from
+secondary observer task status, and arbitrary application observer execution has been
+removed from source lifetime. Same-pool detectable provider control is refused. r3's
+additional failed storage cancellation premise is addressed by owned provider calls
+and known-data retention, with actual before/after-commit cases. Native retirement
+and repeated-cancellation guarantees from the earlier rework remain covered. No plan
+High/Medium is left unanswered, and no Low was silently dropped. The fresh PR critic
+must still challenge soundness independently; this mapping is not its result.
 
-## 3 — Were all critic findings answered?
+## 4 — Issue and PR state
 
-**Original High, completed result hidden by observer timeout:**
-`pool_source.py:_OwnedSource.run` captures the original batch/error before awaited
-health reporting and retrieves it after actual child settlement. The targeted
-check preserves the exact FloodWait7200 plus 100-message prefix and a completed
-successful batch when a callback outlasts the internal timer. No second source.
+#17's fetched status accurately checks T/0–5 with committed evidence, leaves6/7 open,
+and explicitly separates completed offline steps from E1. Exactly one rejected PR
+review and one failed design prebuild are historical. This check completes step6 when
+committed/posted; step7 must remain pending until the fresh PR review is recorded.
 
-**Original Medium, repaired stored login ignored:**
-`recheck_account` retires the owned client before fresh preflight and a durable
-identity-only attempt. Successful retirement clears client/config/identity inside
-the retained worker. Actual StoredSession replacement tests preserve the new key,
-including cancellation during native disconnect; group restrictions remain.
+PR26's description still cites the earlier619-check/14-file delivery and old re-plan
+endpoint. Refresh it to this final21-file product and725-check evidence before the
+fresh review; retain Closes#17, selected existing-access scope, E1 and archive exclusion.
+Keep it draft pending that review. No merge or live operation is authorized by this gate.
 
-**Scoped Medium, repeated cancellation releases a live child:**
-the retained cancel-and-join holds `self.task` and the operation guard until the
-real child ends. Retirement and shutdown use the same private waiting primitive
-with their own outcome policies. Held-source and native-disconnect checks prove
-no concurrent source/replacement, correct failure refusal/retry and cancellation
-precedence. The mandatory six-group prebuild experiment preceded runtime changes.
+## Evidence
 
-Neither plan critic left a Low finding. Broader shared credential rotation and
-generic source-observer supervision were consciously deferred, not half-built.
+`python devdocs/work/17-account-pool/probes/review2/merge_audit.py` → PASS:
+11 ancestry checks,21 product paths,15 adjacent modules unchanged,8 production files
+identical to P0,86 current Python hashes match verification,10 moved public methods
+AST-identical,725 executed checks/3 skips/3 demos backed by logs.
+[Exact audit](evidence/review2/merge-audit.json).
 
-## 4 — Issue status and evidence
-
-The current #17 rework block truthfully checks triage through implementation,
-linking committed artifacts (`bacde95` through `67ffb2c`). It leaves merge-check/PR
-and PR critique unchecked until those artifacts/publication exist. Its historical
-first-delivery block is clearly labeled. Original umbrella intent is preserved;
-current selected scope excludes automatic joining even though #7 now exists.
-
-After this file commits and the PR is published, update step 6 with both links.
-Leave step 7 pending until the fresh critique is committed and posted. Keep E1
-pending, #17 open and the product unmerged. The PR body must say `Closes #17` as
-required by §6.6, while plainly naming the scoped delivery and deferred live/joining
-work; this does not itself close the issue on dev or settle those follow-ups.
-
-Implementation evidence at `67ffb2c`: **619 actual offline checks across 23 suites,
-three explicit live skips excluded**; pool46/46, four demo runs, 76 compile/grammar
-checks and an export excluding work records passing pool46/46/demo. No product
-change has occurred since that run, so a redundant full sweep was not substituted
-for review.
-
-Additional fidelity check run now:
-
-```text
-static_fidelity: 19 artifact ancestors; 10 unchanged dev foundations;
-10 identical public progress methods; 36 retained TgData methods;
-only the permitted backfill factory substitution.
-original_critic_completed_outcomes: 2 passed
-original_critic_credential_reload: 2 passed
-rework_retirement: 2 passed
-rework_source_and_shutdown: 3 passed
-identity_at_admission: 1 passed
-restriction_and_recovery: 2 passed
-source_free_progress: 2 passed
-PASS: static fidelity plus 7 behavioral groups (14 existing composition cases).
-```
-
-Runner: `merge-check-probes.py`; exact output: `merge-check-probes.txt`.
-These selected existing composition cases substantiate fidelity; they are not the
-fresh PR critic probes. Network sockets were forbidden and all data synthetic.
-
-**Next:** publish the PR and run critic-d fresh against this full product diff and
-both plans. This PASS is not merge approval or evidence of live failover.
+The implementation suite is not rerun without changes just to inflate evidence;
+fresh adversarial behavioral probes belong to the next PR critique. Any finding
+there follows §7.3/§7.4, regardless of this fidelity PASS.
