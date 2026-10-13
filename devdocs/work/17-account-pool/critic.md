@@ -173,10 +173,10 @@ Test first-account wait/denial followed by second-account success or failure, in
 snapshot while the second request is held and first-identity refusal with no source.
 **Why this is robust:** the actual one-writer attempt boundary owns these fields and
 can keep them consistent without another observer, registry or stored schema.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* One private writer is the actual shared owner across raw/daily/backfill; a per-attempt transition closes this metadata instance without a second lifecycle or public history. No additional concrete consumer needs a general attempt-observation framework. The small robust change has the best reach/extent, survives any later history API, and is not a forced fallback.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -188,7 +188,7 @@ provenance history if such a consumer is later required.
 
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* Consider a public attempt-observation history only when a named consumer needs every attempt as data beyond the existing PoolReadResult.attempts. No such requirement is established here; the robust boundary remains valid if that feature is later added.
 
 ## Evidence boundaries and disposition
 
