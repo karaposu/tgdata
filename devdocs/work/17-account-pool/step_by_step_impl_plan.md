@@ -2,20 +2,21 @@
 model: gpt-6-astra
 effort: max
 revision: 7
-status: PREBUILD_PASSED_IMPLEMENTATION_PENDING
+status: IMPLEMENTED_OFFLINE_LIVE_E1_PENDING
 ---
 # #17 — owned invocation completion and caller-retained data
 
 **Critic folded:** 2026-10-13 — 1 mitigation (3 steps changed, 0 added).
 Risk1 robust selected; full combined P0 passed before any production step.
-Production steps1–7 remain unstarted in this preparation-only run.
+**Implementation:**007c2e4 completes steps1–6 with750 offline groups+3 demos passing.
+Step7 remains gated by E1. See verification_outcomes.md for parity and exact evidence.
 
 **Source:** desc.md revision5 and the completed public-outcome ownership inquiry.
 **Subject:** product a63099e on feature head f1cae2c; dev2ddb852 is already integrated
 and was verified unchanged on GitHub in this turn. This is a new plan, not a patch to
 rejected plan revision5 (preserved as step_by_step_impl_plan_r5.md).
-**Current authorization:** new plan, fresh in-session critic-d, selected mitigation
-fold, and full combined prebuild. Production implementation and live work are later.
+**Current authorization:** the user resumed implementation under revision7 after P0.
+Steps1–6 are complete. Live E1, renewed PR gates and any merge remain separate.
 Exactly two PR reviews are rejected; the task is not PARKED. No subagent delegation.
 
 ### What is the task
@@ -34,7 +35,8 @@ None OPEN. Inherited public-ownership question is **CLOSED at contract level** b
 new finding: a task-wide non-consuming join still waits for application continuation,
 and exception attributes still lose data under shield/gather without close. Independent
 completion and a caller-retained data destination are required. Actual candidate
-composition remains a behavioural premise for P0, not an assumption marked confirmed.
+composition was tested in P0 before production edits; actual-branch verification now
+passes as recorded in verification_outcomes.md.
 
 The data destination and progress transport can be specified from the actual code:
 BatchEngine owns a list containing only validated complete records; AccountPool owns
@@ -205,7 +207,7 @@ and4 (attempt-loop call). Each remains Safe in nature=False, hardness unchanged.
 **Qualification:** PASS at the exact candidate in evidence/outcome/candidate-manifest.json;
 full attempt2 passed750 executed groups+3 demos, with3 explicit live skips. Baseline
 negative controls reproduced the rejected product's defects. prebuild.md records
-commands, limits and local preparation/environment corrections. No production edits.
+commands, limits and local preparation/environment corrections. No production edits preceded P0.
 
 **Location:** new `probes/outcome/` and `evidence/outcome/` in this work folder. Preserve
 all older inquiry/restart/review scripts and exact failed outputs. Export tracked code,

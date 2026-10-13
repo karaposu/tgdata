@@ -1,0 +1,50 @@
+Public Integration Tests — actual SQLite/SDK; synthetic wire; sockets forbidden
+
+TEST: test_creation_real_commit_exit_pair
+✓ Passed
+
+TEST: test_admission_real_commit_exit_pair_never_sends
+✓ Passed
+
+TEST: test_publication_real_commit_exit_pair
+✓ Passed
+
+TEST: test_empty_end_real_commit_exit_pair
+✓ Passed
+
+TEST: test_ack_real_commit_exit_pair_follows_receiver
+✓ Passed
+
+TEST: test_control_real_commit_exit_pair_preserves_delivery
+✓ Passed
+
+TEST: test_recovery_real_commit_exit_pair_preserves_original_command
+✓ Passed
+
+TEST: test_abandon_real_commit_exit_pair_retires_receipt
+✓ Passed
+
+TEST: test_successor_real_commit_exit_pair_keeps_old_receipt_read_only
+✓ Passed
+
+TEST: test_failed_prefix_and_publication_keep_source_provenance_then_recover
+✓ Passed
+
+TEST: test_cancelled_publication_and_ack_reply_reopen_actual_effect
+✓ Passed
+
+TEST: test_late_final_result_cancel_order_and_equal_hash_successor
+✓ Passed
+
+TEST: test_opposing_controls_and_delayed_resume_are_revision_ordered
+✓ Passed
+
+TEST: test_media_receipt_custody_ack_without_source_bytes_and_health
+✓ Passed
+
+TEST: test_missing_malformed_known_state_and_cleanup_preserve_uncertainty
+Sync storage cleanup failed during rollback (RuntimeError)
+Sync storage cleanup failed during close (RuntimeError)
+✓ Passed
+
+Passed: 15/15

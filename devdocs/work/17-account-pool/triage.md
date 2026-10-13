@@ -47,3 +47,13 @@ Current user authorizes plan, fresh in-session critic-d, fold and full isolated
 prebuild only. Two rejected PR rounds, one earlier failed prebuild; no PARKED block.
 No production implementation, live traffic or merge in this task. Full source/controller/
 batch/progress/lifecycle/prebuild runner interfaces refreshed; model Astra/max verified.
+
+## Revision7 implementation follow-up — 2026-10-13
+
+User explicitly resumed implementation. Product007c2e4 implements all planned runtime
+regions and preserves executable parity with P0. Permanent test40 combines the17 new
+plus8 earlier-review groups. Additional touched documents are the daily/backfill guides'
+pool-reference paragraphs, which clarify the required pool capture argument while
+keeping their ordinary TgData signatures unchanged. This is narrow API documentation,
+not expanded product scope. Full offline verification passes; E1 remains an execution
+gate. Work evidence is separate from the product commit; renewed PR review is next.

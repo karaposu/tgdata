@@ -16,6 +16,12 @@ The result resolves the experiment in critic.md. Its one selected Medium correct
 is folded into plan revision7. Production implementation remains pending; this run
 was authorized for plan/critique/prebuild only. PR26 stays draft/rejected on a63099e.
 
+> Implementation follow-up: product007c2e4 now carries the qualified mechanism;
+> [actual-branch verification](verification_outcomes.md) passed separately. This P0
+> report remains the preimplementation record. Its export script checks baseline
+> equality, so reproduce P0 from preparation commit9772541 in an isolated checkout;
+> use probes/outcome/verify.py for the current implemented branch.
+
 ## Exact subject and representation
 
 Source baseline: f1cae2c (production a63099e), containing dev

@@ -2,7 +2,7 @@
 model: gpt-6-astra
 effort: max
 revision: 5
-status: DESCRIPTION_REQUALIFIED_IMPLEMENTATION_REJECTED
+status: IMPLEMENTED_OFFLINE_REVIEW_PENDING
 ---
 # Account routing with explicit invocation and data ownership
 
@@ -15,8 +15,9 @@ status: DESCRIPTION_REQUALIFIED_IMPLEMENTATION_REJECTED
 **Issue:** #17, feature-heavy; branch `feat/17-account-pool`, draft PR26.
 **Authority:** [public outcome ownership finding](../../inquiries/2026-10-13_11-46__17-public-outcome-ownership/finding.md).
 This description replaces revision4, preserved in desc_r4.md. It does not replace
-or rehabilitate the rejected revision5 implementation plan. Production remains
-`a63099e`; no runtime repair is claimed.
+or rehabilitate the rejected revision5 implementation plan. The replacement is now
+implemented in `007c2e4` under folded plan7; verification_outcomes.md records its
+passing offline checks. Renewed PR review and two-account live qualification remain.
 
 ## Problem Statement
 
@@ -137,10 +138,10 @@ new durable raw-result store, distributed leases, login flow, affinity or union-
 guarantee. Do not impose pool lifetime policy on temporary #7 operations or #10 workers.
 Shared progress changes must preserve existing cursor/receipt semantics.
 
-**Current authorized endpoint (2026-10-13 follow-up):** a new plan from this
-requalified description, fresh plan critique/fold and full combined prebuild. The
-upstream traverse is complete. No production implementation in this run; two-account
-live qualification and renewed merge/PR gates remain separate; no merge.
+**Current authorized endpoint (implementation follow-up):** implementation under
+folded revision7 after the passed prebuild, with permanent tests, public docs and full
+offline verification. This is complete at007c2e4. Two-account live qualification and
+renewed merge/PR gates remain separate; no merge is authorized by this implementation.
 
 ## Priority Level
 
@@ -156,13 +157,12 @@ The finding records the limits, including one full traverse iteration and no cla
 repeated-cycle architectural convergence. No further factual/vendor question blocks
 writing a new plan from this description.
 
-**Production implementation — pending; new prebuild PASSED.** The current product
-still has the second-review defect. A complete isolated candidate passed the fresh
-combined P0 at prebuild.md:750 executed offline groups+3 demos,3 live skips excluded,
-with early visibility, recipient states and the public/progress lifetime boundaries.
-This is stronger evidence than the inquiry adapter, but is not a production patch or
-PR approval. Folded plan revision7 is now the implementation authority. The older
-rejected plan and725-check report remain historical; do not resume their steps.
+**Production implementation — OFFLINE PASS; renewed review pending.** Product007c2e4
+implements folded plan7. All750 executed offline groups and3 demos pass on the actual
+branch, with3 live skips excluded. Its runtime matches the passing prebuild's executable
+code; new public method docstrings and permanent test organization are recorded in
+verification_outcomes.md. This is not a fresh PR approval. The two previous rejected
+reviews remain historical; new merge-check and PR critique are required.
 
 **Earlier storage-cancellation false premise — preserved history.** prebuild_r3.md
 records the failed provider-boundary experiment; the later implementation fixed that

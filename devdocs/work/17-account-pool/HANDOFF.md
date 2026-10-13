@@ -1,82 +1,73 @@
 ---
 model: gpt-6-astra
 effort: max
-status: PLAN_CRITIQUE_PREBUILD_COMPLETE_IMPLEMENTATION_PENDING
+status: IMPLEMENTED_OFFLINE_REVIEW_PENDING
 ---
-# #17 — folded plan7 and full P0 passed; production implementation is next
+# #17 — plan7 implemented and verified; renewed review is next
 
-The latest user authorized: a new plan from the requalified description → fresh plan
-critique → full combined prebuild before implementation. That preparation is complete.
-Production remains a63099e, and PR26 stays draft/unmerged/rejected on that product.
-No production module, permanent test, public README/guide or example changed in the
-feature checkout. Isolated candidate code and evidence live only under the work folder
-and its reproducible /private/tmp export.
+The user authorized implementation under revision7 after the full combined P0 pass.
+**Product commit:**007c2e4. Steps1–6 complete; step7's live E1 remains gated.
+The code, permanent tests, example and public docs are in a separate product commit;
+work evidence is committed separately. PR26 remains draft/unmerged, awaiting renewed
+merge-check and fresh PR critique of this new product. No merge authorization inferred.
 
-## Current authority
+## Read before continuing
 
-- [Description revision5](desc.md), derived from the completed public-outcome traverse.
-- [Folded plan revision7](step_by_step_impl_plan.md). Seven production/live steps; all
-  remain unstarted. P0 is before step1 and has passed.
-- [Fresh plan critic](critic.md), subject plan6 at41a6c59, prompt e7fdafc, critique
-  b5d26e0, selection25a55f0. Verdict REORDER — TEST BEFORE BUILD; Result PASS now recorded.
-- [Full prebuild report](prebuild.md), [exact candidate](evidence/outcome/candidate.patch)
-  and [one complete passing attempt](evidence/outcome/attempt-2/summary.json).
-- [Upstream finding](../../inquiries/2026-10-13_11-46__17-public-outcome-ownership/finding.md).
+- [Verification report](verification_outcomes.md) and
+  [complete passing run](evidence/outcome-implementation/attempt-1/summary.json).
+- [Folded plan7](step_by_step_impl_plan.md), [description5](desc.md),
+  [plan critic](critic.md) with its full-prebuild PASS.
+- [P0 report](prebuild.md), qualified before implementation in9772541.
+- [Public outcome finding](../../inquiries/2026-10-13_11-46__17-public-outcome-ownership/finding.md).
+- Existing pr-critic.md/pr-critic_r1.md describe the two prior rejected products;
+  merge-check.md also remains historical. Neither is approval of007c2e4.
 
-The new mechanism uses a private invocation completion fact plus a caller-retained,
-single-use data recipient. Required capture= at read/get_message_batch/sync_group/
-prepare_backfill. Explicit private transport keeps inner reads from rebinding and
-ordinary TgData from inheriting the new contract. Early snapshots contain actual
-complete records, conservatively interrupted; only the outer public call finalizes.
-Close retires source/client work without joining arbitrary application continuation.
-Progress publication can outlive that source span under its own caller.
+## What shipped on the feature branch
 
-The critic found one Medium detail: source metadata could remain from a prior no-prefix
-attempt. Selected robust correction resets empty source data/diagnostics at each
-confirmed source attempt, publishes verified identity only when real data attaches,
-and forbids another account once a complete prefix exists. Folded into steps1/3/4;
-no extra step or global observation/history service. No re-critique after folding.
+The pool requires caller-retained PoolReadCapture at read/get_message_batch/sync_group/
+prepare_backfill. One explicit private writer carries actual complete records through
+source, account and progress work. Running snapshots are interrupted data; only outer
+public-call exit finalizes. They do not imply a durable receipt or accepted progress.
 
-## What P0 proved and did not prove
+A private invocation completion Future replaces the containing application Task as
+close's completion target. Close retains owned work/native retirement while allowing
+unrelated application continuation to outlive the library call. Source/account closure
+and caller-owned progress publication retain different lifetimes.
 
-Full attempt2:750 executed offline groups,3 demos and separate original-product
-negative controls;3 explicit live skips excluded. Within this are all725 existing
-supported regression groups,17 new capture/lifetime groups and8 prior PR-review groups.
-Pool31:46/46; lifecycle39:48/48; worker37:33/33; worker38:25/25. Compilation and87 Python3.7
-grammar files passed. Python3.11.10/Telethon1.45.0 executed; no native3.7/live claim.
+The selected critic correction resets source metadata on no-prefix failover, attaches
+verified identity to actual observations and forbids another attempt after complete
+data. Routing, quota, uncertain-write refusal, receipts, reentry guards, passive health
+and quarantine semantics remain the existing mechanisms. No supervisor/result database.
 
-Actual SDK/SQLite/ReadBudget/MessageBatch/progress produce the observed data and state.
-New histories cover early page/media/monitor/store visibility, required one-shot binding,
-wrappers, true repeated stop, late observers, unrelated application cleanup, exact
-receipts/replay, unknown writes, attempt metadata, safe types and terminal retention.
-The candidate/probes and branch runtime stayed unchanged during the qualifying run.
+## Verification and parity
 
-Attempt1's proxy suite was sandbox-blocked from local127.0.0.1 bind/connect; it remains
-FAIL. Full attempt2 ran with local loopback access. A coverage audit added three groups
-and strengthened the completed-media stimulus, without a candidate runtime correction
-or weakened assertion. One export-builder marker correction occurred before tests.
-All failed/preparation records and exact earlier probes are preserved.
+750 executed offline groups+3 demos pass;3 explicit live skips excluded. Pool31:46/46,
+lifecycle39:48/48, new outcome40:25/25, worker37:33/33 and worker38:25/25. All27 supported
+offline suites ran in one complete attempt. No watchdog or failed test. Compilation
+and88 Python3.7 grammar checks pass on Python3.11.10/Telethon1.45.0; no native3.7 claim.
 
-## Resume implementation
+All eight runtime modules match the qualified candidate's executable AST. Only public
+API docstrings and a work-label comment differ in two files; six files are byte-identical.
+The17 new and8 previous-review P0 groups are combined in permanent suite40;35 function
+bodies remain identical. Fixtures were migrated, their import placement made suitable
+for direct invocation, and the demo now retains named captures. README/pool/smoke docs
+and two small daily/backfill cross-references explain the intentional pool API change.
+No runtime repair or weakened assertion was needed during implementation verification.
 
-Read the current plan/critic/prebuild and verify current dev; it was2ddb852 before P0
-and already integrated into the branch. Use the passing candidate manifest/diff as the
-comparison when implementing steps1–4. Complete permanent suite40, public docs and demo
-migration under step5; run step6's actual-branch verification and separate code/work
-commits. Do not infer that the isolated P0 candidate already changed the product.
-Then renew merge check and fresh PR critique; any merge still needs user go-ahead.
+Current dev2ddb852 was already integrated and was verified unchanged before/after this
+run. Recheck it before the later merge-check. All tested source hashes are recorded;
+main checkout/untracked HANDOFF/todo, duncan and unrelated work were untouched.
 
-E1 gates only step7: two approved logged-in accounts/shared readable group/existing
-bounded allowance after offline verification. No login, joins, resets or live calls
-were authorized in this run. Keep existing-access scope and one source reader per
-group across progress stores. Preserve separate account permission/quota/ack semantics.
+## Next work
 
-## Preserved history and scope
+Run renewed merge-check against current dev and actual product007c2e4, update the same
+PR26 and run fresh critic-d against the implemented diff plus plan7. Preserve old
+review documents before creating the new canonical artifacts. This is still the same
+branch/history: two rejected PR rounds and one earlier failed design prebuild. Do not
+mistake P0 or the750 implementation checks for a fresh PR soundness verdict.
 
-Exactly two rejected PR rounds and one older failed design prebuild. The local proxy
-permission failure is not another rejected design. Old PR reviews remain pr-critic.md
-and pr-critic_r1.md. Rejected plan5 is step_by_step_impl_plan_r5.md; new pre-fold plan6
-is step_by_step_impl_plan_r6.md; old plan critic/prompt/prebuild are revision4 copies.
-The old DEPRECATED plan remains historical. This upstream restart does not erase any
-review outcome. Main checkout, duncan and unrelated work remain untouched. Work/inquiry
-artifacts stay on the feature archive branch during any later code-only merge.
+E1 remains separate: two approved logged-in accounts/shared readable group/existing
+bounded allowances after offline verification. The user selected one-account/offline-
+first; no login, join, quota reset or real Telegram call was made. Task-impl requires
+stopping at that OPEN execution gate. Any later merge still needs user go-ahead and
+excludes work/inquiry/archaeology artifacts while keeping the feature branch archive.
