@@ -2,7 +2,7 @@
 model: gpt-6-astra
 effort: max
 revision: 5
-status: OFFLINE_PR_REVIEW_PASS_LIVE_E1_PENDING
+status: MERGED_LIVE_E1_PENDING
 ---
 # Account routing with explicit invocation and data ownership
 
@@ -12,7 +12,8 @@ status: OFFLINE_PR_REVIEW_PASS_LIVE_E1_PENDING
 > current code, Python task behavior and real-component inquiry probes. No new
 > architecture warming skill run claimed. GPT-6 Astra/max verified in turn metadata.
 
-**Issue:** #17, feature-heavy; branch `feat/17-account-pool`, draft PR26.
+**Issue:** #17, feature-heavy; branch `feat/17-account-pool`, PR26 merged into dev
+at c4e6eac after explicit user approval. Live E1 remains pending.
 **Authority:** [public outcome ownership finding](../../inquiries/2026-10-13_11-46__17-public-outcome-ownership/finding.md).
 This description replaces revision4, preserved in desc_r4.md. It does not replace
 or rehabilitate the rejected revision5 implementation plan. The replacement is now
@@ -142,7 +143,8 @@ Shared progress changes must preserve existing cursor/receipt semantics.
 **Current authorized endpoint (implementation follow-up):** implementation under
 folded revision7 after the passed prebuild, with permanent tests, public docs and full
 offline verification. This is complete at007c2e4. The later authorized review completed renewed merge/PR
-gates; two-account live qualification remains separate. No merge is authorized.
+gates; the subsequent explicit merge approval landed c4e6eac. Two-account live
+qualification remains separate and pending; see merge-result.md.
 
 ## Priority Level
 
@@ -164,7 +166,8 @@ branch, with3 live skips excluded. Its runtime matches the passing prebuild's ex
 code; new public method docstrings and permanent test organization are recorded in
 verification_outcomes.md. The subsequent round3 PR critique passes with0 High/Medium/Low
 and26 fresh histories; see pr-critic.md. The two previous rejected reviews remain
-historical. E1 and explicit merge approval remain separate.
+historical. User subsequently authorized the merge: c4e6eac, with750 merged-code
+checks+3 demos passing. E1 remains pending.
 
 **Earlier storage-cancellation false premise — preserved history.** prebuild_r3.md
 records the failed provider-boundary experiment; the later implementation fixed that

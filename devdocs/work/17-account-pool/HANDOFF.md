@@ -1,17 +1,18 @@
 ---
 model: gpt-6-astra
 effort: max
-status: OFFLINE_PR_REVIEW_PASS_LIVE_E1_PENDING
+status: MERGED_LIVE_E1_PENDING
 ---
-# #17 — renewed PR review passed; live qualification remains
+# #17 — merged into dev; live qualification remains
 
 User authorized renewed merge check → PR update → fresh PR critique. All three are
 complete for product007c2e4/folded plan7 on feat/17-account-pool. **Round3 PR decision:
 PASS offline,0 High/Medium/Low.** The5 fresh groups cover26 histories and pass in one
 complete attempt. No product changes, re-plan or deprecation were needed.
 
-**PR26 remains draft and unmerged.** Two-account live E1 is pending; any later merge
-still needs user go-ahead. Exactly two historical PR reviews were rejected; this third
+**PR26 is MERGED into dev at c4e6eac89341b204b2749e9d15add578e0706965** after the
+user’s explicit go-ahead. All750 merged-code checks+3 demos pass; two-account live E1
+is still pending. Issue17 remains open for that test. See [merge result](merge-result.md). Exactly two historical PR reviews were rejected; this third
 round passed. Preserve those reviews and all earlier failed/prebuild evidence.
 
 ## Authoritative records
@@ -63,12 +64,13 @@ native3.7 is unqualified. Dev2ddb852 verified unchanged at review start and verd
 existing bounded read allowances, then run plan7's read-only live step7. The user
 selected one-account/offline-first; no second account, login, join or allowance reset
 was inferred. Offline review is complete but cannot qualify actual service visibility
-or proxies. No extra redesign is prescribed by this passing review.
+or proxies. No extra redesign is prescribed by this passing review. The merged product can be
+used within the documented offline-qualified scope; live readiness remains unproven.
 
-Before any merge, obtain the user's explicit go-ahead, recheck current dev, and follow
-§7.6/§7.7: exclude work/inquiry/archaeology artifacts while preserving dev's existing
-docs and keeping this feature branch as archive. Test the merged product as required.
-Do not close issue17 or treat the draft PR as merged.
+The authorized merge followed §7.6/§7.7: devdocs were preserved exactly, all23 reviewed
+product paths landed, and this branch remains the archive. The complete merged-code
+suite passed before push. Do not re-merge PR26 or close issue17 as fully qualified
+until its remaining live gate is actually completed or explicitly re-scoped.
 
 Main checkout remains feat/7-group-operations with its untracked HANDOFF.md and todo.md
 unchanged. Duncan and unrelated work were not staged. The review/work artifacts are
