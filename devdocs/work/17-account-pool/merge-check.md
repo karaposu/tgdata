@@ -1,140 +1,129 @@
 ---
 model: gpt-6-astra
 effort: max
-status: PASS_FIDELITY_PR_REJECTED
-round: 2
+status: PASS_FIDELITY_PR_REVIEW_PENDING
+round: 3
+plan_revision: 7
 ---
-# Renewed merge check — #17
+# Renewed merge check — #17, plan7 implementation
 
-> Later in this review: pr-critic.md rejects the product with one Medium. This
-> fidelity PASS at1c04cf4 remains historical evidence, not permission to merge.
+**PASS for PR soundness review of the selected offline delivery.** Product007c2e4,
+verificationb62189c, against dev2ddb852d917998d003f9db863fce09a92e9c5712, verified
+unchanged on GitHub on2026-10-13. This establishes fidelity, not soundness, two-account
+live qualification or permission to merge. The prior two checks/rejected PR reviews
+remain historical; the previous check is preserved as merge-check_r2.md.
 
-**PASS for renewed PR review of the selected offline delivery.** Subject:
-producta63099e/evidence379a949 against current dev2ddb852, confirmed unchanged on
-GitHub on2026-10-13. This is fidelity, not the fresh PR soundness verdict or merge
-authorization. Two-account live E1 stays pending under the user's offline-first choice.
+Read together: triage (including implementation follow-up), description5, folded plan7,
+selected plan critic, P0, verification_outcomes.md, both prior PR rejections, the public
+outcome ownership finding, and the entire23-file product diff. Full controller/source/
+lifecycle/capture/state/observation/facade/batch/progress paths and all new tests, example
+and public docs were inspected, not only the latest commit.
 
-Read together: triage.md, desc.md revision4, folded step_by_step_impl_plan.md revision5,
-critic.md, prebuild.md, verification_restart.md, archived first PR rejection and failed
-r3 report, and the complete21-file product diff. Original routing description/plan and
-scoped retirement work remain relevant to retained behavior. Same warmed session;
-no delegated review. The old merge check is preserved as merge-check_r1.md.
+## 0 — Warmth, weight and model rule
 
-## 0 — Warmth, weight and §9
-
-Desc/triage name warmth at09e0277, an ancestor verified by the audit, backed by the
-completed foundation traverse and full relevant module reads. The current session
-carries that context and refreshed the complete controller, source, lifecycle,
-observations, pool state, shared facade and sync engine, plus shared/current-dev diffs
-and actual SDK/storage/progress failure paths. Triage remains feature-heavy and matches
-GitHub enhancement/heavy. No unrecorded new architecture-skill run is claimed.
+The same warmed session carries the foundation/public-ownership traverses and module
+reads, refreshed against the implementation. Recorded warmth09e0277 is an ancestor;
+the audit verifies the description/plan/critic/P0/product chain. No new architecture
+skill or delegated review is claimed. Feature-heavy fits the interaction of source
+cancellation, three durable namespaces and shared ordinary-client seams. Current
+GitHub enhancement/heavy labels agree; all open issue titles refreshed.
 
 Current turn metadata confirms **gpt-6-astra / max**, satisfying CONTRIBUTING §9's
-feature-path Astra/xhigh minimum. Model/effort are recorded here and in the prior
-plan/critic. PROJECT_SPECIFICS remains absent; actual repository test runners were used.
-All13 issue titles were refreshed. #7/#10 are merged; #17 remains open.
+feature-path Astra/xhigh minimum. PROJECT_SPECIFICS remains absent; actual repository
+runners apply. #7/#10 are already on dev. Main checkout, duncan and unrelated files
+remain untouched.
 
-## 0b — Diff scope
+## 0b — Scope and deviations
 
-The product diff has21 files: README, account-pool guide/example, small daily/backfill
-guide integration notes, package exports, AccountPool, pool_source/state/lifecycle/
-observation, shared progress facade, TgData delegation, batch/message values, sync/
-backfill error-data retention, test31/test39/storage cases and smoke README.
-All are within current and inherited triage territory. Feature-heavy is appropriate;
-no unreported product subsystem or automatic joining was introduced.
+The complete product has23 files (+5133/-137), including earlier router/retirement/
+storage work. Runtime: AccountPool; pool_source/state/lifecycle/observation/result;
+shared progress facade and TgData delegation; batch/message values; opt-in sync/backfill
+transport; package exports. Others: pool guide/example, README, daily/backfill references,
+smoke README, test31/39/40 and storage cases. All are within recorded triage/inherited
+scope. No joining, scheduler, distributed lease, global registry or raw-result store.
 
-The audit confirms15 adjacent modules are byte-identical to dev: connection engine,
-account operation, owned health, group operations, join budget/client, budget client,
-worker/protocol/engine, read budget, sync store, backfill state/values and legacy health.
-The10 moved public progress method bodies/signatures are AST-identical excluding
-explanatory docstrings. TgData retains its module-local backfill factory seam.
+Fifteen adjacent runtime modules are byte-identical to current dev. Ten moved public
+progress signatures/bodies are AST-identical excluding docstrings. TgData retains its
+module-local backfill factory seam. Every other changed branch path is devdocs. Under
+§7.6 work/inquiry/archaeology must stay out of any later merge while preserving dev's
+own documents; retain this feature branch as archive (§7.7).
 
-All additional changed paths are devdocs. Under §7.6 they stay on this feature archive
-and must be excluded from any later merge, preserving dev's existing copies. The
-GitHub branch diff includes those archive commits; they are not part of the21-file
-product landing. Main checkout, duncan and unrelated user files remain untouched.
+Recorded narrow deviations are acceptable: two daily/backfill guide clarifications;
+API docstrings/comments over P0; permanent combination of17 new+8 earlier probe groups;
+fixture import placement for direct execution; named demo captures retained for inspection.
+They change neither executable runtime nor test oracles.35 promoted helper/test bodies
+exactly match P0. No runtime correction or weakened assertion occurred during verification.
 
-## 1 — Implementation fidelity
+## 1 — Fidelity to folded revision7
 
-- Step1: ceda2bf integrates exact dev2ddb852 after P0. The sole batch conflict retains
-  current worker resolver plus pool-only cancellation-prefix option defaultFalse.
-- Step2: pool_lifecycle owns component outcomes, checkpoint/start/wait, retained joins,
-  expiring scopes and pool-only provider wrapping. No cancellation-count heuristic or
-  global supervisor. Native cleanup retains its separate non-cancelling policy.
-- Step3: pool_source keeps the source body holder on every completion path; unexpected
-  source cancellation stays local/unresolved. ObservationBuffer/PoolMonitor provide
-  bounded passive capture, loss count and all-state synchronous drain. Non-None pool
-  callbacks are explicitly refused; ordinary TgData health code is unchanged.
-- Step4: account controller and all configured async stores use that boundary; exclusive
-  operation entry and close reject live same-pool scopes before changing ownership.
-  State-only progress callers retain their own I/O independently of source lifetime.
-  Admission still needs definiteTrue, recovery exact tokens, and errors do not fail over.
-- Step5: shared interrupted-prefix conversion preserves already-validated records on
-  settlement/publication error or cancellation. Backfill exact-state reconciliation
-  remains unchanged; error data supplies no receipt or history-end proof.
-- Step6: test39 and storage cases are the permanent48-group composition; test31's
-  callback expectations change only for the planned API. Documentation explains
-  cancellation origin, provider roles, prefix/durability and passive event limits.
-- Step7: product/tests/docs a63099e separated from evidence379a949;725 executed offline
-  groups,3 demos, compilation/86 grammar checks pass. Full report and current files match.
-- Step8: E1 explicitly pending. No live qualification or account allowance reset is claimed.
+| Step | Implementation and evidence |
+|---|---|
+| P0 | Full combined candidate passed before production: actual SDK/SQLite/ledger,750 executed groups+3 demos and original-product negative controls. The local proxy sandbox failure was resolved by a full rerun with no runtime change. |
+| 1 | Required exact-type single-use PoolReadCapture, immutable snapshots, local binding/finality, bounded diagnostic names, prefix retention without retained task/exception graphs. |
+| 2 | _Invocation separates normal completion from caller stop address. _operation releases exclusivity then signals completion synchronously. Close stops/joins the exact invocation, never the application Task. |
+| 3 | BatchEngine attaches the actual record list after verified identity/entity resolution. Records append only after validation/media completion. Source body outcome is captured before monitor exit. |
+| 4 | Four public data APIs require capture=. One outer writer spans source and caller-owned publication; private readers never rebind. Replay offers actual pending data locally. Ordinary TgData omits the optional engine argument. |
+| 5 | Permanent25-group outcome suite plus migrated46/48-group pool suites, public docs and runnable demo explain wrapper/lifetime/receipt boundaries. |
+| 6 | Product007c2e4 separate from reportb62189c. Full actual-branch run:750 executed groups+3 demos,3 live skips excluded; compile/88 grammar files. Current hashes and P0 executable parity pass. |
+| 7 | E1 explicitly OPEN. Two-account live testing remains unexecuted under the user's one-account/offline-first choice. |
 
-No structural deviation. The reported local corrections are a P0 recovery fixture
-missing its first page and a verification collector that initially did not recognize
-three existing summary formats. Both retained semantic assertions and are documented;
-no runtime candidate repair occurred after P0. This audit corrected its own initial
-filename typo join_guard→join_client before passing, with no product change.
+All eight changed P0 runtime modules have exact executable AST parity; six have byte
+parity and two differ only in comments/docstrings. All88 Python hashes match the complete
+implementation run; compile/3.7 grammar rechecked. Runtime qualification remains
+Python3.11.10/Telethon1.45.0, not native3.7.
 
-## 2 — Does the rationale still hold?
+## 2 — Rationale still supported
 
-The full prebuild preceded integration/implementation and exercised actual SDK/SQLite/
-ledger/progress composition. A component's cancelled I/O and a caller stop now enter
-different paths; uncertainty remains in authoritative state. Data preservation no
-longer claims receipt durability. One private mechanism serves actual repeated pool
-source/provider instances while cleanup stays distinct. The original router and
-progress protocols remain appropriate under exclusive ownership and one source reader
-per group. A general distributed owner or automatic-join redesign is outside scope.
+Source/account completion, public preparation completion, caller cancellation, available
+data and durable acknowledgment are distinct facts. The code gives owned work an exact
+completion record and data an explicit caller owner. Progress retains its receipt/state
+authority. The source list avoids per-message whole-prefix copies; snapshots/finalization
+produce immutable batches on demand. Close does not acquire independent progress calls.
 
-E1 remains a real qualification limit, not a risk disguised as completed testing.
-Cooperative providers must settle subordinate work before returning. Passive events
-are bounded diagnostics, not authority. These limits are explicit in the public guide.
+This answers the demonstrated missing boundary while retaining tested routing, quota,
+recovery and progress schemas. Scope stays one owning process/event loop, exclusive
+sessions, trustworthy UTC and one source reader per group. Providers settle their own
+I/O without depending on control of their pool. Shutdown is cooperative; capture is
+in memory. Public docs state these limits and account-specific visible history.
+Synthetic wire cannot qualify real proxy/access/history assumptions; E1 remains open.
 
-## 3 — Critic findings answered
+## 3 — Findings answered
 
-The fresh plan critic's sole Medium (status-provider administrative reentry) is folded
-and implemented at AccountPool._operation and close. The actual48-group prebuild and
-permanent suite include45 refusal combinations across pool/daily/backfill providers,
-direct/task/wait_for control and positive foreign/expired-scope controls.
+The current plan critic's sole Medium concerns stale metadata across empty failover.
+The selected robust transition is implemented in _CaptureWriter.attempt/attach and the
+admitted _read loop: empty observation/error/account fields reset together, verified
+identity attaches to actual source data, and a complete prefix prevents another attempt.
+Test40 covers second-account success/failure, held settlement and identity refusal.
+No plan High/Medium or Low remains undisposed.
 
-The original PR's two Mediums were also answered: source outcome no longer comes from
-secondary observer task status, and arbitrary application observer execution has been
-removed from source lifetime. Same-pool detectable provider control is refused. r3's
-additional failed storage cancellation premise is addressed by owned provider calls
-and known-data retention, with actual before/after-commit cases. Native retirement
-and repeated-cancellation guarantees from the earlier rework remain covered. No plan
-High/Medium is left unanswered, and no Low was silently dropped. The fresh PR critic
-must still challenge soundness independently; this mapping is not its result.
+Historical dispositions remain concrete: arbitrary observer callbacks removed; actual
+component outcomes survive secondary reporting; source/provider cancellation provenance
+and retained native cleanup tested. PR round2's close-consumed cancellation payload is
+addressed by caller-owned capture and invocation completion. The upstream inquiry also
+challenged wrapper loss without close and application continuation after the library
+call. Those histories are in combined P0/permanent40. This mapping cannot substitute
+for fresh behavioral soundness review of the public composition.
 
-## 4 — Issue and PR state
+## 4 — Issue and PR status
 
-#17's fetched status accurately checks T/0–5 with committed evidence, leaves6/7 open,
-and explicitly separates completed offline steps from E1. Exactly one rejected PR
-review and one failed design prebuild are historical. This check completes step6 when
-committed/posted; step7 must remain pending until the fresh PR review is recorded.
+Fetched #17 accurately records plan7/product007c2e4/evidenceb62189c, checks T/0–5 and
+leaves6/7 open. It reports exactly two rejected PR rounds, preserves history and keeps
+E1 pending. This check's commit/posting completes pipeline6;7 stays pending until the
+fresh PR critique is committed and posted.
 
-PR26's description still cites the earlier619-check/14-file delivery and old re-plan
-endpoint. Refresh it to this final21-file product and725-check evidence before the
-fresh review; retain Closes#17, selected existing-access scope, E1 and archive exclusion.
-Keep it draft pending that review. No merge or live operation is authorized by this gate.
+PR26 is draft; its stale body still cites plan5/producta63099e/725 checks. Update it to
+this23-file product, required captures/private completion,750 checks and this check.
+Preserve Closes#17, selected existing-access scope, E1, archive exclusion and user
+approval for merge. No live call or merge is part of this task.
 
 ## Evidence
 
-`python devdocs/work/17-account-pool/probes/review2/merge_audit.py` → PASS:
-11 ancestry checks,21 product paths,15 adjacent modules unchanged,8 production files
-identical to P0,86 current Python hashes match verification,10 moved public methods
-AST-identical,725 executed checks/3 skips/3 demos backed by logs.
-[Exact audit](evidence/review2/merge-audit.json).
+`python devdocs/work/17-account-pool/probes/review3/merge_audit.py` → PASS:
+11 ancestry assertions,23 product paths,15 adjacent modules unchanged,8 runtime AST
+matches,88 tested hashes/compile/grammar,35 identical promoted functions,10 moved public
+methods;30 saved process logs substantiate750 executed groups/3 excluded skips/3 demos.
+[Exact audit and hashes](evidence/review3/merge-audit.json).
 
-The implementation suite is not rerun without changes just to inflate evidence;
-fresh adversarial behavioral probes belong to the next PR critique. Any finding
-there follows §7.3/§7.4, regardless of this fidelity PASS.
+The full implementation suite is reused because source/test hashes are unchanged.
+Fresh adversarial probes belong to the PR critique. This fidelity PASS cannot waive
+CONTRIBUTING §7.3's rejection rule if that review finds any High or Medium.
