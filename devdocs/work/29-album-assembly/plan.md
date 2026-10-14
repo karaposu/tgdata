@@ -1,5 +1,9 @@
 # Plan entry point — issue #29
 
-**Revision2 is deprecated after PR35’s first fresh critique rejected it.** Read [pr-critic.md](pr-critic.md) before further implementation.
+Current: [step_by_step_impl_plan.md](step_by_step_impl_plan.md), **revision3**, re-planned after PR35’s first rejection. It has not yet received a fresh plan critique or fold.
 
-Historical folded plan: [DEPRECATED_step_by_step_impl_plan.md](DEPRECATED_step_by_step_impl_plan.md). The unresolved receiver admission/replay contract is recorded in desc.md. Next is revision3 re-planning under CONTRIBUTING §7.4; there is no current executable plan.
+The settled planning contract and six feasibility histories are in [replan-r3-contract.md](replan-r3-contract.md). Production code remains the rejected revision2 implementation.
+
+Historical: [deprecated revision2 plan](DEPRECATED_step_by_step_impl_plan.md), [original plan critique](critic_r1.md), and [first PR critique](pr-critic.md). The previous plan critique/prompt were archived so task-impl cannot accidentally fold them into the new plan.
+
+Next: fresh critic-d → fold revision4 → full combined prebuild → implementation.
