@@ -94,7 +94,7 @@ class AlbumReceiver:
                 db.execute('CREATE INDEX album_members_by_post ON album_members(collection, post_id, message_id)')
                 db.execute('INSERT INTO album_meta VALUES (?, ?)', ('album-receiver', 2))
             self._validate_schema(db)
-            found = db.execute('SELECT 1 FROM album_collections WHERE collection=?', (collection,)).fetchone()
+            found = db.execute('SELECT 1 FROM album_collections WHERE collection COLLATE BINARY=?', (collection,)).fetchone()
             if create:
                 if found:
                     raise ReceiverError('collection already exists; reopen it explicitly')
@@ -149,7 +149,7 @@ class AlbumReceiver:
 
     def _validate(self, db):
         self._validate_schema(db)
-        if db.execute('SELECT 1 FROM album_collections WHERE collection=?', (self.collection,)).fetchone() is None:
+        if db.execute('SELECT 1 FROM album_collections WHERE collection COLLATE BINARY=?', (self.collection,)).fetchone() is None:
             raise ReceiverError('known collection is missing')
 
     def _stats(self, db, key):
@@ -157,14 +157,14 @@ class AlbumReceiver:
             'SELECT COUNT(*), COALESCE(SUM(length(CAST(record AS BLOB))),0), '
             "COALESCE(SUM(typeof(record)!='text' OR typeof(record_sha256)!='text' "
             "OR typeof(chat_id)!='integer' OR typeof(message_id)!='integer'),0) "
-            'FROM album_members WHERE collection=? AND post_id=?', (self.collection, key)).fetchone()
+            'FROM album_members WHERE collection COLLATE BINARY=? AND post_id COLLATE BINARY=?', (self.collection, key)).fetchone()
         if invalid:
             raise ReceiverError('stored member has invalid field types')
         return count, amount
 
     def _read_members(self, db, key):
         return db.execute('SELECT chat_id, message_id, record, record_sha256 FROM album_members '
-                          'WHERE collection=? AND post_id=? ORDER BY message_id', (self.collection, key))
+                          'WHERE collection COLLATE BINARY=? AND post_id COLLATE BINARY=? ORDER BY message_id', (self.collection, key))
 
     def _load(self, db, key, *, max_bytes=None, stats=None):
         maximum = self.max_bytes if max_bytes is None else max_bytes
@@ -210,7 +210,7 @@ class AlbumReceiver:
             "SELECT typeof(record)='text' AND CAST(record AS BLOB)=?, "
             "typeof(post_id)='text' AND post_id COLLATE BINARY=?, "
             "typeof(record_sha256)='text' AND record_sha256 COLLATE BINARY=? "
-            'FROM album_members WHERE collection=? AND chat_id=? AND message_id=?',
+            'FROM album_members WHERE collection COLLATE BINARY=? AND chat_id=? AND message_id=?',
             (encoded.encode('utf-8'), key, digest, self.collection, chat, ident)).fetchone()
 
     def _previous(self, db, keys, input_bytes):
@@ -251,7 +251,7 @@ class AlbumReceiver:
         with self._open() as db:
             db.execute('BEGIN IMMEDIATE')
             self._validate(db)
-            received = db.execute('SELECT 1 FROM album_receipts WHERE collection=? AND batch_id=?',
+            received = db.execute('SELECT 1 FROM album_receipts WHERE collection COLLATE BINARY=? AND batch_id COLLATE BINARY=?',
                                   (self.collection, batch_id)).fetchone() is not None
             if received:
                 for member in prepared:

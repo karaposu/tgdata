@@ -8,6 +8,7 @@ test_byte_boundary_lost_ack_confirms_without_projection_or_write (__main__.Album
 test_byte_boundary_process_exit_before_and_after_receiver_commit (__main__.AlbumTests.test_byte_boundary_process_exit_before_and_after_receiver_commit) ... ok
 test_cancellation_preserves_saved_receiver_and_source_cursor (__main__.AlbumTests.test_cancellation_preserves_saved_receiver_and_source_cursor) ... ok
 test_cleanup_preserves_original_failure (__main__.AlbumTests.test_cleanup_preserves_original_failure) ... ok
+test_collection_lookup_uses_exact_keys_not_column_collation (__main__.AlbumTests.test_collection_lookup_uses_exact_keys_not_column_collation) ... ok
 test_committed_source_publication_error_requires_normal_pending_replay (__main__.AlbumTests.test_committed_source_publication_error_requires_normal_pending_replay) ... ok
 test_competing_first_accept_then_exact_confirmation (__main__.AlbumTests.test_competing_first_accept_then_exact_confirmation) ... ok
 test_competing_writer_refuses_then_reads_current_prior (__main__.AlbumTests.test_competing_writer_refuses_then_reads_current_prior) ... ok
@@ -56,7 +57,7 @@ test_successful_commit_then_close_error_can_confirm (__main__.AlbumTests.test_su
 test_transaction_rolls_back_all_posts_and_marker (__main__.AlbumTests.test_transaction_rolls_back_all_posts_and_marker) ... ok
 
 ----------------------------------------------------------------------
-Ran 56 tests in 4.789s
+Ran 57 tests in 4.898s
 
 OK
 Lost acknowledgment replayed without another source read.

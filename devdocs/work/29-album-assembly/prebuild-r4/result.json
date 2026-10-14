@@ -1,14 +1,14 @@
 {
   "result": "PASS",
   "runtime": "3.11.10",
-  "candidate": "/private/tmp/tgdata29-r4-candidate-jriru1l8",
+  "candidate": "/private/tmp/tgdata29-r4-candidate-b7_50hk6",
   "results": [
     {
       "name": "combined",
       "passed": true,
       "exit_code": 0,
       "log": "combined.txt",
-      "cases": 56
+      "cases": 57
     },
     {
       "name": "test_19_message_batches",
@@ -110,8 +110,8 @@
     }
   ],
   "sha256": {
-    "album_assembly.py": "cc9b3d2ae4791f05234d02d3860d442334c967d1bc35306bb25730bef1380e90",
-    "test_42_album_assembly.py": "e918f6e1db3d626e1e6367e92fce8598e8abaa01b91826588726fc9cd147634b"
+    "album_assembly.py": "64a850f620154024e4f5bc192d91affbe6d85068bdc6ab3d4747b62bd7d09ce3",
+    "test_42_album_assembly.py": "97ba872e011e7951cf15cebfdb0fc1f2c3eb8a1f2f470e820bc4895dc33e40a6"
   },
   "unchanged_core_sha256": "5ba3a753719a52fb6ffb2f87d8bd7f08fd77f8a859053eeb14ef98e989e22de9"
 }

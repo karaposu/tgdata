@@ -1,0 +1,117 @@
+{
+  "result": "PASS",
+  "runtime": "3.11.10",
+  "candidate": "/private/tmp/tgdata29-r4-candidate-jriru1l8",
+  "results": [
+    {
+      "name": "combined",
+      "passed": true,
+      "exit_code": 0,
+      "log": "combined.txt",
+      "cases": 56
+    },
+    {
+      "name": "test_19_message_batches",
+      "passed": true,
+      "exit_code": 0,
+      "log": "test_19_message_batches.txt",
+      "cases": null
+    },
+    {
+      "name": "test_22_daily_continuation",
+      "passed": true,
+      "exit_code": 0,
+      "log": "test_22_daily_continuation.txt",
+      "cases": null
+    },
+    {
+      "name": "test_23_fixed_windows",
+      "passed": true,
+      "exit_code": 0,
+      "log": "test_23_fixed_windows.txt",
+      "cases": null
+    },
+    {
+      "name": "test_24_backfill_state",
+      "passed": true,
+      "exit_code": 0,
+      "log": "test_24_backfill_state.txt",
+      "cases": null
+    },
+    {
+      "name": "test_25_backfill_delivery",
+      "passed": true,
+      "exit_code": 0,
+      "log": "test_25_backfill_delivery.txt",
+      "cases": null
+    },
+    {
+      "name": "test_26_backfill_completion",
+      "passed": true,
+      "exit_code": 0,
+      "log": "test_26_backfill_completion.txt",
+      "cases": null
+    },
+    {
+      "name": "test_27_backfill_pacing",
+      "passed": true,
+      "exit_code": 0,
+      "log": "test_27_backfill_pacing.txt",
+      "cases": null
+    },
+    {
+      "name": "test_28_backfill_controls",
+      "passed": true,
+      "exit_code": 0,
+      "log": "test_28_backfill_controls.txt",
+      "cases": null
+    },
+    {
+      "name": "test_29_backfill_public",
+      "passed": true,
+      "exit_code": 0,
+      "log": "test_29_backfill_public.txt",
+      "cases": null
+    },
+    {
+      "name": "test_30_backfill_integration",
+      "passed": true,
+      "exit_code": 0,
+      "log": "test_30_backfill_integration.txt",
+      "cases": null
+    },
+    {
+      "name": "test_31_account_pool",
+      "passed": true,
+      "exit_code": 0,
+      "log": "test_31_account_pool.txt",
+      "cases": null
+    },
+    {
+      "name": "test_39_pool_lifecycle",
+      "passed": true,
+      "exit_code": 0,
+      "log": "test_39_pool_lifecycle.txt",
+      "cases": null
+    },
+    {
+      "name": "test_40_pool_outcomes",
+      "passed": true,
+      "exit_code": 0,
+      "log": "test_40_pool_outcomes.txt",
+      "cases": null
+    },
+    {
+      "name": "demo",
+      "passed": true,
+      "exit_code": 0,
+      "log": "demo.txt",
+      "cases": null
+    }
+  ],
+  "sha256": {
+    "album_assembly.py": "cc9b3d2ae4791f05234d02d3860d442334c967d1bc35306bb25730bef1380e90",
+    "test_42_album_assembly.py": "e918f6e1db3d626e1e6367e92fce8598e8abaa01b91826588726fc9cd147634b"
+  },
+  "unchanged_core_sha256": "5ba3a753719a52fb6ffb2f87d8bd7f08fd77f8a859053eeb14ef98e989e22de9"
+}

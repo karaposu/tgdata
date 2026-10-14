@@ -6,7 +6,7 @@ effort: unknown
 
 **Critic folded:** 2026-10-14 — 0 additional mitigations (0 implementation steps changed, 0 added). Fresh critique confirms the revised contract and requires the complete candidate prebuild before production step1.
 
-**Status:** reviewed revision4; full combined prebuild pending. The user authorized fold → prebuild → implementation; no production adoption until the prebuild passes. The previous folded plan remains in DEPRECATED_step_by_step_impl_plan.md.
+**Status:** revision4 implemented and verified. Full combined prebuild passed before adoption; see implementation-r4.md and verification-r4/result.json. The product remains subject to renewed merge check and fresh PR critique. The previous folded plan remains in DEPRECATED_step_by_step_impl_plan.md.
 
 **Explicit inputs:** desc.md, pr-critic.md R1, its three counterexamples, replan-r3-contract.md and six planning-probe histories. The prior implementation remains on the draft PR; this plan changes the receiver contract, not merely its numeric limits. Current source base is dev e5cdad7, product head19d421f / equivalent archive product e35392c. One rejected PR critique exists; the rejection guard does not require another traverse.
 

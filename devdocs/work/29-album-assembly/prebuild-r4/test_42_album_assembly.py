@@ -902,6 +902,29 @@ class AlbumTests(unittest.TestCase):
             self.assertEqual((await normal.status(CHAT)).after_id,1)
         asyncio.run(run())
 
+    def test_collection_lookup_uses_exact_keys_not_column_collation(self):
+        path=self.root/'collations.db'
+        with sqlite3.connect(str(path)) as db:
+            for table,columns in receiver_module._SCHEMA.items():
+                if table=='album_collections':
+                    columns='collection TEXT COLLATE NOCASE NOT NULL, PRIMARY KEY(collection COLLATE BINARY)'
+                else:
+                    columns=columns.replace('collection TEXT NOT NULL','collection TEXT COLLATE NOCASE NOT NULL')
+                    columns=columns.replace('PRIMARY KEY(collection,','PRIMARY KEY(collection COLLATE BINARY,')
+                db.execute('CREATE TABLE {} ({})'.format(table,columns))
+            db.execute('CREATE INDEX album_members_by_post ON album_members(collection COLLATE BINARY,post_id,message_id)')
+            db.execute('INSERT INTO album_meta VALUES (?,?)',('album-receiver',2))
+            db.execute('INSERT INTO album_collections VALUES (?)',('Tenant',))
+        raw=batch(record(1));owner=AlbumReceiver(path,'Tenant');owner.accept(raw)
+        with self.assertRaises(ReceiverError):AlbumReceiver(path,'tenant')
+        distinct=AlbumReceiver(path,'tenant',create=True)
+        self.assertIsNone(distinct.load(album_post_ids(raw)[0]))
+        distinct.accept(raw)
+        confirm_only(owner,raw);confirm_only(distinct,raw)
+        with sqlite3.connect(str(path)) as db:
+            self.assertEqual(db.execute('SELECT collection FROM album_receipts ORDER BY collection COLLATE BINARY').fetchall(),
+                             [('Tenant',),('tenant',)])
+
 
 def crash(path, batch_path, mode, cap=None):
     original = sqlite3.connect
