@@ -50,7 +50,7 @@ from .utils import (
 # Progress tracking
 from .progress import ProgressTracker
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
 
 __all__ = [
     # Main class
