@@ -1,0 +1,174 @@
+TEST: test_fixed_owner_event_and_snapshot_survive_stale_cache
+TEST: test_query_unknown_validation_and_no_io
+TEST: test_snapshot_nested_values_are_independent
+TEST: test_two_accounts_keep_independent_conditions
+health: banned [account] USER_DEACTIVATED_BAN — call=read account=test account
+TEST: test_instances_do_not_share_even_the_same_owner
+TEST: test_mismatch_inside_legacy_call_has_no_owner
+TEST: test_unverified_auth_error_and_wrappers_are_excluded
+TEST: test_setup_rpc_is_not_an_owned_or_legacy_condition
+TEST: test_other_legacy_error_after_isolation_still_reports
+TEST: test_owned_success_cannot_recover_enclosing_legacy_group
+TEST: test_local_exception_with_rpc_cause_does_not_manufacture_health
+TEST: test_caught_rpc_stays_recorded_after_earlier_success
+health: logged out [account] AUTH_KEY_UNREGISTERED — call=read account=test account
+TEST: test_nested_budget_verification_reports_once
+health: logged out [account] AUTH_KEY_UNREGISTERED — call=read account=test account
+TEST: test_ambient_report_and_sleep_do_not_create_owned_facts
+TEST: test_real_multi_error_leaves_record_even_when_caught
+TEST: test_successful_list_recovers_matching_request_wait
+TEST: test_foreign_client_cannot_supply_evidence_or_errors
+TEST: test_inherited_child_task_cannot_record_or_confirm
+TEST: test_inactive_inherited_context_cannot_record
+TEST: test_self_proof_and_metadata_alone_never_recover_group
+TEST: test_confirmation_requires_current_lifetime_and_request_evidence
+TEST: test_caught_identity_loss_vetoes_prior_group_and_account_recovery
+health: banned [account] USER_DEACTIVATED_BAN — call=read account=test account
+TEST: test_caught_auth_loss_vetoes_prior_group_recovery
+health: logged out [account] AUTH_KEY_UNREGISTERED — call=read account=test account
+TEST: test_restriction_needs_matching_method_and_post_proof_work
+health: restricted [account] PEER_FLOOD — call=read account=test account
+TEST: test_same_call_cannot_recover_its_own_wait
+TEST: test_wait_recovery_requires_matching_request
+TEST: test_older_work_cannot_clear_newer_account_condition
+health: banned [account] USER_DEACTIVATED_BAN — call=read account=test account
+TEST: test_older_work_cannot_clear_newer_group_condition
+TEST: test_older_work_cannot_clear_newer_request_wait
+TEST: test_operation_order_starts_before_authentication
+health: banned [account] USER_DEACTIVATED_BAN — call=read account=test account
+TEST: test_later_proof_can_recover_account_condition
+health: banned [account] USER_DEACTIVATED_BAN — call=read account=test account
+TEST: test_parent_reported_flags_stay_in_same_monitor_and_task
+health: banned [account] USER_DEACTIVATED_BAN — call=inner account=?
+health: banned [account] USER_DEACTIVATED_BAN — call=same account=?
+TEST: test_sync_async_and_cancelled_callbacks_preserve_original_error
+health_callback raised — events keep flowing; further failures are logged at DEBUG
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/owned_health.py", line 206, in _notify
+    result = self.callback(event)
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/smoke_tests/test_33_owned_health.py", line 511, in body
+    raise kind('observer')
+ValueError: observer
+health_callback raised — events keep flowing; further failures are logged at DEBUG
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/owned_health.py", line 206, in _notify
+    result = self.callback(event)
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/smoke_tests/test_33_owned_health.py", line 511, in body
+    raise kind('observer')
+asyncio.exceptions.CancelledError: observer
+health_callback raised — events keep flowing; further failures are logged at DEBUG
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/owned_health.py", line 208, in _notify
+    await result
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/smoke_tests/test_33_owned_health.py", line 513, in async_callback
+    body(event)
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/smoke_tests/test_33_owned_health.py", line 511, in body
+    raise kind('observer')
+ValueError: observer
+health_callback raised — events keep flowing; further failures are logged at DEBUG
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/owned_health.py", line 208, in _notify
+    await result
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/smoke_tests/test_33_owned_health.py", line 513, in async_callback
+    body(event)
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/smoke_tests/test_33_owned_health.py", line 511, in body
+    raise kind('observer')
+asyncio.exceptions.CancelledError: observer
+TEST: test_callback_failure_does_not_replace_successful_result
+health_callback raised — events keep flowing; further failures are logged at DEBUG
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/owned_health.py", line 206, in _notify
+    result = self.callback(event)
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/smoke_tests/test_33_owned_health.py", line 523, in callback
+    raise ValueError('observer')
+ValueError: observer
+TEST: test_notifications_wait_for_source_disconnect
+TEST: test_cleanup_failure_keeps_primary_and_no_extra_health
+Account operation cleanup failed (AuthKeyUnregisteredError)
+TEST: test_cancellation_waits_for_cleanup_and_preserves_observation
+TEST: test_callback_reentry_records_without_recursive_delivery
+TEST: test_close_retires_pending_notifications
+health_callback raised — events keep flowing; further failures are logged at DEBUG
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/owned_health.py", line 208, in _notify
+    await result
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/smoke_tests/test_33_owned_health.py", line 611, in callback
+    await asyncio.Event().wait()
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/locks.py", line 213, in wait
+    await fut
+asyncio.exceptions.CancelledError
+TEST: test_callback_can_close_without_awaiting_itself
+TEST: test_reporting_failure_does_not_replace_rpc
+health reporting failed — the operation itself is unaffected; further failures are logged at DEBUG
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/connection_engine.py", line 124, in __call__
+    result = await super().__call__(request, ordered=ordered,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/connection_engine.py", line 94, in __call__
+    return await super().__call__(request, ordered=ordered)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/lib/python3.11/site-packages/telethon/client/users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/join_client.py", line 107, in _call
+    return await super()._call(sender, request, ordered=ordered,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/budget_client.py", line 116, in _call
+    return await super()._call(sender, request, ordered=ordered,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/lib/python3.11/site-packages/telethon/client/users.py", line 92, in _call
+    result = await future
+             ^^^^^^^^^^^^
+telethon.errors.rpcerrorlist.ChannelPrivateError: The channel specified is private and you lack permission to access it. Another reason may be that you were banned from it (caused by GetHistoryRequest)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/health.py", line 670, in note_rpc_error
+    call.note_rpc_error(client, exc)
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/owned_health.py", line 107, in note_rpc_error
+    event = self.monitor._record(finding, self, 'rpc')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/unittest/mock.py", line 1124, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/unittest/mock.py", line 1128, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/unittest/mock.py", line 1183, in _execute_mock_call
+    raise effect
+ValueError: observer bug
+TEST: test_r4_wrapped_wait_recovers_on_matching_request
+TEST: test_r4_distinct_waits_and_namespaces
+TEST: test_r4_nested_envelopes_match_leaf
+TEST: test_r4_repeated_identity_is_not_refused_action_success
+health: restricted [account] PEER_FLOOD — call=read account=test account
+TEST: test_r4_fresh_legacy_rpc_precedes_old_neutral_context
+TEST: test_r4_unverified_child_error_is_not_parent_health
+TEST: test_r4_unwrapped_explicit_source_stays_neutral
+TEST: test_r4_changed_batch_input_cannot_invent_recovery
+TEST: test_r4_request_keys_bound_envelopes_and_keep_unknown_types
+TEST: test_r4_capture_does_not_consume_lazy_input_or_reuse_old_binding
+TEST: test_r4_restriction_replacement_uses_the_new_refused_request
+health: restricted [account] PEER_FLOOD — call=read account=test account
+health: restricted [account] PEER_FLOOD — call=read account=test account
+TEST: test_r4_unknown_refusal_key_never_reuses_an_old_key
+health: restricted [account] PEER_FLOOD — call=read account=test account
+health: restricted [account] PEER_FLOOD — call=read account=test account
+TEST: test_r4_restriction_does_not_recover_in_its_own_call
+health: restricted [account] PEER_FLOOD — call=read account=test account
+TEST: test_r4_older_action_success_does_not_clear_newer_restriction
+health: restricted [account] PEER_FLOOD — call=read account=test account
+TEST: test_r4_identity_request_refusal_has_its_own_positive_recovery
+health: restricted [account] PEER_FLOOD — call=read account=test account
+TEST: test_r4_budget_proof_without_admitted_read_cannot_recover_read
+health: restricted [account] PEER_FLOOD — call=read account=test account
+TEST: test_r4_implicit_context_before_isolation_is_not_adopted
+TEST: test_r4_forwarded_preproof_wrappers_remain_neutral
+TEST: test_r4_isolated_sdk_multierror_leaves_remain_neutral
+TEST: test_r4_neutral_metadata_failures_and_cycles_preserve_outcomes
+TEST: test_r4_real_multierror_partial_success_is_not_recovery_evidence
+Passed: 62/62

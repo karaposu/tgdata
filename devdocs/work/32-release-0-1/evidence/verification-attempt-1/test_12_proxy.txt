@@ -1,0 +1,55 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/smoke_tests/test_12_proxy.py", line 367, in <module>
+    sys.exit(asyncio.run(main()))
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/smoke_tests/test_12_proxy.py", line 357, in main
+    results.append(await asyncio.wait_for(test(), timeout=90))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/smoke_tests/test_12_proxy.py", line 276, in test_refusing_proxy
+    relay = await Socks5Relay(forward=False).start()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-release-0.1-evidence/candidate/tgdata/smoke_tests/test_12_proxy.py", line 77, in start
+    self.server = await asyncio.start_server(self._handle, "127.0.0.1", 0)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/streams.py", line 84, in start_server
+    return await loop.create_server(factory, host, port, **kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/base_events.py", line 1536, in create_server
+    raise OSError(err.errno, msg) from None
+PermissionError: [Errno 1] error while attempting to bind on address ('127.0.0.1', 0): operation not permitted
+Proxy Support Tests
+============================================================
+config (items 6–7): /var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/tgdata01-no-live-1y6qq_jc/MISSING_CONFIG.ini
+proxy library installed: True
+
+TEST 1: proxy URL parsing and masking...
+✓ socks5 / socks4 / http parsed; password decoded and masked; 7 bad forms refused
+
+TEST 2: config loading...
+✓ No proxy key: direct, exactly as before
+✓ proxy = none: direct
+✓ require_proxy = true with no proxy: refused before any connection
+✓ require_proxy = maybe: refused
+✓ Quoted proxy with an inline comment parsed; password absent from repr
+
+TEST 3: every client is built with the proxy...
+✓ Main and pool clients carry the proxy; a direct config carries none; health shows it masked
+
+TEST 4: a dead proxy fails — no fallback to a direct connection...
+✗ Dead-proxy test failed: PermissionError: [Errno 1] Operation not permitted
+
+TEST 5: a proxy that refuses the tunnel fails, and the attempt went to the proxy...

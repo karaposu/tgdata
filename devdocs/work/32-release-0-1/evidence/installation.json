@@ -1,0 +1,7 @@
+{
+  "result": "PASS",
+  "version": "0.1",
+  "imported_from": "/private/tmp/tgdata-release-0.1-evidence/installed/tgdata/__init__.py",
+  "public_apis": true,
+  "worker_entrypoint": true
+}
