@@ -6,7 +6,7 @@ A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
 - [x] Surfacing
-- [ ] Sensemaking
+- [x] Sensemaking
 - [ ] Decomposition
 - [ ] Innovation
 - [ ] Critique
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Sensemaking
+Decomposition
 ## Relationships
 - RELATED: ../../29-album-assembly/traverse/ on retained archive branch feat/29-album-assembly — album/receiver contract prerequisite; product merged.
 ## History
@@ -29,3 +29,4 @@ Sensemaking
 - 2026-10-15_00-24: Routelister complete:9 concept identities,6 core routes; both canonical map/index saved. Checker unavailable; manual6/6. Next:iteration assessment. Critique still requires context/barrier refinement.
 - 2026-10-15_00-25: Iteration1 assessed: original question not fully answered; hidden known text under album expansion. Preserved six outputs as *_iter1.md at root, kept articulation and _route index. Iteration2 focuses on selection closure and temporal barriers. Next:Surfacing.
 - 2026-10-15_00-26: Iteration2 surfacing:9 narrowed items/5 regions, no new inaccessible context. Manual8/8; checker absent. Next:Sensemaking.
+- 2026-10-15_00-28: Iteration2 sensemaking: scope must account for known timeline events; original-member interruption distinguished from post display order.3 focused ambiguity counters; manual8/8. Next:Decomposition.
