@@ -9,7 +9,7 @@ A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
 - [x] Surfacing
-- [ ] Sensemaking
+- [x] Sensemaking
 - [ ] Decomposition
 - [ ] Innovation
 - [ ] Critique
@@ -22,7 +22,7 @@ A → Su → S → D → I → C → R (always)
 ACTIVE
 
 ## Next Discipline
-Sensemaking
+Decomposition
 
 ## History
 - 2026-10-14_14-02: Created in the issue's work-folder traverse/ per CONTRIBUTING §5. Articulation HIGH-PROCEED; I1; four variants. Manual structure10/10 (raw input, itemize, MQ questions/shapes, MQ2 axes, MQA, tuple, literal/WHY, bounded variants, nine-mode check, verdict). Derivation7/7 source bundles copied without dropping ambiguity; structural_check.sh absent. Next:Surfacing. No later discipline output drafted.
@@ -42,3 +42,5 @@ Sensemaking
 - 2026-10-14_15-00: Iteration1 assessed: identity/immutable observations/pure combination survive; complete assembly needs explicit known-state reopening and collection-scoped acceptance. Question not fully answered on I1/V1+V3 receiver behavior. Preserved six prior outputs as *_iter1.md; articulation/framing and persistent route index remain. Iteration2 focus: demonstrate safe creation/reopen, authoritative absence and commit/replay using current SDK/value/SQLite seams without a new source lifecycle. Next:Surfacing.
 
 - 2026-10-14_15-04: Surfacing2 complete;7 items/8 real existing-component checks. Manual input/trace/tags/recency/coverage/frontier/telemetry structure passed. Next:Sensemaking.
+
+- 2026-10-14_15-08: Sensemaking2 complete;SV1–SV6, six inherited/new counter-tests, eight perspectives plus frame-exit. Manual structural checks passed; missing-store recovery refined without a new source lifecycle. Next:Decomposition.
