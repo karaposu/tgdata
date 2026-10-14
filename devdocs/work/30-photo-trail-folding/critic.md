@@ -75,10 +75,10 @@ After any unknown/mixed post, disable all subsequent folding in that chat for th
 ### Mitigation — Robust
 Track chronology using each raw member's own positive sender ID and timestamp, independently of the enclosing post's eligible owner. Preserve the existing whole-post eligibility/barrier rules. Add the reproduced mixed-user case and a partly missing-user variant; both must keep regressed text/photo separate. Keep ordinary subsequent monotone new anchors working as a positive control. State this distinction explicitly in Steps2/4 and the shared relation validator.
 **Why this is robust:** closes the information-loss point before eligibility filters can discard it; one local pass and directly targeted tests cover the actual mechanism without changing ownership or scope.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* The raw member already carries the needed positive sender; retaining that evidence in one local pass closes the reproduced case. No other current feature shares this exact per-user inference chronology policy, so a shared framework adds extent without established reach.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -88,9 +88,14 @@ Extract a shared raw-message chronology/evidence abstraction for multiple future
 
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* Revisit only when a second implemented inference consumer needs identical chronology/barrier semantics. MessageBatch format validation, album membership and history-window filtering are not interchangeable consumers of this policy.
 
 ## Compatibility, Complexity and Qualification Limits
 The plan is specific about new wire fields, relation recomputation, conservative barriers, exact count units, immutable caches and selected-policy propagation. Existing raw/album/source files and schema2 acceptance remain byte-identical. No framework, client lifecycle, new persistence authority or deployment is necessary. Python3.7 grammar checks are correctly distinguished from native execution. Strict view failure can inconvenience callers but cannot silently change their requested scope; that is an intentional contract, not an extra finding.
 
 One Medium, zero High, zero Low. Phase2 complete. Phase3 selection follows separately. No planning blocker or plan deprecation is added; the full candidate experiment remains pending.
+
+## Phase3 Selection
+R1 Robust selected and elegant; no quick or last-resort choice. Compared actual neighboring modules: message_batch.py validates format/within-batch IDs, album.py groups explicit membership, history_window.py constrains dates. None needs the same per-user heuristic chronology, so a shared class is not established. The local correction remains useful if future reuse appears. One mitigation affects Step2 and Step4; the same relation function validates Step1 values. No new architectural step or execution blocker.
+
+Next under the user-provided task-impl sequence: complete isolated candidate experiment using revision1 plus selected R1 → record actual result → formal Fold → adopt exact candidate → Verify. Do not re-critique after folding.
