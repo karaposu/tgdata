@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Combined prebuild — PASS
 
@@ -13,3 +13,5 @@ Passing histories include every partition/reverse order of a four-member album; 
 First attempt:33/34 passed; the backfill fixture's end date was later than its injected creation clock, and the real engine correctly refused a future window. The fixture clock was changed to two hours after the observed message time, leaving the intended closed window unchanged. No production or candidate algorithm changed. Native SDK clipping, cleanup and actual exhausted-budget histories were then added to complete coverage; final37/37 passed. attempt-1.txt/json preserve the failed fixture evidence.
 
 The architecture falsifier did not occur: no raw mutation, receipt substitution, guessed completeness, extra source lifecycle or lost observed member was required. Result PASS permits the selected mitigation fold and adoption of the candidate. Tests do not certify arbitrary external storage corruption, hardware power-loss behavior or distributed source ownership.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](../model-effort-verification.md).

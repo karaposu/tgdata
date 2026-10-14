@@ -1,0 +1,378 @@
+{
+  "result": "VERIFIED",
+  "required": {
+    "model": "gpt-6-astra",
+    "effort": "xhigh"
+  },
+  "source": "Active-thread local Codex rollout: turn_context metadata and matching successful git commit tool outputs. No raw messages or credentials exported.",
+  "evidence_scope": {
+    "first_context": "2026-10-14T10:45:42.584Z",
+    "last_context": "2026-10-14T20:17:30.603Z",
+    "context_records": 8,
+    "matched_feature_commits": 39
+  },
+  "contexts": [
+    {
+      "timestamp": "2026-10-14T10:45:42.584Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "timestamp": "2026-10-14T12:17:59.284Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "timestamp": "2026-10-14T14:42:04.568Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "timestamp": "2026-10-14T16:16:39.342Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "timestamp": "2026-10-14T18:55:04.790Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "timestamp": "2026-10-14T19:25:31.907Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "timestamp": "2026-10-14T19:27:57.820Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "timestamp": "2026-10-14T20:17:30.603Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    }
+  ],
+  "aborted_preceding_turn": {
+    "started": "2026-10-14T10:45:34.425Z",
+    "model": "gpt-6.1-sol",
+    "effort": "max",
+    "assistant_items": 0,
+    "tool_calls": 0,
+    "aborted_at": "2026-10-14T10:45:35.563Z"
+  },
+  "commits": [
+    {
+      "commit": "52181dd63e13ee73cc7096983055b4673b474f3a",
+      "committed_at": "2026-10-14T13:58:44+03:00",
+      "subject": "Qualify album assembly scope and receiver boundaries (#29)",
+      "observed_result_at": "2026-10-14T10:58:49.020Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "204c336c5143bfb48b32f1c0038888e069206d6a",
+      "committed_at": "2026-10-14T14:00:29+03:00",
+      "subject": "Correct surfacing trace counts and SDK provenance (#29)",
+      "observed_result_at": "2026-10-14T11:00:29.898Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "8ba13fc01d3776883ec5c9b47c831dc9d2166247",
+      "committed_at": "2026-10-14T14:02:58+03:00",
+      "subject": "Frame album contract variants without choosing an API (#29)",
+      "observed_result_at": "2026-10-14T11:03:01.040Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "e64ecce8614292dd40d4632ea2aa0e79eacc85b7",
+      "committed_at": "2026-10-14T14:09:36+03:00",
+      "subject": "Surface source evidence and delivery ownership for albums (#29)",
+      "observed_result_at": "2026-10-14T11:09:36.760Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "bc982b708f1a019ec16a9d90ccdebcd86ce1ee35",
+      "committed_at": "2026-10-14T14:16:02+03:00",
+      "subject": "Separate album membership, closure and durable acceptance (#29)",
+      "observed_result_at": "2026-10-14T11:16:02.901Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "0dde557b007fa102bfc14ae3ec484e5886740f09",
+      "committed_at": "2026-10-14T14:20:15+03:00",
+      "subject": "Decompose album values, combination and durable acceptance (#29)",
+      "observed_result_at": "2026-10-14T11:20:15.860Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "594ca6099a8e2451e8dfbea620eaeac5837587f2",
+      "committed_at": "2026-10-14T14:33:00+03:00",
+      "subject": "Compare album assembly approaches and receiver reuse (#29)",
+      "observed_result_at": "2026-10-14T11:33:01.094Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "96cfe1625df234ca1903a929aab5c057e6e48c22",
+      "committed_at": "2026-10-14T14:49:51+03:00",
+      "subject": "Critique album receiver state loss and require explicit reopen (#29)",
+      "observed_result_at": "2026-10-14T11:49:52.025Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "033abb0bb9e6e855bcf2339a18d5b641dfa57106",
+      "committed_at": "2026-10-14T14:56:03+03:00",
+      "subject": "Enumerate album contract concepts and evidence directions (#29)",
+      "observed_result_at": "2026-10-14T11:56:06.048Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "71f1a3167697854390fe6b0e48417d331df95f39",
+      "committed_at": "2026-10-14T15:00:12+03:00",
+      "subject": "Focus album inquiry on receiver recovery and collection scope (#29)",
+      "observed_result_at": "2026-10-14T12:00:12.511Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "74ba21ccd0ea6a65e3b7adff787b85faa24f0ac0",
+      "committed_at": "2026-10-14T15:04:19+03:00",
+      "subject": "Probe existing receiver reopen, CAS and transaction behavior (#29)",
+      "observed_result_at": "2026-10-14T12:04:19.514Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "34718785fdc02fb25da47f058b3a4f31d56058be",
+      "committed_at": "2026-10-14T15:08:20+03:00",
+      "subject": "Make receiver absence and reopen semantics explicit (#29)",
+      "observed_result_at": "2026-10-14T12:08:20.061Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "94a8adad6ea05700073647b92838e4cbd7b6cb74",
+      "committed_at": "2026-10-14T15:14:06+03:00",
+      "subject": "Refine album receiver interfaces without a new progress engine (#29)",
+      "observed_result_at": "2026-10-14T12:14:06.805Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "87a447f0ee70824b90d6e451445b0602f45a4c64",
+      "committed_at": "2026-10-14T15:20:34+03:00",
+      "subject": "Qualify focused album receiver composition (#29)",
+      "observed_result_at": "2026-10-14T12:20:34.968Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "c7b27db4e31fef9498729e72cd0271e0e0ce37b6",
+      "committed_at": "2026-10-14T15:22:15+03:00",
+      "subject": "Close album receiver contract critique (#29)",
+      "observed_result_at": "2026-10-14T12:22:15.944Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "92c40f1d882af3e2f3735917f6587c163927957f",
+      "committed_at": "2026-10-14T15:23:32+03:00",
+      "subject": "Record qualified album concept routes (#29)",
+      "observed_result_at": "2026-10-14T12:23:32.924Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "d1a22bd43dc6215b68e03c7aa6bcffb8140c61ce",
+      "committed_at": "2026-10-14T15:25:19+03:00",
+      "subject": "Conclude cross-batch album design inquiry (#29)",
+      "observed_result_at": "2026-10-14T12:25:20.316Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "3f07c1aee18df5c9a9ea41e9f92d994e4f05b440",
+      "committed_at": "2026-10-14T15:26:44+03:00",
+      "subject": "Describe observed album assembly contract (#29)",
+      "observed_result_at": "2026-10-14T12:26:57.828Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "b1baeddb9283810ee019d02cb8e35162cea677f6",
+      "committed_at": "2026-10-14T15:32:04+03:00",
+      "subject": "Plan observed album assembly implementation (#29)",
+      "observed_result_at": "2026-10-14T12:32:04.937Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "7e9ddbb49cb15bfb6b7ea5c54d3848250cff6953",
+      "committed_at": "2026-10-14T15:34:08+03:00",
+      "subject": "Tailor album plan critique to delivery and receiver ownership (#29)",
+      "observed_result_at": "2026-10-14T12:34:08.272Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "98eb40a92293c81ac6f19aa12e222081de749875",
+      "committed_at": "2026-10-14T15:34:40+03:00",
+      "subject": "Review album plan and require combined prebuild (#29)",
+      "observed_result_at": "2026-10-14T12:34:52.361Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "3f2df435d4b4e29176c56f73419c693667b68bed",
+      "committed_at": "2026-10-14T15:34:49+03:00",
+      "subject": "Select focused album receiver limit mitigation (#29)",
+      "observed_result_at": "2026-10-14T12:34:52.361Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "1fef6dd0096149a73c7d5a1dbb0c92d691098598",
+      "committed_at": "2026-10-14T15:46:37+03:00",
+      "subject": "Pass combined real-component album prebuild (#29)",
+      "observed_result_at": "2026-10-14T12:46:42.751Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "b6026590a67155b6776313d37a804c008b6fcac7",
+      "committed_at": "2026-10-14T15:46:42+03:00",
+      "subject": "Fold receiver limit propagation into album plan (#29)",
+      "observed_result_at": "2026-10-14T12:46:42.751Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "e35392cabef3dad924f3c5607b9b8098176cd98f",
+      "committed_at": "2026-10-14T15:53:05+03:00",
+      "subject": "Assemble observed Telegram albums across raw batches (#29)",
+      "observed_result_at": "2026-10-14T12:53:05.964Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "b1ca61ec83807bf50accc4f6859b4d462319fbb0",
+      "committed_at": "2026-10-14T15:55:06+03:00",
+      "subject": "Record album implementation and full offline verification (#29)",
+      "observed_result_at": "2026-10-14T12:55:09.385Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "8d1c8b4d96faafeba29e4791bc5c7da9947502e0",
+      "committed_at": "2026-10-14T17:45:56+03:00",
+      "subject": "Check album implementation fidelity before PR (#29)",
+      "observed_result_at": "2026-10-14T14:46:12.719Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "da14bc00415df99befe8a44f0b0d01abdc0af237",
+      "committed_at": "2026-10-14T17:48:24+03:00",
+      "subject": "Prepare fresh PR35 soundness critique (#29)",
+      "observed_result_at": "2026-10-14T14:48:24.584Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "88af60bf58d5d32f4431d3a746545d1080a70cfb",
+      "committed_at": "2026-10-14T17:57:43+03:00",
+      "subject": "Reject PR35 on reproduced acceptance replay boundary (#29)",
+      "observed_result_at": "2026-10-14T14:57:56.426Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "35c4375bf2a9430b0db8f42b8e8e2307eda86c69",
+      "committed_at": "2026-10-14T19:31:30+03:00",
+      "subject": "Resolve album acceptance and post-view contract for replanning (#29)",
+      "observed_result_at": "2026-10-14T16:31:30.239Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "dbf3d3107865919f7c90c172242af7129fa02c02",
+      "committed_at": "2026-10-14T19:35:21+03:00",
+      "subject": "Replan album acceptance around immutable member records (#29 r3)",
+      "observed_result_at": "2026-10-14T16:35:24.948Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "df727c7c5471fdef908c4df4afe1805c21f90f04",
+      "committed_at": "2026-10-14T21:57:25+03:00",
+      "subject": "Prepare fresh revision3 album plan critique (#29)",
+      "observed_result_at": "2026-10-14T18:57:25.760Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "18cc4a8ac5aaff06911ca2af5568a93b124b5444",
+      "committed_at": "2026-10-14T21:58:37+03:00",
+      "subject": "Review revision3 and require full revised-candidate prebuild (#29)",
+      "observed_result_at": "2026-10-14T18:58:41.947Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "69e44ce8c99d507c01e8e62b47d8ae4dcf9b9205",
+      "committed_at": "2026-10-14T21:58:41+03:00",
+      "subject": "Record reviewed revision4 and prebuild-before-adoption gate (#29)",
+      "observed_result_at": "2026-10-14T18:58:41.947Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "f5fae66c234386122080800aa27b2ebcf7854300",
+      "committed_at": "2026-10-14T22:08:42+03:00",
+      "subject": "Pass full revised album receiver prebuild (#29)",
+      "observed_result_at": "2026-10-14T19:08:42.878Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "8c92cf5c8603054c835dae2f662a077bb5f27433",
+      "committed_at": "2026-10-14T22:15:39+03:00",
+      "subject": "Separate accepted album records from growing post views (#29)",
+      "observed_result_at": "2026-10-14T19:15:39.379Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "eb1a54f393f8001f39c632c5e263eb4460838d48",
+      "committed_at": "2026-10-14T22:17:14+03:00",
+      "subject": "Record revision4 qualification, correction and full verification (#29)",
+      "observed_result_at": "2026-10-14T19:17:20.091Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "528ce7418da0c13fdbe870c4b687d137102a8531",
+      "committed_at": "2026-10-14T22:30:14+03:00",
+      "subject": "docs: renew album merge check for revision 4",
+      "observed_result_at": "2026-10-14T19:30:28.105Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    },
+    {
+      "commit": "dc65d13a3e5547adaaef3e99baf558e27f5dbe81",
+      "committed_at": "2026-10-14T22:34:58+03:00",
+      "subject": "docs: pass fresh album PR review with real component probes",
+      "observed_result_at": "2026-10-14T19:35:08.770Z",
+      "model": "gpt-6-astra",
+      "effort": "xhigh"
+    }
+  ]
+}

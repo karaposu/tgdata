@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Full revised-candidate prebuild — PASS
 
@@ -13,3 +13,5 @@ The57-case suite preserves all37 prior behavioral cases, with explicit schema2/N
 The initial54-case candidate run passed. A final coverage audit added two explicitly combined histories—actual process exit at the byte boundary and committed source publication with a lost response—then reran the complete56-case candidate and all related suites. Initial54-case logs/result are retained. Those runs passed. A subsequent storage-compatibility probe exposed a local lookup omission: a foreign column with NOCASE but BINARY keys could alias collection names. Explicit COLLATE BINARY predicates were added to collection/post/batch lookups, implementing the already specified exact identity rule. The permanent57th test verifies nonexistent-case refusal and independent explicit collections. The corrected candidate and all13 related suites/demo passed again before the correction was adopted. See local-correction.md; no design or expected identity behavior was changed.
 
 The prebuild passes the critic's named experiment. It qualifies this candidate for adoption and full regression verification; it does not approve the PR or certify §9 metadata. The first rejected PR critique and its counterexamples remain historical evidence.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](../model-effort-verification.md).

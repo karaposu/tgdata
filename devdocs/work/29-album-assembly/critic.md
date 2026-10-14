@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 **REORDER — TEST BEFORE BUILD**
 
@@ -66,3 +66,5 @@ The alternative of raising allowance or accepting a marker without checking stor
 ## Phase3 selection
 
 Phase3 complete: no additional findings or mitigation proposals were produced, so the selection set is empty. The real-component prebuild remains mandatory; no phase was skipped on account of the earlier tests. No execution blocker is added. Model/effort remains unknown and must be surfaced under §9 at merge review; no compliance claim is invented.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Description — album assembly across batches (#29)
 
@@ -57,3 +57,5 @@ No photo-trail inference (#30), leases (#31), joins/auth/routing changes, classi
 **Evidence:** all six actual-component planning histories in replan-r3-probe.json passed, including the three rejected cases with unchanged limits, integrity refusals and actual SQLite rollback. This closes the design premise for revision3; it does not mark R1 fixed in production. The complete revised candidate, schema/load guards and both progress-engine compositions still require fresh plan critique and full combined prebuild before implementation.
 
 **Implementation follow-through:** revision4 is implemented at `8c92cf5` / PR head `7a49bd9`, with the complete57-case candidate and830-check full offline run passing; see implementation-r4.md. This is implementation evidence addressing the first PR finding, not a renewed PR approval.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

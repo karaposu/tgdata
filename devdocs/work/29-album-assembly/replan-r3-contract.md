@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Revision 3 contract — accepted records and post views
 
@@ -62,3 +62,5 @@ Replays are instrumented to fail if they call the assembler or post-view loader,
 Prototype corrections: an initial normal-message fixture used None where Telethon's wire string requires text; changed to an empty string. The first prototype also repeatedly accessed MessageBatch.chat_id inside a member loop, causing repeated whole-batch JSON decoding; the final probe extracts metadata before iterating. Initial partial output is retained in replan-r3-probe-attempt1.txt. Neither correction touched production code.
 
 This evidence closes the **planning** question: the receiver can confirm immutable accepted records independently of growing post views with existing source APIs. It does not qualify a complete implementation. Full schema validation, bounded load preflights, cleanup/crash cases, both progress engines, compatibility tests and the complete revised candidate must pass the later critic-directed combined prebuild before production adoption.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

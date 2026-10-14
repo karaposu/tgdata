@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Implementation plan — observed album assembly (#29), revision 2
 
@@ -169,3 +169,5 @@ Regression suite, Python compatibility, offline sockets, baseline parity, Git wo
 ### Hardness Lvl
 
 3
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

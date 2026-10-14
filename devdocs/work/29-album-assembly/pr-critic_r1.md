@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 **DO NOT IMPLEMENT — MEANING GAP**
 
@@ -112,3 +112,5 @@ Phase1's fresh prompt is pr-dynamic-critic-prompt.md. Phase2 produced this same-
 This is #29's first rejected PR critique. **Next: revision3 re-planning**, using this finding and the established counterexamples; settle the receiver contract before committing new implementation steps. CONTRIBUTING §7.4: “When the PR critic rejects, the branch does not get its findings fixed one by one. It goes back to step 2 and re-plans.” After revised implementation, renew both merge check and fresh PR critique.
 
 **Independent merge prerequisite:** §9 model/effort remains unconfirmed. It is not counted as a code finding and is not waived. PR35 remains draft and must not merge in its current state.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

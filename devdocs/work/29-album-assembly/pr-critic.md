@@ -1,13 +1,13 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 **IMPLEMENT AS WRITTEN**
 
 Falsifier: an exact committed input with intact original records and unchanged policy cannot be confirmed after restart/growth without rebuilding views; or successful confirmation accepts different original data or advances the wrong source obligation.
 Affordable now: yes — actual local receiver/SQLite/source-engine probes, no external account or deployment. **Executed: PASS.** No identified affordable premise test remains scheduled after adoption or unrun as a condition of this verdict.
 
-**PR soundness gate: PASS — zero High, zero Medium, zero Low findings.** §9 model/effort verification remains an independent unresolved merge prerequisite; keep PR35 draft and unmerged.
+**PR soundness gate: PASS — zero High, zero Medium, zero Low findings.** §9 model/effort is now [verified retrospectively](model-effort-verification.md): GPT 6 Astra/xhigh. PR35 remains unmerged pending the maintainer's go-ahead.
 
 ## High-level summary
 
@@ -116,4 +116,6 @@ No High, Medium or Low code finding was identified. Phase2 is complete. Phase3 w
 
 The original first rejection is preserved in pr-critic_r1.md, its prompt in pr-dynamic-critic-prompt_r1.md, and its eight original histories in pr-probes.*. The current plan critic remains critic.md. This review's prompt is pr-dynamic-critic-prompt.md; its actual evidence is pr-probes-r2.*.
 
-**Next prerequisite:** verify CONTRIBUTING §9 model/effort before a merge decision. It remains unknown, is not a code finding, and is not certified by this pass. Commit/post this result, update #29's6–7 gates with the actual outcomes, keep PR35 draft, and wait for merge authorization. No merge, release or running ScrapeOps change is part of this review.
+**Metadata prerequisite closed:** the subsequent local active-thread audit establishes GPT 6 Astra/xhigh for this critique and the complete39-commit feature pipeline. See model-effort-verification.md/.json. Review artifacts are committed/posted and #29's6–7 gates passed. Next: maintainer merge go-ahead. No merge, release or running ScrapeOps change is part of this review or metadata verification.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

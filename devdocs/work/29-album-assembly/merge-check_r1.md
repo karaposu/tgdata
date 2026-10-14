@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Merge check — issue29
 
@@ -53,3 +53,5 @@ No merge, release, running ScrapeOps change, original-checkout edit or branch de
 ## Subsequent soundness review
 
 PR35 was opened after this fidelity check. The fresh pr-critic.md then rejected it with one Medium acceptance/replay contract finding, reproduced three ways. Fidelity PASS remains the historical comparison result; it is not current merge readiness. Revision2 is now DEPRECATED_step_by_step_impl_plan.md and revision3 re-planning is required. No product patch or merge occurred.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

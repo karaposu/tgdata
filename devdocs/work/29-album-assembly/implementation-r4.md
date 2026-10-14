@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Revision 4 implementation — verified
 
@@ -37,3 +37,5 @@ The product-only PR branch contains seven feature files relative to dev and no d
 The first rejected PR critique remains pr-critic.md, tied to old head19d421f. Preserve it under an r1 filename before the next fresh PR critique. Its observed failure is now covered by passing implementation tests, but the new product head still needs independent renewed review. The prior merge-check remains historical and must be renewed too. Model/effort metadata remains unknown; no §9 certification is invented.
 
 Next: renewed merge check → PR update as needed → fresh same-session PR critique. No merge or release in this implementation run.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

@@ -1,10 +1,10 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Renewed merge check — #29 / PR35, revision4
 
-**Fidelity gate: PASS.** This checks implementation against the qualified plan; fresh soundness review follows. §9 model/effort remains unconfirmed and the PR stays draft.
+**Fidelity gate: PASS.** This checks implementation against the qualified plan. The subsequent fresh soundness review also passed; §9 model/effort is now [verified](model-effort-verification.md). PR35 remains unmerged pending the maintainer's go-ahead.
 
 Reviewed 2026-10-14 in the same warm session. Refreshed target `e5cdad77ff6af41f21503fc43fe3180d5213a41e`; product head `7a49bd9dd0b109ccd64aa7140bd8d88168382f90`; archive implementation/evidence head `eb1a54f`. Remote dev and PR head have not moved. `merge-parity-r2.json` records ancestor verification, all seven product files matching the archive, and all93 package/example Python hashes matching the final verification manifest. The publication branch is clean and excludes work-folder documents.
 
@@ -42,6 +42,8 @@ The first PR critic's one Medium appeared in three histories: immediate byte-bou
 
 At this review's start T/0–5 are correctly checked with committed artifacts;6–7 are correctly unchecked for this head. Step6 can be checked after this renewed report is committed/posted. Step7 must await the actual fresh verdict. The opening issue description is retained as the original request; the pipeline block records the current state.
 
-**§9 verification is UNCONFIRMED.** The session does not expose the required model/effort setting; metadata remains unknown. This is an independent merge prerequisite, not a code finding and not waived by a fidelity pass. Keep draft status. The user authorized review/publication, not merge, release or a running ScrapeOps change.
+**§9 verification: VERIFIED retrospectively.** At review time the required model/effort had not been established. The subsequent active-thread metadata audit establishes GPT 6 Astra/xhigh for all39 feature commits, including this merge check and the fresh critique; see model-effort-verification.md/.json. The metadata prerequisite is closed without waiving the rule. The user authorized review/publication and this verification, not merge, release or a running ScrapeOps change.
 
 The previous fidelity check and first rejected soundness review are preserved as merge-check_r1.md and pr-critic_r1.md. The original first-review probes remain unchanged.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

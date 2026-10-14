@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Fresh critic prompt — revision 3
 
@@ -19,3 +19,5 @@ Use model/effort frontmatter from actual context, unknown when unavailable. Choo
 After the summary put Premise Inventory, Restart Check (each observed failure / established mechanism / design element) and Inherited Lessons (lesson / satisfying order). For every real finding use two Risk paragraphs, plain then precise, plus severity/category/impact/NoobEng/affected areas. Medium/High gets quick, robust and long-term proposals with explanations and initially unticked selected/elegant/last_resort boxes and empty Why chosen/For future notes. Save Phase2, then Phase3 only selects/fills notes using reach/extent, genuine other instances, scope and delicacy. No forced findings or quick choice on merit alone. If none, state that selection is empty.
 
 §9 remains an independent unconfirmed merge prerequisite, not a guessed model assertion or invented code finding. The user explicitly requests review → revision4 fold → full combined prebuild → implementation; the prebuild must pass before any production adoption. Do not merge, release or touch the running consumer.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Implementation and verification — issue29
 
@@ -47,3 +47,5 @@ The caller must supply authoritative current prior observations, durably own its
 The original checkout is still on feat/7-group-operations with its sole local version edit0.0.9→0.1 untouched. All #29 work is isolated in /private/tmp/tgdata-29-album-assembly on feat/29-album-assembly. §9 model/effort verification remains unknown; the pending factual question has not been answered. It must be surfaced at the later merge check rather than certified here.
 
 Next authorized workflow when requested: merge check → PR → fresh same-session critic-d review. No merge or release is inferred from this task-impl completion.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

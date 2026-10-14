@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Fresh PR critic prompt — PR35 / issue29
 
@@ -25,3 +25,5 @@ Compute a Premise Inventory before risk items: premise, first dependent step, wa
 Each real risk is a section: two Risk paragraphs (plain self-contained user consequence, then precise paths/symbols/trigger), Severity, Category, Impact, NoobEng and Affected areas. Medium/High findings must rest on code or a reproduced probe and get Quick, Robust and Long-term proposals, with robust/long-term explanations. Initially save all three proposal checkboxes unticked and notes empty. Then Phase3 only selects/fills notes, comparing reach/extent, naming genuine other instances before generalizing, and rejecting larger class mechanisms that need special cases or exceed scope. No quick fix on merit alone.
 
 If the entire plan shape rests on a disproved premise, follow critic-d's meaning-gap/deprecated-plan procedure. Otherwise a Medium/High **PR** finding rejects and sends the next work to revision3 re-planning under CONTRIBUTING §7.4; selected proposals are inputs to that plan, not permission to patch production during this review. Commit the critique/probe evidence on the archive branch and post the critique on PR35. Keep original implementation/plan critique evidence intact.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Dynamic critic prompt — issue29
 
@@ -31,3 +31,5 @@ Each risk uses sections, not a risk table: Risk paragraph1 explains the user-vis
 `**Note**` / `*Why chosen:* —` / `*For future:* —`.
 
 Save Phase2 before selecting. Phase3 only ticks boxes and fills notes: enumerate actual other instances before claiming a class, test whether one mechanism serves them without special cases, compare reach/extent, use robust if wider work exceeds scope, and identify prerequisite versus future work by whether the robust fix survives it. Never select quick on merit alone. Elegant/last_resort are exclusive; last_resort implies selected. If there are no Medium/High findings, record that no selection is required. Keep §9 unknown metadata visible without inventing a model assertion.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 **REORDER — TEST BEFORE BUILD**
 
@@ -121,3 +121,5 @@ The proposed format and operation ordering are detailed enough to implement. The
 ## Phase3 selection
 
 Completed after saving Phase2. Risk1 Robust is selected and elegant; no last-resort or quick choice. Named comparison instances: message_batch.py (fixed raw-delivery bound), sync_store.py (opaque source state), backfill_state.py (lifecycle state). Their policies are not interchangeable with cumulative observed members, so the proposed class-wide framework fails the one-mechanism test. No future mechanism is selected or prerequisite added. Phase3 changed only boxes/notes and this selection record; no severity/proposal was rewritten. No execution blockers were declared or added.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

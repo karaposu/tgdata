@@ -1,7 +1,7 @@
 ---
 status: active
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Finding: assemble observed albums at the receiver
 
@@ -82,3 +82,5 @@ The combined prebuild must establish actual candidate behavior before implementa
 ### Refinement Triggers
 
 Revisit the observation API if the user requires one irreversible final post rather than stable entity updates. Revisit conflict refusal if edit/deletion reconciliation becomes an explicit requirement. Qualify actual Telegram behavior before introducing any new source-completeness assumption. No live Telegram claim is made for this pure observed-data contract.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](../model-effort-verification.md).

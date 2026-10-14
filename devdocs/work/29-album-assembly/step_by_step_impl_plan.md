@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # Implementation plan — album acceptance and post views (#29), revision 4
 
@@ -200,3 +200,5 @@ Regression evidence, source parity, Python compatibility, Git worktrees, artifac
 R1 is answered at the design level by a different durable fact, a distinct confirmation path and a None-return acceptance API—not by extra allowance. The three old counterexamples become required passing histories in prebuild and permanent tests. The original pure representation/assembly remains reusable.
 
 Revision3 planning and its six feasibility histories remain the design record. The fresh critique and empty mitigation selection produce revision4 without adding scope. Next: full combined candidate prebuild → implementation. Planning-probe success must not be mistaken for that implementation gate or a passed PR review.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).

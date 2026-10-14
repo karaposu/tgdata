@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 
 # Triage — issue #29
@@ -15,3 +15,5 @@ effort: unknown
 **Prerequisites:** no separate prerequisite implementation is established yet. Existing MessageBatch and caller-owned durable receiver patterns are available. The inquiry must establish the home of assembly; a new generic persistence engine is not presumed necessary. Actual Telegram validation must test any source-completeness assumptions before dependent implementation.
 
 **Scope readiness:** no prior desc, parked block or PR rejection exists for #29. The optional API preference and §9 model/effort question remain pending; preparation is continuing. Provisional API direction is a separate opt-in assembler. No product code has been written.
+
+**Provenance verified retrospectively, 2026-10-14:** local active-thread turn records and matching commit outputs establish GPT 6 Astra / xhigh for this artifact. Earlier unknown/pending wording records what was known at the time; see [§9 verification](model-effort-verification.md).
