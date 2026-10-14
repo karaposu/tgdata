@@ -64,12 +64,14 @@ order. Combining the same records produces identical post JSON and revision,
 regardless of how they were partitioned. Raw member records remain ordered by
 message ID.
 
-Exact duplicate records are idempotent. The function returns unchanged affected
+When the operation is admitted under its bounds, exact duplicate records produce
+the same content and revision. The function returns unchanged affected
 posts too; it is a projection operation, not an event emitter. A downstream
 consumer can upsert by `post_id` and compare `revision` to avoid processing an
 identical observation twice. An additional member creates an update to that same
 post. The API does not promise one irreversible final emission or exactly-once
-external processing.
+external processing. This bounded computation is separate from confirming a
+delivery that a durable receiver has already accepted.
 
 A repeated member whose raw record differs raises `AlbumAssemblyError`. That
 includes changed captions, sender metadata or media observations. Mixing reference
@@ -100,7 +102,7 @@ completion from adjacent IDs, a timeout or Telegram's send-size limit. It groups
 only supplied observed records. This is compatible with daily and historical
 readers without changing their source contracts.
 
-## Bounds and saved-value loading
+## Bounds for combination and post values
 
 Both constructors/loaders and assembly accept positive plain-integer
 `max_members` and `max_bytes` options. Defaults are **10,000 members** and
@@ -126,24 +128,43 @@ history cache. You may deliberately raise them. Apply the same adequate policy
 when loading saved posts and reopening the receiver, as well as when assembling.
 A cumulative observation can exceed one raw batch's limit. Reopening with a
 stricter policy can refuse otherwise valid stored data; restore an adequate
-policy instead of resetting the database.
+policy instead of resetting the database. These aggregate bounds govern a new
+combination; they must not be reapplied as a condition for recognizing an already
+committed delivery. The receiver below separates those operations.
 
 ## Durable receiver and source acknowledgment
 
-The application owns permanent posts and accepted-input recognition. Perform
-these steps as one receiver transaction or equivalent conditional-write protocol:
+The application owns permanent data and accepted-input recognition. The example
+stores each original member record once, keyed by collection, chat and message ID,
+with its post key and content digest. A current `TelegramPost` is reconstructed
+from those records when requested. No second post snapshot or per-batch content
+archive is stored.
+
+For a **new input**, perform these steps in one receiver transaction or equivalent
+conditional-write protocol:
 
 1. Open and validate the intended existing collection. Provision a new collection
    only through an explicit creation operation.
-2. Load the **current** prior post for every affected key.
-3. Assemble and persist every resulting post together with a marker that this
-   raw batch was accepted in this particular collection.
+2. Refuse any existing chat/message record with different content or post identity,
+   then load the **current** prior post view for every affected key.
+3. Run bounded assembly and persist the new immutable member records together
+   with a marker that this raw batch was accepted in this particular collection.
 4. Commit, then acknowledge the original source delivery outside the transaction.
 
-Do not load prior posts before the transaction and then blindly replace them:
-another accepted batch may have added members in between. Scope input markers by
-logical destination; equal batch hashes in separate collections do not establish
-acceptance in each other.
+For an **exact accepted input**, verify its original records against their stored
+canonical content, digest and post key. Do not reassemble, load expanded post
+views, write rows or return grown post content. Missing or changed accepted data
+raises; the marker alone is insufficient. With intact available storage, unchanged
+input limits and the same exact batch, confirmation remains valid after restart
+and later album growth.
+
+`AlbumReceiver.accept(batch)` returns **None on success**, both for a new commit
+and an accepted-input confirmation. `load(post_id)` is a separate bounded read
+that returns the current `TelegramPost`, or None for an absent post key.
+
+Scope input markers by logical destination; equal batch hashes in separate
+collections do not establish acceptance in each other. Load current views inside
+the new-input transaction so another accepted batch cannot make the prior stale.
 
 The repository's [SQLite receiver example](../examples/album_assembly.py) provides
 this composition. It is example code to copy or adapt into your application, not
@@ -152,6 +173,12 @@ and validates schema/version/collection. `create=True` explicitly creates a new
 file/schema or registers a new collection in an existing valid example database;
 it refuses an already registered collection or a damaged/foreign schema. Parent
 directories must already exist. Each operation opens and closes its connection.
+
+The example uses **local schema version2**, with immutable member rows and an index
+for post reads. It refuses version1 databases from the rejected, unmerged example
+unchanged, including when create=True. There is no automatic migration or reset.
+Retain any such known state and use an explicitly validated import/restore before
+switching that collection. Public MessageBatch v1 and TelegramPost v1 are unchanged.
 
 ```python
 from examples.album_assembly import AlbumReceiver  # repository example
@@ -163,7 +190,7 @@ receiver = AlbumReceiver("posts.sqlite3", "daily", create=True)
 receiver = AlbumReceiver("posts.sqlite3", "daily")
 batch = await tg.sync_group(chat_id, limit=200)
 if batch is not None:
-    receiver.accept(batch)  # posts + collection-scoped marker committed together
+    receiver.accept(batch)  # records + marker committed, or prior acceptance confirmed
     await tg.acknowledge_sync(chat_id, batch.batch_id)
 ```
 
@@ -184,10 +211,30 @@ current raw batch; source progress still advances from the original raw delivery
 
 If receiver commit fails, do not acknowledge. A process loss before commit rolls
 back the input; after commit, reopening retains it. If the acceptance reply or
-source acknowledgment is lost, replay the saved source delivery against the
-current receiver state. An older retry cannot replace a later grown post. The
-example verifies that a recognized input is still present in its saved posts and
-refuses inconsistent data rather than silently reconstructing it from a fragment.
+source acknowledgment is lost, replay the saved source delivery. Confirmation
+checks its original immutable records, so an older retry neither replaces later
+members nor pays to assemble them again. Missing or inconsistent accepted records
+refuse rather than being silently reconstructed from a fragment.
+
+The example applies three distinct resource policies:
+
+| Operation | What is bounded |
+|---|---|
+| New acceptance | Original input plus the existing aggregate assembly member/byte bounds |
+| Accepted-input confirmation | Original input size/count and one indexed comparison per original record; no post-wide load or size scan |
+| `load(post_id)` | Current view's member count and serialized bytes, independently of receipt confirmation |
+
+View reads and new-work prior loading check count/byte metadata before fetching
+payloads. New-work loading also accounts for actual reconstructed prior JSON
+incrementally. A consistent SQLite read transaction keeps view metadata and records
+in the same snapshot. Invalid canonical records, digests or row identities refuse.
+
+A later writer using a larger view/admission policy can grow the current album
+beyond a smaller reader's view limit. That reader can still confirm its old input;
+its separate `load` can refuse. Deliberately lowering the original input limit,
+storage failure or contention can still refuse confirmation. Reading or processing
+the latest post content is application work, separate from acknowledging data
+already accepted durably.
 
 The example uses short synchronous local transactions with no await/network work
 under the lock. Contention raises so the caller can retry the whole acceptance

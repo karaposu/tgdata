@@ -539,7 +539,7 @@ python -m tgdata.smoke_tests.test_42_album_assembly
 python examples/album_assembly.py --demo
 ```
 
-37 tests cover partition-independent album revisions, multiple captions, large IDs,
+57 tests cover partition-independent album revisions, multiple captions, large IDs,
 nonadjacent members, singleton/service records, strict immutable serialization,
 required prior lookup, conflict/refusal behavior and exact member/UTF-8 bounds.
 Actual Telethon 1.45 serialization, history iteration and cached-photo download
@@ -548,6 +548,13 @@ Fault histories cover strict reopening, collection separation, competing writers
 transaction rollback, process exits before/after commit, lost acknowledgment,
 replay after later album growth, raised limits through restart, cancellation,
 budget refusal and available partial data without source receipt authority.
+
+The receiver stores immutable canonical member records in local schema2 and
+returns None from both new acceptance and exact confirmation. The20 added histories
+cover unchanged byte/member limits on replay, default16MiB inputs, later larger
+post views, no merge/post scan/DML on confirmation, integrity refusals, known-v1
+and index refusal, byte-exact collection lookup, bounded payload loading, consistent read snapshots, source
+publication committed with a lost reply, and real process exits at the byte boundary.
 
 Socket connections are blocked; source responses are synthetic. No live Telegram
 completeness, deployed receiver or hardware power-loss guarantee is claimed.

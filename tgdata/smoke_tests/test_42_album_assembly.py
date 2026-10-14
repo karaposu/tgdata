@@ -34,8 +34,9 @@ from tgdata.batch_engine import _record, BatchEngine
 from tgdata.backfill import BackfillStartRequest, BackfillPrepareContext
 from tgdata.backfill_engine import BackfillEngine
 from tgdata.sync_engine import SyncEngine
-from tgdata.sync_store import SyncConflictError
+from tgdata.sync_store import SyncConflictError, SyncStorageError
 from examples.album_assembly import AlbumReceiver, ReceiverError, collect, demo
+import examples.album_assembly as receiver_module
 
 
 CHAT = -1000000000007
@@ -61,6 +62,30 @@ def assemble(value, old=(), **options):
     by_key = {post.post_id: post for post in old}
     prior = {key: by_key.get(key) for key in album_post_ids(value, max_bytes=options.get('max_bytes', 16777216))}
     return assemble_albums(value, previous=prior, **options)
+
+
+def accepted_posts(receiver, raw):
+    assert receiver.accept(raw) is None
+    return tuple(receiver.load(key) for key in album_post_ids(raw))
+
+
+def confirm_only(receiver, raw):
+    original = receiver._open
+    # An ordinary synchronous context manager keeps the real connection/commit.
+    from contextlib import contextmanager
+    @contextmanager
+    def guarded():
+        with original() as db:
+            db.set_authorizer(lambda action, *args: sqlite3.SQLITE_DENY if action in
+                              (sqlite3.SQLITE_INSERT, sqlite3.SQLITE_UPDATE, sqlite3.SQLITE_DELETE)
+                              else sqlite3.SQLITE_OK)
+            yield db
+            assert db.total_changes == 0
+    with patch.object(receiver, '_open', side_effect=guarded), \
+            patch.object(receiver, '_load', side_effect=AssertionError('confirmation loaded a post')), \
+            patch.object(receiver, '_stats', side_effect=AssertionError('confirmation scanned post size')), \
+            patch.object(receiver_module, 'assemble_albums', side_effect=AssertionError('confirmation assembled')):
+        assert receiver.accept(raw) is None
 
 
 def resign(document):
@@ -343,26 +368,26 @@ class AlbumTests(unittest.TestCase):
     def test_partial_schema_is_not_repaired(self):
         receiver = self.receiver()
         with sqlite3.connect(str(receiver.path)) as db:
-            db.execute('DROP TABLE album_posts')
+            db.execute('DROP TABLE album_members')
         for create in (False, True):
             with self.assertRaises(ReceiverError):
                 AlbumReceiver(receiver.path, 'other', create=create)
         with sqlite3.connect(str(receiver.path)) as db:
-            self.assertIsNone(db.execute("SELECT name FROM sqlite_master WHERE name='album_posts'").fetchone())
+            self.assertIsNone(db.execute("SELECT name FROM sqlite_master WHERE name='album_members'").fetchone())
 
     def test_schema_shape_version_and_corrupt_post_refuse(self):
-        receiver = self.receiver(); raw = batch(record(1)); post, = receiver.accept(raw)
+        receiver = self.receiver(); raw = batch(record(1)); post, = accepted_posts(receiver, raw)
         with sqlite3.connect(str(receiver.path)) as db:
-            db.execute('UPDATE album_posts SET value=?', ('{}',))
-        with self.assertRaises(AlbumAssemblyError):
+            db.execute('UPDATE album_members SET record=?', ('{}',))
+        with self.assertRaises(ReceiverError):
             receiver.accept(batch(record(2)))
         with sqlite3.connect(str(receiver.path)) as db:
-            db.execute('UPDATE album_meta SET version=2')
+            db.execute('UPDATE album_meta SET version=99')
         with self.assertRaises(ReceiverError):
             AlbumReceiver(receiver.path, 'one')
 
     def test_failed_lookup_does_not_mean_new_post(self):
-        receiver = self.receiver(); first, = receiver.accept(batch(record(1)))
+        receiver = self.receiver(); first, = accepted_posts(receiver, batch(record(1)))
         with patch.object(receiver, '_load', side_effect=OSError('lookup unavailable')):
             with self.assertRaises(OSError):
                 receiver.accept(batch(record(2)))
@@ -371,17 +396,17 @@ class AlbumTests(unittest.TestCase):
     def test_receipts_are_scoped_and_replay_keeps_later_growth(self):
         a = self.receiver('a'); b = AlbumReceiver(a.path, 'b', create=True)
         first = batch(record(1, 'caption')); second = batch(record(2))
-        old, = a.accept(first); grown, = a.accept(second)
-        self.assertEqual(a.accept(first), (grown,))
-        other, = b.accept(first)
+        old, = accepted_posts(a, first); grown, = accepted_posts(a, second)
+        self.assertEqual(accepted_posts(a, first), (grown,))
+        other, = accepted_posts(b, first)
         self.assertEqual(other, old)
         with sqlite3.connect(str(a.path)) as db:
             self.assertEqual(db.execute('SELECT COUNT(*) FROM album_receipts').fetchone()[0], 3)
 
     def test_receipt_with_missing_accepted_member_refuses_repair(self):
-        receiver = self.receiver(); raw = batch(record(1)); post, = receiver.accept(raw)
+        receiver = self.receiver(); raw = batch(record(1)); post, = accepted_posts(receiver, raw)
         with sqlite3.connect(str(receiver.path)) as db:
-            db.execute('DELETE FROM album_posts')
+            db.execute('DELETE FROM album_members')
         with self.assertRaises(ReceiverError):
             receiver.accept(raw)
         self.assertIsNone(receiver.load(post.post_id))
@@ -393,7 +418,7 @@ class AlbumTests(unittest.TestCase):
         with self.assertRaises(sqlite3.IntegrityError):
             receiver.accept(batch(record(1), record(2, grouped=None)))
         with sqlite3.connect(str(receiver.path)) as db:
-            self.assertEqual(db.execute('SELECT COUNT(*) FROM album_posts').fetchone()[0], 0)
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM album_members').fetchone()[0], 0)
             self.assertEqual(db.execute('SELECT COUNT(*) FROM album_receipts').fetchone()[0], 0)
 
     def test_cleanup_preserves_original_failure(self):
@@ -429,19 +454,19 @@ class AlbumTests(unittest.TestCase):
                 self.assertIsNone(stored)
             else:
                 self.assertEqual(stored.member_ids, (1,))
-                self.assertEqual(reopened.accept(raw), (stored,))
+                self.assertEqual(accepted_posts(reopened, raw), (stored,))
 
     def test_competing_writer_refuses_then_reads_current_prior(self):
         a = self.receiver(); b = AlbumReceiver(a.path, 'one')
         original = a._load; attempted = []
-        def load(db, key):
+        def load(db, key, **limits):
             with self.assertRaises(sqlite3.OperationalError):
                 b.accept(batch(record(2)))
             attempted.append(True)
-            return original(db, key)
+            return original(db, key, **limits)
         with patch.object(a, '_load', side_effect=load):
             a.accept(batch(record(1)))
-        post, = b.accept(batch(record(2)))
+        post, = accepted_posts(b, batch(record(2)))
         self.assertEqual(post.member_ids, (1, 2))
         self.assertEqual(attempted, [True])
 
@@ -451,13 +476,14 @@ class AlbumTests(unittest.TestCase):
         rows = [dict(template, id=str(i)) for i in range(1, 10002)]
         first, last = batch(*rows[:10000]), batch(rows[-1])
         receiver = self.receiver(max_members=10001)
-        receiver.accept(first); post, = receiver.accept(last)
+        receiver.accept(first); post, = accepted_posts(receiver, last)
         reopened = AlbumReceiver(receiver.path, 'one', max_members=10001)
         self.assertEqual(reopened.load(post.post_id).member_ids, tuple(range(1, 10002)))
-        self.assertEqual(reopened.accept(last), (post,))
+        self.assertEqual(accepted_posts(reopened, last), (post,))
         lower = AlbumReceiver(receiver.path, 'one')
+        self.assertIsNone(lower.accept(last))
         with self.assertRaises(AlbumAssemblyError):
-            lower.accept(last)
+            lower.load(post.post_id)
         self.assertEqual(reopened.load(post.post_id), post)
 
     def test_daily_lost_ack_replay_and_continuation(self):
@@ -476,7 +502,7 @@ class AlbumTests(unittest.TestCase):
             replay = await resumed.prepare(CHAT, limit=1)
             self.assertEqual(replay.to_json(), first.to_json()); self.assertEqual(len(reads), 1)
             receiver.accept(replay); await resumed.acknowledge(CHAT, replay.batch_id)
-            second = await resumed.prepare(CHAT, limit=1); post, = receiver.accept(second)
+            second = await resumed.prepare(CHAT, limit=1); post, = accepted_posts(receiver, second)
             self.assertEqual((await resumed.status(CHAT)).after_id, 1)
             await resumed.acknowledge(CHAT, second.batch_id)
             self.assertEqual(post.member_ids, (1, 2)); self.assertEqual(len(reads), 2)
@@ -506,7 +532,7 @@ class AlbumTests(unittest.TestCase):
             receiver = AlbumReceiver(receiver.path, 'one'); receiver.accept(replay.batch)
             accepted = await resumed.acknowledge(replay.delivery)
             last = await resumed.prepare(BackfillPrepareContext.from_status(accepted))
-            post, = receiver.accept(last.batch)
+            post, = accepted_posts(receiver, last.batch)
             finished = await resumed.acknowledge(last.delivery)
             self.assertEqual(finished.after_id, 2)
             self.assertEqual(finished.terminal_outcome, 'completed')
@@ -556,7 +582,7 @@ class AlbumTests(unittest.TestCase):
 
     def test_cancellation_preserves_saved_receiver_and_source_cursor(self):
         async def run():
-            receiver = self.receiver(); prior, = receiver.accept(batch(record(1)))
+            receiver = self.receiver(); prior, = accepted_posts(receiver, batch(record(1)))
             async def reader(*args, **options):
                 raise asyncio.CancelledError()
             store = SQLiteSyncStore(self.root / 'source.sqlite3')
@@ -574,7 +600,7 @@ class AlbumTests(unittest.TestCase):
             budget = ReadBudget(self.root / 'budget.sqlite3', clock=lambda: 1000)
             budget.configure(88, daily_limit=1)
             budget._reserve(88, 1)
-            receiver = self.receiver(); prior, = receiver.accept(batch(record(1)))
+            receiver = self.receiver(); prior, = accepted_posts(receiver, batch(record(1)))
             async def reader(*args, **options):
                 budget._reserve(88, 1)
                 raise AssertionError('exhausted allowance must refuse')
@@ -592,8 +618,315 @@ class AlbumTests(unittest.TestCase):
     def test_offline_demo_uses_actual_receiver_and_source_engine(self):
         asyncio.run(demo(self.root))
 
+    def test_byte_boundary_lost_ack_confirms_without_projection_or_write(self):
+        async def run():
+            raw = batch(record(1, 'caption '*100), record(2, 'second '*100), after=0)
+            expected, = assemble(raw)
+            cap = len(raw.to_json().encode()) + len(expected.to_json().encode())
+            receiver = self.receiver(max_bytes=cap)
+            store = SQLiteSyncStore(self.root/'source.sqlite3'); reads = []
+            async def read(*args, **options):
+                reads.append(options); return raw
+            first = SyncEngine(read, store); await first.initialize(CHAT, after_id=0)
+            owed = await first.prepare(CHAT, limit=2); receiver.accept(owed)
+            resumed = SyncEngine(read, SQLiteSyncStore(store.path, create=False))
+            replay = await resumed.prepare(CHAT, limit=2)
+            reopened = AlbumReceiver(receiver.path, 'one', max_bytes=cap)
+            confirm_only(reopened, replay)
+            await resumed.acknowledge(CHAT, replay.batch_id)
+            self.assertEqual((await resumed.status(CHAT)).after_id, 2)
+            self.assertEqual(len(reads), 1)
+            self.assertEqual(reopened.load(expected.post_id), expected)
+        asyncio.run(run())
 
-def crash(path, batch_path, mode):
+    def test_default_byte_limit_replay_of_1300_long_messages(self):
+        raw = batch(*(record(i, 'x'*4096, grouped=None) for i in range(1, 1301)))
+        posts = assemble(raw)
+        self.assertLess(len(raw.to_json().encode()) + sum(len(p.to_json().encode()) for p in posts), 16777216)
+        receiver = self.receiver(); receiver.accept(raw)
+        confirm_only(AlbumReceiver(receiver.path, 'one'), raw)
+        self.assertEqual(receiver.load(posts[-1].post_id), posts[-1])
+
+    def test_old_input_confirms_after_member_growth_and_larger_policy_writer(self):
+        old = batch(record(1, 'caption'), record(2), record(3, 'separate', None))
+        receiver = self.receiver(max_members=3); receiver.accept(old)
+        receiver.accept(batch(record(4), after=3))
+        confirm_only(receiver, old)
+        larger = AlbumReceiver(receiver.path, 'one', max_members=4)
+        larger.accept(batch(record(5), after=4))
+        confirm_only(AlbumReceiver(receiver.path, 'one', max_members=3), old)
+        with self.assertRaises(AlbumAssemblyError):
+            receiver.load(album_post_ids(old)[0])
+        self.assertEqual(larger.load(album_post_ids(old)[0]).member_ids, (1, 2, 4, 5))
+
+    def test_confirmed_member_integrity_matrix_without_repair(self):
+        raw = batch(record(1, 'original'))
+        mutations = [('DELETE FROM album_members', ()),
+                     ('UPDATE album_members SET record=?', ('changed',)),
+                     ('UPDATE album_members SET record_sha256=?', ('0'*64,)),
+                     ('UPDATE album_members SET post_id=?', ('wrong',)),
+                     ('UPDATE album_members SET message_id=?', (9,))]
+        for index, (sql, args) in enumerate(mutations):
+            receiver = AlbumReceiver(self.root/('case{}.db'.format(index)), 'one', create=True)
+            receiver.accept(raw)
+            with sqlite3.connect(str(receiver.path)) as db:
+                db.execute(sql, args)
+                before = db.execute('SELECT * FROM album_members').fetchall()
+            with self.assertRaises(ReceiverError):
+                confirm_only(receiver, raw)
+            with sqlite3.connect(str(receiver.path)) as db:
+                self.assertEqual(db.execute('SELECT * FROM album_members').fetchall(), before)
+                self.assertEqual(db.execute('SELECT COUNT(*) FROM album_receipts').fetchone()[0], 1)
+
+    def test_member_view_validates_json_digest_and_row_metadata(self):
+        raw = batch(record(1, 'private')); key = album_post_ids(raw)[0]
+        variants = ['{}', '[]', '{"id":"1","id":"1"}', '{"x":NaN}']
+        changed = raw.messages[0]; changed['id'] = '2'; variants.append(json.dumps(changed))
+        for index, encoded in enumerate(variants):
+            receiver = AlbumReceiver(self.root/('invalid{}.db'.format(index)), 'one', create=True)
+            receiver.accept(raw)
+            with sqlite3.connect(str(receiver.path)) as db:
+                db.execute('UPDATE album_members SET record=?,record_sha256=?',
+                           (encoded, hashlib.sha256(encoded.encode()).hexdigest()))
+            with self.assertRaises(ReceiverError) as caught:
+                receiver.load(key)
+            self.assertNotIn('private', str(caught.exception))
+        receiver = self.receiver(); receiver.accept(raw)
+        with sqlite3.connect(str(receiver.path)) as db:
+            db.execute('UPDATE album_members SET chat_id=?', (CHAT-1,))
+        with self.assertRaises(ReceiverError):
+            receiver.load(key)
+
+    def test_known_v1_state_is_refused_unchanged_even_with_create(self):
+        path = self.root/'v1.db'
+        with sqlite3.connect(str(path)) as db:
+            db.execute('CREATE TABLE album_meta(name TEXT PRIMARY KEY NOT NULL,version INTEGER NOT NULL)')
+            db.execute('INSERT INTO album_meta VALUES (?,?)', ('album-receiver',1))
+            db.execute('CREATE TABLE album_collections(collection TEXT PRIMARY KEY NOT NULL)')
+            db.execute('INSERT INTO album_collections VALUES (?)', ('one',))
+            db.execute('CREATE TABLE album_posts(collection TEXT NOT NULL,post_id TEXT NOT NULL,value TEXT NOT NULL,PRIMARY KEY(collection,post_id))')
+            db.execute('CREATE TABLE album_receipts(collection TEXT NOT NULL,batch_id TEXT NOT NULL,PRIMARY KEY(collection,batch_id))')
+            raw = batch(record(1)); post, = assemble(raw)
+            db.execute('INSERT INTO album_posts VALUES (?,?,?)', ('one',post.post_id,post.to_json()))
+            db.execute('INSERT INTO album_receipts VALUES (?,?)', ('one',raw.batch_id))
+        before = path.read_bytes()
+        for create in (False, True):
+            with self.assertRaises(ReceiverError):
+                AlbumReceiver(path, 'one', create=create)
+            self.assertEqual(path.read_bytes(), before)
+
+    def test_missing_partial_and_wrong_post_indexes_refuse(self):
+        definitions = [None,
+            'CREATE INDEX album_members_by_post ON album_members(collection,post_id,message_id) WHERE message_id>0',
+            'CREATE INDEX album_members_by_post ON album_members(collection,post_id COLLATE NOCASE,message_id)',
+            'CREATE UNIQUE INDEX album_members_by_post ON album_members(collection,post_id,message_id)',
+            'CREATE INDEX album_members_by_post ON album_members(post_id,collection,message_id)']
+        for index, sql in enumerate(definitions):
+            receiver = AlbumReceiver(self.root/('index{}.db'.format(index)), 'one', create=True)
+            with sqlite3.connect(str(receiver.path)) as db:
+                db.execute('DROP INDEX album_members_by_post')
+                if sql: db.execute(sql)
+            with self.assertRaises(ReceiverError):
+                receiver.accept(batch(record(1)))
+
+    def test_post_view_bounds_precede_payload_materialization(self):
+        raw = batch(*(record(i, 'x'*100) for i in range(1, 5)))
+        receiver = self.receiver(); receiver.accept(raw); key = album_post_ids(raw)[0]
+        for options in ({'max_members':3}, {'max_bytes':50}):
+            reader = AlbumReceiver(receiver.path, 'one', **options)
+            with patch.object(reader, '_read_members', side_effect=AssertionError('payload fetched')):
+                with self.assertRaises(AlbumAssemblyError):
+                    reader.load(key)
+
+    def test_aggregate_prior_preflight_precedes_any_materialization(self):
+        receiver = self.receiver()
+        a, b = record(1,'a'*1000), record(2,'b'*1000,grouped=GROUP+1)
+        receiver.accept(batch(a)); receiver.accept(batch(b,after=1))
+        incoming = batch(record(3), record(4,grouped=GROUP+1),after=2)
+        from tgdata.message_batch import _canonical
+        cap = len(incoming.to_json().encode())+len(_canonical(a).encode())+len(_canonical(b).encode())-1
+        bounded = AlbumReceiver(receiver.path,'one',max_bytes=cap)
+        with patch.object(bounded,'_read_members',side_effect=AssertionError('payload fetched')):
+            with self.assertRaises(AlbumAssemblyError):
+                bounded.accept(incoming)
+        with sqlite3.connect(str(receiver.path)) as db:
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM album_members').fetchone()[0],2)
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM album_receipts').fetchone()[0],2)
+
+    def test_actual_prior_json_cost_is_accounted_before_next_view(self):
+        receiver = self.receiver(); a,b = record(1,'a'*1000),record(2,'b'*1000,grouped=GROUP+1)
+        receiver.accept(batch(a)); receiver.accept(batch(b,after=1))
+        incoming = batch(record(3),record(4,grouped=GROUP+1),after=2)
+        from tgdata.message_batch import _canonical
+        cap=len(incoming.to_json().encode())+len(_canonical(a).encode())+len(_canonical(b).encode())+1
+        bounded=AlbumReceiver(receiver.path,'one',max_bytes=cap); reads=[]; original=bounded._read_members
+        def read(db,key):
+            reads.append(key);return original(db,key)
+        with patch.object(bounded,'_read_members',side_effect=read):
+            with self.assertRaises(AlbumAssemblyError):bounded.accept(incoming)
+        self.assertEqual(reads,[album_post_ids(incoming)[0]])
+
+    def test_post_view_is_one_snapshot_during_concurrent_growth(self):
+        receiver=self.receiver();raw=batch(record(1,'first'));receiver.accept(raw)
+        with sqlite3.connect(str(receiver.path)) as db:db.execute('PRAGMA journal_mode=WAL')
+        writer=AlbumReceiver(receiver.path,'one');original=receiver._read_members
+        def grow(db,key):
+            writer.accept(batch(record(2),after=1))
+            return original(db,key)
+        with patch.object(receiver,'_read_members',side_effect=grow):
+            self.assertEqual(receiver.load(album_post_ids(raw)[0]).member_ids,(1,))
+        self.assertEqual(receiver.load(album_post_ids(raw)[0]).member_ids,(1,2))
+
+    def test_competing_first_accept_then_exact_confirmation(self):
+        a=self.receiver();b=AlbumReceiver(a.path,'one');raw=batch(record(1))
+        original=a._previous
+        def overlap(*args):
+            with self.assertRaises(sqlite3.OperationalError):b.accept(raw)
+            return original(*args)
+        with patch.object(a,'_previous',side_effect=overlap):a.accept(raw)
+        confirm_only(b,raw)
+        with sqlite3.connect(str(a.path)) as db:
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM album_members').fetchone()[0],1)
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM album_receipts').fetchone()[0],1)
+
+    def test_successful_commit_then_close_error_can_confirm(self):
+        receiver=self.receiver();raw=batch(record(1));original=sqlite3.connect
+        class BadClose(sqlite3.Connection):
+            def close(self):
+                super().close();raise OSError('close failed after commit')
+        def connect(*args,**kwargs):
+            kwargs['factory']=BadClose;return original(*args,**kwargs)
+        with patch.object(receiver_module.sqlite3,'connect',side_effect=connect):
+            with self.assertRaises(OSError):receiver.accept(raw)
+        confirm_only(AlbumReceiver(receiver.path,'one'),raw)
+        self.assertEqual(receiver.load(album_post_ids(raw)[0]).member_ids,(1,))
+
+    def test_reassociation_and_ignored_insert_cannot_claim_acceptance(self):
+        receiver=self.receiver();raw=batch(record(1,'text'));receiver.accept(raw)
+        with self.assertRaises(ReceiverError):receiver.accept(batch(record(1,'text',grouped=GROUP+1)))
+        with sqlite3.connect(str(receiver.path)) as db:
+            db.execute("CREATE TRIGGER ignore_member BEFORE INSERT ON album_members BEGIN SELECT RAISE(IGNORE); END")
+        with self.assertRaises(ReceiverError):receiver.accept(batch(record(2),after=1))
+        with sqlite3.connect(str(receiver.path)) as db:
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM album_members').fetchone()[0],1)
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM album_receipts').fetchone()[0],1)
+
+    def test_backfill_boundary_confirmation_uses_original_delivery_reference(self):
+        async def run():
+            raw=batch(record(1,'caption '*100),record(2,'second '*100),after=0,stop='end')
+            post,=assemble(raw);cap=len(raw.to_json().encode())+len(post.to_json().encode())
+            receiver=self.receiver(max_bytes=cap);store=SQLiteSyncStore(self.root/'source.db');reads=[]
+            async def read(*args,**options):reads.append(options);return raw
+            engine=BackfillEngine(store,'jobs',read_batch=read,clock=lambda:NOW+timedelta(hours=2))
+            request=BackfillStartRequest(collection_id='jobs',chat_id=CHAT,run_id='one',destination_id='one',
+                      origin='fresh',after_id=0,expected_predecessor=None,start_date=NOW-timedelta(hours=1),
+                      end_date=NOW+timedelta(hours=1),batch_size=2,pause_seconds=0)
+            status=(await engine.start(request,submission='new')).status
+            first=await engine.prepare(BackfillPrepareContext.from_status(status));receiver.accept(first.batch)
+            restarted=BackfillEngine(SQLiteSyncStore(store.path,create=False),'jobs',read_batch=read,
+                                    clock=lambda:NOW+timedelta(hours=2))
+            replay=await restarted.prepare(BackfillPrepareContext.from_status(first.status))
+            self.assertEqual(replay.delivery,first.delivery)
+            confirm_only(AlbumReceiver(receiver.path,'one',max_bytes=cap),replay.batch)
+            done=await restarted.acknowledge(replay.delivery)
+            self.assertEqual(done.after_id,2);self.assertEqual(done.terminal_outcome,'completed')
+            self.assertEqual(len(reads),1)
+        asyncio.run(run())
+
+    def test_corrupt_accepted_record_never_acknowledges_pending_source(self):
+        async def run():
+            raw=batch(record(1),after=0)
+            async def read(*args,**options):return raw
+            store=SQLiteSyncStore(self.root/'source.db');engine=SyncEngine(read,store)
+            await engine.initialize(CHAT,after_id=0)
+            receiver=self.receiver();receiver.accept(await engine.prepare(CHAT,limit=1))
+            with sqlite3.connect(str(receiver.path)) as db:db.execute('DELETE FROM album_members')
+            facade=Facade(engine)
+            with self.assertRaises(ReceiverError):await collect(facade,CHAT,receiver,max_batches=1)
+            self.assertEqual(facade.acks,[])
+            state=await engine.status(CHAT)
+            self.assertEqual(state.after_id,0);self.assertEqual(state.pending_batch_id,raw.batch_id)
+        asyncio.run(run())
+
+    def test_lower_input_policy_can_refuse_without_changing_accepted_data(self):
+        receiver=self.receiver();raw=batch(record(1),record(2));receiver.accept(raw)
+        for options in ({'max_members':1},{'max_bytes':len(raw.to_json().encode())-1}):
+            lower=AlbumReceiver(receiver.path,'one',**options)
+            with self.assertRaises(AlbumAssemblyError):lower.accept(raw)
+        confirm_only(receiver,raw)
+
+    def test_byte_boundary_process_exit_before_and_after_receiver_commit(self):
+        async def run():
+            raw=batch(record(1,'caption '*100),record(2,'second '*100),after=0)
+            post,=assemble(raw);cap=len(raw.to_json().encode())+len(post.to_json().encode())
+            receiver=self.receiver(max_bytes=cap);store=SQLiteSyncStore(self.root/'source.db');reads=[]
+            async def read(*args,**options):reads.append(options);return raw
+            engine=SyncEngine(read,store);await engine.initialize(CHAT,after_id=0)
+            owed=await engine.prepare(CHAT,limit=2);saved=self.root/'owed.json';saved.write_text(owed.to_json())
+            for mode,code in (('before',41),('after',42)):
+                child=subprocess.run([sys.executable,__file__,'--crash',str(receiver.path),str(saved),mode,str(cap)],
+                                     stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=20)
+                self.assertEqual(child.returncode,code,child.stderr.decode())
+                resumed=SyncEngine(read,SQLiteSyncStore(store.path,create=False))
+                replay=await resumed.prepare(CHAT,limit=2)
+                self.assertEqual(replay.to_json(),owed.to_json())
+                state=await resumed.status(CHAT);self.assertEqual(state.after_id,0)
+                self.assertEqual(len(reads),1)
+                reopened=AlbumReceiver(receiver.path,'one',max_bytes=cap)
+                if mode=='before':self.assertIsNone(reopened.load(post.post_id))
+                else:
+                    confirm_only(reopened,replay)
+                    await resumed.acknowledge(CHAT,replay.batch_id)
+                    self.assertEqual((await resumed.status(CHAT)).after_id,2)
+                    self.assertEqual(reopened.load(post.post_id),post)
+        asyncio.run(run())
+
+    def test_committed_source_publication_error_requires_normal_pending_replay(self):
+        async def run():
+            raw=batch(record(1,'caption'),after=0,stop='end');reads=[]
+            async def read(*args,**options):reads.append(options);return raw
+            store=SQLiteSyncStore(self.root/'source.db');normal=SyncEngine(read,store)
+            await normal.initialize(CHAT,after_id=0)
+            class LostReply:
+                async def load(self,chat):return await store.load(chat)
+                async def compare_and_swap(self,*args):
+                    assert await store.compare_and_swap(*args)
+                    raise OSError('publication committed; response lost')
+            facade=Facade(SyncEngine(read,LostReply()));receiver=self.receiver()
+            with self.assertRaises(SyncStorageError):await collect(facade,CHAT,receiver,max_batches=1)
+            self.assertEqual(facade.acks,[]);self.assertIsNone(receiver.load(album_post_ids(raw)[0]))
+            self.assertEqual((await normal.status(CHAT)).pending_batch_id,raw.batch_id)
+            replaying=Facade(SyncEngine(read,SQLiteSyncStore(store.path,create=False)))
+            await collect(replaying,CHAT,receiver,max_batches=1)
+            self.assertEqual(replaying.acks,[raw.batch_id]);self.assertEqual(len(reads),1)
+            self.assertEqual((await normal.status(CHAT)).after_id,1)
+        asyncio.run(run())
+
+    def test_collection_lookup_uses_exact_keys_not_column_collation(self):
+        path=self.root/'collations.db'
+        with sqlite3.connect(str(path)) as db:
+            for table,columns in receiver_module._SCHEMA.items():
+                if table=='album_collections':
+                    columns='collection TEXT COLLATE NOCASE NOT NULL, PRIMARY KEY(collection COLLATE BINARY)'
+                else:
+                    columns=columns.replace('collection TEXT NOT NULL','collection TEXT COLLATE NOCASE NOT NULL')
+                    columns=columns.replace('PRIMARY KEY(collection,','PRIMARY KEY(collection COLLATE BINARY,')
+                db.execute('CREATE TABLE {} ({})'.format(table,columns))
+            db.execute('CREATE INDEX album_members_by_post ON album_members(collection COLLATE BINARY,post_id,message_id)')
+            db.execute('INSERT INTO album_meta VALUES (?,?)',('album-receiver',2))
+            db.execute('INSERT INTO album_collections VALUES (?)',('Tenant',))
+        raw=batch(record(1));owner=AlbumReceiver(path,'Tenant');owner.accept(raw)
+        with self.assertRaises(ReceiverError):AlbumReceiver(path,'tenant')
+        distinct=AlbumReceiver(path,'tenant',create=True)
+        self.assertIsNone(distinct.load(album_post_ids(raw)[0]))
+        distinct.accept(raw)
+        confirm_only(owner,raw);confirm_only(distinct,raw)
+        with sqlite3.connect(str(path)) as db:
+            self.assertEqual(db.execute('SELECT collection FROM album_receipts ORDER BY collection COLLATE BINARY').fetchall(),
+                             [('Tenant',),('tenant',)])
+
+
+def crash(path, batch_path, mode, cap=None):
     original = sqlite3.connect
     class Connection(sqlite3.Connection):
         def commit(self):
@@ -606,7 +939,8 @@ def crash(path, batch_path, mode):
         options['factory'] = Connection
         return original(*args, **options)
     with patch('examples.album_assembly.sqlite3.connect', side_effect=connect):
-        AlbumReceiver(path, 'one').accept(MessageBatch.from_json(Path(batch_path).read_text()))
+        AlbumReceiver(path, 'one', max_bytes=int(cap) if cap is not None else 16777216).accept(
+            MessageBatch.from_json(Path(batch_path).read_text()))
     raise AssertionError('commit fault did not fire')
 
 
