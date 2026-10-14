@@ -5,18 +5,18 @@ articulated-surfacing-routed
 A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
-- [x] Surfacing
-- [x] Sensemaking
-- [x] Decomposition
-- [x] Innovation
-- [x] Critique
-- [x] Routelister
+- [ ] Surfacing
+- [ ] Sensemaking
+- [ ] Decomposition
+- [ ] Innovation
+- [ ] Critique
+- [ ] Routelister
 ## Iteration
-1
+2
 ## Status
 ACTIVE
 ## Next Discipline
-Iteration assessment
+Surfacing
 ## Relationships
 - RELATED: ../../29-album-assembly/traverse/ on retained archive branch feat/29-album-assembly — album/receiver contract prerequisite; product merged.
 ## History
@@ -27,3 +27,4 @@ Iteration assessment
 - 2026-10-15_00-19: Innovation complete:7/7 mechanisms,12 tested variations,4 principal survivors plus1 refinement,4 kills,3 deferred; explicit inversions for4 meta-decisions. Checker absent; manual10/10 required structure. Next: Critique.
 - 2026-10-15_00-22: Critique complete:12 candidates,7 dimensions; assembly REFINE after real scope counterexample. Manual8/8 structural requirements; checker unavailable. Next:Routelister, then iteration2 on bounded context/barriers. No PR rejection or production change.
 - 2026-10-15_00-24: Routelister complete:9 concept identities,6 core routes; both canonical map/index saved. Checker unavailable; manual6/6. Next:iteration assessment. Critique still requires context/barrier refinement.
+- 2026-10-15_00-25: Iteration1 assessed: original question not fully answered; hidden known text under album expansion. Preserved six outputs as *_iter1.md at root, kept articulation and _route index. Iteration2 focuses on selection closure and temporal barriers. Next:Surfacing.

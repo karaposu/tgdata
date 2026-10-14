@@ -61,3 +61,6 @@ Question covers goal: YES. In scope: qualifying the optional generic capability,
 
 ## Derivation Check
 Item coverage, MQ1–MQ4 coverage, WHY coverage, all four variants and exclusions preserved:5/5. The common observation-view/incremental-final-output axis is retained without adjudication. No cognitive-framework rewrite or multi-inquiry synthesis is requested, so Layer Commitment and Synthesis Trigger do not apply.
+
+## Iteration2 Focus (original articulation preserved)
+Resolve the bounded observation-scope and precise temporal-barrier gaps from critique_iter1.md. Compare closed interval refusal, safe context closure and partial-observation approaches using the actual scope_probe counterexample. Keep A/B/C/D and the original exclusions visible; no new feature scope or re-articulation.
