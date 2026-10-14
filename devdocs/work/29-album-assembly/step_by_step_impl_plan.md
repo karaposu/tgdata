@@ -2,7 +2,9 @@
 model: unknown
 effort: unknown
 ---
-# Implementation plan — observed album assembly (#29), revision 1
+# Implementation plan — observed album assembly (#29), revision 2
+
+**Critic folded:** 2026-10-14 — 1 selected robust mitigation (3 steps changed, 0 added). Combined prebuild PASS37/37 before step1; see critic.md and prebuild/report.md.
 
 Canonical task-plan artifact. `plan.md` points here to preserve the repository's conventional entry point without maintaining duplicate plans. Input explicitly supplied: `devdocs/work/29-album-assembly/desc.md`. No prior PR rejection or deprecated plan exists.
 
@@ -50,6 +52,8 @@ Keep source data and its receipts intact. Add one immutable versioned post value
 
 ## Step 1 — Immutable observed posts and assembly
 
+[folded: Risk 1, robust] Apply caller-selected limits to saved-value revalidation as well as output construction. Safe=False remains appropriate for public exports.
+
 ### Proposed changes
 
 Add `tgdata/album.py`; reuse raw-record and canonical identifier/JSON validators without changing MessageBatch or its format. Normalize only record ordering, never member content. Reject wrong prior key/value/identity, duplicate conflicting IDs, mixed mode and malformed serialization using local AlbumAssemblyError. Revalidate public saved values, reject unsupported fields/types, hide message contents from repr/errors. Implement key selection and pure bounded union; empty batch requires an empty mapping and returns an empty tuple. Export four names from `tgdata/__init__.py`, preserving version0.1 and every existing export. If the required prebuild has produced the qualified candidate, adopt those exact module bytes.
@@ -72,6 +76,8 @@ MessageBatch v1, canonical identifiers/JSON, raw media validation, package expor
 
 ## Step 2 — Durable receiver example
 
+[folded: Risk 1, robust] AlbumReceiver takes explicit max_members/max_bytes and passes them to every saved post load, assembly operation and readback. Reopening under a lower policy may refuse; restore an adequate policy, never reset data. Safe=True remains: only a new opt-in example changes.
+
 ### Proposed changes
 
 Add `examples/album_assembly.py` with `AlbumReceiver`, isolated versioned schema, named collections, post JSON and input markers. Reopen through SQLite mode=rw, validate schema column types/nullability/primary keys and version/collection before lookup or writes. Explicit provisioning creates only a genuinely new schema; known partial schema refuses. Each accept opens/closes its connection, uses current prior state under one write transaction and commits data/marker together. Rollback/close must preserve the original error; a post-commit failure must not reset committed data. Provide readback for the offline demo and tests. Add a bounded daily collect helper using confirmed normal delivery only. The no-network CLI demo stores a split album, loses its raw ack, reopens both stores, replays and continues, then prints member/caption counts. No live CLI/login is required. Adopt qualified prebuild bytes if available.
@@ -93,6 +99,8 @@ SQLite transactions/schema, SyncEngine receipts, BackfillDeliveryRef, post seria
 4
 
 ## Step 3 — Focused tests and combined evidence
+
+[folded: Risk 1, robust] Include10001 members accumulated from valid bounded raw batches, accept→reopen→replay under a raised policy, then lower-policy refusal without a write; exact multibyte byte accounting also crosses the boundary. Safe=True remains: temporary offline data only.
 
 ### Proposed changes
 
