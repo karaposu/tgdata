@@ -1,0 +1,20 @@
+{
+  "version": "0.1",
+  "project_url": "https://pypi.org/project/tgdata/0.1/",
+  "files": [
+    {
+      "filename": "tgdata-0.1-py3-none-any.whl",
+      "sha256": "cc2e95a341ea51f393487d7b81d58f7b9ae31a081a504e92b2e85ae5311f10b3",
+      "upload_time": "2026-10-14T07:57:45.928008Z",
+      "size": 443815,
+      "yanked": false
+    },
+    {
+      "filename": "tgdata-0.1.tar.gz",
+      "sha256": "0a0ebfaf6e7e79c61711ad2aeb0781f7075b833b2bd5cf748d97aec7cb9e9aee",
+      "upload_time": "2026-10-14T07:57:47.416752Z",
+      "size": 420039,
+      "yanked": false
+    }
+  ]
+}
