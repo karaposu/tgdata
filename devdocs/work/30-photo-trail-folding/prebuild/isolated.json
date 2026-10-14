@@ -1,0 +1,21 @@
+{
+  "result": "PASS",
+  "no_git": true,
+  "no_work_docs": true,
+  "results": [
+    {
+      "name": "isolated-suite43",
+      "exit_code": 0
+    },
+    {
+      "name": "isolated-demo",
+      "exit_code": 0
+    }
+  ],
+  "candidate_sources": {
+    "tgdata/photo_trails.py": "9be88edefcab93829511f6d183fd923a6760fc7ba1b9c10c2ade29016b1428ee",
+    "examples/photo_trails.py": "96e5cd47174a01da8a615f4aad8ad9874eab70c902587ddf198c19edb9333a4e",
+    "tgdata/smoke_tests/test_43_photo_trails.py": "c7e4478fb61cee9437c49105464f41eb0323fa22dc5d30c284e3d6726c6d0e5c",
+    "tgdata/__init__.py": "208997f8ef390e0422060ce4dc96c5c06514dc9ec556e6aeb32da3dcca28bb25"
+  }
+}

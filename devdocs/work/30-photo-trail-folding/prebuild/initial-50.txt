@@ -1,0 +1,3 @@
+Initial candidate run: python -m tgdata.smoke_tests.test_43_photo_trails
+Observed tool exit0: Ran50 tests in3.533s; OK. The actual offline demo also completed.
+No product/runtime correction was required. Three additional required composition cases were then added: source read-failure pending replay, receiver commit-response loss, and read-lock release before pure projection. The complete53-case candidate and related suites are run together in the subsequent full prebuild.
