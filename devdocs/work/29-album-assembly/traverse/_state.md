@@ -12,7 +12,7 @@ A → Su → S → D → I → C → R (always)
 - [x] Sensemaking
 - [x] Decomposition
 - [x] Innovation
-- [ ] Critique
+- [x] Critique
 - [ ] Routelister
 
 ## Iteration
@@ -22,7 +22,7 @@ A → Su → S → D → I → C → R (always)
 ACTIVE
 
 ## Next Discipline
-Critique
+Routelister
 
 ## History
 - 2026-10-14_14-02: Created in the issue's work-folder traverse/ per CONTRIBUTING §5. Articulation HIGH-PROCEED; I1; four variants. Manual structure10/10 (raw input, itemize, MQ questions/shapes, MQ2 axes, MQA, tuple, literal/WHY, bounded variants, nine-mode check, verdict). Derivation7/7 source bundles copied without dropping ambiguity; structural_check.sh absent. Next:Surfacing. No later discipline output drafted.
@@ -48,3 +48,5 @@ Critique
 - 2026-10-14_15-13: Decomposition2 complete; same4 pieces/7 flows, explicit receiver creation/reopen and source-receipt distinction. Manual seven-step structure and full seven-dimension check pass. Next:Innovation.
 
 - 2026-10-14_15-20: Innovation2 complete;7 mechanisms/12 variations/four piece inversions/five tests, explicit frame/axis/shared-input/artifact checks. Manual structure and telemetry passed; four actionable components form A2. Next:Critique.
+
+- 2026-10-14_15-21: Critique2 complete;12 candidates + A2, fixed7 dimensions, concrete recovery/namespace/receipt prosecutions and external anchors. Manual full-phase/accumulator/telemetry checks pass. A2 SURVIVE; TERMINATE after required Routelister. Next:Routelister.
