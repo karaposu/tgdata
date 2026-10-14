@@ -559,3 +559,28 @@ publication committed with a lost reply, and real process exits at the byte boun
 Socket connections are blocked; source responses are synthetic. No live Telegram
 completeness, deployed receiver or hardware power-loss guarantee is claimed.
 See [the album contract](../../docs/album_assembly.md).
+
+### Test 43: optional photo-trail views (offline)
+
+```bash
+python -m tgdata.smoke_tests.test_43_photo_trails
+python examples/photo_trails.py --demo
+```
+
+53 tests exercise the default-disabled policy, exact photo/user/reply/time rules,
+whole follower albums, interleaved users, original-member barriers, late caption
+withdrawal and separate folded-post/photo counts. Original records, both media
+modes, immutable values, strict/forged serialization, input order/partition
+invariance, exact UTF-8 limits and raised 10001-member reload/getters are covered.
+
+Actual Telethon 1.45 values, SQLite and daily/backfill engines compose with the
+candidate. Cases include closed-range refusal, missing/corrupt state, exact
+collations, metadata preflight, consistent snapshots, read-lock release, zero
+view writes, cleanup precedence, original replay after view refusal, source
+publication/read failures, cancellation, commit-response loss and child-process
+loss after acceptance. The mixed-post chronology case preserves each individual
+known sender's timestamps even when the whole post cannot anchor.
+
+Source responses are synthetic and sockets are blocked. These checks do not
+claim live intent accuracy, deployed consumer compatibility or physical
+power-loss durability. See [the photo-trail contract](../../docs/photo_trails.md).
