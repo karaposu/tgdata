@@ -15,6 +15,7 @@ probe groups. Both checks are committed, pushed and posted to the PR.
 Merged with the user's go-ahead:PR28 → dev f92749688b7d544da55249459c489164497d47ed.
 The actual merged tree passed all28 suites/773 offline cases and5 examples before
 push. Work documents were excluded, branch archive preserved. See merge-record.md.
+#8 is CLOSED as completed; GitHub confirmation:2026-10-14T05:38:48Z.
 Real Telegram code delivery/password acceptance remains pending; no live login was
 performed. Optional unfinished-state preference was unanswered; portable completed
 steps are the stated default and memory-only object use also works.

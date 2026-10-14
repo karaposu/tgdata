@@ -21,13 +21,13 @@ with package import location asserted under that checkout. `verify_merge.py`
 reuses the full verifier against that tree and stores evidence under
 `merged-verification/`; no work documents need to ship in dev to run the product.
 
--28 supported suites passed:773 executed offline cases,3 explicit legacy live skips.
--All5 offline examples passed, including the new login and existing worker examples.
--Compile, package imports, Python3.7 grammar, candidate byte parity and factory AST
+- 28 supported suites passed:773 executed offline cases,3 explicit legacy live skips.
+- All5 offline examples passed, including the new login and existing worker examples.
+- Compile, package imports, Python3.7 grammar, candidate byte parity and factory AST
   parity passed on Python3.11.10 / Telethon1.45.0.
--Reviewed product tree parity and archive exclusion were asserted before and after
+- Reviewed product tree parity and archive exclusion were asserted before and after
   verification. Source hashes remained unchanged; merged worktree was clean.
--All33 child jobs finished without a watchdog timeout. Full logs/results are in
+- All33 child jobs finished without a watchdog timeout. Full logs/results are in
   merged-verification/result.json and sibling logs.
 
 After verification, pushed the two-parent merge to dev without force. GitHub reports
@@ -41,6 +41,8 @@ guide states that limit. No real code/password was requested or production crede
 replaced during verification. Native Python3.7 and physical proxy exit-IP checks
 are not claimed. #17's two-account live validation remains separately deferred.
 
-Issue8 can close as completed for the reviewed implementation. Any later live
-qualification should retain these distinctions and use an explicitly authorized
-account/setup; it is not an instruction to log in automatically now.
+Issue8 was manually closed as completed at2026-10-14T05:38:48Z after the verified
+dev merge; GitHub state/reason were read back. PR and issue completion records link
+this archive. Any later live qualification should retain these distinctions and
+use an explicitly authorized account/setup; it is not an instruction to log in
+automatically now.
