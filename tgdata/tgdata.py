@@ -4,16 +4,38 @@ Single class with all features, delegating to specialized engines.
 """
 
 import asyncio
+import functools
+import inspect
 import json
 import logging
+import os
+from contextlib import asynccontextmanager
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any, Union, Callable
 import pandas as pd
 
-from .connection_engine import ConnectionEngine
+from . import health
+from .account_operation import _expected_account_id
+from .owned_health import _OwnedHealthMonitor, _retire_notifications
+from .connection_engine import ConnectionEngine, AuthRequiredError, ProxyConfigError
 from .message_engine import MessageEngine
 from .discovery_engine import DiscoveryEngine
+from .batch_engine import BatchEngine
+from .message_batch import MessageBatch
+from .progress_facade import ProgressFacade
+from .sync_engine import SyncEngine
+from .backfill_engine import BackfillEngine
+from .backfill import (
+    BackfillStartRequest, BackfillRunRef, BackfillPrepareContext,
+    BackfillDeliveryRef, BackfillConfigurationError,
+)
 from .models import GroupInfo
+from .group_operations import (
+    GroupLookup, GroupAccess, GroupJoin, _parse_target, _lookup_group, _check_group_access, _join_group,
+)
+from .read_budget import ReadBudgetError, ReadBudgetExceeded
+from .join_budget import JoinBudget, JoinBudgetConfigError
+from .join_client import _join_policy
 from .utils import (
     format_message_for_display,
     export_to_json,
@@ -27,7 +49,61 @@ from .utils import (
 
 logger = logging.getLogger(__name__)
 
-class TgData:
+
+def _reported(group_param: Optional[str] = None, recover: bool = True,
+              success_if: Optional[Callable[[Any], bool]] = None):
+    """Run a public method that talks to Telegram as one health call (issue
+    #4): a Telegram verdict that escapes it is reported, then re-raised
+    unchanged; a success sends "ok" for what it proves has ended.
+
+    group_param names the argument holding the group (the current group when
+    it is not given); recover=False leaves recovering to the calls made inside;
+    success_if marks a result that means failure, so it is never a recovery."""
+    def decorate(method):
+        signature = inspect.signature(method)
+        name = method.__name__
+
+        @functools.wraps(method)
+        async def wrapper(self, *args, **kwargs):
+            monitor = getattr(self, '_health', None)
+            if monitor is None:
+                return await method(self, *args, **kwargs)
+            group = None
+            if group_param is not None:
+                try:
+                    group = signature.bind_partial(self, *args, **kwargs).arguments.get(group_param)
+                except TypeError:              # a wrong call: the method raises its own error
+                    group = None
+                current = getattr(self, 'current_group', None)
+                if group is None and current is not None:
+                    group = current.id
+            async with monitor.call(name, health.normalise_group(group), recover) as call:
+                result = await method(self, *args, **kwargs)
+                if success_if is not None and not success_if(result):
+                    call.failed = True
+                return result
+        return wrapper
+    return decorate
+
+
+def _polling_cannot_recover(error: BaseException) -> bool:
+    """Whether polling again at the next interval cannot help: the session is
+    not logged in, proxy/budget policy blocks reading, or Telegram's verdict is
+    that the account is logged out, banned or restricted, or cannot read the group."""
+    if isinstance(error, (AuthRequiredError, ProxyConfigError, ReadBudgetError)):
+        return True
+    finding = health.classify(error, include_reported=True)
+    return finding is not None and finding.verdict in health.TERMINAL
+
+
+def _health_check_passed(status: Dict[str, Any]) -> bool:
+    """Whether a health_check() reached Telegram and found every connection
+    logged in — the only kind that may count as a recovery."""
+    return (status.get('primary_connection') is True
+            and all(entry.get('healthy') for entry in status.get('pool_connections', [])))
+
+
+class TgData(ProgressFacade):
     """
     Unified interface for Telegram group operations.
     All features in one place, with clean delegation to specialized engines.
@@ -36,14 +112,59 @@ class TgData:
     def __init__(self,
                  config_path: str = "config.ini",
                  connection_pool_size: int = 1,
-                 log_file: Optional[str] = None):
+                 log_file: Optional[str] = None,
+                 interactive_login: Optional[bool] = None,
+                 health_callback: Optional[Callable] = None,
+                 account_label: Optional[str] = None,
+                 session_store=None,
+                 read_budget=None,
+                 sync_store=None,
+                 backfill_store=None,
+                 join_budget=None):
         """
         Initialize Telegram group handler.
-        
+
         Args:
             config_path: Path to configuration file
             connection_pool_size: Number of connections (1 = no pooling)
             log_file: Optional log file path
+            interactive_login: When tgdata may ask Telegram for a login code
+                and wait for it on stdin. None (default): only the first
+                login of a brand-new session, run by hand in a terminal.
+                True: also log a session back in after Telegram logged it out —
+                run that by hand. False: never. Otherwise a session that is
+                not logged in raises AuthRequiredError (with .reason and
+                .banned), and no code is ever requested.
+            health_callback: Called with a plain, JSON-ready dict every time
+                Telegram says no to this account — a wait, a logout, a ban, a
+                restriction, no access to a group — and with verdict "ok" when
+                that ends. A function or a coroutine function; an exception in
+                it is logged, never raised. Events caused by tgdata calls it
+                makes itself are logged and counted, not delivered back to it.
+                See the README, "Account health events".
+                health_check()["health"] summarises legacy public calls;
+                get_account_health(id) is the separate verified-operation view.
+            account_label: A name for this account in those events (default:
+                None; the session name and the account id are always included)
+            session_store: Optional object with synchronous load(name) -> str
+                or None, save(name, data), and optional delete(name) methods.
+                Stores the login, group cache and update states without a
+                .session file. Methods run on the event loop and should return
+                quickly. None keeps the existing file sessions.
+            read_budget: Optional ReadBudget sharing a rolling 24-hour message
+                allowance by authenticated account ID. None keeps reads unlimited
+                by account quota. See the README's read-budget contract.
+            sync_store: Optional async load/compare_and_swap backend for durable
+                daily continuation. SQLiteSyncStore provides local persistence.
+                Progress advances only on explicit acknowledge_sync.
+            backfill_store: Optional async load/compare_and_swap backend in a
+                separate historical collection namespace. The caller configures
+                that namespace; collection_id does not route to another backend.
+                Progress advances only on acknowledge_backfill. None disables
+                the backfill facade. See docs/backfill_runs.md.
+            join_budget: Optional JoinBudget used only by join_group's verified
+                temporary operation. None disables that method; raw SDK clients
+                are outside this guard. Provision/configure the ledger separately.
         """
         # Set up logging
         if log_file:
@@ -56,7 +177,10 @@ class TgData:
         # Initialize engines
         self.connection_engine = ConnectionEngine(
             config_path=config_path,
-            pool_size=connection_pool_size
+            pool_size=connection_pool_size,
+            interactive_login=interactive_login,
+            session_store=session_store,
+            read_budget=read_budget
         )
         
         self.message_engine = MessageEngine(
@@ -66,15 +190,124 @@ class TgData:
         self.discovery_engine = DiscoveryEngine(
             connection_engine=self.connection_engine
         )
+        self.batch_engine = BatchEngine(self.connection_engine)
+        self.sync_engine = SyncEngine(self.get_message_batch, sync_store)
+        self._backfill_store = backfill_store
+        self._join_budget = join_budget
+        # Keep local activity, known ends and monotonic minima across operations.
+        # A collection cache key is identity, not automatic backend namespacing.
+        self._backfill_engines = {}
 
         # State
         self.current_group: Optional[GroupInfo] = None
         self._metrics: Dict[str, Any] = {}
+        self._health = health.HealthMonitor(health_callback, account_label, self._health_identity)
+        self._account_health = {}
         
         logger.info("TgData initialized")
-        
+
+    def _health_identity(self):
+        """(session, user_id) for health events: the session file's name
+        without folder or .session, and the account id Telethon restored for
+        the client, when known. Never raises."""
+        session = user_id = None
+        try:
+            config = self.connection_engine._config      # read only once loaded: no side effect
+            if config is not None and config.session_file:
+                name = os.path.basename(str(config.session_file))
+                session = name[:-len('.session')] if name.endswith('.session') else name
+        except Exception:  # noqa: BLE001
+            pass
+        try:
+            client = self.connection_engine._primary_client
+            user_id = client._self_id if client is not None else None
+        except Exception:  # noqa: BLE001
+            pass
+        return session, user_id
+
+    def get_account_health(self, account_id: int) -> Optional[Dict[str, Any]]:
+        """Local health observed through verified operations, or None if unknown.
+
+        No I/O or authentication. Legacy reads/health_check() keep their separate
+        health view; cached session identities never populate this owned ledger.
+        """
+        account_id = _expected_account_id(account_id)
+        monitor = self._account_health.get(account_id)
+        return monitor.snapshot() if monitor is not None else None
+
+    @asynccontextmanager
+    async def _account_health_operation(self, expected_account_id, method, group=None):
+        """Private Stage 1 composition; yield (verified handle, health observation).
+
+        Group code must explicitly confirm proven access on the observation.
+        Caller work stays in the opening task; notifications run after cleanup.
+        """
+        started = next(health._TICKS)
+        monitor = observation = None
+        with health.isolate_call():
+            try:
+                async with self.connection_engine._account_operation(expected_account_id) as operation:
+                    monitor = self._account_health.get(operation.account_id)
+                    if monitor is None:
+                        monitor = _OwnedHealthMonitor(operation.account_id, self._health_identity()[0],
+                                                      self._health.callback, self._health.label)
+                        self._account_health[operation.account_id] = monitor
+                    async with monitor.observe(operation, method, health.normalise_group(group),
+                                               started) as observation:
+                        yield operation, observation
+            finally:
+                if observation is not None:
+                    monitor.dispatch(observation)
+
     # ==================== Group Management ====================
+
+    async def lookup_group(self, target: Union[str, int], *, account_id: int) -> GroupLookup:
+        """Resolve group metadata under a freshly verified expected account.
+
+        Uses one temporary client; never logs in, joins or probes history.
+        See docs/group_operations.md for supported references and source errors.
+        """
+        reference = _parse_target(target)
+        async with self._account_health_operation(
+                account_id, 'lookup_group', reference.label) as (operation, _):
+            return await _lookup_group(operation, reference)
+
+    async def check_group_access(self, target: Union[str, int], *, account_id: int) -> GroupAccess:
+        """Resolve metadata and, when possible, probe one message of history.
+
+        Returns readable, denied or unprobed; operational failures still raise.
+        The existing read budget applies. Readability does not establish membership.
+        """
+        reference = _parse_target(target)
+        async with self._account_health_operation(
+                account_id, 'check_group_access', reference.label) as (operation, observation):
+            result = await _check_group_access(operation, reference)
+            if result.readable is True:
+                observation.confirm_group_access()
+            return result
+
+    async def join_group(self, target: Union[str, int], *, account_id: int) -> GroupJoin:
+        """Join through an expected authenticated account and explicit allowance.
+
+        Returns a qualified source outcome with preflight metadata; it does not
+        prove read access or refresh unknown invite IDs. See docs/group_joining.md.
+        """
+        reference = _parse_target(target)
+        account_id = _expected_account_id(account_id)
+        budget = self._join_budget
+        if not isinstance(budget, JoinBudget):
+            raise JoinBudgetConfigError('join_group requires a configured JoinBudget instance')
+        async with self._account_health_operation(
+                account_id, 'join_group', reference.label) as (operation, _):
+            _join_policy(budget, operation.account_id)
+            client = operation.client
+            client._tgdata_join_budget = budget
+            try:
+                return await _join_group(operation, reference)
+            finally:
+                client._tgdata_join_budget = None
     
+    @_reported()
     async def list_groups(self) -> pd.DataFrame:
         """
         List all accessible groups/channels.
@@ -125,7 +358,40 @@ class TgData:
         logger.info(f"Set current group to {group_id}")
         
     # ==================== Message Operations ====================
+
+    def _new_backfill_engine(self, collection):
+        # Keep the existing module-local factory seam for clock/test injection.
+        return BackfillEngine(self._backfill_store, collection, read_batch=self.get_message_batch)
+
+    @_reported('group_id')
+    async def get_message_batch(self, group_id: Union[int, str], *,
+                                after_id: int = 0, limit: int = 200,
+                                download_media_to=None,
+                                start_date=None, end_date=None) -> MessageBatch:
+        """Read a bounded oldest-first raw snapshot after an exclusive ID.
+
+        Returns a versioned MessageBatch with canonical JSON, a batch_id and
+        next_after_id. Pass download_media_to for hash-named photo/document
+        files; otherwise only references are returned. The existing client,
+        proxy/session configuration and optional read budget apply.
+
+        Once a chat is resolved, an ordinary failure carries a MessageBatch
+        of completed records in error.partial_result and is re-raised unchanged.
+        Persist/replay that value and advance your durable cursor only after
+        the receiver acknowledges it. This method does not change current_group.
+
+        group_id must name a group/channel explicitly; after_id is 0..2**31-1,
+        limit is 1..10000. See docs/message_batch_v1.md for the exact wire contract.
+        Optional timezone-aware start_date/end_date constrain message dates to
+        [start_date, end_date). Supply both; the ID cursor still applies. Reads
+        outside the interval spend normal budget but do not download media.
+        """
+        options = dict(after_id=after_id, limit=limit, download_media_to=download_media_to)
+        if start_date is not None or end_date is not None:
+            options.update(start_date=start_date, end_date=end_date)
+        return await self.batch_engine.fetch_batch(group_id, **options)
     
+    @_reported('group_id')
     async def get_messages(self,
                           group_id: Optional[int] = None,
                           limit: Optional[int] = None,
@@ -220,6 +486,7 @@ class TgData:
         return df
         
         
+    @_reported('group_id')
     async def get_message_count(self, group_id: Optional[int] = None) -> int:
         """
         Get total message count for a group without fetching all messages.
@@ -236,6 +503,7 @@ class TgData:
             
         return await self.message_engine.get_message_count(target_group_id)
         
+    @_reported('group_id')
     async def search_messages(self,
                             query: str,
                             group_id: Optional[int] = None,
@@ -263,6 +531,7 @@ class TgData:
         
     # ==================== Group Discovery ====================
 
+    @_reported()
     async def search_groups(self,
                             query: str,
                             limit: int = 100,
@@ -286,7 +555,12 @@ class TgData:
                 proven pace for a personal account)
             max_flood_wait: A rate-limit wait up to this many seconds is
                 obeyed exactly, with heartbeat ticks; a longer one raises
-                DiscoveryInterrupted (default 3600)
+                DiscoveryInterrupted (default 3600). A wait on a username
+                lookup is never slept: it skips the seed or stops resolving
+                (for a linked_groups source it raises DiscoveryInterrupted).
+                Reading a room's posts for links, and the dialog sync for a
+                numeric id, keep Telethon's own handling: a wait of up to a
+                minute there is slept without ticks.
             max_offline: How long to wait for a dropped connection to come
                 back before giving up (default 3600)
             heartbeat: Liveness callback(phase) — see get_messages
@@ -307,6 +581,7 @@ class TgData:
             query, limit, pace=pace, max_flood_wait=max_flood_wait, max_offline=max_offline,
             heartbeat=heartbeat, found_callback=found_callback)
 
+    @_reported()
     async def similar_groups(self,
                              seeds,
                              rounds: int = 2,
@@ -346,6 +621,7 @@ class TgData:
             seeds, rounds, max_resolve=max_resolve, pace=pace, max_flood_wait=max_flood_wait,
             max_offline=max_offline, heartbeat=heartbeat, found_callback=found_callback)
 
+    @_reported('group_id')
     async def linked_groups(self,
                             group_id,
                             posts: int = 100,
@@ -378,12 +654,17 @@ class TgData:
         Returns:
             DataFrame in the search_groups shape, FoundVia 'link', FoundBy the
             source room's '@name' or 'id:N'. Source rooms are never rows.
+
+        Raises:
+            DiscoveryInterrupted: when looking up a source room's name must
+                wait (lookups are never slept through), or as in search_groups.
         """
         return await self.discovery_engine.linked_groups(
             group_id, posts, resolve, max_resolve=max_resolve, pace=pace,
             max_flood_wait=max_flood_wait, max_offline=max_offline,
             heartbeat=heartbeat, found_callback=found_callback)
 
+    @_reported()
     async def discover_groups(self,
                               seeds=(),
                               queries=(),
@@ -574,10 +855,16 @@ class TgData:
         
     # ==================== Utility Methods ====================
     
+    @_reported(success_if=bool)
     async def validate_connection(self) -> bool:
         """
         Validate connection status.
-        
+
+        Still True or False — and on False it says why: a Telegram verdict
+        (logged out, banned, restricted, a wait, ...) is logged at WARNING
+        with Telegram's name for it and reported as a health event; any other
+        failure is logged at ERROR. A False result never counts as recovery.
+
         Returns:
             True if connection is valid
         """
@@ -586,11 +873,28 @@ class TgData:
     async def health_check(self) -> Dict[str, Any]:
         """
         Perform health check.
+
+        A connection is healthy only when Telegram confirms its session is
+        logged in. A logout or a ban it finds is named in 'errors' —
+        'logged out (AUTH_KEY_UNREGISTERED)' — and reported as a health event.
         
         Returns:
-            Health check results
+            Health check results. ['health'] summarises this instance's
+            account health events (see health_callback), what this check
+            found included: the account's verdict and since when, open waits
+            per request type, groups without access, wait and event counts,
+            the last unclassified error. JSON-ready.
         """
-        return await self.connection_engine.health_check()
+        # One health call, opened here rather than by @_reported, so the
+        # summary is read after it closes: a recovery this check proves is
+        # already in it. Only a check that reached Telegram and found every
+        # connection logged in counts as one.
+        async with self._health.call('health_check') as call:
+            status = await self.connection_engine.health_check()
+            if not _health_check_passed(status):
+                call.failed = True
+        status['health'] = self._health.snapshot()
+        return status
 
     def device_identity(self) -> Dict[str, Any]:
         """
@@ -614,6 +918,20 @@ class TgData:
         """
         return self.connection_engine.device_identity()
 
+    @_reported()
+    async def get_read_budget(self):
+        """Current authenticated account's ReadBudgetStatus, or None if disabled.
+
+        No connection is opened when disabled. Enabled budgets verify the
+        account using Telegram's self response before reading the ledger.
+        """
+        budget = self.connection_engine.read_budget
+        if budget is None:
+            return None
+        client = await self.connection_engine.get_client()
+        return budget.status(await client._read_budget_account())
+
+    @_reported('group_id')
     async def download_media_by_id(self,
                              group_id: Union[int, str],
                              message_ids: Union[int, List[int]],
@@ -657,7 +975,10 @@ class TgData:
         
     async def close(self) -> None:
         """Close all connections."""
-        await self.connection_engine.close()
+        try:
+            await self.connection_engine.close()
+        finally:
+            await _retire_notifications(self._account_health.values())
         logger.info("TgData closed")
         
     # ==================== Polling and Real-time Updates ====================
@@ -721,6 +1042,7 @@ class TgData:
         
         self._pending_handlers.clear()
     
+    @_reported('group_id', recover=False)
     async def poll_for_messages(self, 
                                group_id: Union[int, str],
                                interval: int = 60,
@@ -729,6 +1051,15 @@ class TgData:
                                max_iterations: Optional[int] = None) -> None:
         """
         Poll for new messages at specified intervals.
+
+        A failure polling again cannot fix ends the polling with that error
+        (the same exception object): the account is logged out, banned or
+        restricted, it cannot read this group (CHANNEL_PRIVATE,
+        GroupAccessError, ...), the session is not logged in
+        (AuthRequiredError) or the proxy setting is unusable
+        (ProxyConfigError). Any other failure — the network, a rate-limit
+        wait, a server error — is logged and retried at the next interval.
+        An exception raised by `callback` propagates, like batch_callback's.
         
         Args:
             group_id: Group ID or username (e.g., '@channelname') to poll messages from
@@ -754,58 +1085,70 @@ class TgData:
         seen_message_ids = set()  # Track all message IDs we've already processed
         
         while max_iterations is None or iterations < max_iterations:
+            # Get new messages since last check
+            logger.info(f"Poll iteration {iterations + 1}: Checking for messages after ID {current_after_id}")
+            budget_stop = None
             try:
-                # Get new messages since last check
-                logger.info(f"Poll iteration {iterations + 1}: Checking for messages after ID {current_after_id}")
                 new_messages = await self.get_messages(
                     group_id=group_id,
                     after_id=current_after_id
                 )
-                
-                if not new_messages.empty:
-                    # Get all message IDs and filter out already seen ones
-                    all_message_ids = new_messages['MessageId'].tolist()
-                    new_message_ids = [msg_id for msg_id in all_message_ids if msg_id not in seen_message_ids]
-                    
-                    if new_message_ids:
-                        # Filter DataFrame to only include truly new messages
-                        truly_new_messages = new_messages[new_messages['MessageId'].isin(new_message_ids)]
-                        
-                        # Add new IDs to seen set
-                        seen_message_ids.update(new_message_ids)
-                        
-                        # Simply update to the maximum ID we've seen
-                        max_id = max(all_message_ids)
-                        logger.info(f"Poll iteration {iterations + 1}: Found {len(truly_new_messages)} new messages, IDs: {sorted(new_message_ids)}")
-                        logger.info(f"Updating after_id from {current_after_id} to {max_id}")
-                        current_after_id = max_id
-                        
-                        # Call the callback only with truly new messages
-                        if callback:
-                            await callback(truly_new_messages)
-                    else:
-                        # All messages were duplicates, but still update after_id to the max
-                        max_id = max(all_message_ids)
-                        logger.info(f"Poll iteration {iterations + 1}: Found {len(new_messages)} messages but all were duplicates")
-                        logger.info(f"Updating after_id from {current_after_id} to {max_id}")
-                        current_after_id = max_id
-                else:
-                    logger.debug(f"Poll iteration {iterations + 1}: No new messages")
-                
-                iterations += 1
-                
-                # Wait for next interval (unless this is the last iteration)
-                if max_iterations is None or iterations < max_iterations:
-                    await asyncio.sleep(interval)
-                    
+            except ReadBudgetExceeded as e:
+                budget_stop = e
+                new_messages = e.partial_result if isinstance(e.partial_result, pd.DataFrame) else pd.DataFrame()
             except Exception as e:
+                if _polling_cannot_recover(e):
+                    logger.error(f"Polling {group_id} stopped: {e}")
+                    raise
                 logger.error(f"Error during polling: {e}")
                 iterations += 1  # Increment even on error to respect max_iterations
                 
                 # Continue polling after error (unless we've reached max iterations)
                 if max_iterations is None or iterations < max_iterations:
                     await asyncio.sleep(interval)
+                continue
+            
+            if not new_messages.empty:
+                # Get all message IDs and filter out already seen ones
+                all_message_ids = new_messages['MessageId'].tolist()
+                new_message_ids = [msg_id for msg_id in all_message_ids if msg_id not in seen_message_ids]
+                
+                if new_message_ids:
+                    # Filter DataFrame to only include truly new messages
+                    truly_new_messages = new_messages[new_messages['MessageId'].isin(new_message_ids)]
+                    
+                    # Add new IDs to seen set
+                    seen_message_ids.update(new_message_ids)
+                    
+                    # Simply update to the maximum ID we've seen
+                    max_id = max(all_message_ids)
+                    logger.info(f"Poll iteration {iterations + 1}: Found {len(truly_new_messages)} new messages, IDs: {sorted(new_message_ids)}")
+                    logger.info(f"Updating after_id from {current_after_id} to {max_id}")
+                    current_after_id = max_id
+                    
+                    # Call the callback only with truly new messages — an
+                    # exception in it propagates instead of losing them silently
+                    if callback:
+                        await callback(truly_new_messages)
+                else:
+                    # All messages were duplicates, but still update after_id to the max
+                    max_id = max(all_message_ids)
+                    logger.info(f"Poll iteration {iterations + 1}: Found {len(new_messages)} messages but all were duplicates")
+                    logger.info(f"Updating after_id from {current_after_id} to {max_id}")
+                    current_after_id = max_id
+            else:
+                logger.debug(f"Poll iteration {iterations + 1}: No new messages")
+
+            if budget_stop is not None:
+                raise budget_stop
+            
+            iterations += 1
+            
+            # Wait for next interval (unless this is the last iteration)
+            if max_iterations is None or iterations < max_iterations:
+                await asyncio.sleep(interval)
     
+    @_reported()
     async def run_with_event_loop(self):
         """
         Run the Telegram client with event loop to handle real-time events.

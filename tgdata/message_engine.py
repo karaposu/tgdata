@@ -13,9 +13,11 @@ from telethon import utils as tl_utils
 from telethon.errors import FloodWaitError
 from telethon.tl import types as tl_types
 
+from . import health
 from .connection_engine import ConnectionEngine
 from .models import MessageData
 from .progress import ProgressTracker
+from .read_budget import ReadBudgetError
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +35,9 @@ class GroupAccessError(Exception):
     """The account cannot see this group: it is not a member (or the id is
     wrong). Raised only after a dialog sync ruled out the benign cause —
     a fresh session whose entity cache simply hasn't met the id yet."""
+
+
+health.register(GroupAccessError, health.NO_ACCESS, 'group')
 
 
 class MessageEngine:
@@ -336,7 +341,13 @@ class MessageEngine:
 
                 break  # fetch completed
 
+            except ReadBudgetError as e:
+                e.partial_result = self._to_frame(messages_data)
+                raise
             except FloodWaitError as e:
+                # every wait is reported here, the give-up's included; the boundary
+                # then skips the RuntimeError's (already reported) cause: counted once
+                await health.report(e, 'handled')
                 flood_attempts += 1
                 total_flood_wait += e.seconds
                 if flood_attempts > MAX_FLOOD_RETRIES:
@@ -544,6 +555,8 @@ class MessageEngine:
                 try:
                     photo_bytes = await client.download_profile_photo(sender, file=bytes)
                     message_data.photo_data = photo_bytes
+                except ReadBudgetError:
+                    raise
                 except Exception as e:
                     logger.warning(f"Failed to download photo for {sender.id}: {e}")
 
@@ -555,6 +568,8 @@ class MessageEngine:
                     message_data.media_path = await self._download_or_reuse(
                         client, msg, media_dir, chat_id, _beat
                     )
+                except ReadBudgetError:
+                    raise
                 except Exception as e:
                     logger.warning(f"Failed to download media for message {msg.id}: {e}")
 
@@ -563,11 +578,14 @@ class MessageEngine:
             if include_media and msg.media is not None:
                 try:
                     message_data.media_data = await client.download_media(msg, file=bytes)
+                except ReadBudgetError:
+                    raise
                 except Exception as e:
                     logger.warning(f"Failed to load media bytes for message {msg.id}: {e}")
 
             return message_data
-
+        except ReadBudgetError:
+            raise
         except Exception as e:
             logger.error(f"Error processing message {msg.id}: {e}")
             return None
@@ -610,11 +628,25 @@ class MessageEngine:
                 entity = await client.get_entity(group_id)
                 # get_messages(ids=...) returns entries positionally aligned to
                 # `ids`, with None for any id that no longer exists
-                msgs = await client.get_messages(entity, ids=ids)
+                if getattr(self.connection_engine, 'read_budget', None) is None:
+                    # Preserve the existing no-budget fetch/download order.
+                    msgs = await client.get_messages(entity, ids=ids)
+
+                    async def pairs():
+                        for pair in zip(ids, msgs):
+                            yield pair
+                else:
+                    async def pairs():
+                        index = 0
+                        async for msg in client.iter_messages(entity, ids=ids):
+                            if index >= len(ids):
+                                break
+                            yield ids[index], msg
+                            index += 1
                 if output_dir:
                     os.makedirs(output_dir, exist_ok=True)
 
-                for mid, msg in zip(ids, msgs):
+                async for mid, msg in pairs():
                     if msg is None or msg.media is None:
                         results[mid] = None
                         continue
@@ -627,6 +659,8 @@ class MessageEngine:
                         else:
                             # In-memory bytes when no output_dir was given
                             results[mid] = await client.download_media(msg, file=bytes)
+                    except ReadBudgetError:
+                        raise
                     except Exception as e:
                         logger.warning(f"Failed to download media for message {mid}: {e}")
                         results[mid] = None
@@ -635,6 +669,9 @@ class MessageEngine:
             logger.info(f"Downloaded media for {got}/{len(ids)} messages from {group_id}")
             return results
 
+        except ReadBudgetError as e:
+            e.partial_result = dict(results)
+            raise
         except Exception as e:
             logger.error(f"Error downloading media: {e}")
             raise
@@ -704,6 +741,9 @@ class MessageEngine:
             logger.info(f"Found {len(df)} messages matching '{query}'")
             return df
 
+        except ReadBudgetError as e:
+            e.partial_result = self._to_frame(messages_data)
+            raise
         except Exception as e:
             logger.error(f"Error searching messages: {e}")
             raise

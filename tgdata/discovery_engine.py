@@ -18,8 +18,10 @@ Two rules, learned the hard way on a production account:
 
 Everything else the engine does is paced (`pace` seconds after each request),
 obeys flood waits exactly and visibly (per-call threshold 0 + a beating
-sleep), waits for a dropped connection to come back, and never loses what it
-has found: an interruption raises DiscoveryInterrupted carrying `.found`.
+sleep; reading posts for links and the dialog sync for a numeric id keep
+Telethon's own silent sleeps of up to a minute), waits for a dropped
+connection to come back, and never loses what it has found: an interruption
+raises DiscoveryInterrupted carrying `.found`.
 """
 
 from __future__ import annotations
@@ -34,12 +36,15 @@ from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 import pandas as pd
 from telethon import functions
 from telethon import utils as tl_utils
-from telethon.errors import FloodWaitError, RPCError
+from telethon.errors import RPCError
 from telethon.tl import types as tl_types
 
+from . import health
 from .connection_engine import ConnectionEngine
+from .health import WAIT_ERRORS as _WAIT_ERRORS
 from .message_engine import MessageEngine, GroupAccessError
 from .models import GroupInfo
+from .read_budget import ReadBudgetError
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +57,10 @@ SEARCH_LIMIT = 100               # Telegram caps lower; ask for the most
 LINK_POSTS = 100                 # posts read per room when mining links
 SIMILAR_ROUNDS = 2               # a third round drifts out of the topic
 NET_ERRORS = (ConnectionError, OSError, asyncio.TimeoutError, asyncio.IncompleteReadError)
+# _WAIT_ERRORS (from health.WAIT_ERRORS): every wait Telethon's own sleep branch
+# handles (UserMethods._call). Discovery sends with a per-call flood threshold
+# of 0, so Telethon never sleeps for it and it must handle all of them itself —
+# every one carries .seconds.
 COLUMNS = ['GroupID', 'Title', 'Username', 'Identifier', 'IsChannel', 'IsMegagroup',
            'ParticipantsCount', 'FoundVia', 'FoundBy']
 
@@ -67,7 +76,10 @@ RESERVED_PATHS = {"joinchat", "addstickers", "addemoji", "addtheme", "share", "p
 
 class DiscoveryInterrupted(RuntimeError):
     """The run could not continue: Telegram demanded a wait longer than
-    max_flood_wait, or the network stayed down past max_offline.
+    max_flood_wait, the network stayed down past max_offline, or — in
+    linked_groups — looking up a source room's name must wait. Lookups are
+    never slept through, so in that case retry_after can be below
+    max_flood_wait.
 
     Nothing found so far is lost: ``.found`` is the DataFrame collected up
     to the interruption, ``.retry_after`` the seconds Telegram asked for
@@ -97,6 +109,7 @@ class _State:
     entities: dict = field(default_factory=dict)    # key -> entity, so link mining uses objects
     resolved: int = 0                               # resolutions spent so far
     resolve_stopped: bool = False                   # first wait or the cap: no more resolving
+    budget_error: Optional[ReadBudgetError] = None
 
 
 class DiscoveryEngine:
@@ -241,7 +254,10 @@ class DiscoveryEngine:
 
     async def _request(self, client, request, st: _State, phase: str):
         """One raw request with EVERY wait surfaced: sent with a per-call
-        flood threshold of 0, so Telethon never sleeps silently. A wait
+        flood threshold of 0, so Telethon never sleeps silently (Telethon's
+        own __call__ ignores a per-call threshold; every client tgdata builds
+        honours it — connection_engine._PerCallFloodThreshold). Every kind of
+        wait Telethon would have slept is handled here (_WAIT_ERRORS). A wait
         within max_flood_wait is slept in beating slices and the same
         request retried; a longer one raises DiscoveryInterrupted with
         everything found so far. A transport failure waits for the network
@@ -250,7 +266,7 @@ class DiscoveryEngine:
             try:
                 st.beat(phase)
                 return await client(request, flood_sleep_threshold=0)
-            except FloodWaitError as e:
+            except _WAIT_ERRORS as e:
                 name = type(request).__name__
                 if e.seconds > st.max_flood_wait:
                     raise DiscoveryInterrupted(
@@ -258,6 +274,7 @@ class DiscoveryEngine:
                         f"(max_flood_wait={st.max_flood_wait}); {len(st.rows)} rooms found so far",
                         self._frame(st.rows), e.seconds) from e
                 logger.warning(f"FloodWait {e.seconds}s on {name} — waiting, then retrying")
+                await health.report(e, 'handled')
                 await self._sleep_beating(e.seconds, st.beat, "flood-wait")
             except NET_ERRORS as e:
                 logger.warning(f"Connection lost during {type(request).__name__} "
@@ -272,10 +289,13 @@ class DiscoveryEngine:
 
         Entities pass through untouched. Otherwise the session cache is read
         directly (pure, no network). On a miss, a STRING sends ResolveUsername
-        through the per-call path with threshold 0 — never through _request —
-        so a FloodWaitError propagates unslept for the caller to skip or stop
-        on, and it counts against max_resolve; an INT uses the message
-        engine's dialog-sync fallback, so GroupAccessError keeps its meaning.
+        through the per-call path with threshold 0 — never through _request,
+        and honoured because tgdata's clients make that per-call threshold
+        work (connection_engine._PerCallFloodThreshold) — so a wait (any of
+        _WAIT_ERRORS) propagates unslept for the caller to skip or stop on,
+        and it counts against max_resolve; an INT uses the message engine's
+        dialog-sync fallback, so GroupAccessError keeps its meaning (that sync
+        is Telethon's own: a wait of up to a minute there is slept, silently).
         A cached peer becomes the full object by id + access hash
         (GetChannels / GetChats), which beats and carries no resolution risk."""
         if isinstance(ref, (tl_types.Channel, tl_types.Chat)):
@@ -324,6 +344,7 @@ class DiscoveryEngine:
                                     st, "search")
         except RPCError as e:                       # an empty or too-short query, for instance
             logger.warning(f"Search {query!r} failed ({type(e).__name__}) — skipped")
+            await health.report(e, 'swallowed')
             await self._pause(st)
             return
         new = 0
@@ -341,14 +362,16 @@ class DiscoveryEngine:
         for seed in seeds:
             try:
                 entity = await self._resolve(client, seed, st)
-            except FloodWaitError as e:
+            except _WAIT_ERRORS as e:
                 logger.warning(f"Seed {seed!r} skipped — Telegram wants {e.seconds}s on username lookups")
+                await health.report(e, 'swallowed', group=seed)
                 continue
             except _BudgetExhausted:
                 logger.warning(f"Seed {seed!r} skipped — resolution budget exhausted (max_resolve={st.max_resolve})")
                 continue
             except (ValueError, TypeError, GroupAccessError, RPCError) as e:
                 logger.warning(f"Seed {seed!r} skipped ({type(e).__name__}: {e})")
+                await health.report(e, 'swallowed', group=seed)
                 continue
             if not isinstance(entity, tl_types.Channel):
                 logger.warning(f"Seed {seed!r} is a basic group — Telegram only recommends similar CHANNELS; skipped")
@@ -371,6 +394,7 @@ class DiscoveryEngine:
                         st, "similar")
                 except (RPCError, TypeError) as e:  # a private channel, a min object, ...
                     logger.warning(f"similar: {by} skipped ({type(e).__name__})")
+                    await health.report(e, 'swallowed', group=entity)
                     await self._pause(st)
                     continue
                 new = 0
@@ -406,20 +430,26 @@ class DiscoveryEngine:
         hyperlink entities and URL buttons — in order of first appearance,
         minus reserved paths, bots (a username ending in 'bot' is never a
         room and would waste a resolution) and the room's own name."""
+        texts = []
         while True:
             try:
                 st.beat("links")
-                texts = []
+                if getattr(self.connection_engine, 'read_budget', None) is None:
+                    texts = []
                 async for m in client.iter_messages(entity, limit=posts):
                     texts.extend(self._link_sources_of(m))
                 break
-            except FloodWaitError as e:
+            except ReadBudgetError as e:
+                st.budget_error = e
+                break
+            except _WAIT_ERRORS as e:
                 if e.seconds > st.max_flood_wait:
                     raise DiscoveryInterrupted(
                         f"Telegram wants a {e.seconds}s wait while reading posts "
                         f"(max_flood_wait={st.max_flood_wait}); {len(st.rows)} rooms found so far",
                         self._frame(st.rows), e.seconds) from e
                 logger.warning(f"FloodWait {e.seconds}s while reading posts — waiting, then retrying")
+                await health.report(e, 'handled')
                 await self._sleep_beating(e.seconds, st.beat, "flood-wait")
             except NET_ERRORS as e:
                 logger.warning(f"Connection lost while reading posts ({type(e).__name__}) — waiting for the network")
@@ -447,6 +477,7 @@ class DiscoveryEngine:
                 names = await self._mine_room(client, entity, posts, st)
             except RPCError as e:
                 logger.warning(f"links: {by} skipped ({type(e).__name__})")
+                await health.report(e, 'swallowed', group=entity)
                 await self._pause(st)
                 continue
             new = 0
@@ -457,11 +488,12 @@ class DiscoveryEngine:
                 if resolve and not st.resolve_stopped:
                     try:
                         target = await self._resolve(client, name, st)
-                    except FloodWaitError as e:
+                    except _WAIT_ERRORS as e:
                         st.resolve_stopped = True
                         logger.warning(
                             f"Stopped resolving links — Telegram wants {e.seconds}s on username lookups; "
                             f"the remaining links are returned unresolved (Username only)")
+                        await health.report(e, 'swallowed', group=name)
                     except _BudgetExhausted:
                         st.resolve_stopped = True
                         logger.warning(
@@ -469,6 +501,7 @@ class DiscoveryEngine:
                             f"links are returned unresolved — pass max_resolve=... to resolve more")
                     except (ValueError, RPCError) as e:     # not a room, or a dead name
                         logger.debug(f"links: {name} dropped ({type(e).__name__})")
+                        await health.report(e, 'swallowed', group=name)
                         st.seen.add(key)
                         continue
                     else:
@@ -483,6 +516,8 @@ class DiscoveryEngine:
                 await self._notify(st, row)
                 new += 1
             logger.info(f"links: {by} -> {len(names)} linked rooms, {new} new")
+            if st.budget_error is not None:
+                raise st.budget_error
             await self._pause(st)
 
     # ---------------------------------------------------------- public API --
@@ -496,8 +531,12 @@ class DiscoveryEngine:
         """Telegram's global search for groups and channels matching `query`
         by NAME or @username (never by post content). See TgData.search_groups."""
         st = self._new_state(heartbeat, pace, max_flood_wait, max_offline, DEFAULT_MAX_RESOLVE, found_callback)
-        async with self.connection_engine.session() as client:
-            await self._search(client, st, query, limit)
+        try:
+            async with self.connection_engine.session() as client:
+                await self._search(client, st, query, limit)
+        except ReadBudgetError as e:
+            e.partial_result = self._frame(st.rows)
+            raise
         logger.info(f"search_groups: {len(st.rows)} rooms")
         return self._frame(st.rows)
 
@@ -511,8 +550,12 @@ class DiscoveryEngine:
         """Telegram's 'similar channels' recommendations, `rounds` rounds out
         from the seeds. See TgData.similar_groups."""
         st = self._new_state(heartbeat, pace, max_flood_wait, max_offline, max_resolve, found_callback)
-        async with self.connection_engine.session() as client:
-            await self._similar(client, st, self._as_list(seeds), rounds)
+        try:
+            async with self.connection_engine.session() as client:
+                await self._similar(client, st, self._as_list(seeds), rounds)
+        except ReadBudgetError as e:
+            e.partial_result = self._frame(st.rows)
+            raise
         logger.info(f"similar_groups: {len(st.rows)} rooms")
         return self._frame(st.rows)
 
@@ -531,7 +574,7 @@ class DiscoveryEngine:
             for ref in self._as_list(group_id):
                 try:
                     entity = await self._resolve(client, ref, st)
-                except FloodWaitError as e:
+                except _WAIT_ERRORS as e:
                     raise DiscoveryInterrupted(
                         f"Telegram wants a {e.seconds}s wait to resolve {ref!r}",
                         self._frame(st.rows), e.seconds) from e
@@ -541,7 +584,11 @@ class DiscoveryEngine:
                 st.seen.add(key)                    # a source is never returned as a find
                 st.entities.setdefault(key, entity)
                 sources.append(entity)
-            await self._links(client, st, sources, posts, resolve)
+            try:
+                await self._links(client, st, sources, posts, resolve)
+            except ReadBudgetError as e:
+                e.partial_result = self._frame(st.rows)
+                raise
         logger.info(f"linked_groups: {len(st.rows)} rooms")
         return self._frame(st.rows)
 
@@ -573,7 +620,11 @@ class DiscoveryEngine:
                         f"Mining links from the first {link_sources} of {len(sources)} rooms found; "
                         f"pass link_sources=... to mine more")
                     sources = sources[:link_sources]
-                await self._links(client, st, sources, link_posts, resolve_links)
+                try:
+                    await self._links(client, st, sources, link_posts, resolve_links)
+                except ReadBudgetError as e:
+                    e.partial_result = self._frame(st.rows)
+                    raise
         logger.info(f"discover_groups: {len(st.rows)} rooms "
                     f"({st.resolved} username resolutions spent of {st.max_resolve})")
         return self._frame(st.rows)

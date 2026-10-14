@@ -3,25 +3,141 @@ Connection management engine for Telegram.
 Handles connection pooling, rate limiting, retries, health checks, and the
 account's proxy: every client is built by one function, _new_client(), which
 applies the configured proxy to every connection and never falls back to a
-direct one.
+direct one. Every client it builds also honours Telethon's per-request
+flood_sleep_threshold, which Telethon itself ignores (_PerCallFloodThreshold),
+and notes each request Telegram answers for the health events
+(_AnswerEvidence).
 """
 
 import asyncio
 import configparser
+import contextvars
+import functools
 import importlib.util
 import logging
 import re
+import sys
 import time
 from contextlib import asynccontextmanager
 from typing import Optional, List, Dict, Any, Tuple, Union
 from urllib.parse import urlsplit, unquote
-from telethon import TelegramClient
-from telethon.errors import FloodWaitError, AuthKeyUnregisteredError
+from telethon import TelegramClient, functions
+from telethon.client.telegrambaseclient import TelegramBaseClient
+from telethon.errors import (
+    FloodWaitError, AuthKeyUnregisteredError, UnauthorizedError, AuthKeyError, RPCError, MultiError,
+)
 from telethon.sessions import StringSession
 
+from . import health
+from .health import telegram_error_name as _telegram_error_name
 from .models import ConnectionConfig, RateLimitInfo
+from .session_store import StoredSession
+from .budget_client import BudgetClientMixin
+from .join_client import JoinClientMixin
+from .account_operation import _AccountOperation, _disconnect_owned, _expected_account_id
 
 logger = logging.getLogger(__name__)
+
+
+# ── a per-request flood threshold that actually works ──────────────────────
+#
+# (owner task, seconds) while a request sent with flood_sleep_threshold=N is
+# in flight; None otherwise.
+_PER_CALL_FLOOD_THRESHOLD = contextvars.ContextVar('tgdata_per_call_flood_threshold', default=None)
+
+
+class _PerCallFloodThreshold:
+    """Makes ``client(request, flood_sleep_threshold=N)`` do what Telethon
+    documents: use N, for this request only, instead of the client-wide value.
+
+    Telethon ignores the value. UserMethods.__call__ accepts it and calls
+    _call without it, and _call decides whether to sleep through a flood wait
+    by reading ``self.flood_sleep_threshold`` — the client-wide property —
+    both before sending (a wait already known for that request type) and
+    after a wait error. Checked in Telethon 1.33.1, 1.34.0, 1.40.0, 1.42.0,
+    1.44.0 and 1.45.0: identical in all of them. So a per-call 0 still sleeps
+    every wait up to the client threshold (60 s by default), silently.
+
+    This mixin overrides that property: while a request sent with its own
+    value is in flight, the property returns that value — but only to the
+    task that sent it. Telethon starts background tasks inside connect() (the
+    updates loop, keepalive), and connect() can run mid-request on a
+    data-centre switch; a task created then inherits the context variable,
+    and must not inherit the value. A request sent WITHOUT its own value
+    clears any value an enclosing request in the same task set (for example
+    a name Telethon resolves from inside that request), so a value applies to
+    exactly the request it was passed with. The value is also passed on to
+    Telethon, so a future Telethon that honours it natively behaves the same.
+
+    tgdata/smoke_tests/test_14_flood_threshold.py checks this against the
+    installed Telethon — run it after any Telethon upgrade.
+    """
+
+    @property
+    def flood_sleep_threshold(self):
+        held = _PER_CALL_FLOOD_THRESHOLD.get()
+        if held is not None:
+            try:
+                if asyncio.current_task() is held[0]:
+                    return held[1]
+            except RuntimeError:            # read outside a running loop: no per-call value
+                pass
+        return TelegramBaseClient.flood_sleep_threshold.fget(self)
+
+    @flood_sleep_threshold.setter
+    def flood_sleep_threshold(self, value):
+        TelegramBaseClient.flood_sleep_threshold.fset(self, value)    # keeps Telethon's 24 h cap
+
+    async def __call__(self, request, ordered=False, flood_sleep_threshold=None):
+        if flood_sleep_threshold is None:
+            if _PER_CALL_FLOOD_THRESHOLD.get() is None:                # the common path
+                return await super().__call__(request, ordered=ordered)
+            token = _PER_CALL_FLOOD_THRESHOLD.set(None)                # never inherit one
+            try:
+                return await super().__call__(request, ordered=ordered)
+            finally:
+                _PER_CALL_FLOOD_THRESHOLD.reset(token)
+        token = _PER_CALL_FLOOD_THRESHOLD.set((asyncio.current_task(), flood_sleep_threshold))
+        try:
+            return await super().__call__(request, ordered=ordered,
+                                          flood_sleep_threshold=flood_sleep_threshold)
+        finally:
+            _PER_CALL_FLOOD_THRESHOLD.reset(token)
+
+
+class _AnswerEvidence:
+    """Notes every request Telegram answers, for the health events (issue #4).
+
+    An "ok" for the account or a group needs evidence that the condition
+    ended: Telegram answering the call after the verdict was recorded. A call
+    merely completing is not that — a concurrent call may have been answered
+    before the verdict, and some calls send no request at all. Every request
+    tgdata sends passes through the client's __call__, so this is where an
+    answer is observed. Requests Telethon sends past __call__ (an exported
+    sender for media on another data centre) count as no evidence, which can
+    only delay an "ok", never fake one. Verified owned calls also observe raw
+    RPC failures here, before a higher-level operation can handle them."""
+
+    async def __call__(self, request, ordered=False, flood_sleep_threshold=None):
+        evidence = health.capture_request_evidence(self, request)
+        try:
+            result = await super().__call__(request, ordered=ordered,
+                                            flood_sleep_threshold=flood_sleep_threshold)
+        except (RPCError, MultiError) as exc:
+            health.note_rpc_error(self, exc)
+            raise
+        health.note_answer(self, request, evidence)
+        return result
+
+
+@functools.lru_cache(maxsize=None)
+def _client_class(base):
+    """The client class _new_client() builds: `base` (Telethon's
+    TelegramClient, or whatever stands in for it in a test) with
+    answer evidence, owned join admission, optional read budgets and per-call flood thresholds
+    in front of it. Cached per base."""
+    return type(f"Tgdata{base.__name__}",
+                (_AnswerEvidence, JoinClientMixin, BudgetClientMixin, _PerCallFloodThreshold, base), {})
 
 
 class ProxyConfigError(ValueError):
@@ -154,12 +270,61 @@ class ConnectionPool:
         self.connections.clear()
 
 
-class AuthRequiredError(RuntimeError):
-    """The session is not authorized and this code path is non-interactive.
+class AuthRequiredError(ConnectionError, RuntimeError):
+    """The session is not logged in, and tgdata may not ask Telegram for a
+    login code here.
 
-    Raised by ephemeral_client() instead of Telethon's start() prompt —
-    a headless process must FAIL LOUDLY here, never sit on input().
-    Fix: run an interactive login for this account once, by hand."""
+    tgdata never requests a code nobody can type. Telethon's interactive
+    login (start()) sends a code to the account owner and then waits on
+    stdin; in a background job it fails, and every retry sends another code.
+    So the persistent connection, every pool connection and every
+    use-and-close client ask Telegram directly whether the session is logged
+    in, and raise this instead of prompting — unless a first login is being
+    done by hand at a terminal, or the caller passed interactive_login=True.
+
+    .reason — Telegram's own name for the problem: AUTH_KEY_UNREGISTERED or
+    SESSION_REVOKED (logged out), USER_DEACTIVATED_BAN (banned), ... The
+    Telegram error itself is the exception's __cause__.
+    .banned — True when the account is banned or deleted: logging in again
+    will not help.
+    .first_login — True when the session has never been logged in: a
+    configuration step, not something Telegram did to the account, so it is
+    not reported as a health event.
+
+    Both a ConnectionError (what the persistent path raised for a failed
+    login before) and a RuntimeError (what this class was before), so
+    existing handlers of either keep catching it.
+    Fix a logout: log in again by hand, TgData(..., interactive_login=True)
+    in a terminal."""
+
+    def __init__(self, message: str, reason: Optional[str] = None, banned: bool = False,
+                 first_login: bool = False):
+        super().__init__(message)
+        self.reason = reason
+        self.banned = banned
+        self.first_login = first_login
+
+
+# The account itself is gone: logging in again cannot help
+_BANNED = {'USER_DEACTIVATED_BAN', 'USER_DEACTIVATED'}
+
+
+def _describe_error(error: BaseException) -> str:
+    """An error as a health check reports it: a Telegram verdict by its name —
+    'logged out (AUTH_KEY_UNREGISTERED)' — anything else by its message."""
+    finding = health.classify(error, include_reported=True)
+    return f"{finding.verdict} ({finding.error})" if finding is not None else str(error)
+
+
+def _human_at_terminal() -> bool:
+    """Whether someone could type a login code: stdin is an interactive
+    terminal. A pseudo-terminal nobody watches (tmux, screen) passes too —
+    which is why a session that was logged in before never prompts on this
+    alone; only a first login does."""
+    try:
+        return bool(sys.stdin) and sys.stdin.isatty()
+    except (AttributeError, ValueError, OSError):
+        return False
 
 
 class ConnectionEngine:
@@ -172,22 +337,41 @@ class ConnectionEngine:
                  pool_size: int = 1,
                  max_retries: int = 3,
                  retry_delay: float = 1.0,
-                 exponential_backoff: bool = True):
+                 exponential_backoff: bool = True,
+                 interactive_login: Optional[bool] = None,
+                 session_store=None,
+                 read_budget=None):
         """
         Initialize connection engine.
-        
+
         Args:
             config_path: Path to configuration file
             pool_size: Number of connections in pool (1 = no pooling)
             max_retries: Maximum retry attempts
             retry_delay: Initial retry delay in seconds
             exponential_backoff: Whether to use exponential backoff
+            interactive_login: When tgdata may run Telethon's interactive
+                login, which asks Telegram to send a code and waits for it on
+                stdin. None (default): only a first login on a brand-new
+                session, with someone at a terminal. True: also log a logged-out
+                session back in — run it by hand. False: never. Otherwise a
+                session that is not logged in raises AuthRequiredError, and no
+                code is ever requested.
+            session_store: Optional object with synchronous load(name) -> str
+                or None, save(name, data), and optional delete(name) methods.
+                Keeps sessions in that store instead of .session files. These
+                methods run on the event loop and should return quickly.
+            read_budget: Optional ReadBudget ledger shared by every client.
+                Policies are keyed by authenticated Telegram account ID.
         """
         self.config_path = config_path
         self.pool_size = pool_size
         self.max_retries = max_retries
         self.retry_delay = retry_delay
         self.exponential_backoff = exponential_backoff
+        self.interactive_login = interactive_login
+        self.session_store = session_store
+        self.read_budget = read_budget
         
         self._config: Optional[ConnectionConfig] = None
         self._primary_client: Optional[TelegramClient] = None
@@ -195,6 +379,9 @@ class ConnectionEngine:
         self._health_check_interval = 300  # 5 minutes
         self._last_health_check = 0
         self._route_logged = False         # "via proxy …" / "direct" is logged once per engine
+        # A process consumer may stop admission after uncertain owned cleanup.
+        # Ordinary callers retain their existing outcome/continuation behavior.
+        self._account_cleanup_failure = None
         
     def _load_config(self) -> ConnectionConfig:
         """Load configuration from file"""
@@ -351,7 +538,7 @@ class ConnectionEngine:
                                       if presented[key] is not None),
         }
 
-    def _new_client(self, session_file: Optional[str] = None) -> TelegramClient:
+    def _new_client(self, session_file: Optional[str] = None, *, _client_base=None, **client_options) -> TelegramClient:
         """
         THE door to Telegram: every client tgdata opens — the persistent one,
         each pool connection, and every use-and-close lookup — is built here.
@@ -366,8 +553,23 @@ class ConnectionEngine:
         Every client also carries the account's pinned device identity, if the
         config sets one; unpinned fields keep Telethon's machine defaults.
 
+        With session_store set, the configured name (or the pool's suffixed
+        name) loads a StoredSession. A load failure raises before a client is
+        built. Without a store, Telethon receives the same file name as before.
+
+        And every client honours a per-request flood_sleep_threshold —
+        client(request, flood_sleep_threshold=0) raises a flood wait instead of
+        sleeping through it — which Telethon itself ignores (see
+        _PerCallFloodThreshold). Requests sent without one behave exactly as
+        Telethon's own. Each answered request is also noted for the health
+        events (_AnswerEvidence).
+
         Args:
             session_file: Session name for this client (default: the config's)
+            _client_base: Private auth-only SDK policy; ordinary clients use
+                TelegramClient exactly as before.
+            client_options: Internal constructor policy for an owned operation.
+                Omitted on ordinary clients, preserving Telethon's defaults.
         """
         config = self._load_config()
         identity = self._identity_kwargs(config)
@@ -382,13 +584,21 @@ class ConnectionEngine:
             else:
                 logger.info("Device identity not pinned: Telethon's defaults for this machine")
             self._route_logged = True
-        return TelegramClient(
-            session_file or config.session_file,
+        # TelegramClient is looked up here, at call time, so a test that stands
+        # in for it (test_13) still controls what is built.
+        name = session_file or config.session_file
+        session = StoredSession(self.session_store, name) if self.session_store is not None else name
+        client = _client_class(_client_base or TelegramClient)(
+            session,
             config.api_id,
             config.api_hash,
             proxy=dict(config.proxy) if config.proxy else None,
-            **identity
+            **identity,
+            **client_options
         )
+        client._tgdata_read_budget = self.read_budget
+        client._tgdata_join_budget = None  # Activated only by the public owned join operation.
+        return client
         
     async def get_client(self) -> TelegramClient:
         """
@@ -429,6 +639,57 @@ class ConnectionEngine:
         # Intentionally NO disconnect here — the connection is persistent.
 
     @asynccontextmanager
+    async def _account_operation(self, expected_account_id):
+        """Private, creator-task-scoped client for an explicitly expected account.
+
+        The policy is in place before connect's own authenticated requests.
+        This never performs login, even when interactive_login=True. Later
+        admissions must use the yielded handle's verify_account(). Health
+        ownership and public group operations are separate consumers.
+        """
+        expected_account_id = _expected_account_id(expected_account_id)
+        config = self._load_config()
+        client = self._new_client(
+            flood_sleep_threshold=0, request_retries=0, connection_retries=0,
+            retry_delay=0, auto_reconnect=False, raise_last_call_error=True,
+            receive_updates=False)
+        first_login = client.session.auth_key is None
+
+        def auth_required(problem):
+            if problem is None:
+                return AuthRequiredError(
+                    f"session {config.session_file!r}: Telegram provided no authenticated "
+                    "account; log in separately before starting an account operation",
+                    first_login=first_login)
+            error = self._auth_required(config.session_file, problem, first_login)
+            if error.first_login:
+                error.args = (
+                    f"session {config.session_file!r}: account operations require an "
+                    f"existing login ({error.reason}); log in separately before retrying",)
+            return error
+
+        operation = _AccountOperation(client, expected_account_id, auth_required)
+        try:
+            try:
+                await client.connect()
+                problem = await self._authorization_problem(client)
+                if problem is not None:
+                    raise auth_required(problem) from problem
+                await operation.verify_account()
+            except (UnauthorizedError, AuthKeyError) as exc:
+                raise auth_required(exc) from exc
+            client._tgdata_account_operation = operation
+            yield operation
+        finally:
+            operation._close()
+            failures = []
+            try:
+                await _disconnect_owned(client, failures=failures)
+            finally:
+                if failures:
+                    self._account_cleanup_failure = failures[0]
+
+    @asynccontextmanager
     async def ephemeral_client(self):
         """USE-AND-CLOSE (2026-08-05): a fresh client on the same resolved
         session, connected WITHOUT start() (never interactive), disconnected
@@ -438,17 +699,19 @@ class ConnectionEngine:
         above is untouched — it remains correct for the loop's own fetches,
         where ONE process owns the session for its lifetime.
 
-        Raises AuthRequiredError when the session is not authorized: the
-        one situation start() would have prompted for a login code and hung
-        a headless process on stdin forever."""
+        Raises AuthRequiredError when Telegram says the session is not logged
+        in — with Telegram's reason, so a ban is told from a logout — and
+        never requests a login code. A flood wait is raised as the wait
+        (FloodWaitError), never mistaken for "not logged in", which is what
+        Telethon's is_user_authorized() does with any error."""
         config = self._load_config()
         client = self._new_client()
+        first_login = client.session.auth_key is None
         try:
             await client.connect()
-            if not await client.is_user_authorized():
-                raise AuthRequiredError(
-                    f"session {config.session_file!r} is not authorized — "
-                    f"run an interactive login for this account once, then retry")
+            problem = await self._authorization_problem(client)
+            if problem is not None:
+                raise self._auth_required(config.session_file, problem, first_login) from problem
             yield client
         finally:
             try:
@@ -457,7 +720,9 @@ class ConnectionEngine:
                 pass
 
     async def _init_primary_client(self):
-        """Create and authenticate the primary client once (may be interactive)."""
+        """Create and authenticate the primary client once. A failed login
+        leaves nothing behind, so the next get_client() checks again instead
+        of handing out a client that never logged in."""
         config = self._load_config()
 
         # Session naming is resolved ONCE in _load_config (explicit
@@ -466,12 +731,29 @@ class ConnectionEngine:
         # can never disagree about where the session lives.
         self._primary_client = self._new_client(config.session_file)
 
-        await self._authenticate(self._primary_client)
+        try:
+            await self._authenticate(self._primary_client)
 
-        # Initialize pool if needed
-        if self.pool_size > 1:
-            await self._init_pool()
-            
+            # Initialize pool if needed
+            if self.pool_size > 1:
+                await self._init_pool()
+        except Exception:
+            await self._discard_clients()
+            raise
+
+    async def _discard_clients(self):
+        """Disconnect and forget the primary client and the pool."""
+        clients = list(self._pool.connections) if self._pool else []
+        if self._primary_client is not None and self._primary_client not in clients:
+            clients.append(self._primary_client)
+        for client in clients:
+            try:
+                await client.disconnect()
+            except Exception:  # noqa: BLE001 — teardown must never mask the error being raised
+                pass
+        self._primary_client = None
+        self._pool = None
+
     async def _init_pool(self):
         """Initialize connection pool"""
         config = self._load_config()
@@ -486,34 +768,126 @@ class ConnectionEngine:
             session_file = f"{config.session_file}_{i}"
             client = self._new_client(session_file)
 
-            await self._authenticate(client)
+            try:
+                await self._authenticate(client)
+            except Exception:
+                try:
+                    await client.disconnect()      # not in the pool yet: close it here
+                except Exception:  # noqa: BLE001 — never mask the login error
+                    pass
+                raise
             self._pool.add_connection(client)
             
         logger.info(f"Initialized connection pool with {self.pool_size} connections")
         
     async def _authenticate(self, client: TelegramClient):
         """
-        One-time authentication (login). Uses start(), which may prompt for a
-        login code on first run. Runs once per client — NOT per operation.
-        After this the session is authorized and its auth key persists on disk.
+        One-time authentication (login). Runs once per client — NOT per
+        operation. After this the session is logged in and its auth key
+        persists on disk.
+
+        It asks Telegram directly whether the session is logged in, and runs
+        Telethon's interactive login — which asks Telegram to send a code to
+        the account owner, then waits for it on stdin — only when someone can
+        type the code (see interactive_login). Otherwise a session that is
+        not logged in raises AuthRequiredError, and no code is requested: a
+        background loop that retries fails the same way each time, instead of
+        sending the owner one login code per retry.
         """
         config = self._load_config()
+        first_login = client.session.auth_key is None     # no key yet: never connected before
 
         try:
-            await client.start(phone=config.phone)
-            logger.info("Authenticated with Telegram")
+            await self._log_in(client, config, first_login)
 
         except FloodWaitError as e:
             wait_time = e.seconds
             logger.warning(f"Rate limited during authentication, waiting {wait_time} seconds...")
+            await health.report(e, 'handled')
             if self._pool:
                 self._pool.mark_rate_limited(client, wait_time)
             await asyncio.sleep(wait_time)
-            await client.start(phone=config.phone)
+            await self._log_in(client, config, first_login)
+
+        except AuthRequiredError as e:
+            logger.error(f"Authentication failed: {e}")
+            raise
 
         except Exception as e:
             logger.error(f"Authentication failed: {e}")
             raise ConnectionError(f"Failed to authenticate: {e}")
+
+    async def _log_in(self, client: TelegramClient, config: ConnectionConfig, first_login: bool):
+        """Connect, ask Telegram whether the session is logged in, and log in
+        interactively only when that is allowed."""
+        if not client.is_connected():
+            await client.connect()
+        problem = await self._authorization_problem(client)
+        if problem is None:
+            logger.info("Authenticated with Telegram")
+            return
+        if not self._may_prompt(problem, first_login):
+            raise self._auth_required(config.session_file, problem, first_login) from problem
+        logger.info(f"Session not logged in ({_telegram_error_name(problem)}) — "
+                    f"interactive login: Telegram will send a code")
+        await client.start(phone=config.phone)
+        logger.info("Authenticated with Telegram")
+
+    @staticmethod
+    async def _authorization_problem(client: TelegramClient) -> Optional[Exception]:
+        """None when Telegram says this session is logged in; otherwise the
+        Telegram error that says it is not (logged out, banned, ...).
+
+        Asks Telegram directly, with the request Telethon's own
+        is_user_authorized() uses (GetState), because is_user_authorized()
+        turns EVERY error into "no" — a long flood wait included — and
+        get_me() reads a ban as "not logged in". Any other error, a flood
+        wait above the threshold included, propagates as itself."""
+        try:
+            await client(functions.updates.GetStateRequest())
+            return None
+        except (UnauthorizedError, AuthKeyError) as e:
+            return e
+
+    async def _confirm_logged_in(self, client: TelegramClient) -> None:
+        """Raise Telegram's error when this client's session is not logged in.
+
+        Telethon's get_me() answers a logout or a ban with None instead of an
+        error, so a None is followed by asking Telegram directly, as the login
+        check does. A logged-in session costs the one get_me() request, as
+        before."""
+        if await client.get_me() is None:
+            problem = await self._authorization_problem(client)
+            if problem is not None:
+                raise problem
+
+    def _may_prompt(self, problem: Exception, first_login: bool) -> bool:
+        """Whether Telethon's interactive login may run: never for a banned
+        account; as interactive_login says when set; otherwise only a first
+        login on a brand-new session, with someone at a terminal."""
+        if _telegram_error_name(problem) in _BANNED:
+            return False
+        if self.interactive_login is not None:
+            return bool(self.interactive_login)
+        return first_login and _human_at_terminal()
+
+    @staticmethod
+    def _auth_required(session_file: str, problem: Exception, first_login: bool) -> AuthRequiredError:
+        reason = _telegram_error_name(problem)
+        if reason in _BANNED:
+            return AuthRequiredError(
+                f"session {session_file!r}: Telegram reports the account banned or deleted "
+                f"({reason}) — logging in again will not help",
+                reason=reason, banned=True)
+        if first_login:
+            return AuthRequiredError(
+                f"session {session_file!r} has never been logged in ({reason}), and there is no "
+                f"terminal to type the login code into — run it once by hand in a terminal, "
+                f"or pass interactive_login=True", reason=reason, first_login=True)
+        return AuthRequiredError(
+            f"session {session_file!r} is not logged in ({reason}) — Telegram logged it out. "
+            f"tgdata never asks for a login code on its own; log in again by hand: "
+            f"TgData(..., interactive_login=True) in a terminal", reason=reason)
 
     async def _ensure_connected(self, client: TelegramClient):
         """
@@ -530,6 +904,7 @@ class ConnectionEngine:
         except FloodWaitError as e:
             wait_time = e.seconds
             logger.warning(f"Rate limited on connect, waiting {wait_time} seconds...")
+            await health.report(e, 'handled')
             if self._pool:
                 self._pool.mark_rate_limited(client, wait_time)
             await asyncio.sleep(wait_time)
@@ -541,6 +916,11 @@ class ConnectionEngine:
     async def health_check(self) -> Dict[str, Any]:
         """
         Perform health check on all connections.
+
+        A connection is healthy only when Telegram confirms its session is
+        logged in (see _confirm_logged_in). A Telegram verdict found here is
+        named in 'errors' — 'logged out (AUTH_KEY_UNREGISTERED)' — and
+        reported as a health event.
         
         Returns:
             Dictionary with health status
@@ -566,19 +946,20 @@ class ConnectionEngine:
             if self._primary_client:
                 try:
                     if self._primary_client.is_connected():
-                        await self._primary_client.get_me()
+                        await self._confirm_logged_in(self._primary_client)
                         status['primary_connection'] = True
                         logger.info("Primary connection healthy")
                 except Exception as e:
-                    status['errors'].append(f"Primary connection error: {e}")
-                    logger.warning(f"Primary connection unhealthy: {e}")
+                    status['errors'].append(f"Primary connection error: {_describe_error(e)}")
+                    logger.warning(f"Primary connection unhealthy: {_describe_error(e)}")
+                    await health.report(e, 'swallowed')
                     
             # Check pool connections
             if self._pool:
                 for i, conn in enumerate(self._pool.connections):
                     try:
                         if conn.is_connected():
-                            await conn.get_me()
+                            await self._confirm_logged_in(conn)
                             status['pool_connections'].append({
                                 'index': i,
                                 'healthy': True,
@@ -592,12 +973,14 @@ class ConnectionEngine:
                                 'healthy': False
                             })
                     except Exception as e:
-                        status['errors'].append(f"Pool connection {i} error: {e}")
+                        status['errors'].append(f"Pool connection {i} error: {_describe_error(e)}")
                         status['pool_connections'].append({
                             'index': i,
                             'healthy': False,
-                            'error': str(e)
+                            'error': _describe_error(e)
                         })
+                        if conn is not self._primary_client:    # the primary was reported above
+                            await health.report(e, 'swallowed')
                         
         except Exception as e:
             status['errors'].append(f"Health check error: {e}")
@@ -608,16 +991,26 @@ class ConnectionEngine:
     async def validate_connection(self) -> bool:
         """
         Validate that we have a working connection.
-        
+
+        Returns True or False, and on False says why: a Telegram verdict
+        (logged out, banned, restricted, a wait, ...) is logged at WARNING
+        with Telegram's name for it and reported as a health event; any other
+        failure keeps the ERROR line.
+
         Returns:
             True if connection is valid
         """
         try:
             client = await self.get_client()
-            await client.get_me()
+            await self._confirm_logged_in(client)
             return True
         except Exception as e:
-            logger.error(f"Connection validation failed: {e}")
+            finding = health.classify(e, include_reported=True)
+            if finding is not None:
+                logger.warning(f"Connection validation failed: {finding.verdict} ({finding.error})")
+            else:
+                logger.error(f"Connection validation failed: {e}")
+            await health.report(e, 'swallowed')
             return False
             
     async def handle_rate_limit(self, error: FloodWaitError, client: Optional[TelegramClient] = None, strategy: str = 'wait'):

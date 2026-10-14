@@ -7,10 +7,46 @@ A production-grade Python library for extracting and processing Telegram group a
 # Main class
 from .tgdata import TgData
 
+from .account_pool import (
+    AccountPool, PoolAccount, PoolGroup, PoolPolicy,
+    PoolAttempt, PoolAccountStatus, PoolStatus, PoolReadResult,
+    SQLiteAccountPoolStore, PoolError, PoolConfigurationError, PoolStateError,
+    PoolStorageError, PoolConflictError, PoolClockError, PoolBusyError,
+    PoolClosedError, PoolIdentityError, PoolTimeoutError, PoolUnavailable
+)
+
+from .pool_result import PoolReadCapture, PoolReadSnapshot
+
 # Errors
 from .message_engine import GroupAccessError
+from .group_operations import (
+    GroupMetadata, GroupLookup, GroupAccess, GroupJoin, GroupReferenceError, GroupResponseError,
+)
 from .connection_engine import AuthRequiredError, ProxyConfigError
+from .login import LoginFlow, LoginStatus, LoginError
 from .discovery_engine import DiscoveryInterrupted
+from .message_batch import MessageBatch, BatchFormatError
+from .batch_files import BatchStorageError
+from .backfill import (
+    BackfillRunRef, BackfillStartRequest, BackfillPrepareContext, BackfillDeliveryRef,
+    BackfillStatus, BackfillStartResult, BackfillTurn, BackfillControlResult, BackfillRecoveryResult,
+    BackfillError, BackfillConfigurationError, BackfillConflictError, BackfillUnknownRun,
+    BackfillUnknownCommand, BackfillStateError, BackfillStorageError, BackfillUnknownReceipt,
+    BackfillRecoveryRequired, BackfillMediaError, BackfillClockError,
+)
+from .sync_store import (
+    SQLiteSyncStore, SyncStatus, SyncError, SyncConfigurationError,
+    SyncNotInitializedError, SyncConflictError, SyncStorageError,
+)
+from .read_budget import (
+    ReadBudget, ReadBudgetStatus, ReadBudgetError, ReadBudgetExceeded,
+    ReadBudgetConfigError, ReadBudgetStorageError, UnsupportedBudgetRequest,
+)
+from .join_budget import (
+    JoinBudget, JoinBudgetStatus, JoinBudgetError, JoinBudgetExceeded,
+    JoinBudgetConfigError, JoinBudgetStorageError,
+)
+from .join_client import UnsupportedJoinRequest
 
 # Models
 from .models import (
@@ -36,17 +72,95 @@ from .utils import (
 # Progress tracking
 from .progress import ProgressTracker
 
-__version__ = "0.0.8"
+__version__ = "0.1"
 
 __all__ = [
+    # Explicit account onboarding
+    "LoginFlow",
+    "LoginStatus",
+    "LoginError",
+    # Account routing
+    "AccountPool",
+    "PoolAccount",
+    "PoolGroup",
+    "PoolPolicy",
+    "PoolAttempt",
+    "PoolAccountStatus",
+    "PoolStatus",
+    "PoolReadResult",
+    "PoolReadCapture",
+    "PoolReadSnapshot",
+    "SQLiteAccountPoolStore",
+    "PoolError",
+    "PoolConfigurationError",
+    "PoolStateError",
+    "PoolStorageError",
+    "PoolConflictError",
+    "PoolClockError",
+    "PoolBusyError",
+    "PoolClosedError",
+    "PoolIdentityError",
+    "PoolTimeoutError",
+    "PoolUnavailable",
+
     # Main class
     "TgData",
 
     # Errors
     "GroupAccessError",
+    "GroupMetadata",
+    "GroupLookup",
+    "GroupAccess",
+    "GroupJoin",
+    "GroupReferenceError",
+    "GroupResponseError",
     "AuthRequiredError",
     "ProxyConfigError",
     "DiscoveryInterrupted",
+    "MessageBatch",
+    "BatchFormatError",
+    "BatchStorageError",
+    "BackfillRunRef",
+    "BackfillStartRequest",
+    "BackfillPrepareContext",
+    "BackfillDeliveryRef",
+    "BackfillStatus",
+    "BackfillStartResult",
+    "BackfillTurn",
+    "BackfillControlResult",
+    "BackfillRecoveryResult",
+    "BackfillError",
+    "BackfillConfigurationError",
+    "BackfillConflictError",
+    "BackfillUnknownRun",
+    "BackfillUnknownCommand",
+    "BackfillStateError",
+    "BackfillStorageError",
+    "BackfillUnknownReceipt",
+    "BackfillRecoveryRequired",
+    "BackfillMediaError",
+    "BackfillClockError",
+    "SQLiteSyncStore",
+    "SyncStatus",
+    "SyncError",
+    "SyncConfigurationError",
+    "SyncNotInitializedError",
+    "SyncConflictError",
+    "SyncStorageError",
+    "ReadBudget",
+    "ReadBudgetStatus",
+    "ReadBudgetError",
+    "ReadBudgetExceeded",
+    "ReadBudgetConfigError",
+    "ReadBudgetStorageError",
+    "UnsupportedBudgetRequest",
+    "JoinBudget",
+    "JoinBudgetStatus",
+    "JoinBudgetError",
+    "JoinBudgetExceeded",
+    "JoinBudgetConfigError",
+    "JoinBudgetStorageError",
+    "UnsupportedJoinRequest",
 
     # Models
     "MessageData",
