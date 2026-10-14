@@ -5,7 +5,7 @@ articulated-surfacing-routed
 A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
-- [ ] Surfacing
+- [x] Surfacing
 - [ ] Sensemaking
 - [ ] Decomposition
 - [ ] Innovation
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Surfacing
+Sensemaking
 ## Relationships
 - RELATED: ../../29-album-assembly/traverse/ on retained archive branch feat/29-album-assembly — album/receiver contract prerequisite; product merged.
 ## History
@@ -28,3 +28,4 @@ Surfacing
 - 2026-10-15_00-22: Critique complete:12 candidates,7 dimensions; assembly REFINE after real scope counterexample. Manual8/8 structural requirements; checker unavailable. Next:Routelister, then iteration2 on bounded context/barriers. No PR rejection or production change.
 - 2026-10-15_00-24: Routelister complete:9 concept identities,6 core routes; both canonical map/index saved. Checker unavailable; manual6/6. Next:iteration assessment. Critique still requires context/barrier refinement.
 - 2026-10-15_00-25: Iteration1 assessed: original question not fully answered; hidden known text under album expansion. Preserved six outputs as *_iter1.md at root, kept articulation and _route index. Iteration2 focuses on selection closure and temporal barriers. Next:Surfacing.
+- 2026-10-15_00-26: Iteration2 surfacing:9 narrowed items/5 regions, no new inaccessible context. Manual8/8; checker absent. Next:Sensemaking.
