@@ -1,0 +1,4 @@
+{"name": "small_byte_boundary_lost_ack", "result": "PASS", "unchanged_cap": 4640, "source_reads": 1, "cursor": 2, "replay_writes": 0}
+{"name": "default_16mib_replay", "result": "PASS", "messages": 1300, "cap": 16777216, "replay_writes": 0}
+{"name": "later_growth_member_boundary", "result": "PASS", "original_cap": 3, "current_album_members": 4, "replay_writes": 0, "separate_view_refusal": true}
+{"name": "recognized_input_integrity", "result": "PASS", "refused_cases": ["missing", "content", "digest", "post_key"], "repair_attempted": false}

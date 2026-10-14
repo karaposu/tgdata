@@ -1,0 +1,59 @@
+{
+  "scope": "planning feasibility; full candidate/prebuild pending",
+  "runtime": "3.11.10",
+  "source_sha256": {
+    "tgdata/album.py": "5ba3a753719a52fb6ffb2f87d8bd7f08fd77f8a859053eeb14ef98e989e22de9",
+    "examples/album_assembly.py": "4f3fd3fe7beaa850d13e152617614433c95c2da3b28057468b99d4ec8fa477aa",
+    "tgdata/smoke_tests/test_42_album_assembly.py": "4040507130965a3166eced99fedc3b555148d91ca9e183ea879657f9e074ea8f"
+  },
+  "histories": [
+    {
+      "name": "small_byte_boundary_lost_ack",
+      "result": "PASS",
+      "unchanged_cap": 4640,
+      "source_reads": 1,
+      "cursor": 2,
+      "replay_writes": 0
+    },
+    {
+      "name": "default_16mib_replay",
+      "result": "PASS",
+      "messages": 1300,
+      "cap": 16777216,
+      "replay_writes": 0
+    },
+    {
+      "name": "later_growth_member_boundary",
+      "result": "PASS",
+      "original_cap": 3,
+      "current_album_members": 4,
+      "replay_writes": 0,
+      "separate_view_refusal": true
+    },
+    {
+      "name": "recognized_input_integrity",
+      "result": "PASS",
+      "refused_cases": [
+        "missing",
+        "content",
+        "digest",
+        "post_key"
+      ],
+      "repair_attempted": false
+    },
+    {
+      "name": "atomic_member_and_receipt_write",
+      "result": "PASS",
+      "members": 0,
+      "receipts": 0
+    },
+    {
+      "name": "new_work_limits_and_record_identity",
+      "result": "PASS",
+      "fresh_limit_refused": true,
+      "conflicts_refused": 2
+    }
+  ],
+  "product_files_changed": false,
+  "elapsed_seconds": 0.492
+}

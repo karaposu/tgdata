@@ -29,7 +29,7 @@ Consumers can store one logical Telegram post and update its revision as more me
 7. Explicit adjustable count/UTF-8 byte bounds refuse the whole operation; no hidden lookahead, trimming, eviction or internal history cache occurs.
 8. Global album membership stays explicitly unconfirmed at limit/end/interrupted batches, fixed-window edges, exhausted allowance, cancellation and restart. No new source-completeness assumption is used; no live completeness claim is made.
 9. A runnable SQLite receiver example requires explicit new collection creation or strict reopening. Missing/corrupt known file/schema/collection and failed loads raise, while a genuinely absent individual key can yield None.
-10. Receiver acceptance loads current prior observations inside its transaction and commits all posts with a collection-scoped input marker before source ack. Rollback, commit-response loss, lost ack, duplicate input after later growth, and equal inputs in different collections are tested.
+10. The receiver commits immutable original member records and a collection-scoped input marker before source ack. New inputs load current post views and pass bounded assembly admission. Exact accepted inputs confirm their original stored records without reassembling or returning a current post view. Acceptance returns None on success; load(post_id) separately returns the current TelegramPost. Rollback, commit-response loss, lost ack, unchanged-limit replay, later growth and collection separation are tested.
 11. Daily and backfill integration retains original raw batch/delivery receipts and cursors. Available partial data alone is never represented as a pending source receipt. Existing pool captures, budget charging, raw hashes and progress schemas are unchanged.
 12. Documentation explains observed updates, conflict refusal, caller retention/atomicity, media-byte custody, limits and correct acknowledgment order. The library version remains0.1; consumer migration and release are separate work.
 13. The real candidate passes a combined SDK/value/SQLite/daily/backfill prebuild, then targeted tests and the full offline regression suite on Python3.11 and Telethon1.45.0. Scripted source replies are disclosed; they do not prove vendor completeness.
@@ -44,10 +44,14 @@ No photo-trail inference (#30), leases (#31), joins/auth/routing changes, classi
 
 ## Known Blockers
 
-### Accepted-input replay under unchanged bounds — OPEN
+### Accepted-input replay under unchanged bounds — CLOSED (planning contract)
 
 **What must be known:** define which bounds admit new assembly versus confirm already accepted input, and what replay returns after post growth. Any successfully accepted input must remain confirmable under unchanged policy after restart/permitted later updates, while retaining integrity checks and original source receipt authority.
 
 **Why it blocks planning:** the current receiver calls fresh assembly before recognizing accepted input; its costs grow on immediate retry or after later membership growth. Fresh PR35 probes reproduce refusal after successful commit with unchanged byte/member settings, including the default16MiB limit. Steps2–4 need a settled replay/return contract; propagating the same limits to loaders is not sufficient. The immutable post representation and source APIs are not disproved.
 
 **Found by:** same-session critic-d on PR35 diff + revision2 plan,2026-10-14. Evidence: pr-critic.md and pr-probes.py/.json/.txt. This is the first PR rejection. Revision2 is retained as DEPRECATED_step_by_step_impl_plan.md. The re-planning agent can resolve this design contract from the recorded counterexamples; no external account or live access is required.
+
+**Resolution,2026-10-14:** replan-r3-contract.md separates new projection admission, confirmation of immutable accepted member records, and bounded post-view reads. The SQLite example stores one canonical copy per collection/chat/message ID plus a digest/post key and the existing scoped input marker. Confirmation validates only the original records, returns no post payload, performs no write and never invokes assembly. Public post/batch formats and source APIs remain unchanged; the unmerged example database changes to schema2 with strict refusal of old known state, not automatic migration/reset.
+
+**Evidence:** all six actual-component planning histories in replan-r3-probe.json passed, including the three rejected cases with unchanged limits, integrity refusals and actual SQLite rollback. This closes the design premise for revision3; it does not mark R1 fixed in production. The complete revised candidate, schema/load guards and both progress-engine compositions still require fresh plan critique and full combined prebuild before implementation.

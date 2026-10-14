@@ -1,0 +1,7 @@
+{"name": "small_byte_boundary_lost_ack", "result": "PASS", "unchanged_cap": 4640, "source_reads": 1, "cursor": 2, "replay_writes": 0}
+{"name": "default_16mib_replay", "result": "PASS", "messages": 1300, "cap": 16777216, "replay_writes": 0}
+{"name": "later_growth_member_boundary", "result": "PASS", "original_cap": 3, "current_album_members": 4, "replay_writes": 0, "separate_view_refusal": true}
+{"name": "recognized_input_integrity", "result": "PASS", "refused_cases": ["missing", "content", "digest", "post_key"], "repair_attempted": false}
+{"name": "atomic_member_and_receipt_write", "result": "PASS", "members": 0, "receipts": 0}
+{"name": "new_work_limits_and_record_identity", "result": "PASS", "fresh_limit_refused": true, "conflicts_refused": 2}
+Planning feasibility: six histories pass; production files unchanged.
