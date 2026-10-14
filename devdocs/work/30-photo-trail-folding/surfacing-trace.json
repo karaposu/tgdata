@@ -1,0 +1,218 @@
+[
+  {
+    "ordinal": 1,
+    "region": "consumer",
+    "item": "/Users/ns/Desktop/projects/flatmir-scrapeops/scrapeOps/engine/collapse.py",
+    "tag": "core",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-08-13T19:11:54.659864+00:00"
+    },
+    "read": "full; current or immediately preceding same-session read"
+  },
+  {
+    "ordinal": 2,
+    "region": "consumer",
+    "item": "/Users/ns/Desktop/projects/flatmir-scrapeops/scrapeOps/tests/test_engine_smoke.py",
+    "tag": "sub",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-02T09:15:43.082247+00:00"
+    },
+    "read": "full; current or immediately preceding same-session read"
+  },
+  {
+    "ordinal": 3,
+    "region": "values",
+    "item": "/private/tmp/tgdata-30-photo-trail-folding/tgdata/message_batch.py",
+    "tag": "core",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T21:02:16.255242+00:00"
+    },
+    "read": "full; current or immediately preceding same-session read"
+  },
+  {
+    "ordinal": 4,
+    "region": "values",
+    "item": "/private/tmp/tgdata-30-photo-trail-folding/tgdata/album.py",
+    "tag": "core",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T21:02:16.249285+00:00"
+    },
+    "read": "full; current or immediately preceding same-session read"
+  },
+  {
+    "ordinal": 5,
+    "region": "consumer",
+    "item": "/Users/ns/Desktop/projects/flatmir-scrapeops/scrapeOps/engine/bursts.py",
+    "tag": "sub",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-08-10T19:57:42.201984+00:00"
+    },
+    "read": "full fresh read"
+  },
+  {
+    "ordinal": 6,
+    "region": "consumer",
+    "item": "/Users/ns/Desktop/projects/flatmir-scrapeops/scrapeOps/engine/__init__.py",
+    "tag": "sub",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-09-07T06:47:30.509990+00:00"
+    },
+    "read": "full fresh read"
+  },
+  {
+    "ordinal": 7,
+    "region": "reader",
+    "item": "/private/tmp/tgdata-30-photo-trail-folding/tgdata/batch_engine.py",
+    "tag": "sub",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T21:02:16.250746+00:00"
+    },
+    "read": "full fresh read"
+  },
+  {
+    "ordinal": 8,
+    "region": "receiver",
+    "item": "/private/tmp/tgdata-30-photo-trail-folding/examples/album_assembly.py",
+    "tag": "core",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T21:02:16.243333+00:00"
+    },
+    "read": "retained full read from immediately preceding #29 review; unchanged verified tree"
+  },
+  {
+    "ordinal": 9,
+    "region": "contracts",
+    "item": "/private/tmp/tgdata-30-photo-trail-folding/docs/album_assembly.md",
+    "tag": "core",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T21:02:16.237792+00:00"
+    },
+    "read": "retained full read from immediately preceding #29 review; unchanged verified tree"
+  },
+  {
+    "ordinal": 10,
+    "region": "tests",
+    "item": "/private/tmp/tgdata-30-photo-trail-folding/tgdata/smoke_tests/test_42_album_assembly.py",
+    "tag": "sub",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T21:02:16.291204+00:00"
+    },
+    "read": "retained full read from immediately preceding #29 review; unchanged verified tree"
+  },
+  {
+    "ordinal": 11,
+    "region": "source-progress",
+    "item": "/private/tmp/tgdata-30-photo-trail-folding/tgdata/sync_engine.py",
+    "tag": "sub",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T21:02:16.292494+00:00"
+    },
+    "read": "retained full read from #29 merge review; unchanged"
+  },
+  {
+    "ordinal": 12,
+    "region": "source-progress",
+    "item": "/private/tmp/tgdata-30-photo-trail-folding/tgdata/backfill_engine.py",
+    "tag": "sub",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T21:02:16.249941+00:00"
+    },
+    "read": "retained full read from #29 qualification; unchanged"
+  },
+  {
+    "ordinal": 13,
+    "region": "source-progress",
+    "item": "/private/tmp/tgdata-30-photo-trail-folding/tgdata/sync_store.py",
+    "tag": "sub",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T21:02:16.293114+00:00"
+    },
+    "read": "retained full read from #29 qualification; unchanged"
+  },
+  {
+    "ordinal": 14,
+    "region": "source-progress",
+    "item": "/private/tmp/tgdata-30-photo-trail-folding/tgdata/history_window.py",
+    "tag": "sub",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T21:02:16.253201+00:00"
+    },
+    "read": "retained full read from #29 qualification; unchanged"
+  },
+  {
+    "ordinal": 15,
+    "region": "source-progress",
+    "item": "/private/tmp/tgdata-30-photo-trail-folding/tgdata/pool_result.py",
+    "tag": "side",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T21:02:16.257571+00:00"
+    },
+    "read": "retained full read from #29 qualification; unchanged"
+  },
+  {
+    "ordinal": 16,
+    "region": "prior-evidence",
+    "item": "/private/tmp/tgdata-29-album-assembly/devdocs/work/29-album-assembly/pr-critic_r1.md",
+    "tag": "core",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T20:20:29.770784+00:00"
+    },
+    "read": "full prior review read; provenance-only correction afterward"
+  },
+  {
+    "ordinal": 17,
+    "region": "prior-evidence",
+    "item": "/private/tmp/tgdata-29-album-assembly/devdocs/work/29-album-assembly/replan-r3-contract.md",
+    "tag": "core",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T20:20:29.770063+00:00"
+    },
+    "read": "full prior planning read; provenance-only correction afterward"
+  },
+  {
+    "ordinal": 18,
+    "region": "process",
+    "item": "/private/tmp/tgdata-30-photo-trail-folding/CONTRIBUTING.md",
+    "tag": "umbrella",
+    "confidence": "HIGH",
+    "recency": {
+      "source": "filesystem",
+      "value": "2026-10-14T21:02:16.214628+00:00"
+    },
+    "read": "full same-session read and refreshed all task-applicable sections"
+  }
+]
