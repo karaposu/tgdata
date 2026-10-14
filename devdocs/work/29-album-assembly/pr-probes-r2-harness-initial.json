@@ -1,0 +1,151 @@
+{
+  "product_head": "7a49bd9dd0b109ccd64aa7140bd8d88168382f90",
+  "python": "3.11.10",
+  "histories": [
+    {
+      "name": "mixed_histories",
+      "result": "PASS",
+      "detail": {
+        "seeds": 18,
+        "accept_calls": 576,
+        "zero_write_confirmations": 576,
+        "distinct_members_per_database": 48,
+        "oracle": "one-shot core plus independent row/marker counts"
+      },
+      "seconds": 1.339
+    },
+    {
+      "name": "new_hash_boundary",
+      "result": "PASS",
+      "detail": {
+        "cap": 5096,
+        "new_hash_refused": true,
+        "original_confirmed": true,
+        "markers": 1
+      },
+      "seconds": 0.004
+    },
+    {
+      "name": "namespace_matrix",
+      "result": "PASS",
+      "detail": {
+        "collections": 6,
+        "members": 12,
+        "markers": 12,
+        "normalization_or_prefix_alias": false
+      },
+      "seconds": 0.021
+    },
+    {
+      "name": "confirmation_scope",
+      "result": "PASS",
+      "detail": {
+        "original_confirmation": true,
+        "changed_original_refused": true,
+        "grown_view_refused": true,
+        "no_repair": true
+      },
+      "seconds": 0.005
+    },
+    {
+      "name": "commit_response_lost",
+      "result": "PASS",
+      "detail": {
+        "source_reads": 1,
+        "receiver_members": 1,
+        "receiver_markers": 1,
+        "settled_after_restart": 1
+      },
+      "seconds": 0.007
+    },
+    {
+      "name": "equal_content_two_sources",
+      "result": "FAIL",
+      "error": "Traceback (most recent call last):\n  File \"/private/tmp/tgdata-29-album-assembly/devdocs/work/29-album-assembly/pr-probes-r2.py\", line 347, in main\n    result=probe(root);entry=dict(name=probe.__name__,result='PASS',detail=result)\n           ^^^^^^^^^^^\n  File \"/private/tmp/tgdata-29-album-assembly/devdocs/work/29-album-assembly/pr-probes-r2.py\", line 195, in equal_content_two_sources\n    return asyncio.run(run())\n           ^^^^^^^^^^^^^^^^^^\n  File \"/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py\", line 190, in run\n    return runner.run(main)\n           ^^^^^^^^^^^^^^^^\n  File \"/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/ns/miniconda3/lib/python3.11/asyncio/base_events.py\", line 654, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"/private/tmp/tgdata-29-album-assembly/devdocs/work/29-album-assembly/pr-probes-r2.py\", line 189, in run\n    assert (await history.status(CHAT)).after_id==0\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/tgdata-29-album-pr/tgdata/backfill_engine.py\", line 737, in status\n    raise BackfillConfigurationError('status requires BackfillRunRef')\ntgdata.backfill.BackfillConfigurationError: status requires BackfillRunRef\n",
+      "seconds": 0.012
+    },
+    {
+      "name": "actual_busy_commit",
+      "result": "PASS",
+      "detail": {
+        "real_commit_contention": true,
+        "partial_data_or_marker": false,
+        "retry_succeeds": true
+      },
+      "seconds": 0.005
+    },
+    {
+      "name": "snapshot_integrity",
+      "result": "PASS",
+      "detail": {
+        "first_view_snapshot": "valid",
+        "next_view": "refused",
+        "next_confirmation": "refused"
+      },
+      "seconds": 0.004
+    },
+    {
+      "name": "process_competition",
+      "result": "FAIL",
+      "error": "Traceback (most recent call last):\n  File \"/private/tmp/tgdata-29-album-assembly/devdocs/work/29-album-assembly/pr-probes-r2.py\", line 347, in main\n    result=probe(root);entry=dict(name=probe.__name__,result='PASS',detail=result)\n           ^^^^^^^^^^^\n  File \"/private/tmp/tgdata-29-album-assembly/devdocs/work/29-album-assembly/pr-probes-r2.py\", line 262, in process_competition\n    assert child.returncode==0,(child.returncode,err)\n           ^^^^^^^^^^^^^^^^^^^\nAssertionError: (1, 'Traceback (most recent call last):\\n  File \"/private/tmp/tgdata-29-album-assembly/devdocs/work/29-album-assembly/pr-probes-r2.py\", line 359, in <module>\\n    if __name__==\\'__main__\\':main()\\n                            ^^^^^^\\n  File \"/private/tmp/tgdata-29-album-assembly/devdocs/work/29-album-assembly/pr-probes-r2.py\", line 332, in main\\n    child_accept(*sys.argv[3:]);return\\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n  File \"/private/tmp/tgdata-29-album-assembly/devdocs/work/29-album-assembly/pr-probes-r2.py\", line 232, in child_accept\\n    receiver=AlbumReceiver(database,\\'one\\');raw=MessageBatch.from_json(Path(wire).read_text())\\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n  File \"/private/tmp/tgdata-29-album-pr/examples/album_assembly.py\", line 90, in __init__\\n    db.execute(\\'BEGIN IMMEDIATE\\')\\nsqlite3.OperationalError: database is locked\\n')\n",
+      "seconds": 0.708
+    },
+    {
+      "name": "mixed_conflict_rollback",
+      "result": "PASS",
+      "detail": {
+        "conflict_refused": true,
+        "new_member_absent": true,
+        "marker_count": 1
+      },
+      "seconds": 0.006
+    },
+    {
+      "name": "exact_query_plans",
+      "result": "PASS",
+      "detail": {
+        "plans": [
+          [
+            [
+              3,
+              0,
+              0,
+              "SEARCH album_members USING INDEX sqlite_autoindex_album_members_1 (collection=? AND chat_id=? AND message_id=?)"
+            ]
+          ],
+          [
+            [
+              4,
+              0,
+              0,
+              "SEARCH album_members USING INDEX album_members_by_post (collection=? AND post_id=?)"
+            ]
+          ],
+          [
+            [
+              2,
+              0,
+              0,
+              "SEARCH album_receipts USING COVERING INDEX sqlite_autoindex_album_receipts_1 (collection=? AND batch_id=?)"
+            ]
+          ]
+        ]
+      },
+      "seconds": 0.002
+    },
+    {
+      "name": "cancellation_after_commit",
+      "result": "PASS",
+      "detail": {
+        "cancellation_preserved": true,
+        "data_retained": true,
+        "source_reads": 1,
+        "recovery_cursor": 1
+      },
+      "seconds": 0.01
+    }
+  ],
+  "no_live_telegram": true,
+  "result": "FAIL",
+  "unchanged_sources": 93
+}

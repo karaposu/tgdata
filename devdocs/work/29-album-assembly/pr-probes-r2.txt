@@ -1,0 +1,12 @@
+{"name": "mixed_histories", "result": "PASS", "detail": {"seeds": 18, "accept_calls": 576, "zero_write_confirmations": 576, "distinct_members_per_database": 48, "oracle": "one-shot core plus independent row/marker counts"}, "seconds": 1.366}
+{"name": "new_hash_boundary", "result": "PASS", "detail": {"cap": 5096, "new_hash_refused": true, "original_confirmed": true, "markers": 1}, "seconds": 0.004}
+{"name": "namespace_matrix", "result": "PASS", "detail": {"collections": 6, "members": 12, "markers": 12, "normalization_or_prefix_alias": false}, "seconds": 0.02}
+{"name": "confirmation_scope", "result": "PASS", "detail": {"original_confirmation": true, "changed_original_refused": true, "grown_view_refused": true, "no_repair": true}, "seconds": 0.005}
+{"name": "commit_response_lost", "result": "PASS", "detail": {"source_reads": 1, "receiver_members": 1, "receiver_markers": 1, "settled_after_restart": 1}, "seconds": 0.007}
+{"name": "equal_content_two_sources", "result": "PASS", "detail": {"source_reads": 2, "independent_original_receipts": 2, "members": 2, "receiver_markers": 1}, "seconds": 0.012}
+{"name": "actual_busy_commit", "result": "PASS", "detail": {"real_commit_contention": true, "partial_data_or_marker": false, "retry_succeeds": true}, "seconds": 0.005}
+{"name": "snapshot_integrity", "result": "PASS", "detail": {"first_view_snapshot": "valid", "next_view": "refused", "next_confirmation": "refused"}, "seconds": 0.005}
+{"name": "process_competition", "result": "PASS", "detail": {"processes": 3, "actual_changes": [0, 0, 51], "members": 50, "markers": 1}, "seconds": 0.599}
+{"name": "mixed_conflict_rollback", "result": "PASS", "detail": {"conflict_refused": true, "new_member_absent": true, "marker_count": 1}, "seconds": 0.005}
+{"name": "exact_query_plans", "result": "PASS", "detail": {"plans": [[[3, 0, 0, "SEARCH album_members USING INDEX sqlite_autoindex_album_members_1 (collection=? AND chat_id=? AND message_id=?)"]], [[4, 0, 0, "SEARCH album_members USING INDEX album_members_by_post (collection=? AND post_id=?)"]], [[2, 0, 0, "SEARCH album_receipts USING COVERING INDEX sqlite_autoindex_album_receipts_1 (collection=? AND batch_id=?)"]]]}, "seconds": 0.002}
+{"name": "cancellation_after_commit", "result": "PASS", "detail": {"cancellation_preserved": true, "data_retained": true, "source_reads": 1, "recovery_cursor": 1}, "seconds": 0.007}
