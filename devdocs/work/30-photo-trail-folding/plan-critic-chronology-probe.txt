@@ -1,0 +1,29 @@
+{
+  "result": "COUNTEREXAMPLE",
+  "observed_groups": [
+    [
+      1,
+      2
+    ],
+    [
+      3,
+      4
+    ]
+  ],
+  "positive_user_88_events": [
+    [
+      1,
+      10
+    ],
+    [
+      3,
+      2
+    ],
+    [
+      4,
+      3
+    ]
+  ],
+  "expected": "mixed post stays separate; regressed text3 must not create a trail",
+  "scope": "current inquiry sketch; plan must specify per-member chronology independent of post ownership"
+}
