@@ -1,0 +1,23 @@
+{
+  "result": "PASS",
+  "published_merge": "35c4362d4e6a8fc92e695def67bffcac192dc073",
+  "tree": "6e6c2ee5c67f5f1e65c2a16d557b137cacc02e97",
+  "parents": [
+    "e5cdad77ff6af41f21503fc43fe3180d5213a41e",
+    "7a49bd9dd0b109ccd64aa7140bd8d88168382f90"
+  ],
+  "tested_candidate": "6b1c56eba59251c7425c73fa1f711eddb11b1bb8",
+  "changed_files": [
+    "README.md",
+    "docs/album_assembly.md",
+    "examples/album_assembly.py",
+    "tgdata/__init__.py",
+    "tgdata/album.py",
+    "tgdata/smoke_tests/README.md",
+    "tgdata/smoke_tests/test_42_album_assembly.py"
+  ],
+  "retained_remote_branches": {
+    "feat/29-album-assembly": "b55a99e897f6e1f26c203d01610ded4d10879005",
+    "feat/29-album-assembly-pr": "7a49bd9dd0b109ccd64aa7140bd8d88168382f90"
+  }
+}
