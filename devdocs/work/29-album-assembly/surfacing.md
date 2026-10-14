@@ -24,7 +24,7 @@ Mode: artifact. Entry: signal-first. Territory: the current raw-batch/receiver/p
 | 13 | `examples/daily_continuation.py` | core | HIGH | filesystem: 2026-10-14T10:49:01.214614+00:00 |
 | 14 | `/Users/ns/Desktop/projects/flatmir-scrapeops/scrapeOps/engine/collapse.py` | core | HIGH | filesystem: 2026-08-13T19:11:54.659864+00:00 |
 | 15 | `/Users/ns/Desktop/projects/flatmir-scrapeops/scrapeOps/tests/test_engine_smoke.py` | sub | HIGH | filesystem: 2026-10-02T09:15:43.082247+00:00 |
-| 16 | Telethon1.45.0 events.album.AlbumHack/build, inspected locally | sub | HIGH | none: null |
+| 16 | `/Users/ns/Desktop/projects/telegram-group-scraper/.venv/lib/python3.11/site-packages/telethon/events/album.py`: AlbumHack, Album.build | sub | HIGH | filesystem: 2026-10-03T09:09:32.896134+00:00 |
 | 17 | https://core.telegram.org/constructor/message | core | HIGH | none: null |
 | 18 | Issue #30 photo-trail scope | side | HIGH | none: null |
 | 19 | Issue #31 lease scope | side | HIGH | none: null |
@@ -35,9 +35,9 @@ Purpose: surface the scope and delicacy before choosing a design. Coverage: core
 
 Concept names with provenance: raw observation/hash [1], grouped_id [1,2,17], completed prefix [2,11], blob custody [3], pending delivery [4,5,9,10], fixed window [6], explicit acknowledgment [7,13], caller data capture [11], logical post/caption carrier [14], delayed album event [16]. Types: vocabulary for platform/library names; structural-reference for receiver/retention seams. No invented output API is selected here.
 
-Recency distribution: filesystem annotations cover15 items; four items use none/null. Source checkout files share the new-worktree materialization time; annotations are provenance only and were not used for relevance. Min/max timestamps are available directly in the trace. All19 items were included; no uncertain item was filtered out.
+Recency distribution: filesystem annotations cover 16 items; three items use none/null. Source checkout files share the new-worktree materialization time; annotations are provenance only and were not used for relevance. Min/max timestamps are available directly in the trace. All 19 items were included; no uncertain item was filtered out.
 
 Frontier: source-completeness guarantees, assembly closure policy, bounded retention, output/replay contract, and the real existing-account fixture for later qualification. These are inquiry work, not completed evidence. Workspace populated: true at 2026-10-14T10:58:36.557338+00:00; relevant implementations loaded. No unseen file is claimed read.
 
 ## Telemetry and self-assessment
-Three regions traversed (tgdata core/consumer reference/source evidence);19 items:10 core,5 sub,4 side,0 umbrella. Filesystem-backed15, no-mtime4. Current-resolution scope converged; live completeness remains explicitly unknown. Checked missed relevance, territory misbinding, workspace overload, artifact under-specification, tag drift and recency bias. No silent sampling or metadata relevance filter. **PROCEED** to triage/traverse; no implementation decision follows from this relevance inventory.
+Three regions traversed (tgdata core/consumer reference/source evidence); 19 items: 11 core, 5 sub, 3 side, 0 umbrella. Filesystem-backed 16, no-mtime 3. Current-resolution scope converged; live completeness remains explicitly unknown. Checked missed relevance, territory misbinding, workspace overload, artifact under-specification, tag drift and recency bias. No silent sampling or metadata relevance filter. **PROCEED** to triage/traverse; no implementation decision follows from this relevance inventory.
