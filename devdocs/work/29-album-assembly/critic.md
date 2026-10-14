@@ -13,6 +13,8 @@ Must precede: step1 and every production edit. The plan declares this prebuild b
 Disqualifying result: an actual representation, SQLite acceptance or existing receipt rule makes the qualified ownership contract impossible without changing source semantics or redesigning the selected value/receiver split. A missing member, false acknowledgment authority or raw identity change caused by that architecture fails the experiment. Ordinary local prototype typos do not establish a false premise; record and correct them before comparing results.
 Passing result: all named combined histories run on actual candidate/components, retain exact observed members/captions and canonical revision, retain original raw bytes/receipts/cursors, refuse invalid/uncertain state, preserve committed data through retries, and make zero network calls. Record candidate hashes and exact cases. Targeted existing-component probes alone cannot pass.
 
+Result: PASS — 37 combined actual-candidate tests passed on Python3.11.10/Telethon1.45.0, 2026-10-14. See prebuild/result.json and prebuild/combined.log for candidate hashes and histories; prebuild/report.md records the one corrected test-clock fixture. No source semantics or production code changed during the experiment.
+
 ## High-level summary
 
 The plan's small derived layer fits the existing library. The new post represents observed membership, while raw batch IDs and full backfill delivery references remain source acknowledgment authority. A strict caller-owned receiver can retain members without a new progress engine. The full combined candidate has not run; qualify it first.

@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "exit_code": 0,
+  "candidate": "/private/tmp/tgdata-29-prebuild-7lr2ji8y",
+  "runtime": "3.11.10",
+  "sha256": {
+    "album.py": "5ba3a753719a52fb6ffb2f87d8bd7f08fd77f8a859053eeb14ef98e989e22de9",
+    "album_assembly.py": "4f3fd3fe7beaa850d13e152617614433c95c2da3b28057468b99d4ec8fa477aa",
+    "test_42_album_assembly.py": "663e377a28fe6f6c49de1d1dabadae6282136abdf18f6e232dd01767767ee744"
+  },
+  "network": "socket connect/connect_ex forbidden in tests; no live Telegram claim"
+}
