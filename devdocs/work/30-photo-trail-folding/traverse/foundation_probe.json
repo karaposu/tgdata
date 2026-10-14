@@ -1,0 +1,81 @@
+{
+  "result": "PASS",
+  "runtime_components": "actual Telethon1.45 values, #29 core/SQLite receiver, real consumer helpers",
+  "source_responses": "synthetic; no live Telegram or human-intent accuracy claim",
+  "observations": {
+    "video_followup": {
+      "output_posts": 1,
+      "members": [
+        [
+          1,
+          2
+        ]
+      ],
+      "input_mutated": true
+    },
+    "backwards_timestamp": {
+      "output_posts": 1,
+      "members": [
+        [
+          1,
+          2
+        ]
+      ],
+      "input_mutated": true
+    },
+    "channel_identity": {
+      "output_posts": 1,
+      "members": [
+        [
+          1,
+          2
+        ]
+      ],
+      "input_mutated": true
+    },
+    "missing_identity": {
+      "output_posts": 2,
+      "members": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "input_mutated": false
+    },
+    "consumer_overflow_fixture": {
+      "media_count": 11,
+      "member_count": 11,
+      "unique_member_count": 10
+    },
+    "actual_sdk_fields": {
+      "user_sender": "88",
+      "channel_sender": "-1000000000007",
+      "media_kind": "photo"
+    },
+    "later_album_observation": {
+      "post_identity_stable": true,
+      "revision_changes": true,
+      "original_value_immutable": true,
+      "current_senders": [
+        "88",
+        "99"
+      ],
+      "membership": "unconfirmed",
+      "old_input_confirmed_without_view": true
+    },
+    "reverse_observation_arrival": {
+      "member_ids": [
+        4,
+        5
+      ],
+      "membership": "unconfirmed"
+    }
+  },
+  "source_hashes": {
+    "scrapeOps/engine/collapse.py": "0cc32429e6be1850db08052e29d981b4e96e5acd25bd9800bfb8b5599e894715",
+    "scrapeOps/engine/bursts.py": "f211c298e8ce025dcd148939330aaac23d111306c3c195d3f17e055482baac21"
+  }
+}
