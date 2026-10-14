@@ -12,7 +12,9 @@ were made after promotion; qualified candidate/runtime parity checked.
 Review completed on2026-10-14 at the user's request: merge-check0a3c83d PASS;
 PR28 into dev; fresh same-session critic-d8a2d370 PASS with0 findings and16 fresh
 probe groups. Both checks are committed, pushed and posted to the PR.
-Next: merge only with the user's go-ahead. #8 remains open and unmerged.
+Merged with the user's go-ahead:PR28 → dev f92749688b7d544da55249459c489164497d47ed.
+The actual merged tree passed all28 suites/773 offline cases and5 examples before
+push. Work documents were excluded, branch archive preserved. See merge-record.md.
 Real Telegram code delivery/password acceptance remains pending; no live login was
 performed. Optional unfinished-state preference was unanswered; portable completed
 steps are the stated default and memory-only object use also works.
@@ -28,6 +30,7 @@ Do not commit duncan or unrelated work. #17 two-account validation remains defer
 PR: https://github.com/karaposu/tgdata/pull/28
 Merge check: https://github.com/karaposu/tgdata/pull/28#issuecomment-6161091371
 Fresh critique: https://github.com/karaposu/tgdata/pull/28#issuecomment-6161179495
-Read pr-critic.md/review/results.json before integration. Product is unchanged from
-877d29d. Follow §7.6–7.7: exclude work/archaeology docs from dev, preserve branch,
-verify merged code before push, close #8 manually after the dev merge.
+Product is unchanged from877d29d. Review results remain in pr-critic.md and
+review/results.json; final merged-tree evidence is in merged-verification/result.json.
+The feature work is complete. Live login qualification remains pending as stated
+above; do not resume unrelated #17 testing or create real login requests implicitly.
