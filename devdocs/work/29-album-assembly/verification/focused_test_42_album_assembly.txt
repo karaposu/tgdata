@@ -1,0 +1,8 @@
+.....................................
+----------------------------------------------------------------------
+Ran 37 tests in 2.764s
+
+OK
+Lost acknowledgment replayed without another source read.
+One album; 3 members; 2 captions; membership unconfirmed.
+Acknowledged through: 103

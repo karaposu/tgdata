@@ -24,7 +24,7 @@ def main():
     init.write_text(init.read_text() + '\nfrom .album import TelegramPost, AlbumAssemblyError, album_post_ids, assemble_albums\n'
                     '__all__ += ["TelegramPost", "AlbumAssemblyError", "album_post_ids", "assemble_albums"]\n')
     env = dict(os.environ, PYTHONPATH=str(candidate), PYTHONDONTWRITEBYTECODE='1')
-    log = HERE / 'combined.log'
+    log = HERE / 'combined.txt'
     with log.open('w') as stream:
         result = subprocess.run([sys.executable, '-m', 'tgdata.smoke_tests.test_42_album_assembly', '-v'],
                                 cwd=candidate, env=env, stdout=stream, stderr=subprocess.STDOUT, timeout=180)
