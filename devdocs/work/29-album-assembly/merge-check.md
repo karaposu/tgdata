@@ -2,54 +2,46 @@
 model: unknown
 effort: unknown
 ---
-# Merge check — issue29
+# Renewed merge check — #29 / PR35, revision4
 
-**Fidelity gate: PASS.** PR publication may proceed for fresh soundness review. This is not merge approval: the PR critic and §9 model/effort verification remain pending.
+**Fidelity gate: PASS.** This checks implementation against the qualified plan; fresh soundness review follows. §9 model/effort remains unconfirmed and the PR stays draft.
 
-Reviewed in the same warm session on2026-10-14. Archive head before this document: `b1ca61ec83807bf50accc4f6859b4d462319fbb0`. Product commit: `e35392c`. Refreshed target `origin/dev`: `e5cdad77ff6af41f21503fc43fe3180d5213a41e`. Product-only publication branch: `feat/29-album-assembly-pr`, head `19d421f1465961f90ab8a1036bd285425c2b90ad`, created from that target by cherry-picking the product commit. All seven product files and all93 Python sources match the previously verified tree byte-for-byte. No work-folder or archaeology changes enter the PR diff.
+Reviewed 2026-10-14 in the same warm session. Refreshed target `e5cdad77ff6af41f21503fc43fe3180d5213a41e`; product head `7a49bd9dd0b109ccd64aa7140bd8d88168382f90`; archive implementation/evidence head `eb1a54f`. Remote dev and PR head have not moved. `merge-parity-r2.json` records ancestor verification, all seven product files matching the archive, and all93 package/example Python hashes matching the final verification manifest. The publication branch is clean and excludes work-folder documents.
 
-## 0 — Warmth and weight
+## Warmth, weight and surfaced territory
 
-desc.md records retained architecture context and complete batch/progress/facade/storage/receiver reads at ancestor e5cdad7; `git merge-base --is-ancestor` confirms that ancestry. This review re-read triage, description, canonical folded plan, original critic, implementation evidence, every changed product file and setup.py. Existing source contracts remain available from the same session's full reads; no new all-code archaeology sweep is claimed.
+Read together: triage.md, warm.md, desc.md, plan.md/canonical revision4, critic.md, original critic_r1.md finding/selection, first rejected pr-critic_r1.md, implementation/prebuild evidence, and every changed product file in full. Current source-engine/value contracts are retained from the same warm session; no new whole-repository archaeology is claimed. The warming ancestor is the current target. The issue's enhancement/heavy labels agree with triage.
 
-triage.md classifies feature-heavy. GitHub #29 currently has `enhancement` and `heavy`, matching path/weight. The new derived representation and durable acceptance boundary justify that weight. The preserved original issue body is filing evidence; its current pipeline block gives the implementation state.
+The seven files are album.py, the album receiver example, suite42, the album guide, package exports, README and smoke README. The new paths extend the surfaced raw-batch/receiver boundary expressly qualified in desc/plan. They do not change the source engines, budget, pool, health, worker or existing raw representation. This remains feature-heavy because persistence, derived identity and source acknowledgment interact. No newly discovered cross-cutting implementation is hidden by a lighter classification.
 
-## 0b — Diff against surfaced territory
+## Fidelity and deviations
 
-Seven product files change: new `tgdata/album.py`, `examples/album_assembly.py`, `tgdata/smoke_tests/test_42_album_assembly.py`, `docs/album_assembly.md`; additive exports in `tgdata/__init__.py`; additions to README.md and smoke_tests/README.md. The four new paths and three integration/documentation paths were not existing implementation targets in the initial surfaced-file list. They are explicitly introduced by the qualified description and folded plan within the surfaced raw-batch/receiver boundary. No newly discovered account, health, budget, worker or progress-engine rewrite occurred. Heavy remains the appropriate weight.
+Step1 is present: schema2 stores one canonical immutable member record keyed by collection/chat/message, with digest and post key. Strict reopening validates schema, keys, post index and collection; known v1 is refused unchanged. Current views use a consistent read transaction, metadata preflight, canonical/digest/row validation and the original TelegramPost constructor with selected limits. New-work prior loading has aggregate lower-bound preflight and incremental actual JSON accounting.
 
-## 1 — Fidelity to the folded plan
+Step2 is present: one BEGIN IMMEDIATE transaction selects new admission or accepted-input confirmation. New input checks conflicts, uses the real bounded assembler, and commits only absent rows plus the scoped marker. Confirmation performs indexed original-record comparisons without assembly, grown views, post statistics or DML. Both return None. Close/rollback preserve primary failure; uncertainty after a successful commit remains recoverable.
 
-Step1: immutable versioned post values, stable chat/group or chat/message identity, canonical revision, original member records, exact required prior mapping, whole-operation conflict/limit refusal and four public exports are present. Version0.1 is unchanged. Raw batch source modules and schema are unchanged.
+Step3 is present: example consumers use separate loads, and suite42 contains57 tests, retaining the original37 cases with the explicitly changed schema/return expectations. All three first-rejection histories are permanent tests under unchanged limits. Both real source engines retain their original receipts; the collect helper acknowledges only normal confirmed returns.
 
-Step2: the receiver explicitly creates or strictly reopens a named collection; validates schema/version; loads current values under BEGIN IMMEDIATE; commits posts and scoped input recognition before any source ack; checks replay against current stored observations. Local cleanup preserves the original failure. The bounded collect helper only acknowledges normal confirmed daily returns. Reference-only example and separate blob custody are documented.
+Step4 is present: public docs distinguish new admission, fixed-input confirmation and bounded view reads; describe schema2 refusal, conflicts, caller custody, separate source receipts and unconfirmed membership. No release/version change or automatic migration is implied.
 
-Step3:37 focused tests compose actual SDK/value/SQLite/daily/backfill behavior with disclosed synthetic source responses. They exercise split/nonadjacent/reverse-arrival grouping, multiple captions, strict values, bounds, durable recovery, source receipt authority and media references. The required combined prebuild passed before production adoption, with candidate hashes retained. The core/example still match those hashes.
+Step5 is present: the complete corrected candidate passed57 album tests plus13 related suites and the demo before adoption. The final manifest records830 executed offline checks across29 suites,6 demos and3 explicit live skips. Python3.11.10/Telethon1.45.0;93-source compile and Python3.7 grammar checks, without a native3.7 claim. Product and archive commits are separate. Hash parity allows reuse of that full regression evidence without rerunning unchanged suites during this review.
 
-Step4: the public guide, README and smoke entry describe observation updates, explicit uncertainty, limits, conflicts, storage and receipt ownership, with an executable no-network demo.
+The recorded deviation is local: an additional implementation verification probe exposed SQLite column NOCASE comparison despite BINARY indexes. Explicit COLLATE BINARY predicates now enforce the plan's existing exact namespace rule; the57th permanent case and repeated complete prebuild/full verification cover the correction. No architectural contract changed and no assertion was weakened. The prior implementation/prebuild results remain archived. Current plan headers record completed status; historical body passages describe their original sequence, not unfinished production work.
 
-Step5: verification/result.json records810 executed offline checks across29 suites,6 demos and3 live skips on Python3.11.10/Telethon1.45.0. All93 package/example sources compile and parse with Python3.7 grammar; native3.7 is not claimed. All89 pre-existing Python files except __init__ are unchanged. The clean publication tree additionally ran suite42:37/37 passed, including its child process imports. Full suite repetition is unnecessary for a byte-identical source tree.
+## Does the plan still hold?
 
-Deviations are local and recorded: the prebuild's backfill fixture clock was corrected to satisfy the existing closed-window rule; the adopted test gained a repository-root sys.path insertion for direct child execution. No product algorithm changed. `plan.md` is a pointer to the skill's canonical `step_by_step_impl_plan.md`, avoiding duplicate plans. The product-only publication branch is the §7.6 transport of the exact qualified diff; the archive branch retains all reasoning.
+Yes at this fidelity gate. Accepted original data is the durable fact; a growing derived view is a separate computation. This addresses the first rejection at the receiver ownership boundary rather than changing allowance or source semantics. Core album.py is byte-identical to the earlier qualified implementation. Unconfirmed membership means no live completeness premise is needed. The example does not claim distributed leases, physical power-loss qualification, automatic repair or deployed consumer migration.
 
-## 2 — Does the plan still hold?
+## Findings accounted for
 
-Yes at this fidelity check. The implemented boundary remains a pure observed-data projection plus caller-owned acceptance. It introduces no source-completeness oracle, source lifecycle or permanent library archive. Original raw receipts/cursors remain authoritative. Full component evidence supports that composition; it does not establish live Telegram completeness, physical power-loss durability, external storage repair or distributed ownership. Fresh soundness critique follows publication and may still reject a design decision that was implemented faithfully.
+The original plan critic's one Medium, raised-limit loss on reload, is handled by explicit receiver policy and propagation to bounded view construction/assembly. The10001-member restart test and lower-policy view refusal remain, with old confirmation now independent of grown views. No original Low was deferred. The fresh revision3 plan critic had zero additional findings and required the complete prebuild; its appended PASS and exact candidate evidence satisfy that ordering requirement.
 
-## 3 — Original critic findings
+The first PR critic's one Medium appeared in three histories: immediate byte-bound replay, default16MiB replay and old multi-post input after growth. Revision4's independent confirmation path and None return answer the mechanism. Suite42 explicitly forbids assembler/view/stat calls and writes on replay, while integrity controls still refuse missing/changed data. This is mitigation evidence, not a substitute for the fresh critique that follows this check.
 
-The single Medium finding, Risk1 (raised limits lost during reload), is folded into steps1–3. `AlbumReceiver` retains both selected limits, passes them to `_load`/TelegramPost.from_json and assemble_albums, and readback uses the same `_load`. `test_raised_member_limit_survives_restart_and_replay` crosses10000 accumulated members, reopens/replays under10001 and demonstrates lower-policy refusal without state mutation. Exact multibyte byte accounting has a separate test. No High or Low original finding remains unaddressed.
+## Honest issue status and remaining prerequisite
 
-The REORDER experiment has an explicit PASS result in critic.md, backed by the combined real-component run and unchanged core/example hashes. Historical wording in that original critique describes the pre-experiment state; its appended Result and prebuild report are the later evidence, not a rewritten verdict history.
+At this review's start T/0–5 are correctly checked with committed artifacts;6–7 are correctly unchecked for this head. Step6 can be checked after this renewed report is committed/posted. Step7 must await the actual fresh verdict. The opening issue description is retained as the original request; the pipeline block records the current state.
 
-## 4 — Issue status and remaining gates
+**§9 verification is UNCONFIRMED.** The session does not expose the required model/effort setting; metadata remains unknown. This is an independent merge prerequisite, not a code finding and not waived by a fidelity pass. Keep draft status. The user authorized review/publication, not merge, release or a running ScrapeOps change.
 
-At review start, T and0–5 are checked with committed artifacts;6 and7 are correctly unchecked. Step6 can be checked after this document is committed and the PR exists; step7 only after the fresh critique is committed/posted, with its actual pass/reject outcome. No future gate is pre-ticked. The original request remains intact.
-
-**§9 verification: UNCONFIRMED.** CONTRIBUTING assigns new-feature work to Fable5.1/max or GPT6Astra/xhigh. The session does not expose that setting; the factual question remains unanswered. Artifact metadata correctly says unknown. This report does not certify compliance or waive the requirement. Keep the PR draft and surface the uncertainty at the merge decision.
-
-No merge, release, running ScrapeOps change, original-checkout edit or branch deletion is authorized by this review request. The user's new request authorizes PR publication and review, superseding only the prior task-impl turn's publication boundary.
-
-## Subsequent soundness review
-
-PR35 was opened after this fidelity check. The fresh pr-critic.md then rejected it with one Medium acceptance/replay contract finding, reproduced three ways. Fidelity PASS remains the historical comparison result; it is not current merge readiness. Revision2 is now DEPRECATED_step_by_step_impl_plan.md and revision3 re-planning is required. No product patch or merge occurred.
+The previous fidelity check and first rejected soundness review are preserved as merge-check_r1.md and pr-critic_r1.md. The original first-review probes remain unchanged.
