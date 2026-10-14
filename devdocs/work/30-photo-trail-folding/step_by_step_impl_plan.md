@@ -2,7 +2,11 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# Implementation plan — optional photo-trail views (#30), revision1
+# Implementation plan — optional photo-trail views (#30), revision2
+
+**Critic folded:** 2026-10-15 — 1 mitigation (2 steps changed,0 added): Risk1 Robust. Complete candidate experiment PASS at1daf215 before this fold, following the user-provided task-impl order.
+
+**Status:** folded and qualified for exact candidate adoption; implementation/full actual-branch verification follows.
 
 Explicit input: desc.md at570cc7d, triage.md, traverse/finding.md and its preserved two-pass evidence. Baseline dev35c4362. No previous plan or rejected PR critique exists for #30. Product code has not started.
 
@@ -32,7 +36,7 @@ Add one pure module with a validated policy and versioned current-view value. Th
 
 ## Mandatory complete prebuild before production Step1
 
-After fresh critic-d and its selected fold, build the **entire** proposed module, exports, example and suite43 in an isolated temporary package based on dev35c4362. Run the complete new suite and relevant existing raw/album/daily/window/backfill/pool suites, plus the new demo, before adopting any candidate file into product paths. The inquiry's contract_probe.py is deliberately incomplete and cannot satisfy this gate.
+Following the user-provided task-impl order, run fresh critic-d, then build the **entire** proposed module, exports, example and suite43 with selected mitigations in an isolated temporary package based on dev35c4362. Record the experiment result before formal Fold; only after PASS and the fold adopt the exact qualified candidate. Run the complete new suite and relevant existing raw/album/daily/window/backfill/pool suites, plus the new demo, before adopting any candidate file into product paths. The inquiry's contract_probe.py is deliberately incomplete and cannot satisfy this gate.
 
 Use real Telethon1.45 values/serialization, existing TelegramPost, actual candidate public constructors/loaders/fold, actual SQLite schema/open/read/preflight/cleanup and real daily/backfill engines. Include all critical histories below together: late caption withdrawal; unknown late album member; same-user overlap; exact gap/span/count limits; list/arrival/partition invariance; malformed forged view; raised10001-member reload and getters; closed-scope counterexample; aggregate/key/byte preflight; foreign-collation exact namespace; missing/corrupt known data; consistent WAL snapshot; original acceptance independently replayable after scope/view refusal; actual source receipts, lost ack/reply, cancellation and child-process loss.
 
@@ -66,7 +70,7 @@ The single-view constructor/JSON loader bounds its encoded view size and total r
 ### Inference rule
 Precompute each post's complete metadata from its original members. An eligible owner exists only if every member names the same positive user ID. A usable post consists of ordinary messages, has dates for every member and has nondecreasing dates in original-ID order. Text means nonempty after whitespace stripping. An anchor has text or an actual non-null Telegram grouped_id. A follower consists solely of ordinary textless photo-kind records; whole photo-only albums qualify atomically.
 
-For each known user/chat, mark every post in a connected overlap of original-post ID intervals as unsafe. Separately inspect original events for that known user; any post containing a date earlier than the maximum previously observed known timestamp is unsafe. Missing dates are unsafe. These determinations happen before inference so later evidence can invalidate an earlier guess.
+For each known user/chat, mark every post in a connected overlap of original-post ID intervals as unsafe. [folded: Risk1, robust] Independently inspect each original member using its own positive sender ID, even when its enclosing post has mixed/unknown ownership. Any post containing a date earlier than that sender's maximum previously observed known timestamp is unsafe. Whole-post eligibility must not discard individual chronology evidence. Missing dates are unsafe. These determinations happen before inference so later evidence can invalidate an earlier guess.
 
 Traverse all original members by(chat, numeric message ID). Unknown/mixed/nonpositive owners clear all active anchors in that chat at each of their member events. Unsafe known-user posts clear that user's anchor at each event. A valid non-follower clears the user's previous anchor at its first member. Other positively identified users remain independent.
 
@@ -89,7 +93,7 @@ TelegramPost v1, canonical JSON, raw peer identifiers/dates, resource limits, im
 ## Step2 — Pure event-based folding
 
 ### Proposed changes
-In the same module, implement bounded input validation/deduplication, metadata/overlap/chronology passes, original-member event traversal and canonical group/counter construction. One private deterministic rule supplies both fold output and loader relation validation. Build only bounded per-call structures; no history cache, callbacks or I/O. Preserve byte-identical originals. Keep construction and inference code separate enough to avoid repeated whole-value getter decoding inside member loops; caches remain immutable outside the call.
+In the same module, implement bounded input validation/deduplication, metadata/overlap/chronology passes, original-member event traversal and canonical group/counter construction. [folded: Risk1, robust] The chronology pass is keyed by each original member's positive sender, independently of the post's eligible owner. Keep all existing whole-post/barrier rules and use this same corrected relation in saved-value validation. One private deterministic rule supplies both fold output and loader relation validation. Build only bounded per-call structures; no history cache, callbacks or I/O. Preserve byte-identical originals. Keep construction and inference code separate enough to avoid repeated whole-value getter decoding inside member loops; caches remain immutable outside the call.
 
 ### Output
 The exact opted-in rule and disabled behavior, with deterministic complete-view results, reversible late-observation changes and no source/persistence side effect.
@@ -123,7 +127,7 @@ AlbumReceiver schema2/validation, SQLite snapshots and BINARY comparisons, metad
 ## Step4 — Behavioral tests and documentation
 
 ### Proposed changes
-Add `tgdata/smoke_tests/test_43_photo_trails.py`, socket-blocked and runnable directly/module-wise without work-folder files or Git metadata. Use actual Telethon1.45 serialization/_record fixtures and real TelegramPost/receiver/source classes. New fixture messages use unique IDs; preserve the old consumer discrepancy as explanation, not as an expected library duplicate.
+Add `tgdata/smoke_tests/test_43_photo_trails.py`, socket-blocked and runnable directly/module-wise without work-folder files or Git metadata. [folded: Risk1, robust] Add the reproduced mixed-author chronology history and a partly missing-author variant; regressed text cannot anchor, while a later monotone text can still start a valid trail. Use actual Telethon1.45 serialization/_record fixtures and real TelegramPost/receiver/source classes. New fixture messages use unique IDs; preserve the old consumer discrepancy as explanation, not as an expected library duplicate.
 
 Cover these behavioral groups with explicit expected outcomes rather than source-text assertions:
 
@@ -160,3 +164,6 @@ True — isolated verification and reversible feature-branch publication; no liv
 Full regressions, source hash parity, Python compatibility, watchdogs, isolated imports, archive branch/process separation, issue provenance.
 ### Hardness Lvl
 3
+
+## Qualification result
+The complete candidate passed53 new tests,14 related suites and2 demos (491 offline checks), plus a source-only package run without Git/work notes. prebuild/result.json binds all seven candidate product files and96 Python sources. No runtime correction or weakened expectation was needed. R1 is included. This fold does not repeat critique; it records the selected mitigation and the already satisfied experiment ordering.
