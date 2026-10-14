@@ -8,7 +8,7 @@ A → Su → S → D → I → C → R (always)
 - [x] Surfacing
 - [x] Sensemaking
 - [x] Decomposition
-- [ ] Innovation
+- [x] Innovation
 - [ ] Critique
 - [ ] Routelister
 ## Iteration
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Innovation
+Critique
 ## Relationships
 - RELATED: ../../29-album-assembly/traverse/ on retained archive branch feat/29-album-assembly — album/receiver contract prerequisite; product merged.
 ## History
@@ -31,3 +31,4 @@ Innovation
 - 2026-10-15_00-26: Iteration2 surfacing:9 narrowed items/5 regions, no new inaccessible context. Manual8/8; checker absent. Next:Sensemaking.
 - 2026-10-15_00-28: Iteration2 sensemaking: scope must account for known timeline events; original-member interruption distinguished from post display order.3 focused ambiguity counters; manual8/8. Next:Decomposition.
 - 2026-10-15_00-29: Iteration2 decomposition:2 focused mechanisms with explicit runtime determination and combined verification obligation;7/7 quality/structure checks. Next:Innovation.
+- 2026-10-15_00-32: Iteration2 innovation:7 mechanisms,6 tested variations; closed explicit intervals plus original-member event evaluation selected for critique.9 actual-component contract histories PASS; complete public candidate still unbuilt. Manual10/10 structure. Next:Critique.

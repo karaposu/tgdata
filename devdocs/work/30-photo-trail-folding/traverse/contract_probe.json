@@ -1,0 +1,15 @@
+{
+  "result": "PASS",
+  "histories": {
+    "closed_scope": "split refused; widened scope retains known text and overlapping posts stay separate",
+    "late_caption": "prior attachment withdraws; all originals survive unchanged",
+    "late_unknown_barrier": "unknown member5 breaks the trail before photo6",
+    "known_user_interleaving": "two independent trails; post-list permutation identical",
+    "chain_limits": "whole followers remain separate on count/span limit",
+    "reply_barrier": "unknown reply target prevents attachment and clears old anchor",
+    "backward_chronology": "regressed text cannot become a fresh anchor",
+    "view_refusal_replay": "view cap refuses before payload; original input confirms unchanged",
+    "daily_restart": "two source reads; lost ack replays; original cursor settles through2"
+  },
+  "limits": "contract sketch only; public value/schema/options and full adapter corruption/cleanup matrix remain for complete prebuild"
+}
