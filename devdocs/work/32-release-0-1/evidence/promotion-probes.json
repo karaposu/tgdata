@@ -1,0 +1,8 @@
+{
+  "result": "PASS",
+  "proposed_merge": "6a76f78f9cf92c5e0a0054f91abea35ee368cb9c",
+  "entire_tree_equals_qualified_product": true,
+  "checked_source_hashes": 91,
+  "work_archive_excluded": true,
+  "includes_reviewed_current_dev": true
+}
