@@ -2,9 +2,11 @@
 model: unknown
 effort: unknown
 ---
-# Implementation plan — album acceptance and post views (#29), revision 3
+# Implementation plan — album acceptance and post views (#29), revision 4
 
-**Status:** re-planned after PR35's first rejection; not yet critiqued or folded. No production changes are authorized by this planning artifact alone. The previous folded plan remains in DEPRECATED_step_by_step_impl_plan.md.
+**Critic folded:** 2026-10-14 — 0 additional mitigations (0 implementation steps changed, 0 added). Fresh critique confirms the revised contract and requires the complete candidate prebuild before production step1.
+
+**Status:** reviewed revision4; full combined prebuild pending. The user authorized fold → prebuild → implementation; no production adoption until the prebuild passes. The previous folded plan remains in DEPRECATED_step_by_step_impl_plan.md.
 
 **Explicit inputs:** desc.md, pr-critic.md R1, its three counterexamples, replan-r3-contract.md and six planning-probe histories. The prior implementation remains on the draft PR; this plan changes the receiver contract, not merely its numeric limits. Current source base is dev e5cdad7, product head19d421f / equivalent archive product e35392c. One rejected PR critique exists; the rejection guard does not require another traverse.
 
@@ -197,4 +199,4 @@ Regression evidence, source parity, Python compatibility, Git worktrees, artifac
 
 R1 is answered at the design level by a different durable fact, a distinct confirmation path and a None-return acceptance API—not by extra allowance. The three old counterexamples become required passing histories in prebuild and permanent tests. The original pure representation/assembly remains reusable.
 
-This planning turn records the contract/probe and revision3 only. No production receiver, public core, test suite or PR product head changed. Next: fresh critic-d against this revision and contract → selected fold into revision4 → full combined candidate prebuild → implementation. Planning-probe success must not be mistaken for the later implementation gate or a passed PR review.
+Revision3 planning and its six feasibility histories remain the design record. The fresh critique and empty mitigation selection produce revision4 without adding scope. Next: full combined candidate prebuild → implementation. Planning-probe success must not be mistaken for that implementation gate or a passed PR review.
