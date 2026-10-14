@@ -75,7 +75,7 @@ Lands: Representative unique-ID photo cases with explicit intentional difference
 WHY: The reusable feature gains practical examples without importing video/anonymous/backward-time mistakes.
 Priority: MED; Confidence: HIGH; Essentiality: supporting.
 Guidance Mode: compact. Retain the original11-count/10-unique observation (bc a copied passing test can encode impossible raw identity).
-Pointer: foundation_probe.json (the cited manifestation of this concept).
+Pointer: ../foundation_probe.json (the cited manifestation of this concept).
 Depth-link: none; depth-signal: formed at the qualification level; no separate depth run.
 
 ## R7 — Heuristic calibration evidence

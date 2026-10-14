@@ -5,7 +5,7 @@ effort: xhigh
 # Route map — photo-trail concepts
 
 ## User Input
-Territory: _branch.md, articulate_simple.md, surfacing.md, sensemaking.md, decomposition.md, innovation.md, critique.md and their empirical probe artifacts. Goal (from _branch.md): Qualify and implement a generic opt-in photo-trail capability with preserved originals, explicit provenance and safe batch/restart behavior.
+Territory: _branch.md, docarchive/articulate_simple.md, docarchive/surfacing.md, docarchive/sensemaking.md, docarchive/decomposition.md, docarchive/innovation.md, docarchive/critique.md and their empirical probe artifacts. Goal (from _branch.md): Qualify and implement a generic opt-in photo-trail capability with preserved originals, explicit provenance and safe batch/restart behavior.
 
 ## Map Header
 Root/project-space breadth; index-extending. Identities10; high-priority6; essential/core7 (supporting2, peripheral1). Attributes are not a route selection or schedule.
@@ -18,7 +18,7 @@ Lands: A precise include-or-refuse contract for albums touching the boundary.
 WHY: The feature needs trustworthy supplied context to avoid creating a false fold from omitted known messages.
 Priority: HIGH; Confidence: MED; Essentiality: core.
 Guidance Mode: compact. Use the real1–2→1,2,4 counterexample (bc it distinguishes valid albums from valid context).
-Pointer: critique.md#candidate-adversarial-tests-and-verdicts (the cited manifestation of this concept).
+Pointer: docarchive/critique.md#candidate-adversarial-tests-and-verdicts (the cited manifestation of this concept).
 Depth-link: none; depth-signal: closed-interval contract qualified against actual omitted-context case.
 
 ## R2 — Photo-trail eligibility and temporal barriers
@@ -29,7 +29,7 @@ Lands: Deterministic conservative link decisions under interleaving and late obs
 WHY: The requested generic helper must respect the stated same-user/photo rules rather than reproduce unsafe incidental behavior.
 Priority: HIGH; Confidence: MED; Essentiality: core.
 Guidance Mode: compact. Include caption changes and same-user overlaps (bc both can withdraw an earlier link).
-Pointer: sensemaking.md#phase3--ambiguity-collapse (the cited manifestation of this concept).
+Pointer: docarchive/sensemaking.md#phase3--ambiguity-collapse (the cited manifestation of this concept).
 Depth-link: none; depth-signal: formed at the qualification level; no separate depth run.
 
 ## R3 — Original-record durability and confirmation
@@ -40,7 +40,7 @@ Lands: Restartable inference while source receipts continue to confirm original 
 WHY: Daily collection remains recoverable even when a growing view exceeds its separate policy.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
 Guidance Mode: compact. Keep accepted-input confirmation free of projection work (bc #29 reproduced that coupling failure).
-Pointer: innovation_iter1.md#q4--retention-and-integration (the cited manifestation of this concept).
+Pointer: docarchive/innovation_iter1.md#q4--retention-and-integration (the cited manifestation of this concept).
 Depth-link: none; depth-signal: formed at the qualification level; no separate depth run.
 Meaning-gaps: integration fault matrix — [mid] — real composition still needs qualification.
 
@@ -52,7 +52,7 @@ Lands: Inspectable original records plus current groups, policy and revision.
 WHY: The feature can recover from an incorrect guess without corrupting the factual album representation.
 Priority: HIGH; Confidence: MED; Essentiality: core.
 Guidance Mode: compact. Keep originals and relation links distinguishable (bc revision/undo requires both).
-Pointer: innovation_iter1.md#q3--result-and-provenance (the cited manifestation of this concept).
+Pointer: docarchive/innovation_iter1.md#q3--result-and-provenance (the cited manifestation of this concept).
 Depth-link: none; depth-signal: formed at the qualification level; no separate depth run.
 Meaning-gaps: exact wire fields and validation — [mid] — one clear boundary remains to specify; whole-view replacement example — [mid] — prevents stale appended interpretations.
 
@@ -64,7 +64,7 @@ Lands: Whole-operation refusal with original data and source progress intact.
 WHY: A bounded daily library must neither grow without control nor erase data when work is refused.
 Priority: HIGH; Confidence: MED; Essentiality: core.
 Guidance Mode: compact. Separate archive growth from view size (bc neither a cap nor a clock proves safe eviction).
-Pointer: decomposition_iter1.md#q4--how-does-one-caller-retain-enough-evidence-across-batches-and-restarts-without-changing-source-authority (the cited manifestation of this concept).
+Pointer: docarchive/decomposition_iter1.md#q4--how-does-one-caller-retain-enough-evidence-across-batches-and-restarts-without-changing-source-authority (the cited manifestation of this concept).
 Depth-link: none; depth-signal: formed at the qualification level; no separate depth run.
 
 ## R6 — Consumer parity fixtures
@@ -86,7 +86,7 @@ Lands: Measured false-fold/nonattachment behavior without claiming intent certai
 WHY: Future consumers can tune convenience versus caution; current opt-in mechanics can ship without inventing an accuracy claim.
 Priority: LOW; Confidence: LOW; Essentiality: supporting.
 Guidance Mode: compact. Keep30 seconds a policy (bc the consumer example is not a generic intent oracle).
-Pointer: sensemaking.md#phase2--perspective-checking (the cited manifestation of this concept).
+Pointer: docarchive/sensemaking.md#phase2--perspective-checking (the cited manifestation of this concept).
 Depth-link: none; depth-signal: formed at the qualification level; no separate depth run.
 
 ## R8 — Downloaded media custody
@@ -97,7 +97,7 @@ Lands: No inference value is mistaken for copied or permanently available media.
 WHY: The feature preserves usable evidence without silently weakening source acknowledgment obligations for downloaded files.
 Priority: MED; Confidence: HIGH; Essentiality: core.
 Guidance Mode: compact. Keep blob custody with the caller (bc source hashes and references alone do not retain bytes).
-Pointer: decomposition_iter1.md#5-interface-map-and-assumptions (the cited manifestation of this concept).
+Pointer: docarchive/decomposition_iter1.md#5-interface-map-and-assumptions (the cited manifestation of this concept).
 Depth-link: none; depth-signal: formed at the qualification level; no separate depth run.
 
 ## R9 — Explicit stream closure
@@ -108,7 +108,7 @@ Lands: A separately qualified basis for final incremental outputs.
 WHY: Indirect future value: supports consumers that cannot replace current views, without imposing an unneeded lifecycle today.
 Priority: LOW; Confidence: LOW; Essentiality: peripheral.
 Guidance Mode: compact. Require an actual closure authority (bc history end and quiet time do not provide it).
-Pointer: innovation_iter1.md#q1--observation-contract (the cited manifestation of this concept).
+Pointer: docarchive/innovation_iter1.md#q1--observation-contract (the cited manifestation of this concept).
 Depth-link: none; depth-signal: formed at the qualification level; no separate depth run.
 
 ## R10 — Original-member event ordering

@@ -5,7 +5,7 @@ effort: xhigh
 # Sensemaking — scope closure and barriers, iteration2
 
 ## User Input
-_branch.md Iteration2 Focus; surfacing.md; critique_iter1.md and actual scope_probe.json. Preserve the original four readings and the selected fact/view separation; settle the remaining context/order meanings without inventing finality.
+_branch.md Iteration2 Focus; surfacing.md; critique_iter1.md and actual ../scope_probe.json. Preserve the original four readings and the selected fact/view separation; settle the remaining context/order meanings without inventing finality.
 
 ## SV1 — Baseline
 Selecting whole posts touched by a bounded message interval looked sufficient to preserve albums. The actual query returned1,2,4 while omitting known text3, so whole-post integrity alone is not the right context condition.
