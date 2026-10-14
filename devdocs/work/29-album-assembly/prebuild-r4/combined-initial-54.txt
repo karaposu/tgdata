@@ -1,0 +1,62 @@
+test_actual_exhausted_budget_preserves_prior_and_does_not_ack (__main__.AlbumTests.test_actual_exhausted_budget_preserves_prior_and_does_not_ack) ... ok
+test_actual_prior_json_cost_is_accounted_before_next_view (__main__.AlbumTests.test_actual_prior_json_cost_is_accounted_before_next_view) ... ok
+test_actual_sdk_iterator_and_reader_clip_an_album_without_lookahead (__main__.AlbumTests.test_actual_sdk_iterator_and_reader_clip_an_album_without_lookahead) ... ok
+test_aggregate_prior_preflight_precedes_any_materialization (__main__.AlbumTests.test_aggregate_prior_preflight_precedes_any_materialization) ... ok
+test_backfill_boundary_confirmation_uses_original_delivery_reference (__main__.AlbumTests.test_backfill_boundary_confirmation_uses_original_delivery_reference) ... ok
+test_backfill_fixed_window_replay_keeps_original_receipt (__main__.AlbumTests.test_backfill_fixed_window_replay_keeps_original_receipt) ... ok
+test_byte_boundary_lost_ack_confirms_without_projection_or_write (__main__.AlbumTests.test_byte_boundary_lost_ack_confirms_without_projection_or_write) ... ok
+test_cancellation_preserves_saved_receiver_and_source_cursor (__main__.AlbumTests.test_cancellation_preserves_saved_receiver_and_source_cursor) ... ok
+test_cleanup_preserves_original_failure (__main__.AlbumTests.test_cleanup_preserves_original_failure) ... ok
+test_competing_first_accept_then_exact_confirmation (__main__.AlbumTests.test_competing_first_accept_then_exact_confirmation) ... ok
+test_competing_writer_refuses_then_reads_current_prior (__main__.AlbumTests.test_competing_writer_refuses_then_reads_current_prior) ... ok
+test_confirmed_member_integrity_matrix_without_repair (__main__.AlbumTests.test_confirmed_member_integrity_matrix_without_repair) ... ok
+test_conflicting_record_refuses_without_mutation_or_content_leak (__main__.AlbumTests.test_conflicting_record_refuses_without_mutation_or_content_leak) ... ok
+test_corrupt_accepted_record_never_acknowledges_pending_source (__main__.AlbumTests.test_corrupt_accepted_record_never_acknowledges_pending_source) ... ok
+test_daily_lost_ack_replay_and_continuation (__main__.AlbumTests.test_daily_lost_ack_replay_and_continuation) ... ok
+test_default_byte_limit_replay_of_1300_long_messages (__main__.AlbumTests.test_default_byte_limit_replay_of_1300_long_messages) ... ok
+test_duplicate_input_keeps_revision_and_raw_bytes (__main__.AlbumTests.test_duplicate_input_keeps_revision_and_raw_bytes) ... ok
+test_empty_batch_and_invalid_input (__main__.AlbumTests.test_empty_batch_and_invalid_input) ... ok
+test_every_partition_and_reverse_arrival_has_identical_bytes (__main__.AlbumTests.test_every_partition_and_reverse_arrival_has_identical_bytes) ... ok
+test_exact_utf8_byte_accounting_includes_prior_and_output (__main__.AlbumTests.test_exact_utf8_byte_accounting_includes_prior_and_output) ... ok
+test_explicit_creation_reopen_and_collection_absence (__main__.AlbumTests.test_explicit_creation_reopen_and_collection_absence) ... ok
+test_failed_lookup_does_not_mean_new_post (__main__.AlbumTests.test_failed_lookup_does_not_mean_new_post) ... ok
+test_failed_publication_partial_data_is_not_acknowledged (__main__.AlbumTests.test_failed_publication_partial_data_is_not_acknowledged) ... ok
+test_frozen_copying_and_json_roundtrip (__main__.AlbumTests.test_frozen_copying_and_json_roundtrip) ... ok
+test_json_malformed_duplicate_nonfinite_and_utf8 (__main__.AlbumTests.test_json_malformed_duplicate_nonfinite_and_utf8) ... ok
+test_known_v1_state_is_refused_unchanged_even_with_create (__main__.AlbumTests.test_known_v1_state_is_refused_unchanged_even_with_create) ... ok
+test_limit_configuration_validation (__main__.AlbumTests.test_limit_configuration_validation) ... ok
+test_lower_input_policy_can_refuse_without_changing_accepted_data (__main__.AlbumTests.test_lower_input_policy_can_refuse_without_changing_accepted_data) ... ok
+test_member_limits_aggregate_and_no_partial_mutation (__main__.AlbumTests.test_member_limits_aggregate_and_no_partial_mutation) ... ok
+test_member_view_validates_json_digest_and_row_metadata (__main__.AlbumTests.test_member_view_validates_json_digest_and_row_metadata) ... ok
+test_missing_partial_and_wrong_post_indexes_refuse (__main__.AlbumTests.test_missing_partial_and_wrong_post_indexes_refuse) ... ok
+test_mode_conflict_and_reference_receiver_refusal (__main__.AlbumTests.test_mode_conflict_and_reference_receiver_refusal) ... ok
+test_nonadjacent_album_singleton_and_service (__main__.AlbumTests.test_nonadjacent_album_singleton_and_service) ... ok
+test_offline_demo_uses_actual_receiver_and_source_engine (__main__.AlbumTests.test_offline_demo_uses_actual_receiver_and_source_engine) ... ok
+test_old_input_confirms_after_member_growth_and_larger_policy_writer (__main__.AlbumTests.test_old_input_confirms_after_member_growth_and_larger_policy_writer) ... ok
+test_partial_schema_is_not_repaired (__main__.AlbumTests.test_partial_schema_is_not_repaired) ... ok
+test_post_view_bounds_precede_payload_materialization (__main__.AlbumTests.test_post_view_bounds_precede_payload_materialization) ... ok
+test_post_view_is_one_snapshot_during_concurrent_growth (__main__.AlbumTests.test_post_view_is_one_snapshot_during_concurrent_growth) ... ok
+test_prior_mapping_is_required_exact_and_identity_checked (__main__.AlbumTests.test_prior_mapping_is_required_exact_and_identity_checked) ... ok
+test_public_exports (__main__.AlbumTests.test_public_exports) ... ok
+test_raised_member_limit_survives_restart_and_replay (__main__.AlbumTests.test_raised_member_limit_survives_restart_and_replay) ... ok
+test_read_error_pending_replay_is_accepted_only_on_normal_return (__main__.AlbumTests.test_read_error_pending_replay_is_accepted_only_on_normal_return) ... ok
+test_real_cached_photo_download_and_blob_preservation (__main__.AlbumTests.test_real_cached_photo_download_and_blob_preservation) ... ok
+test_real_process_loss_before_and_after_commit (__main__.AlbumTests.test_real_process_loss_before_and_after_commit) ... ok
+test_reassociation_and_ignored_insert_cannot_claim_acceptance (__main__.AlbumTests.test_reassociation_and_ignored_insert_cannot_claim_acceptance) ... ok
+test_receipt_with_missing_accepted_member_refuses_repair (__main__.AlbumTests.test_receipt_with_missing_accepted_member_refuses_repair) ... ok
+test_receipts_are_scoped_and_replay_keeps_later_growth (__main__.AlbumTests.test_receipts_are_scoped_and_replay_keeps_later_growth) ... ok
+test_schema_identity_member_and_revision_corruption (__main__.AlbumTests.test_schema_identity_member_and_revision_corruption) ... ok
+test_schema_shape_version_and_corrupt_post_refuse (__main__.AlbumTests.test_schema_shape_version_and_corrupt_post_refuse) ... ok
+test_sdk_large_ids_captions_and_cross_chat (__main__.AlbumTests.test_sdk_large_ids_captions_and_cross_chat) ... ok
+test_singleton_cannot_claim_multiple_members (__main__.AlbumTests.test_singleton_cannot_claim_multiple_members) ... ok
+test_stop_reason_and_window_do_not_certify_complete_membership (__main__.AlbumTests.test_stop_reason_and_window_do_not_certify_complete_membership) ... ok
+test_successful_commit_then_close_error_can_confirm (__main__.AlbumTests.test_successful_commit_then_close_error_can_confirm) ... ok
+test_transaction_rolls_back_all_posts_and_marker (__main__.AlbumTests.test_transaction_rolls_back_all_posts_and_marker) ... ok
+
+----------------------------------------------------------------------
+Ran 54 tests in 3.979s
+
+OK
+Lost acknowledgment replayed without another source read.
+One album; 3 members; 2 captions; membership unconfirmed.
+Acknowledged through: 103

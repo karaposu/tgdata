@@ -13,6 +13,8 @@ Must precede: production step1 and all production adoption. The plan already dec
 Disqualifying result: the selected record/confirmation/view split itself cannot satisfy exact replay, integrity, atomicity or original source authority without changing that contract or widening the source APIs. Do not replace a failed premise with higher limits, ignored checks or a fake receiver.
 Passing result: the complete actual candidate passes all named histories and the revised suite with exact recorded hashes; accepted-input confirmation succeeds unchanged, performs no merge/write, and the genuine refusal/cleanup/source controls remain intact. Local prototype wiring/fixture corrections must be recorded; architectural failure stops the run.
 
+Result: PASS — full revised candidate:56/56 album tests, all13 related regression suites and the offline demo passed before production adoption,2026-10-14. See prebuild-r4/result.json for exact hashes and per-run logs.
+
 ## High-level summary
 
 The revised design addresses the failure at the correct layer. Original accepted records stay immutable; current post views can grow independently. Confirmation therefore checks the fixed input rather than a newly expanded projection, and None-return acceptance no longer couples source progress to a content response. The old aggregate assembler limits remain meaningful for new work.
