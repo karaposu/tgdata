@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "checks": {
+    "existing_store_reopen_missing_refuses_without_creation": true,
+    "existing_store_absence_and_stale_cas_are_distinct": true,
+    "partial_known_schema_refuses_without_repair": true,
+    "actual_transaction_rolls_back_data_and_receipt": true,
+    "committed_data_and_receipt_survive_reopen": true,
+    "same_content_receipt_is_scoped_by_collection": true,
+    "receiver_write_transaction_excludes_stale_writer": true,
+    "lookup_inside_retried_transaction_sees_current_state": true
+  },
+  "scope": "actual existing SQLiteSyncStore and SQLite transaction behavior; synthetic data; no new album code or Telegram behavior claim"
+}
