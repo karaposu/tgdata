@@ -1,0 +1,31 @@
+{
+  "result": "PASS",
+  "actual_old_wheel_rejected": true,
+  "old_runtime_count": 18,
+  "missing_current_modules": [
+    "tgdata/account_operation.py",
+    "tgdata/account_pool.py",
+    "tgdata/backfill.py",
+    "tgdata/backfill_engine.py",
+    "tgdata/backfill_state.py",
+    "tgdata/history_window.py",
+    "tgdata/login.py",
+    "tgdata/owned_health.py",
+    "tgdata/pool_lifecycle.py",
+    "tgdata/pool_observation.py",
+    "tgdata/pool_result.py",
+    "tgdata/pool_source.py",
+    "tgdata/pool_state.py",
+    "tgdata/progress_facade.py",
+    "tgdata/sync_engine.py",
+    "tgdata/sync_store.py",
+    "tgdata/worker.py",
+    "tgdata/worker_engine.py",
+    "tgdata/worker_protocol.py"
+  ],
+  "same_version_stale_checkout_rejected": true,
+  "actual_pr_one_file": true,
+  "product_equals_qualified_candidate": true,
+  "old_tag_not_in_product": true,
+  "version_01_available": true
+}
