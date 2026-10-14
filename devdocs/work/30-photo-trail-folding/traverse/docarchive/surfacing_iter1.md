@@ -5,7 +5,7 @@ effort: xhigh
 # Surfacing — photo-trail contract
 
 ## User Input
-Read _branch.md as the purpose: qualify all four preserved readings A/B/C/D of optional photo-trail folding, especially source facts, ordering, current album observations and durable retry. Territory is the bounded tgdata/consumer/SDK seam. Prior artifact: ../surfacing.md; prior workspace supplied by the same session.
+Read _branch.md as the purpose: qualify all four preserved readings A/B/C/D of optional photo-trail folding, especially source facts, ordering, current album observations and durable retry. Territory is the bounded tgdata/consumer/SDK seam. Prior artifact: ../../surfacing.md; prior workspace supplied by the same session.
 
 ## Traversal Trace
 The18 triage items are explicitly re-included under the refined semantic purpose; no new reading is invented for retained full-file context. Three adjacent items were read fresh. This is an artifact/signal-first pass, not candidate generation.

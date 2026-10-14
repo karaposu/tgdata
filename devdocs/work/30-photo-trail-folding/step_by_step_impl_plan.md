@@ -6,9 +6,9 @@ effort: xhigh
 
 **Critic folded:** 2026-10-15 — 1 mitigation (2 steps changed,0 added): Risk1 Robust. Complete candidate experiment PASS at1daf215 before this fold, following the user-provided task-impl order.
 
-**Status:** folded and qualified for exact candidate adoption; implementation/full actual-branch verification follows.
+**Status:** implemented at6eff7c7 and fully verified:883 offline checks,7 demos,3 explicit live skips. See implementation.md and verification/result.json. Merge check/PR/fresh PR critique remain pending.
 
-Explicit input: desc.md at570cc7d, triage.md, traverse/finding.md and its preserved two-pass evidence. Baseline dev35c4362. No previous plan or rejected PR critique exists for #30. Product code has not started.
+Explicit input: desc.md at570cc7d, triage.md, traverse/finding.md and its preserved two-pass evidence. Baseline dev35c4362. No previous plan or rejected PR critique exists for #30. Product code had not started when revision1 was written; the final completion status is recorded above.
 
 ### What is the task
 Offer an optional conservative relation between a user's original text/album and following photo-only posts. Preserve every original TelegramPost and raw member, expose a replaceable provisional view, and demonstrate restartable use with the existing caller-owned receiver. The selected scope and original-message timeline must not hide known activity or change source acknowledgment semantics.

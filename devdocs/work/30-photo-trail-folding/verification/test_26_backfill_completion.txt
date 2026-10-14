@@ -1,0 +1,52 @@
+Backfill Completion Tests — Telethon 1.45.0; LOCAL/INJECTED, actual SQLite/SDK
+
+TEST: test_pre_and_post_commit_reply_matrix
+✓ Passed
+
+TEST: test_exact_readback_has_no_second_clock_source_or_write
+✓ Passed
+
+TEST: test_readback_noncanonical_text_must_validate_same_full_state
+✓ Passed
+
+TEST: test_unreadable_absent_stale_or_foreign_readback_never_confirms
+✓ Passed
+
+TEST: test_newer_control_snapshot_requires_inspection_not_stale_success
+✓ Passed
+
+TEST: test_ack_readback_moved_on_keeps_newer_pending_and_retained_receipt
+✓ Passed
+
+TEST: test_admission_error_cannot_gain_permission_from_committed_marker
+✓ Passed
+
+TEST: test_cancel_during_readback_is_not_success_or_rollback
+✓ Passed
+
+TEST: test_prefix_commit_confirmation_preserves_original_rpc_exception
+✓ Passed
+
+TEST: test_cancellation_in_prefix_readback_has_no_rpc_health
+✓ Passed
+
+TEST: test_completion_preserves_declared_origin_window_and_cursor
+✓ Passed
+
+TEST: test_full_batch_followup_budget_or_auth_failure_is_not_end
+health: logged out [account] AUTH_KEY_UNREGISTERED — call=get_message_batch account=account_47
+✓ Passed
+
+TEST: test_empty_end_preserves_pause_or_cancel_fixture
+✓ Passed
+
+TEST: test_abandoned_final_fixture_never_accepts_or_completes
+✓ Passed
+
+TEST: test_actual_final_sqlite_close_errors_confirm_immediately
+✓ Passed
+
+TEST: test_subprocess_exit_at_all_final_commit_boundaries
+✓ Passed
+
+Passed: 16/16

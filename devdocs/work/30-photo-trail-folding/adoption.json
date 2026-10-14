@@ -1,0 +1,17 @@
+{
+  "result": "PASS",
+  "candidate": "/private/tmp/tgdata30-candidate-odzusqqh",
+  "base": "35c4362d4e6a8fc92e695def67bffcac192dc073",
+  "complete_prebuild_commit": "1daf215",
+  "fold_commit": "0691364",
+  "product_sha256": {
+    "tgdata/photo_trails.py": "9be88edefcab93829511f6d183fd923a6760fc7ba1b9c10c2ade29016b1428ee",
+    "tgdata/__init__.py": "208997f8ef390e0422060ce4dc96c5c06514dc9ec556e6aeb32da3dcca28bb25",
+    "examples/photo_trails.py": "96e5cd47174a01da8a615f4aad8ad9874eab70c902587ddf198c19edb9333a4e",
+    "tgdata/smoke_tests/test_43_photo_trails.py": "c7e4478fb61cee9437c49105464f41eb0323fa22dc5d30c284e3d6726c6d0e5c",
+    "docs/photo_trails.md": "abc64f6635688a57704b10a48b3d98416decdfff9787fc7b92b855403557611d",
+    "README.md": "441be8ad68b1fd3aed153932284d8785cf7f03e7b3fc8695e93e5adc51def73c",
+    "tgdata/smoke_tests/README.md": "0215be0c82390f8eaa9a46f7c1c31600fa929cccc29df02843a1d35a7b12e1a9"
+  },
+  "source_hashes_matched": 96
+}

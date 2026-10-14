@@ -12,7 +12,7 @@ $task-impl |  |  |
 | #30 — Optional photo-trail folding | Not started. Now unblocked by #29’s merge; its checklist still lists the old blocker. |
 ```
 
-Invocation context: qualify the meaning of this requested implementation before description/planning; issue30's complete original request is preserved in ../source-input.md. The work-folder inquiry location is prescribed by the repository's formal issue pipeline. Warm substrate: current raw/album/receiver/source interfaces and ScrapeOps helper/caller/fixtures, as recorded in ../surfacing.md.
+Invocation context: qualify the meaning of this requested implementation before description/planning; issue30's complete original request is preserved in ../../source-input.md. The work-folder inquiry location is prescribed by the repository's formal issue pipeline. Warm substrate: current raw/album/receiver/source interfaces and ScrapeOps helper/caller/fixtures, as recorded in ../../surfacing.md.
 
 ## Itemize
 

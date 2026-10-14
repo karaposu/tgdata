@@ -1,0 +1,99 @@
+Backfill Controls Tests — Telethon 1.45.0; LOCAL/INJECTED actual SQLite/SDK
+
+TEST: test_values_status_projection_and_scope_validation
+✓ Passed
+
+TEST: test_new_matching_no_change_decisions_increment_once_without_clocks
+✓ Passed
+
+TEST: test_exact_retry_and_changed_input_do_not_write_or_observe_time
+✓ Passed
+
+TEST: test_stale_resume_prepare_and_forgotten_command_refuse
+✓ Passed
+
+TEST: test_cross_recovery_command_collision_in_both_directions
+✓ Passed
+
+TEST: test_two_opposing_controls_have_one_accepted_order
+✓ Passed
+
+TEST: test_delayed_control_reply_is_historical_not_authority
+✓ Passed
+
+TEST: test_data_only_cas_conflict_reloads_but_new_control_refuses
+✓ Passed
+
+TEST: test_perpetual_conflicts_are_bounded
+✓ Passed
+
+TEST: test_pause_and_cancel_during_real_sdk_wait_preserve_late_data
+✓ Passed
+
+TEST: test_control_after_admission_commit_before_reply_allows_that_read
+✓ Passed
+
+TEST: test_pause_during_publication_reloads_only_same_attempt
+✓ Passed
+
+TEST: test_final_ack_cancel_orders_keep_first_terminal_outcome
+✓ Passed
+
+TEST: test_cancel_empty_end_orders_and_terminal_reports
+✓ Passed
+
+TEST: test_pause_final_ack_completes_without_resuming_source
+✓ Passed
+
+TEST: test_abandonment_records_owed_scope_without_accepting_or_deleting
+✓ Passed
+
+TEST: test_cancel_then_abandon_and_empty_retirement_preserve_meaning
+✓ Passed
+
+TEST: test_abandon_clock_failure_and_unknown_source_preserve_obligation
+✓ Passed
+
+TEST: test_busy_local_replay_refuses_abandon_and_successor_but_recognizes_start
+✓ Passed
+
+TEST: test_successor_requires_terminal_settled_exact_predecessor
+✓ Passed
+
+TEST: test_retired_equal_hash_receipt_never_accepts_successor
+✓ Passed
+
+TEST: test_retained_accepted_receipt_and_previous_cancel_are_read_only_then_pruned
+✓ Passed
+
+TEST: test_paused_failed_budget_prefix_replays_and_ack_preserves_wait_and_failure
+✓ Passed
+
+TEST: test_early_and_late_controls_neither_extend_nor_shorten_pacing
+✓ Passed
+
+TEST: test_control_reserves_revisions_for_pending_ack_and_unknown_settlement
+✓ Passed
+
+TEST: test_insufficient_attempt_capacity_refuses_and_abandon_can_retire_last_revision
+✓ Passed
+
+TEST: test_control_write_confirmation_matrix_and_safe_error
+✓ Passed
+
+TEST: test_ambiguous_readback_never_overwrites_later_control
+✓ Passed
+
+TEST: test_cancelled_control_reply_reconciles_without_resetting_wait
+✓ Passed
+
+TEST: test_real_post_commit_close_failure_confirms_control
+✓ Passed
+
+TEST: test_corrupt_missing_or_foreign_state_is_not_repaired
+✓ Passed
+
+TEST: test_process_exit_before_and_after_real_control_commit
+✓ Passed
+
+Passed: 32/32
