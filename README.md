@@ -801,9 +801,11 @@ captions. Identical replay keeps the same revision. Album membership remains
 member was seen. Assembly performs no additional reads and changes no raw batch
 hash, cursor or acknowledgment.
 
-For restartable collection, load current prior posts and commit the updates plus
-input recognition in your destination transaction **before** acknowledging the raw
-delivery. Do not replace lost destination state with an empty dictionary. The
+For restartable collection, commit the original records and input recognition in
+your destination **before** acknowledging the raw delivery. Confirm an already
+accepted input from those records without rebuilding a growing album. The SQLite
+example's `accept` returns no post payload; `load(post_id)` reads the current view
+separately. Do not replace lost destination state with an empty dictionary. The
 [album contract](docs/album_assembly.md) explains updates, limits and storage;
 `python examples/album_assembly.py --demo` demonstrates SQLite restart and lost-ack
 replay without Telegram.
