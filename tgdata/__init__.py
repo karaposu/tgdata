@@ -182,3 +182,6 @@ __all__ = [
     # Progress
     "ProgressTracker"
 ]
+
+from .album import TelegramPost, AlbumAssemblyError, album_post_ids, assemble_albums
+__all__ += ["TelegramPost", "AlbumAssemblyError", "album_post_ids", "assemble_albums"]
