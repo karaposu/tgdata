@@ -65,3 +65,17 @@ feature-heavy process despite the deliberately small public surface.
 ## Foundation
 [Traverse finding](traverse/finding.md), source-input.md and triage.md at dev base
 c4e6eac. No prior #8 plan/rejected PR. Implementation scope excludes PR/merge.
+
+## Session warmth record
+The implementation session retained the preceding #17 review/merge and #18 closeout
+context and refreshed the factory, session store, account-operation lifetime,
+configuration, public consumers, login tests and installed Telethon1.45 auth paths
+at ancestor c4e6eac89341b204b2749e9d15add578e0706965. Triage a481e32 records those
+reads; the full traverse is archived beside its finding. GPT-6 Astra/max verified.
+This direct record was added during the merge check to make §4.2 explicit; it does
+not claim a new warm-up or change the description's implementation contract.
+
+## Review checkpoint
+The prebuild mentioned above subsequently passed in1a234b0, followed by product
+877d29d and full verification b76f1f6. On2026-10-14 the user authorized merge check,
+PR publication and fresh PR critique. Merge itself remains a later decision.
