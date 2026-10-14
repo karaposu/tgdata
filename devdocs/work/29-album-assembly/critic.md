@@ -94,10 +94,10 @@ Document that the example only accepts values within library defaults, despite c
 
 Give the receiver explicit positive max_members/max_bytes configuration, use it for every loaded post and assembly/readback, and refuse a deliberately lowered bound without writes. Add a real raised-member-limit accept→close→reopen→replay case (for example10001 members across individually valid batches) plus exact UTF-8 byte-bound refusal. Explain that reopening under stricter policy may refuse and requires restoring an adequate limit, never resetting data.
 **Why this is robust:** the one receiver path carries its declared policy consistently; saved data remains portable, and the test crosses the default boundary rather than mirroring parameter plumbing.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* One explicit receiver policy closes this instance permanently in the planned files. The other serialized types have different fixed source/state invariants, so a generic mechanism would need special cases and adds extent without the same reach.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -118,4 +118,4 @@ The proposed format and operation ordering are detailed enough to implement. The
 
 ## Phase3 selection
 
-Pending; Phase2 proposals are saved with empty selection boxes. No execution blockers were declared or added.
+Completed after saving Phase2. Risk1 Robust is selected and elegant; no last-resort or quick choice. Named comparison instances: message_batch.py (fixed raw-delivery bound), sync_store.py (opaque source state), backfill_state.py (lifecycle state). Their policies are not interchangeable with cumulative observed members, so the proposed class-wide framework fails the one-mechanism test. No future mechanism is selected or prerequisite added. Phase3 changed only boxes/notes and this selection record; no severity/proposal was rewritten. No execution blockers were declared or added.
