@@ -1,0 +1,21 @@
+{
+  "result": "COUNTEREXAMPLE",
+  "narrow_seed": [
+    1,
+    2
+  ],
+  "expanded_member_ids": [
+    1,
+    2,
+    4
+  ],
+  "omitted_known_same_sender_text_id": 3,
+  "widened_member_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "split_album_detectable_by_metadata": true,
+  "original_acceptance_still_confirmable": true
+}
