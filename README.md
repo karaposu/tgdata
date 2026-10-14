@@ -56,9 +56,8 @@ Scheduling, result storage and continuation acknowledgments stay with the caller
 
 ## Authentication
 
-tgdata supports 1 authentication at the moment. 
-
-(2 other are being implemented)
+Use terminal login for a local first run, or the explicit `LoginFlow` API for
+an application that collects the phone, code and optional password itself.
 
 1. get telegram development credentials in telegram API Development Tools from [https://my.telegram.org/apps](https://my.telegram.org/apps)
 
@@ -104,6 +103,36 @@ prompting.
 - A background job should stop and alert someone on `AuthRequiredError`.
   Retrying cannot log it back in — and, unlike before, it no longer sends the
   owner a fresh login code on every retry.
+
+### Step-by-step login without console prompts
+
+`LoginFlow` lets your application supply each input in a separate call:
+
+```python
+from tgdata import LoginFlow
+
+flow = LoginFlow("config.ini")
+status = await flow.start(phone)              # Deliberately requests one code.
+status = await flow.submit_code(code)
+if status.step == "password":
+    status = await flow.submit_password(password)
+if status.step == "complete" and not status.cleanup_pending:
+    # session_name must equal the configured session_file store key.
+    store.save(session_name, flow.session_data)
+```
+
+Inspect `status` after every call: waits, expired codes and unsupported Telegram
+interactions need application handling. The flow uses the configured proxy and
+device settings and never loads or replaces an existing session automatically.
+The application saves the finished credential explicitly.
+
+You can keep the flow in memory or store `flow.export_state()` privately and
+restore it with `LoginFlow("config.ini", state=saved_state)`. Use only the latest
+state with one owner at a time. The state is secret, not a browser token; restoring
+it does not make an interrupted request safe to repeat. See the
+[login guide](docs/stepwise_login.md) for errors, cancellation, cleanup and
+session-store integration. Qualified offline against Telethon 1.45.0; live code
+delivery and password acceptance remain unqualified.
 
 ### Keeping sessions out of files
 

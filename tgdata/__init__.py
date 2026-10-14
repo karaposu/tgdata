@@ -23,6 +23,7 @@ from .group_operations import (
     GroupMetadata, GroupLookup, GroupAccess, GroupJoin, GroupReferenceError, GroupResponseError,
 )
 from .connection_engine import AuthRequiredError, ProxyConfigError
+from .login import LoginFlow, LoginStatus, LoginError
 from .discovery_engine import DiscoveryInterrupted
 from .message_batch import MessageBatch, BatchFormatError
 from .batch_files import BatchStorageError
@@ -74,6 +75,10 @@ from .progress import ProgressTracker
 __version__ = "0.0.8"
 
 __all__ = [
+    # Explicit account onboarding
+    "LoginFlow",
+    "LoginStatus",
+    "LoginError",
     # Account routing
     "AccountPool",
     "PoolAccount",

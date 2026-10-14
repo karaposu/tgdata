@@ -538,7 +538,7 @@ class ConnectionEngine:
                                       if presented[key] is not None),
         }
 
-    def _new_client(self, session_file: Optional[str] = None, **client_options) -> TelegramClient:
+    def _new_client(self, session_file: Optional[str] = None, *, _client_base=None, **client_options) -> TelegramClient:
         """
         THE door to Telegram: every client tgdata opens — the persistent one,
         each pool connection, and every use-and-close lookup — is built here.
@@ -566,6 +566,8 @@ class ConnectionEngine:
 
         Args:
             session_file: Session name for this client (default: the config's)
+            _client_base: Private auth-only SDK policy; ordinary clients use
+                TelegramClient exactly as before.
             client_options: Internal constructor policy for an owned operation.
                 Omitted on ordinary clients, preserving Telethon's defaults.
         """
@@ -586,7 +588,7 @@ class ConnectionEngine:
         # in for it (test_13) still controls what is built.
         name = session_file or config.session_file
         session = StoredSession(self.session_store, name) if self.session_store is not None else name
-        client = _client_class(TelegramClient)(
+        client = _client_class(_client_base or TelegramClient)(
             session,
             config.api_id,
             config.api_hash,
