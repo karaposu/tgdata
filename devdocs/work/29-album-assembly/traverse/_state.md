@@ -8,21 +8,21 @@ A → Su → S → D → I → C → R (always)
 
 ## Progress
 - [x] Articulate-Simple
-- [x] Surfacing
-- [x] Sensemaking
-- [x] Decomposition
-- [x] Innovation
-- [x] Critique
-- [x] Routelister
+- [ ] Surfacing
+- [ ] Sensemaking
+- [ ] Decomposition
+- [ ] Innovation
+- [ ] Critique
+- [ ] Routelister
 
 ## Iteration
-1
+2
 
 ## Status
 ACTIVE
 
 ## Next Discipline
-Iteration assessment
+Surfacing
 
 ## History
 - 2026-10-14_14-02: Created in the issue's work-folder traverse/ per CONTRIBUTING §5. Articulation HIGH-PROCEED; I1; four variants. Manual structure10/10 (raw input, itemize, MQ questions/shapes, MQ2 axes, MQA, tuple, literal/WHY, bounded variants, nine-mode check, verdict). Derivation7/7 source bundles copied without dropping ambiguity; structural_check.sh absent. Next:Surfacing. No later discipline output drafted.
@@ -38,3 +38,5 @@ Iteration assessment
 - 2026-10-14_14-49: Critique1 complete;13 candidates + assembly,7 dimensions, receiver reopen/namespace refinement. Manual structure10/10; external code/vendor/actual-consumer anchors checked. Signal ITERATE after required Routelister; next:Routelister.
 
 - 2026-10-14_14-55: Routelister complete;17 typed concept identities, both map/index saved. Manual schema10/10; no process state or inter-concept edges in index. Next:iteration assessment; critique calls for focused receiver-state refinement.
+
+- 2026-10-14_15-00: Iteration1 assessed: identity/immutable observations/pure combination survive; complete assembly needs explicit known-state reopening and collection-scoped acceptance. Question not fully answered on I1/V1+V3 receiver behavior. Preserved six prior outputs as *_iter1.md; articulation/framing and persistent route index remain. Iteration2 focus: demonstrate safe creation/reopen, authoritative absence and commit/replay using current SDK/value/SQLite seams without a new source lifecycle. Next:Surfacing.
