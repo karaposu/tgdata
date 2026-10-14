@@ -1,0 +1,17 @@
+{
+  "result": "PASS",
+  "histories": {
+    "backfill": {
+      "reads": 2,
+      "original_delivery_replayed": true,
+      "completed_after_id": 2
+    },
+    "snapshot": {
+      "old_view_consistent": true,
+      "new_split_refused": true,
+      "widened_view_withdraws_link": true,
+      "original_receipt_confirmable": true
+    }
+  },
+  "scope": "contract sketch composition, not the complete public prebuild"
+}
