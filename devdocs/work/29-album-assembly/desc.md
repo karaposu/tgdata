@@ -41,3 +41,13 @@ No photo-trail inference (#30), leases (#31), joins/auth/routing changes, classi
 ## Priority Level
 
 **Medium / P2.** Cross-batch fragmentation affects recurring scraping and provides the foundation for optional photo trails, but does not invalidate the existing raw-message contract. Feature-heavy describes implementation risk, not urgency.
+
+## Known Blockers
+
+### Accepted-input replay under unchanged bounds — OPEN
+
+**What must be known:** define which bounds admit new assembly versus confirm already accepted input, and what replay returns after post growth. Any successfully accepted input must remain confirmable under unchanged policy after restart/permitted later updates, while retaining integrity checks and original source receipt authority.
+
+**Why it blocks planning:** the current receiver calls fresh assembly before recognizing accepted input; its costs grow on immediate retry or after later membership growth. Fresh PR35 probes reproduce refusal after successful commit with unchanged byte/member settings, including the default16MiB limit. Steps2–4 need a settled replay/return contract; propagating the same limits to loaders is not sufficient. The immutable post representation and source APIs are not disproved.
+
+**Found by:** same-session critic-d on PR35 diff + revision2 plan,2026-10-14. Evidence: pr-critic.md and pr-probes.py/.json/.txt. This is the first PR rejection. Revision2 is retained as DEPRECATED_step_by_step_impl_plan.md. The re-planning agent can resolve this design contract from the recorded counterexamples; no external account or live access is required.

@@ -1,0 +1,9 @@
+{"name": "mixed_post_partition_order", "result": "CONTROL_PASS", "orders": 6, "posts": 4, "members": 6}
+{"name": "same_policy_lost_ack_byte_replay", "result": "COUNTEREXAMPLE_REPRODUCED", "cap": 4640, "initial_cost": 4640, "replay_cost": 6990, "error": "AlbumAssemblyError: max_bytes exceeded", "source_reads": 1, "before_manual_policy_increase": {"cursor": 0, "pending": true, "saved_post_loadable": true, "receipt_rows": 1}, "raised_policy_control": "PASS"}
+{"name": "default_16mib_accepted_input_replay", "result": "COUNTEREXAMPLE_REPRODUCED", "raw_messages": 1300, "text_chars_each": 4096, "cap": 16777216, "initial_cost": 11669628, "replay_cost": 17679914, "stored_posts": 1300, "stored_receipts": 1, "error": "AlbumAssemblyError: max_bytes exceeded"}
+{"name": "old_accepted_input_after_other_post_growth", "result": "COUNTEREXAMPLE_REPRODUCED", "unchanged_member_cap": 3, "initially_returned": 3, "later_call_returned": 3, "old_replay_wants": 4, "error": "AlbumAssemblyError: max_members exceeded", "raised_policy_control": "PASS"}
+{"name": "malformed_saved_values_and_rpc_context", "result": "CONTROL_PASS", "malformed_cases": 5, "local_error_health": null, "content_not_exposed": true}
+{"name": "successful_commit_failed_close", "result": "CONTROL_PASS", "saved_data_recovered": true, "replay": "same revision"}
+{"name": "raw_stop_reason_chat_and_collection_scope", "result": "CONTROL_PASS", "membership": "unconfirmed", "same_records_same_post": true, "separate_receipts": 2}
+{"name": "known_state_refusal_and_atomic_rollback", "result": "CONTROL_PASS", "absent_file_created": false, "typo_refused": true, "post_rows_after_failure": 0, "receipt_rows_after_failure": 0, "damaged_schema_refused": true}
+Completed 8 fresh histories; 3 counterexamples reproduced

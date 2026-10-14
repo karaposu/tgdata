@@ -49,3 +49,7 @@ At review start, T and0–5 are checked with committed artifacts;6 and7 are corr
 **§9 verification: UNCONFIRMED.** CONTRIBUTING assigns new-feature work to Fable5.1/max or GPT6Astra/xhigh. The session does not expose that setting; the factual question remains unanswered. Artifact metadata correctly says unknown. This report does not certify compliance or waive the requirement. Keep the PR draft and surface the uncertainty at the merge decision.
 
 No merge, release, running ScrapeOps change, original-checkout edit or branch deletion is authorized by this review request. The user's new request authorizes PR publication and review, superseding only the prior task-impl turn's publication boundary.
+
+## Subsequent soundness review
+
+PR35 was opened after this fidelity check. The fresh pr-critic.md then rejected it with one Medium acceptance/replay contract finding, reproduced three ways. Fidelity PASS remains the historical comparison result; it is not current merge readiness. Revision2 is now DEPRECATED_step_by_step_impl_plan.md and revision3 re-planning is required. No product patch or merge occurred.
