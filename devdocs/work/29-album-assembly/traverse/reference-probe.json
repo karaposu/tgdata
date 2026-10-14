@@ -1,0 +1,20 @@
+{
+  "actual_reference_multiple_captions": {
+    "posts": 1,
+    "preserved_caption_fields": [
+      "first caption"
+    ],
+    "members": [
+      1,
+      2
+    ]
+  },
+  "actual_reference_mixed_chats": {
+    "posts": 1,
+    "members": [
+      1,
+      2
+    ]
+  },
+  "scope": "synthetic input to actual consumer helper; no Telegram behavior claim"
+}
