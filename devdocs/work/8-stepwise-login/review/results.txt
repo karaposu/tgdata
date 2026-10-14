@@ -1,0 +1,21 @@
+{"case": "delivery_variants", "result": "PASS", "observation": "SMS and voice challenge restore to final authorization"}
+{"case": "signin_signup_refusal", "result": "PASS", "observation": "SignIn signup response performs no signup or password mutation"}
+{"case": "wait_code_and_password", "result": "PASS", "observation": {"preserved_phase_and_wait": ["code", "password"], "early_retry_traffic": 0}}
+{"case": "wait_on_uncertain_check", "result": "PASS", "observation": "Read-only check wait preserves uncertainty and restartable deadline"}
+{"case": "bounded_double_redirect", "result": "PASS", "observation": {"SendCode_requests": 2, "step": "restart_required", "proxy_preserved": true}}
+{"case": "queued_stop_reaches_public_boundary", "result": "PASS", "observation": {"caller_entered_API": true, "source_requests": 0, "busy_after": false}}
+{"case": "late_response_after_stop", "result": "PASS", "observation": {"caller_cancelled": true, "late_authorization_retained": true, "signins": 1}}
+{"case": "component_self_cancel", "result": "PASS", "observation": {"public_task_cancelled": false, "kind": "interrupted"}}
+Account operation cleanup failed (OSError)
+{"case": "paired_code_and_flush_failure", "result": "PASS", "observation": "Original invalid-code error survives native flush failure; explicit close permits continuation"}
+Account operation cleanup failed (OSError)
+{"case": "close_retry_repeated_stop", "result": "PASS", "observation": "Repeatedly cancelled close settles once before releasing pending state"}
+Account operation cleanup failed (CancelledError)
+{"case": "component_close_cancel", "result": "PASS", "observation": "Component cleanup stop preserves result and requires explicit cleanup retry"}
+{"case": "completed_key_revoked", "result": "PASS", "observation": "Fresh unauthorized observation invalidates completed status without requesting a code"}
+{"case": "ordinary_client_consumes_credential", "result": "PASS", "observation": "Ordinary native client connects and verifies identity from the returned stored session"}
+health: logged out [account] AUTH_KEY_UNREGISTERED — call=old_reader account=stale-owner
+{"case": "real_ambient_health", "result": "PASS", "observation": "Native auth neither relabels nor recovers stale owner in actual HealthMonitor"}
+{"case": "application_continues_after_call", "result": "PASS", "observation": "Invocation completion is independent of later application-task lifetime"}
+{"case": "malformed_phase_matrix", "result": "PASS", "observation": {"malformed_inputs_rejected_before_network": 8}}
+Fresh PR probes: 16/16
