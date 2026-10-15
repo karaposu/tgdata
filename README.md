@@ -538,6 +538,19 @@ Numeric channel IDs need a cached access hash. Readability is distinct from memb
 and does not promise future access. See [the group-operations contract](docs/group_operations.md)
 for input rules, result fields, errors, budget costs and the known SDK cache limitation.
 
+### Richer group profiles
+
+`await tg.get_group_profile("@example_group", account_id=expected_id, pinned_limit=5)`
+returns the description, available member/online counts and a bounded pinned-message
+observation. Pins default off; the explicit limit is 1–100 and uses the existing
+read budget. Returned IDs/text/dates, coverage status, count accuracy and separate
+observation times distinguish empty, limited, unavailable and failed reads.
+
+The method verifies the account and closes its temporary client. Optional pin
+failures raise their original error with completed metadata on `partial_result`
+when supported. Profile success makes no general history-access claim. See
+[group profiles](docs/group_profiles.md) for fields, errors and heartbeat support.
+
 ### Group discovery — finding groups you are not in
 
 `list_groups` shows what the account already follows. To find *new* rooms there are three
@@ -1213,9 +1226,9 @@ The ID must be a positive integer, not a string or boolean. The call is synchron
 it does no connection, authentication or recovery. The returned dictionaries are
 independent copies, with the same fields as the health summary above.
 
-`lookup_group`, `check_group_access` and `join_group` populate this account-owned view. Existing
+`lookup_group`, `check_group_access`, `get_group_profile` and `join_group` populate this account-owned view. Existing
 message reads and `health_check()` still use their existing health view; the views
-are not combined. A join result does not clear an earlier history-access failure.
+are not combined. A join or profile result does not clear an earlier history-access failure.
 
 Internally, an observation begins after a temporary client proves the expected
 account. Its event and retained state keep that numeric owner even if a cached
