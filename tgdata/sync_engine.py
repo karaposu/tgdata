@@ -5,6 +5,8 @@ from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 import os
 
+from .batch_heartbeat import heartbeat_kwargs
+
 from .batch_files import prepare_directory, _verify_existing
 from .message_batch import MessageBatch, BatchFormatError, MAX_BATCH_MESSAGES, MAX_MESSAGE_ID, _interrupted_prefix
 from .history_window import _HistoryWindow
@@ -127,7 +129,8 @@ class SyncEngine:
             raise
         return batch
 
-    async def prepare(self, chat_id, *, limit=200, download_media_to=None, _capture=None):
+    async def prepare(self, chat_id, *, limit=200, download_media_to=None, heartbeat=None, _capture=None):
+        progress = heartbeat_kwargs(heartbeat)
         chat_id = _chat_id(chat_id)
         limit = _integer(limit, 'limit', 1, MAX_BATCH_MESSAGES)
         self._require_store()
@@ -144,7 +147,7 @@ class SyncEngine:
                     _capture.offer(state.pending)
                 return state.pending
             try:
-                options = dict(after_id=state.after_id, limit=limit, download_media_to=directory)
+                options = dict(after_id=state.after_id, limit=limit, download_media_to=directory, **progress)
                 if state.window is not None:
                     options.update(start_date=state.window.start_date, end_date=state.window.end_date)
                 if _capture is not None:

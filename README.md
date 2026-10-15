@@ -811,6 +811,15 @@ separately. Do not replace lost destination state with an empty dictionary. The
 `python examples/album_assembly.py --demo` demonstrates SQLite restart and lost-ack
 replay without Telegram.
 
+### Batch-reader liveness
+
+Pass a quick synchronous `heartbeat(phase)` to `get_message_batch`, `sync_group`
+or `prepare_backfill` (also through AccountPool) to observe message, media-chunk
+and request progress. This lets a caller distinguish a slow download from a
+silent read. Defaults, batch hashes and acknowledgments stay unchanged. See
+[heartbeat and watchdog guidance](docs/batch_heartbeat.md) for callback isolation,
+replay behavior and the SDK-wait limit.
+
 ### Optional photo trails
 
 For a text or album followed by additional photo-only posts, explicitly enable
