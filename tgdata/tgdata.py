@@ -14,6 +14,8 @@ from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any, Union, Callable
 import pandas as pd
 
+from .batch_heartbeat import heartbeat_kwargs
+
 from . import health
 from .account_operation import _expected_account_id
 from .owned_health import _OwnedHealthMonitor, _retire_notifications
@@ -367,7 +369,7 @@ class TgData(ProgressFacade):
     async def get_message_batch(self, group_id: Union[int, str], *,
                                 after_id: int = 0, limit: int = 200,
                                 download_media_to=None,
-                                start_date=None, end_date=None) -> MessageBatch:
+                                start_date=None, end_date=None, heartbeat=None) -> MessageBatch:
         """Read a bounded oldest-first raw snapshot after an exclusive ID.
 
         Returns a versioned MessageBatch with canonical JSON, a batch_id and
@@ -382,11 +384,14 @@ class TgData(ProgressFacade):
 
         group_id must name a group/channel explicitly; after_id is 0..2**31-1,
         limit is 1..10000. See docs/message_batch_v1.md for the exact wire contract.
+        Optional synchronous heartbeat(phase) reports actual source/media progress;
+        callback errors are logged by type and ignored. See docs/batch_heartbeat.md.
         Optional timezone-aware start_date/end_date constrain message dates to
         [start_date, end_date). Supply both; the ID cursor still applies. Reads
         outside the interval spend normal budget but do not download media.
         """
-        options = dict(after_id=after_id, limit=limit, download_media_to=download_media_to)
+        options = dict(after_id=after_id, limit=limit, download_media_to=download_media_to,
+                       **heartbeat_kwargs(heartbeat))
         if start_date is not None or end_date is not None:
             options.update(start_date=start_date, end_date=end_date)
         return await self.batch_engine.fetch_batch(group_id, **options)

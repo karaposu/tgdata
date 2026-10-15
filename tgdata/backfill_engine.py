@@ -11,6 +11,8 @@ import re
 import time
 from uuid import uuid4
 
+from .batch_heartbeat import heartbeat_kwargs
+
 from .backfill import (
     BackfillRunRef, BackfillStartRequest, BackfillStartResult, BackfillRecoveryResult,
     BackfillControlResult,
@@ -384,13 +386,14 @@ class BackfillEngine:
                 return self._turn(state)
         raise BackfillConflictError('source settlement kept conflicting; inspect the authoritative attempt')
 
-    async def prepare(self, context, *, download_media_to=None, _capture=None):
+    async def prepare(self, context, *, download_media_to=None, heartbeat=None, _capture=None):
         """Prepare/replay one exact delivery using current run/cursor/control intent.
 
         Early pacing returns a wait without sleeping or reading. Pending replay
         remains local, including while paused or cancelled. The
         caller excludes other source readers in separate collections/daily jobs.
         """
+        progress = heartbeat_kwargs(heartbeat)
         if not isinstance(context, BackfillPrepareContext):
             raise BackfillConfigurationError('prepare requires BackfillPrepareContext')
         context = BackfillPrepareContext.from_dict(context.to_dict())
@@ -430,7 +433,7 @@ class BackfillEngine:
             options = dict(after_id=int(admitted['after_id']), limit=admitted['request']['batch_size'],
                            download_media_to=root,
                            start_date=_decode_date(admitted['window']['start_date']),
-                           end_date=_decode_date(admitted['window']['end_date']))
+                           end_date=_decode_date(admitted['window']['end_date']), **progress)
             if _capture is not None:
                 options['_capture'] = _capture
             try:

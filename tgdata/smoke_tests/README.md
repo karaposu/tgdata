@@ -584,3 +584,17 @@ known sender's timestamps even when the whole post cannot anchor.
 Source responses are synthetic and sockets are blocked. These checks do not
 claim live intent accuracy, deployed consumer compatibility or physical
 power-loss durability. See [the photo-trail contract](../../docs/photo_trails.md).
+
+### Test 44: batch-reader heartbeat (offline)
+
+```bash
+python -m tgdata.smoke_tests.test_44_batch_heartbeat
+```
+
+31 tests use real Telethon1.45 request/download loops, SQLite and pool sources
+with synthetic wire replies and blocked sockets. Slow active downloads outlast
+a scaled silence watchdog; stalled chunks still cancel and clean up. Cases cover
+messages/window/dialog phases, repeated/cached waits, callback and logger errors,
+async callback refusal, cancellation, concurrent/background isolation, budget
+charges, source pending/replay, all pool APIs and existing injected readers.
+See [the heartbeat contract](../../docs/batch_heartbeat.md).
