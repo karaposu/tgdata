@@ -1,0 +1,19 @@
+{
+  "base": "abd1f577c928cc22c08cdbd9580c2d916e98c64b",
+  "head": "72f51313214a318d59eb9fc43e652ae64bf67159",
+  "all_python_files_match": 100,
+  "changed_paths": [
+    "README.md",
+    "docs/group_operations.md",
+    "docs/group_profiles.md",
+    "tgdata/__init__.py",
+    "tgdata/group_profile.py",
+    "tgdata/smoke_tests/README.md",
+    "tgdata/smoke_tests/test_45_group_profile.py",
+    "tgdata/tgdata.py"
+  ],
+  "product_tree_identical": true,
+  "existing_offline_checks": 952,
+  "existing_demos": 7,
+  "live_skips": 3
+}
