@@ -33,6 +33,7 @@ from .health import telegram_error_name as _telegram_error_name
 from .models import ConnectionConfig, RateLimitInfo
 from .session_store import StoredSession
 from .budget_client import BudgetClientMixin
+from .batch_heartbeat import BatchHeartbeatMixin, heartbeat_sleep
 from .join_client import JoinClientMixin
 from .account_operation import _AccountOperation, _disconnect_owned, _expected_account_id
 
@@ -137,7 +138,7 @@ def _client_class(base):
     answer evidence, owned join admission, optional read budgets and per-call flood thresholds
     in front of it. Cached per base."""
     return type(f"Tgdata{base.__name__}",
-                (_AnswerEvidence, JoinClientMixin, BudgetClientMixin, _PerCallFloodThreshold, base), {})
+                (_AnswerEvidence, JoinClientMixin, BudgetClientMixin, BatchHeartbeatMixin, _PerCallFloodThreshold, base), {})
 
 
 class ProxyConfigError(ValueError):
@@ -806,7 +807,7 @@ class ConnectionEngine:
             await health.report(e, 'handled')
             if self._pool:
                 self._pool.mark_rate_limited(client, wait_time)
-            await asyncio.sleep(wait_time)
+            await heartbeat_sleep(wait_time)
             await self._log_in(client, config, first_login)
 
         except AuthRequiredError as e:
@@ -907,7 +908,7 @@ class ConnectionEngine:
             await health.report(e, 'handled')
             if self._pool:
                 self._pool.mark_rate_limited(client, wait_time)
-            await asyncio.sleep(wait_time)
+            await heartbeat_sleep(wait_time)
             await client.connect()
         except Exception as e:
             logger.error(f"Connection failed: {e}")
@@ -1037,7 +1038,7 @@ class ConnectionEngine:
         if self._pool and client:
             self._pool.mark_rate_limited(client, wait_time)
             
-        await asyncio.sleep(wait_time)
+        await heartbeat_sleep(wait_time)
         
     async def close(self):
         """Close all connections"""

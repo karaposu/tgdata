@@ -1,5 +1,7 @@
 """Shared state-only progress facade over an injected bounded batch reader."""
 
+from .batch_heartbeat import heartbeat_kwargs
+
 from .backfill import (
     BackfillStartRequest, BackfillRunRef, BackfillPrepareContext, BackfillDeliveryRef,
     BackfillConfigurationError,
@@ -28,7 +30,7 @@ class ProgressFacade:
             chat_id, after_id=after_id, media_mode=media_mode,
             start_date=start_date, end_date=end_date, last_days=last_days)
 
-    async def sync_group(self, chat_id, *, limit=200, download_media_to=None):
+    async def sync_group(self, chat_id, *, limit=200, download_media_to=None, heartbeat=None):
         """Prepare/replay one durable pending MessageBatch, or None if empty.
 
         Enroll the canonical chat ID first. Pending replay does not contact
@@ -40,11 +42,12 @@ class ProgressFacade:
         before that same error is re-raised. A failed partial save raises a
         local SyncError with the original exception in read_error instead.
         Download-mode replay verifies every referenced blob at the given root.
+        heartbeat(phase) observes fresh source progress only; replay needs no beat.
         """
         # Only the actual configured batch reader carries a source health context.
         # Local replay must not count as fresh Telegram recovery evidence.
         return await self.sync_engine.prepare(chat_id, limit=limit,
-                                              download_media_to=download_media_to)
+                                              download_media_to=download_media_to, **heartbeat_kwargs(heartbeat))
 
     async def acknowledge_sync(self, chat_id, batch_id):
         """Assert durable destination acceptance and atomically advance progress.
@@ -91,7 +94,7 @@ class ProgressFacade:
         engine, run = self._backfill_for(run, BackfillRunRef)
         return await engine.status(run)
 
-    async def prepare_backfill(self, context: BackfillPrepareContext, *, download_media_to=None):
+    async def prepare_backfill(self, context: BackfillPrepareContext, *, download_media_to=None, heartbeat=None):
         """Prepare/replay one exact delivery, or return stored status/local wait.
 
         A stale cursor/control context refuses without auto-rebase. Until ack,
@@ -99,9 +102,11 @@ class ProgressFacade:
         eligible new attempt calls the existing get_message_batch health boundary.
         Ordinary source errors retain a valid prefix before re-raising; obtain
         its full delivery reference by replaying the stored pending observation.
+        Optional synchronous heartbeat(phase) follows only fresh source work.
         """
+        options = heartbeat_kwargs(heartbeat)
         engine, context = self._backfill_for(context, BackfillPrepareContext)
-        return await engine.prepare(context, download_media_to=download_media_to)
+        return await engine.prepare(context, download_media_to=download_media_to, **options)
 
     async def acknowledge_backfill(self, delivery: BackfillDeliveryRef):
         """Assert durable receiver acceptance of the exact full delivery reference.
