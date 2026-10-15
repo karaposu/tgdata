@@ -1,0 +1,15 @@
+{"name": "probe_annotation_failure_does_not_replace_source", "passed": true, "cases": 2}
+{"name": "probe_budget_precedes_domain_rejection", "passed": true, "cases": 3}
+{"name": "probe_count_provenance_extremes", "passed": true, "cases": 4}
+{"name": "probe_heartbeat_boundary_cancellation_preserves_priority", "passed": true, "cases": 2}
+{"name": "probe_native_count_precision_and_coverage_matrix", "passed": true, "cases": 10}
+{"name": "probe_native_sqlite_settlement_failure_after_reply", "passed": true, "cases": 1}
+{"name": "probe_older_reply_cannot_clear_newer_wait", "passed": true, "cases": 1}
+{"name": "probe_overlapping_accounts_keep_evidence_separate", "passed": true, "cases": 1}
+Account operation cleanup failed (OSError)
+{"name": "probe_pin_rejection_and_failed_cleanup_notify_after_close", "passed": true, "cases": 1}
+{"name": "probe_repeated_cancel_during_failure_cleanup", "passed": true, "cases": 1}
+{"name": "probe_source_and_public_abi", "passed": true, "cases": 1}
+{"name": "probe_source_failure_before_full_projection_keeps_original", "passed": true, "cases": 1}
+{"name": "probe_wait_recovery_needs_valid_same_request", "passed": true, "cases": 1}
+RESULT PASS groups 13 cases 29

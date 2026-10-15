@@ -2,7 +2,7 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# #43 — implementation complete; review pending
+# #43 — implementation and review complete; merge pending
 
 Branch: `feat/43-richer-group-profiles`, based on dev `abd1f57`.
 Worktree: `/private/tmp/tgdata-43-richer-group-profiles`.
@@ -25,7 +25,13 @@ compile/Python3.7 grammar pass on3.11.10/Telethon1.45.0. See verification.md and
 evidence/verified-result.json. Initial fixture corrections and sandbox loopback
 refusal are preserved; no architectural deviation or product fix during tests.
 
-**Next: merge check → PR into dev → fresh PR critique.** These have not run.
-Do not call this merged or released. Later merge excludes devdocs/work and keeps
-the branch archive. Version remains0.1.1. Original checkout and unrelated files
-were untouched. #44/#45/#46 remain separate requests.
+Merge check PASS f7f88b6, posted on PR47. Product-only PR branch:
+feat/43-richer-group-profiles-pr at72f51313214a318d59eb9fc43e652ae64bf67159.
+Fresh in-session critic-d ACCEPTED:0 High/0 Medium/0 Low;13 fresh probe groups,
+29 cases passed against the actual PR checkout. See pr-critic.md, pr-probes.py
+and pr-probe-results.json. No product change during review. §9 verified Astra/xhigh.
+
+**Next: merge only with the user's go-ahead.** PR47 targets dev with Closes #43;
+no work-folder/archaeology files are in the PR. Preserve both branches as archives.
+Not merged or released. Version remains0.1.1. Original checkout and unrelated
+files were untouched. #44/#45/#46 remain separate requests.
