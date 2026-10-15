@@ -1,0 +1,10 @@
+{
+  "exit_code": 0,
+  "reason": "Sandbox refused loopback bind; rerun unchanged suite with loopback access",
+  "command": [
+    "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python",
+    "-m",
+    "tgdata.smoke_tests.test_12_proxy",
+    "<missing-config>"
+  ]
+}
