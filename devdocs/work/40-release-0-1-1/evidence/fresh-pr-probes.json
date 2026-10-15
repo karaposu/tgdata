@@ -1,0 +1,29 @@
+{
+  "result": "PASS",
+  "candidate": "d8aa8e4214535d7e201167c68dbae788945420b8",
+  "tree": "becc54f6baae9008c4ad9fc172a3f1ffef28d160",
+  "matching_tested_sources": 98,
+  "positive_artifacts": 2,
+  "negative_artifacts": [
+    {
+      "case": "old actual published0.1 wheel",
+      "result": "REFUSED",
+      "error_type": "AssertionError"
+    },
+    {
+      "case": "wrong-source0.0.9 wheel",
+      "result": "REFUSED",
+      "error_type": "StopIteration"
+    },
+    {
+      "case": "changed heartbeat payload under valid0.1.1 metadata",
+      "result": "REFUSED",
+      "error_type": "AssertionError"
+    },
+    {
+      "case": "missing heartbeat payload under valid0.1.1 metadata",
+      "result": "REFUSED",
+      "error_type": "AssertionError"
+    }
+  ]
+}
