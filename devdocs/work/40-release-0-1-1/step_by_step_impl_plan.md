@@ -2,7 +2,9 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# Gated0.1.1 publication — revision1
+# Gated0.1.1 publication — revision2
+
+**Critic folded:**2026-10-15 — zero mitigations; required complete qualification PASS before adoption. Real wheel/sdist/install,914 offline checks/31 suites/7 demos pass with3 live skips. Tool setup corrections and exact manifests are retained in qualification.md/evidence. Steps and source scope unchanged.
 
 ### What is the task
 Publish the already reviewed main product as0.1.1, proving source/tag/artifact identity before and after upload. Inputs: desc.md, triage340202a, completed main promotion05904d1 and prior0.1 release records. Reuse existing archive/product branches; no new branch or consumer deployment.
