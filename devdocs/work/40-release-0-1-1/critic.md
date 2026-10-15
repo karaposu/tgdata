@@ -13,6 +13,8 @@ Must precede: production adoption in Step2, any version merge/tag/publication.
 Disqualifying result: correct source cannot produce/install the required package without runtime/packaging redesign, missing files must be excused, or feature expectations must be relaxed to accept the candidate.
 Passing result: both actual packages contain the exact source and expected0.1.1 metadata, isolated import/CLI works, all named suites pass and source remains unchanged. Then record result, fold, adopt exact edits and continue reviewed promotion/publication.
 
+Result: PASS — actual wheel/sdist each contain all90 expected Python package files (40 runtime modules) with exact source/metadata; isolated0.1.1 import/102 exports/7 heartbeat signatures/worker help pass.914 offline checks across31 suites and7 demos passed;3 explicit live skips.2026-10-15. Build-environment corrections retained in qualification.md; no source or expected parity was weakened.
+
 ## Summary
 The plan uses the correct authority: reviewed main source, then exact candidate bytes, reviewed PR transport and a pinned-main tag. The version/test substitutions are explicit and do not alter runtime behavior. No actionable High/Medium/Low defect is established. Actual artifact qualification is still needed before adoption, and actual vendor publication remains a later observation rather than a local assumption.
 

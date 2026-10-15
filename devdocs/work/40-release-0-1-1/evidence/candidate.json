@@ -1,0 +1,10 @@
+{
+  "base": "05904d12d3960b5af837d83fb177cc7f9b557b8a",
+  "path": "/private/tmp/tgdata-release-0.1.1-evidence/candidate",
+  "version": "0.1.1",
+  "product_files": [
+    "tgdata/__init__.py",
+    "tgdata/smoke_tests/test_42_album_assembly.py",
+    "tgdata/smoke_tests/test_43_photo_trails.py"
+  ]
+}

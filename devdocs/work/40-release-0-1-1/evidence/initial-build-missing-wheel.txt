@@ -1,0 +1,143 @@
+* Getting build dependencies for sdist...
+running egg_info
+creating tgdata.egg-info
+writing tgdata.egg-info/PKG-INFO
+writing dependency_links to tgdata.egg-info/dependency_links.txt
+writing entry points to tgdata.egg-info/entry_points.txt
+writing requirements to tgdata.egg-info/requires.txt
+writing top-level names to tgdata.egg-info/top_level.txt
+writing manifest file 'tgdata.egg-info/SOURCES.txt'
+reading manifest file 'tgdata.egg-info/SOURCES.txt'
+writing manifest file 'tgdata.egg-info/SOURCES.txt'
+* Building sdist...
+running sdist
+running egg_info
+writing tgdata.egg-info/PKG-INFO
+writing dependency_links to tgdata.egg-info/dependency_links.txt
+writing entry points to tgdata.egg-info/entry_points.txt
+writing requirements to tgdata.egg-info/requires.txt
+writing top-level names to tgdata.egg-info/top_level.txt
+reading manifest file 'tgdata.egg-info/SOURCES.txt'
+writing manifest file 'tgdata.egg-info/SOURCES.txt'
+running check
+creating tgdata-0.1.1
+creating tgdata-0.1.1/tgdata
+creating tgdata-0.1.1/tgdata.egg-info
+creating tgdata-0.1.1/tgdata/smoke_tests
+copying files to tgdata-0.1.1...
+copying README.md -> tgdata-0.1.1
+copying setup.py -> tgdata-0.1.1
+copying tgdata/__init__.py -> tgdata-0.1.1/tgdata
+copying tgdata/account_operation.py -> tgdata-0.1.1/tgdata
+copying tgdata/account_pool.py -> tgdata-0.1.1/tgdata
+copying tgdata/album.py -> tgdata-0.1.1/tgdata
+copying tgdata/backfill.py -> tgdata-0.1.1/tgdata
+copying tgdata/backfill_engine.py -> tgdata-0.1.1/tgdata
+copying tgdata/backfill_state.py -> tgdata-0.1.1/tgdata
+copying tgdata/batch_engine.py -> tgdata-0.1.1/tgdata
+copying tgdata/batch_files.py -> tgdata-0.1.1/tgdata
+copying tgdata/batch_heartbeat.py -> tgdata-0.1.1/tgdata
+copying tgdata/budget_client.py -> tgdata-0.1.1/tgdata
+copying tgdata/connection_engine.py -> tgdata-0.1.1/tgdata
+copying tgdata/discovery_engine.py -> tgdata-0.1.1/tgdata
+copying tgdata/group_operations.py -> tgdata-0.1.1/tgdata
+copying tgdata/health.py -> tgdata-0.1.1/tgdata
+copying tgdata/history_window.py -> tgdata-0.1.1/tgdata
+copying tgdata/join_budget.py -> tgdata-0.1.1/tgdata
+copying tgdata/join_client.py -> tgdata-0.1.1/tgdata
+copying tgdata/login.py -> tgdata-0.1.1/tgdata
+copying tgdata/message_batch.py -> tgdata-0.1.1/tgdata
+copying tgdata/message_engine.py -> tgdata-0.1.1/tgdata
+copying tgdata/models.py -> tgdata-0.1.1/tgdata
+copying tgdata/owned_health.py -> tgdata-0.1.1/tgdata
+copying tgdata/photo_trails.py -> tgdata-0.1.1/tgdata
+copying tgdata/pool_lifecycle.py -> tgdata-0.1.1/tgdata
+copying tgdata/pool_observation.py -> tgdata-0.1.1/tgdata
+copying tgdata/pool_result.py -> tgdata-0.1.1/tgdata
+copying tgdata/pool_source.py -> tgdata-0.1.1/tgdata
+copying tgdata/pool_state.py -> tgdata-0.1.1/tgdata
+copying tgdata/progress.py -> tgdata-0.1.1/tgdata
+copying tgdata/progress_facade.py -> tgdata-0.1.1/tgdata
+copying tgdata/read_budget.py -> tgdata-0.1.1/tgdata
+copying tgdata/session_store.py -> tgdata-0.1.1/tgdata
+copying tgdata/sync_engine.py -> tgdata-0.1.1/tgdata
+copying tgdata/sync_store.py -> tgdata-0.1.1/tgdata
+copying tgdata/tgdata.py -> tgdata-0.1.1/tgdata
+copying tgdata/utils.py -> tgdata-0.1.1/tgdata
+copying tgdata/worker.py -> tgdata-0.1.1/tgdata
+copying tgdata/worker_engine.py -> tgdata-0.1.1/tgdata
+copying tgdata/worker_protocol.py -> tgdata-0.1.1/tgdata
+copying tgdata.egg-info/PKG-INFO -> tgdata-0.1.1/tgdata.egg-info
+copying tgdata.egg-info/SOURCES.txt -> tgdata-0.1.1/tgdata.egg-info
+copying tgdata.egg-info/dependency_links.txt -> tgdata-0.1.1/tgdata.egg-info
+copying tgdata.egg-info/entry_points.txt -> tgdata-0.1.1/tgdata.egg-info
+copying tgdata.egg-info/requires.txt -> tgdata-0.1.1/tgdata.egg-info
+copying tgdata.egg-info/top_level.txt -> tgdata-0.1.1/tgdata.egg-info
+copying tgdata/smoke_tests/__init__.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/my_test.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/pool_storage_cases.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_00_connection.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_01_list_group_chats.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_02_get_message_count.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_03_get_all_messages.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_04_get_all_messages_in_batches.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_05_with_progress_feature.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_06_polling_simple.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_07_on_new_message_simple.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_07_real_time_event_handler.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_08_batch_callback.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_08_polling.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_10_advanced_features.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_11_discover_groups.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_12_proxy.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_13_device_identity.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_14_flood_threshold.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_15_login_checks.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_16_health_events.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_17_session_store.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_18_read_budget.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_19_message_batches.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_22_daily_continuation.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_23_fixed_windows.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_24_backfill_state.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_25_backfill_delivery.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_26_backfill_completion.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_27_backfill_pacing.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_28_backfill_controls.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_29_backfill_public.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_30_backfill_integration.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_31_account_pool.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_32_account_operation.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_33_owned_health.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_34_group_access.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_35_join_budget.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_36_group_join.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_37_worker.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_38_worker_process.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_39_pool_lifecycle.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_40_pool_outcomes.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_41_stepwise_login.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_42_album_assembly.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_43_photo_trails.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_44_batch_heartbeat.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_debug_min_id.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_polling_debug.py -> tgdata-0.1.1/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_username_support.py -> tgdata-0.1.1/tgdata/smoke_tests
+Writing tgdata-0.1.1/setup.cfg
+Creating tar archive
+removing 'tgdata-0.1.1' (and everything under it)
+* Building wheel from sdist
+* Getting build dependencies for wheel...
+running egg_info
+writing tgdata.egg-info/PKG-INFO
+writing dependency_links to tgdata.egg-info/dependency_links.txt
+writing entry points to tgdata.egg-info/entry_points.txt
+writing requirements to tgdata.egg-info/requires.txt
+writing top-level names to tgdata.egg-info/top_level.txt
+reading manifest file 'tgdata.egg-info/SOURCES.txt'
+writing manifest file 'tgdata.egg-info/SOURCES.txt'
+
+ERROR Unmet dependencies (checked against /private/tmp/tgdata-release-0.1-evidence/build-env/bin/python):
+	wheel
+		wanted: any
+		found: not installed
