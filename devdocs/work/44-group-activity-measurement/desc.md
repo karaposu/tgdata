@@ -4,6 +4,8 @@ effort: xhigh
 ---
 # #44 — Activity and engagement measurement
 
+**Session warmth:** retained from #43 in this same session; refreshed current dev490cf5f batch/window/value, group/profile/owned-operation, budget and heartbeat implementations, SDK1.45 iterator/constructors, public-path fixtures and downstream measure.py. Triage records the bounded read inventory; no fresh whole-tree archaeology is claimed. PROJECT_SPECIFICS.md is absent. Model/effort: gpt-6-astra/xhigh, verified from current-thread metadata at 2026-10-15T19:46:59.404Z.
+
 ## Problem Statement
 Applications currently repeat raw Telethon history collection and arithmetic. The audit consumer silently caps history, excludes zero views and conflates unknown senders. Existing `get_statistics(df)` cannot establish source coverage; MessageBatch v1 omits engagement counters and must retain its strict schema.
 
