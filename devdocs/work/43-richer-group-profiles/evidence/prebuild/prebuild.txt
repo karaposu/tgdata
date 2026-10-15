@@ -1,0 +1,19 @@
+PASS composition
+PASS optional_and_inexact
+PASS allowance_and_owner
+PASS errors_and_health
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+PASS heartbeat_failure
+PASS cleanup_cancellation
+6 prebuild groups passed

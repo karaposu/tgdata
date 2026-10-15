@@ -24,6 +24,12 @@ Passing result: every listed composition probe and all five foundational suites
 pass on1.45.0, the baseline product is unchanged and observed limitations match
 the plan. Then fold the selected clarification and implement.
 
+Result: PASS — six combined real-component probe groups passed, covering both
+session backends and basic/channel replies; all198 checks in suites32/33/34/18/44
+passed. Source hashes and git diff confirm no product edits preceded this gate.
+2026-10-15. Evidence: evidence/prebuild/result.json and prebuild.txt. One fixture
+constructor setup correction is recorded in prebuild-setup.md.
+
 ## High-level summary
 The design is a bounded consumer of the settled #7 operation; no new persistence
 or lifecycle is needed. One Medium contract ambiguity needs folding. A combined

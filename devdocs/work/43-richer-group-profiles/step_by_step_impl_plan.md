@@ -2,7 +2,11 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# Richer group profiles — implementation plan, revision 1
+# Richer group profiles — implementation plan, revision 2
+
+**Critic folded:** 2026-10-15 — 1 mitigation (3 steps changed, 0 added).
+Combined prebuild PASS before step1: six probe groups and198 existing checks;
+see critic.md and evidence/prebuild/. No open execution blocker.
 
 ## What is the task
 Expose a portable profile observation under the existing verified-account
@@ -46,18 +50,18 @@ SearchRequest admission/refunds, original errors/health keys, owner changes befo
 admission and actual cleanup cancellation. No prototype implementation can supply
 the behavior whose existing composition is being qualified.
 
-## Step 1 — Profile values and full metadata
+## Step 1 — Profile values and full metadata [folded: Risk 1, robust]
 ### Proposed changes
 Add tgdata/group_profile.py importing existing private group-operation helpers.
 Define frozen GroupPinnedMessage(id, kind, date, text) and GroupProfile(account_id,
 target, group, about, online_count, observed_at, pinned_messages, pins_status,
-pins_total, pins_observed_at). Pins are a tuple; output dictionaries are detached,
+pins_total, pins_total_exact, pins_observed_at). Pins are a tuple; output dictionaries are detached,
 JSON-ready, with UTC ISO8601 dates and integer IDs. Exclude SDK objects, access
 hashes, user/contact rows, clients and credentials. Use repr=False for free text.
 Properties are unnecessary beyond the existing group metadata object.
 
 Validate pinned_limit as a Python integer excluding bool, range 0..100. Zero
-means not_requested, no search, empty pin tuple, unknown total/time. Resolve using
+means not_requested, no search, empty pin tuple, unknown total/precision/time. Resolve using
 _resolve(operation, target). Supported lookup kinds are group, megagroup, channel;
 a plain invite/minimal hashless result without a peer, Community or unknown kind
 raises GroupReferenceError and performs no full/pin request.
@@ -88,7 +92,7 @@ UTC times, JSON conversion, retained SDK session cache behavior.
 ### Hardness Lvl
 3
 
-## Step 2 — Bounded pinned-message observation
+## Step 2 — Bounded pinned-message observation [folded: Risk 1, robust]
 ### Proposed changes
 On explicit pinned_limit>0, use the already resolved input peer for exactly one
 messages.SearchRequest(q='', filter=InputMessagesFilterPinned(), min_date=None,
@@ -118,12 +122,15 @@ malformed. Pin status:
 - incomplete: inexact results, unavailable rows, or a shorter-than-limit slice
   whose count reports more. Never use short-page length alone as completion.
 Successful empty exact response is complete with total=0. Preserve approximate
-total as supplied but never infer completion from it. Record pins_observed_at
+total as supplied but never infer completion from it. pins_total_exact is True
+for a full vector or exact slice/channel count, False for inexact, and None when
+no successful pin response exists. Content completeness remains independent.
+Record pins_observed_at
 after projection.
 
 If optional pin send/projection fails, catch Exception or CancelledError only,
 attach a frozen completed-profile partial_result with pins_status='failed',
-unknown pin total/time and no accepted pins, then re-raise the same exception.
+unknown pin total/precision/time and no accepted pins, then re-raise the same exception.
 Exception annotation is best effort and must never replace the primary error.
 Partial pin rows from an invalid response are not accepted. Metadata remains the
 prior successful observation; pin denial does not erase it or become empty.
@@ -167,7 +174,7 @@ public export compatibility.
 ### Hardness Lvl
 3
 
-## Step 4 — Contract tests and documentation
+## Step 4 — Contract tests and documentation [folded: Risk 1, robust]
 ### Proposed changes
 Add test_45_group_profile.py using the real SDK wire harness from test_34/test_33/
 test_32, actual TL replies/errors and SQLite budget/session backends. Socket and
@@ -181,6 +188,7 @@ Exercise:
   namespaces/vectors/fields; field counts do not borrow unrelated chat/user rows;
 - default pins off and one exact filtered request; zero, limit, short/inexact,
   service/unavailable and invalid/duplicate/wrong-peer pin rows; JSON independence;
+  exact incomplete versus approximate incomplete totals remain distinguishable;
 - zero budget metadata, pre-send pin refusal, actual charge/refund, owner change
   before claim; original RPC/wait/local errors and complete-profile partial_result;
 - source-only owned events, no metadata/pin group recovery, cancellation before
