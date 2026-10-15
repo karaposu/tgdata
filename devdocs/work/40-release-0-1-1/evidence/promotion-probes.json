@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "candidate": "9578bb643594b1237a3d45771d8c3f635adb9d8b",
+  "tree": "becc54f6baae9008c4ad9fc172a3f1ffef28d160",
+  "parents": [
+    "05904d12d3960b5af837d83fb177cc7f9b557b8a",
+    "abd1f577c928cc22c08cdbd9580c2d916e98c64b"
+  ],
+  "matching_sources": 98,
+  "identical_version_diff": true,
+  "version": "0.1.1"
+}
