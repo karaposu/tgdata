@@ -6,7 +6,7 @@ effort: xhigh
 
 **Critic folded:** 2026-10-15 — 1 mitigation (2 steps changed,0 added): Risk1 Robust. Complete candidate experiment PASS at1daf215 before this fold, following the user-provided task-impl order.
 
-**Status:** implemented at6eff7c7 and fully verified:883 offline checks,7 demos,3 explicit live skips. See implementation.md and verification/result.json. Merge check3963a10 and fresh PR critique72efa0f PASS; product-only PR36 is ready for review and remains unmerged.
+**Status:** implemented at6eff7c7 and fully verified:883 offline checks,7 demos,3 explicit live skips. See implementation.md and verification/result.json. Merge check3963a10 and fresh PR critique72efa0f PASS; product-only PR36 merged into dev at38dee0b after merged-tree verification. See merge-report.md.
 
 Explicit input: desc.md at570cc7d, triage.md, traverse/finding.md and its preserved two-pass evidence. Baseline dev35c4362. No previous plan or rejected PR critique exists for #30. Product code had not started when revision1 was written; the final completion status is recorded above.
 

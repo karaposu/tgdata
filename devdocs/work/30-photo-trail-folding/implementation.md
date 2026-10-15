@@ -4,7 +4,7 @@ effort: xhigh
 ---
 # Implementation and verification — #30
 
-**Task-impl complete.** Product commit `6eff7c7` on feat/30-photo-trail-folding, based on dev35c4362. Not merged or published as a release. Subsequent review gates completed: merge check3963a10 PASS; product-only PR36; fresh critique72efa0f PASS with zero findings.
+**Task-impl complete.** Product commit `6eff7c7` on feat/30-photo-trail-folding, based on dev35c4362. Merged into dev at38dee0b via PR36; no new release published. Subsequent review gates completed: merge check3963a10 PASS; product-only PR36; fresh critique72efa0f PASS with zero findings.
 
 ## Delivered behavior
 
@@ -52,3 +52,7 @@ The original user checkout remains untouched apart from its already-existing ver
 Both gates are complete for product-only head1cd001e against dev35c4362. Merge check3963a10 is [posted](https://github.com/karaposu/tgdata/pull/36#issuecomment-6185798213); fresh same-session critic-d72efa0f is [posted](https://github.com/karaposu/tgdata/pull/36#issuecomment-6185907745), zero findings and20 fresh cases passing (128 generated observation sets,16 randomized receiver-arrival histories,10 invalid-view variants within those cases). Current-turn metadata independently confirms GPT6 Astra/xhigh.
 
 [PR36](https://github.com/karaposu/tgdata/pull/36) is ready for review, not merged. All seven product paths and96 Python sources match the verified archive tree. Next is the maintainer’s merge go-ahead. Preserve feat/30-photo-trail-folding as the evidence archive and feat/30-photo-trail-folding-pr as the product branch. The original checkout and running consumer were not changed.
+
+## Merge completion
+
+PR36 merged into dev at38dee0b on2026-10-15 after the maintainer’s explicit go-ahead. The exact GitHub merge candidate passed883 offline checks/7 demos; published tree/parents equal the tested candidate. See [merge-report.md](merge-report.md) and verification-merge/. Both branches retained. Heartbeat#37 is excluded and remains unmerged. Earlier review handoff paragraphs above record the state before this merge.
