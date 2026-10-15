@@ -1,0 +1,24 @@
+{
+  "base": "35c4362d4e6a8fc92e695def67bffcac192dc073",
+  "head": "1cd001ea3ecf37aaad0c69f09b506a5359549f2b",
+  "product_paths": [
+    "README.md",
+    "docs/photo_trails.md",
+    "examples/photo_trails.py",
+    "tgdata/__init__.py",
+    "tgdata/photo_trails.py",
+    "tgdata/smoke_tests/README.md",
+    "tgdata/smoke_tests/test_43_photo_trails.py"
+  ],
+  "product_sha256": {
+    "README.md": "441be8ad68b1fd3aed153932284d8785cf7f03e7b3fc8695e93e5adc51def73c",
+    "docs/photo_trails.md": "abc64f6635688a57704b10a48b3d98416decdfff9787fc7b92b855403557611d",
+    "examples/photo_trails.py": "96e5cd47174a01da8a615f4aad8ad9874eab70c902587ddf198c19edb9333a4e",
+    "tgdata/__init__.py": "208997f8ef390e0422060ce4dc96c5c06514dc9ec556e6aeb32da3dcca28bb25",
+    "tgdata/photo_trails.py": "9be88edefcab93829511f6d183fd923a6760fc7ba1b9c10c2ade29016b1428ee",
+    "tgdata/smoke_tests/README.md": "0215be0c82390f8eaa9a46f7c1c31600fa929cccc29df02843a1d35a7b12e1a9",
+    "tgdata/smoke_tests/test_43_photo_trails.py": "c7e4478fb61cee9437c49105464f41eb0323fa22dc5d30c284e3d6726c6d0e5c"
+  },
+  "all_python_sources_equal": 96,
+  "archive_product": "6eff7c744b08f9366370da501b8835d53cf30e8e"
+}
