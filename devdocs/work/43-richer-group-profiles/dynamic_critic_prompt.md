@@ -64,4 +64,3 @@ the Phase2 findings and severities. No unbounded refactor, unconditional quick
 patch, plan rewrite or product implementation during critique. DO NOT IMPLEMENT
 requires the skill's deprecation/blocker procedure; REORDER proceeds only after
 the specified actual composition passes.
-

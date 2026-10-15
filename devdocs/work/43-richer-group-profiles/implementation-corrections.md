@@ -20,3 +20,6 @@ capability and an explicitly missing config:5 executed checks passed,2 live
 checks skipped. The first failure log remains in evidence/full; the retry and
 reconciled source-identical result are separate evidence. Other passing tests
 were not rerun for this environmental failure.
+
+Final work-document hygiene removed trailing blank lines flagged by git diff
+--check. Product/test source hashes were unchanged.

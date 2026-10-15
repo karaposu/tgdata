@@ -29,4 +29,3 @@ refusal are preserved; no architectural deviation or product fix during tests.
 Do not call this merged or released. Later merge excludes devdocs/work and keeps
 the branch archive. Version remains0.1.1. Original checkout and unrelated files
 were untouched. #44/#45/#46 remain separate requests.
-

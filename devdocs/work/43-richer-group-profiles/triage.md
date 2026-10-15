@@ -57,4 +57,3 @@ Artifact mode, signal-first; explicitly bounded territory: #43 public observatio
 plus existing group/factory/ownership/health/budget/heartbeat composition, SDK
 request/reply types, package exports and regression fixtures. Source content was
 read into this session; the thin traversal record is surfacing.md.
-

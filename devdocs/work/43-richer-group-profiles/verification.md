@@ -74,4 +74,3 @@ pinned search filter and latest-pin field; its
 [MessagesSlice contract](https://core.telegram.org/constructor/messages.messagesSlice)
 distinguishes count from inexact results. Actual1.45.0 constructors/dispatch were
 inspected and exercised; current website schemas alone are not live qualification.
-

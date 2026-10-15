@@ -70,4 +70,3 @@ measurement without importing its business rules.
 None identified. SDK composition must pass the critic's combined prebuild before
 product edits; source availability remains an explicit runtime outcome, not a
 reason to assume a successful live observation.
-
