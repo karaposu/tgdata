@@ -4,6 +4,8 @@ effort: xhigh
 ---
 # Gated0.1.1 publication — revision2
 
+**Status:** complete. Version PR41 and promotion PR42 merged; exact-main tagv0.1.1 and GitHub/PyPI publication verified, including downloaded artifacts and isolated install. See release-result.md.
+
 **Critic folded:**2026-10-15 — zero mitigations; required complete qualification PASS before adoption. Real wheel/sdist/install,914 offline checks/31 suites/7 demos pass with3 live skips. Tool setup corrections and exact manifests are retained in qualification.md/evidence. Steps and source scope unchanged.
 
 ### What is the task

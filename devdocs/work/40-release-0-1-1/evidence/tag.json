@@ -1,0 +1,9 @@
+{
+  "tag": "v0.1.1",
+  "annotated": true,
+  "main": "2e6edf2a3b2c016f9fea4a43b5edffd25fc9cf8e",
+  "remote_refs": {
+    "refs/tags/v0.1.1": "aa55aa6cfad5940dbca1bc142df3eebb2903ed5f",
+    "refs/tags/v0.1.1^{}": "2e6edf2a3b2c016f9fea4a43b5edffd25fc9cf8e"
+  }
+}

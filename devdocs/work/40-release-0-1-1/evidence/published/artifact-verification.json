@@ -1,0 +1,38 @@
+[
+  {
+    "file": "tgdata-0.1.1-py3-none-any.whl",
+    "result": "PASS",
+    "sha256": "3fa62e91245eb81410dd4f8bf6ee4ae9422d7f68b5324e6438d2d8b4fc79bc35",
+    "python_files": 90,
+    "runtime_files": 40,
+    "metadata": {
+      "name": "tgdata",
+      "version": "0.1.1",
+      "requires_python": ">=3.7",
+      "requires_dist": [
+        "Telethon<2.0,>=1.45",
+        "pandas>=1.0",
+        "python-socks[asyncio]>=2.0; extra == \"proxy\""
+      ]
+    },
+    "worker_entry_point": "tgdata.worker:main"
+  },
+  {
+    "file": "tgdata-0.1.1.tar.gz",
+    "result": "PASS",
+    "sha256": "8b4d7f3e5ab1eec5c9123a9ceb3338aac50d6e877954c06f4c71167e109f4052",
+    "python_files": 90,
+    "runtime_files": 40,
+    "metadata": {
+      "name": "tgdata",
+      "version": "0.1.1",
+      "requires_python": ">=3.7",
+      "requires_dist": [
+        "Telethon<2.0,>=1.45",
+        "pandas>=1.0",
+        "python-socks[asyncio]>=2.0; extra == \"proxy\""
+      ]
+    },
+    "worker_entry_point": "tgdata.worker:main"
+  }
+]

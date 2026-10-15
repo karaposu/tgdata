@@ -1,0 +1,25 @@
+{
+  "version": "0.1.1",
+  "files": [
+    {
+      "filename": "tgdata-0.1.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/f0/8c/e4de573c940b751ada609d915da75f221cc1edb1277ed791f0ce79899ac6/tgdata-0.1.1-py3-none-any.whl",
+      "size": 482557,
+      "sha256": "3fa62e91245eb81410dd4f8bf6ee4ae9422d7f68b5324e6438d2d8b4fc79bc35",
+      "uploaded": "2026-10-15T09:44:56.813167Z",
+      "path": "/private/tmp/tgdata-release-0.1.1-evidence/published/tgdata-0.1.1-py3-none-any.whl",
+      "hash_verified": true,
+      "yanked": false
+    },
+    {
+      "filename": "tgdata-0.1.1.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/03/ee/1a01b8834841b30215cbc51747362e5488be66e035637bacc2d8b07a978e/tgdata-0.1.1.tar.gz",
+      "size": 456706,
+      "sha256": "8b4d7f3e5ab1eec5c9123a9ceb3338aac50d6e877954c06f4c71167e109f4052",
+      "uploaded": "2026-10-15T09:44:58.368547Z",
+      "path": "/private/tmp/tgdata-release-0.1.1-evidence/published/tgdata-0.1.1.tar.gz",
+      "hash_verified": true,
+      "yanked": false
+    }
+  ]
+}

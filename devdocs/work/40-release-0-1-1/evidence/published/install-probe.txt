@@ -1,0 +1,13 @@
+{
+  "result": "PASS",
+  "target": "/private/tmp/tgdata-release-0.1.1-evidence/published-installed",
+  "module_path": "/private/tmp/tgdata-release-0.1.1-evidence/published-installed/tgdata/__init__.py",
+  "version": "0.1.1",
+  "runtime": "3.11.10",
+  "telethon": "1.45.0",
+  "public_exports": 102,
+  "optional_heartbeat_signatures": 7,
+  "photo_trails_default_disabled": true,
+  "worker_entry_point": "tgdata.worker:main",
+  "installed_worker_help_exit": 0
+}
