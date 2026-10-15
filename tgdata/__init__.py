@@ -22,6 +22,7 @@ from .message_engine import GroupAccessError
 from .group_operations import (
     GroupMetadata, GroupLookup, GroupAccess, GroupJoin, GroupReferenceError, GroupResponseError,
 )
+from .group_profile import GroupProfile, GroupPinnedMessage
 from .connection_engine import AuthRequiredError, ProxyConfigError
 from .login import LoginFlow, LoginStatus, LoginError
 from .discovery_engine import DiscoveryInterrupted
@@ -112,6 +113,8 @@ __all__ = [
     "GroupLookup",
     "GroupAccess",
     "GroupJoin",
+    "GroupProfile",
+    "GroupPinnedMessage",
     "GroupReferenceError",
     "GroupResponseError",
     "AuthRequiredError",

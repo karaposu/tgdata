@@ -1,5 +1,9 @@
 # Group lookup and access checks
 
+For descriptions, available member/online counts and optional bounded pinned
+messages, see [group profiles](group_profiles.md). That operation uses this same
+verified-account foundation without changing lookup or access results.
+
 These two async methods make short-lived, read-only observations under an explicitly
 expected Telegram account. Authenticate separately first. They never request a login
 code, join a group, select `current_group` or use the persistent client/pool.

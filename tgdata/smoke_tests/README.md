@@ -53,6 +53,16 @@ Tests polling and real-time features:
 
 ## Running Tests
 
+### Richer group profiles (offline)
+
+`python -m tgdata.smoke_tests.test_45_group_profile` exercises the public profile
+operation on Telethon 1.45.0 with actual SDK/TL decoding, both session backends and
+SQLite budgets. Covers basic groups/channels, expected identity, unknown/zero
+counts, one bounded optional pin search, exact/inexact totals, unavailable rows,
+partial metadata on failure, source-only health, heartbeat and cancellation/cleanup.
+Sockets and login are forbidden. Synthetic replies do not qualify live visibility.
+See [the profile contract](../../docs/group_profiles.md).
+
 ### Reading worker (offline)
 
 `python -m tgdata.smoke_tests.test_37_worker` runs 33 test groups for strict framing and
