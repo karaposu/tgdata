@@ -6,6 +6,8 @@ effort: xhigh
 
 **Critic folded:**2026-10-15 — zero mitigations selected; qualification ordering retained. Complete candidate PASS recorded before this fold.
 
+**Status:** implemented atb789846; full914-check/7-demo verification passed. Review/publication/merge remain separate.
+
 **Qualification:**31 new tests,16 related existing suites and3 demos;472 offline checks passed. Exact product/source hashes are recorded in prebuild/result.json. No design change was required. The initial fixture and local authoring corrections are recorded in prebuild/report.md.
 
 ### What is the task

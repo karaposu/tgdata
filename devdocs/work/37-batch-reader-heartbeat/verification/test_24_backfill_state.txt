@@ -1,0 +1,72 @@
+Backfill State Tests — Telethon 1.45.0; offline actual SQLite
+
+TEST: test_input_and_portable_identity
+✓ Passed
+
+TEST: test_duration_precision_and_bounds
+✓ Passed
+
+TEST: test_explicit_creation_and_reopen
+✓ Passed
+
+TEST: test_relative_window_freezes_before_retry_clock
+✓ Passed
+
+TEST: test_imported_origin_is_not_acceptance_or_exhaustion
+✓ Passed
+
+TEST: test_changed_input_and_active_successor_conflict
+✓ Passed
+
+TEST: test_unknown_retry_and_missing_known_run
+✓ Passed
+
+TEST: test_namespace_and_legacy_state_isolation
+✓ Passed
+
+TEST: test_successor_recognition_and_bounded_retention
+✓ Passed
+
+TEST: test_exact_loaded_text_is_cas_expectation
+✓ Passed
+
+TEST: test_concurrent_creation_has_one_effect
+✓ Passed
+
+TEST: test_backend_failures_return_types_and_privacy
+✓ Passed
+
+TEST: test_actual_sqlite_commit_then_close_error
+✓ Passed
+
+TEST: test_cancellation_after_commit_is_not_rollback
+✓ Passed
+
+TEST: test_process_exit_at_real_create_commit
+✓ Passed
+
+TEST: test_existing_only_open_never_bootstraps
+✓ Passed
+
+TEST: test_malformed_outer_and_request_refused
+✓ Passed
+
+TEST: test_pending_validation_and_ownership
+✓ Passed
+
+TEST: test_exhaustion_and_attempt_cross_invariants
+✓ Passed
+
+TEST: test_control_recovery_and_failure_snapshot_validation
+✓ Passed
+
+TEST: test_abandonment_and_pending_predecessor_refused
+✓ Passed
+
+TEST: test_counter_limits_and_stale_reference
+✓ Passed
+
+TEST: test_window_and_clock_failures_are_local
+✓ Passed
+
+Passed: 23/23
