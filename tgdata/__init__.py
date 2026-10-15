@@ -185,3 +185,6 @@ __all__ = [
 
 from .album import TelegramPost, AlbumAssemblyError, album_post_ids, assemble_albums
 __all__ += ["TelegramPost", "AlbumAssemblyError", "album_post_ids", "assemble_albums"]
+
+from .photo_trails import PhotoTrailPolicy, PhotoTrailView, PhotoTrailError, fold_photo_trails
+__all__ += ["PhotoTrailPolicy", "PhotoTrailView", "PhotoTrailError", "fold_photo_trails"]
