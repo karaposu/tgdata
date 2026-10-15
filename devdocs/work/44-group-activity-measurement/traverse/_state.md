@@ -5,7 +5,7 @@ articulated-surfacing-routed
 A → Su → S → D → I → C → R (always)
 ## Progress
 - [x] Articulate-Simple
-- [ ] Surfacing
+- [x] Surfacing
 - [ ] Sensemaking
 - [ ] Decomposition
 - [ ] Innovation
@@ -16,6 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Surfacing
+Sensemaking
 ## History
 - 2026-10-15_22-53: Articulate-Simple HIGH-PROCEED;1 item/3 variants. Manual structural4/4; branch preservation complete. Checker script absent. Next: Surfacing.
+- 2026-10-15_22-56: Surfacing PROCEED;29 items/3 cycles;manual structural8/8; live frontier retained. Next: Sensemaking.
