@@ -1,0 +1,157 @@
+{
+  "user_input": "Make0.1.1 and publish",
+  "mode": "artifact",
+  "entry": "signal-first",
+  "territory": "reviewed main product, package metadata/backend, release workflow, PyPI/version state and prior release evidence",
+  "trace": [
+    {
+      "sequence": 1,
+      "region": "product",
+      "item": "tgdata/__init__.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T22:10:38.084499+00:00"
+      }
+    },
+    {
+      "sequence": 2,
+      "region": "packaging",
+      "item": "setup.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.247429+00:00"
+      }
+    },
+    {
+      "sequence": 3,
+      "region": "publication",
+      "item": ".github/workflows/python-publish.yml",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.213621+00:00"
+      }
+    },
+    {
+      "sequence": 4,
+      "region": "tests",
+      "item": "tgdata/smoke_tests/test_42_album_assembly.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.291204+00:00"
+      }
+    },
+    {
+      "sequence": 5,
+      "region": "tests",
+      "item": "tgdata/smoke_tests/test_43_photo_trails.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T22:10:38.098224+00:00"
+      }
+    },
+    {
+      "sequence": 6,
+      "region": "tests",
+      "item": "devdocs/work/37-batch-reader-heartbeat/run-verification.py",
+      "relevance": "sub",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-15T07:29:42.161389+00:00"
+      }
+    },
+    {
+      "sequence": 7,
+      "region": "evidence",
+      "item": "devdocs/work/37-batch-reader-heartbeat/verification-merge/result.json",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-15T08:04:39.935377+00:00"
+      }
+    },
+    {
+      "sequence": 8,
+      "region": "evidence",
+      "item": "devdocs/work/37-batch-reader-heartbeat/main-promotion/published-proof.json",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-15T09:01:54.588463+00:00"
+      }
+    },
+    {
+      "sequence": 9,
+      "region": "precedent",
+      "item": "/private/tmp/tgdata-release-0.1/devdocs/work/32-release-0-1/plan.md",
+      "relevance": "sub",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T07:45:55.637454+00:00"
+      }
+    },
+    {
+      "sequence": 10,
+      "region": "precedent",
+      "item": "/private/tmp/tgdata-release-0.1/devdocs/work/32-release-0-1/release-result.md",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T08:06:16.823568+00:00"
+      }
+    },
+    {
+      "sequence": 11,
+      "region": "precedent",
+      "item": "/private/tmp/tgdata-release-0.1/devdocs/work/32-release-0-1/evidence/check_artifacts.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T07:40:06.360210+00:00"
+      }
+    },
+    {
+      "sequence": 12,
+      "region": "workflow",
+      "item": "CONTRIBUTING.md",
+      "relevance": "umbrella",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.214628+00:00"
+      }
+    }
+  ],
+  "cycles": 3,
+  "coverage": {
+    "product": "confirmed at release/interface resolution",
+    "packaging": "confirmed at release/interface resolution",
+    "publication": "confirmed at release/interface resolution",
+    "tests": "confirmed at release/interface resolution",
+    "evidence": "confirmed at release/interface resolution",
+    "precedent": "confirmed at release/interface resolution",
+    "workflow": "confirmed at release/interface resolution"
+  },
+  "confirmed_absent": [
+    "new runtime behavior",
+    "new deployment workflow"
+  ],
+  "frontier": [],
+  "workspace_populated": true,
+  "verdict": "PROCEED"
+}
