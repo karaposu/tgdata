@@ -1,0 +1,15 @@
+{
+  "base": "7d9840fa725fada9592051fa561a2f901b8e154e",
+  "head": "f92d165d8fc6668bc6506760064be60bb2f25baa",
+  "matching_sources": 98,
+  "changed_paths": [
+    "tgdata/__init__.py",
+    "tgdata/smoke_tests/test_42_album_assembly.py",
+    "tgdata/smoke_tests/test_43_photo_trails.py"
+  ],
+  "product_sha256": {
+    "tgdata/__init__.py": "cab5540dfb65bfcb86e79edd454a7daf8981291f83a990d219b26cd629cfd6a7",
+    "tgdata/smoke_tests/test_42_album_assembly.py": "01d46f66f47fb457156ab11c4f369a8491c1c8c10581b83c42ca45bcc3591359",
+    "tgdata/smoke_tests/test_43_photo_trails.py": "2565ba651aeabe4023d6ca3c2d88fd35576e73b62e356a98fb57e9126261586c"
+  }
+}
