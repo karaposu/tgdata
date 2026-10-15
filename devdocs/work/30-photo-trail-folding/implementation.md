@@ -4,7 +4,7 @@ effort: xhigh
 ---
 # Implementation and verification — #30
 
-**Task-impl complete.** Product commit `6eff7c7` on feat/30-photo-trail-folding, based on dev35c4362. Not merged or published as a release. Next separate gates: merge check → product-only PR → fresh PR critique.
+**Task-impl complete.** Product commit `6eff7c7` on feat/30-photo-trail-folding, based on dev35c4362. Not merged or published as a release. Subsequent review gates completed: merge check3963a10 PASS; product-only PR36; fresh critique72efa0f PASS with zero findings.
 
 ## Delivered behavior
 
@@ -46,3 +46,9 @@ Coverage includes default behavior, strict policy/value serialization, forged re
 These are local SDK/storage/source-engine mechanics with synthetic observations, not a generic human-intent accuracy or hardware-durability claim. The policy is deliberately optional and provisional; callers own observation scope, full-view replacement, original-data backups and downloaded media. A split known album causes explicit view refusal. The guide documents that behavior and the intentional differences from the old consumer helper.
 
 The original user checkout remains untouched apart from its already-existing version edit, and the running ScrapeOps tree was only read. No Duncan files, credentials or account/session state were committed or changed. Work-folder notes remain on this archive branch; later PR transport must include only product6eff7c7. #30 may mark stepsT–5 complete after this report is committed/pushed; steps6–7 remain pending. §9 model/effort is already verified from the active turn record, not an outstanding gate.
+
+## Review closeout — 2026-10-15
+
+Both gates are complete for product-only head1cd001e against dev35c4362. Merge check3963a10 is [posted](https://github.com/karaposu/tgdata/pull/36#issuecomment-6185798213); fresh same-session critic-d72efa0f is [posted](https://github.com/karaposu/tgdata/pull/36#issuecomment-6185907745), zero findings and20 fresh cases passing (128 generated observation sets,16 randomized receiver-arrival histories,10 invalid-view variants within those cases). Current-turn metadata independently confirms GPT6 Astra/xhigh.
+
+[PR36](https://github.com/karaposu/tgdata/pull/36) is ready for review, not merged. All seven product paths and96 Python sources match the verified archive tree. Next is the maintainer’s merge go-ahead. Preserve feat/30-photo-trail-folding as the evidence archive and feat/30-photo-trail-folding-pr as the product branch. The original checkout and running consumer were not changed.
