@@ -531,3 +531,70 @@ The example keeps all credentials private and performs no real login.
 
 This is offline SDK-composition evidence, not live code-delivery or real-account 2FA
 acceptance. Execution uses Python 3.11; native Python 3.7 is not qualified.
+
+### Test 42: observed album assembly (offline)
+
+```bash
+python -m tgdata.smoke_tests.test_42_album_assembly
+python examples/album_assembly.py --demo
+```
+
+57 tests cover partition-independent album revisions, multiple captions, large IDs,
+nonadjacent members, singleton/service records, strict immutable serialization,
+required prior lookup, conflict/refusal behavior and exact member/UTF-8 bounds.
+Actual Telethon 1.45 serialization, history iteration and cached-photo download
+compose with the new assembler, SQLite receiver and daily/backfill engines.
+Fault histories cover strict reopening, collection separation, competing writers,
+transaction rollback, process exits before/after commit, lost acknowledgment,
+replay after later album growth, raised limits through restart, cancellation,
+budget refusal and available partial data without source receipt authority.
+
+The receiver stores immutable canonical member records in local schema2 and
+returns None from both new acceptance and exact confirmation. The20 added histories
+cover unchanged byte/member limits on replay, default16MiB inputs, later larger
+post views, no merge/post scan/DML on confirmation, integrity refusals, known-v1
+and index refusal, byte-exact collection lookup, bounded payload loading, consistent read snapshots, source
+publication committed with a lost reply, and real process exits at the byte boundary.
+
+Socket connections are blocked; source responses are synthetic. No live Telegram
+completeness, deployed receiver or hardware power-loss guarantee is claimed.
+See [the album contract](../../docs/album_assembly.md).
+
+### Test 43: optional photo-trail views (offline)
+
+```bash
+python -m tgdata.smoke_tests.test_43_photo_trails
+python examples/photo_trails.py --demo
+```
+
+53 tests exercise the default-disabled policy, exact photo/user/reply/time rules,
+whole follower albums, interleaved users, original-member barriers, late caption
+withdrawal and separate folded-post/photo counts. Original records, both media
+modes, immutable values, strict/forged serialization, input order/partition
+invariance, exact UTF-8 limits and raised 10001-member reload/getters are covered.
+
+Actual Telethon 1.45 values, SQLite and daily/backfill engines compose with the
+candidate. Cases include closed-range refusal, missing/corrupt state, exact
+collations, metadata preflight, consistent snapshots, read-lock release, zero
+view writes, cleanup precedence, original replay after view refusal, source
+publication/read failures, cancellation, commit-response loss and child-process
+loss after acceptance. The mixed-post chronology case preserves each individual
+known sender's timestamps even when the whole post cannot anchor.
+
+Source responses are synthetic and sockets are blocked. These checks do not
+claim live intent accuracy, deployed consumer compatibility or physical
+power-loss durability. See [the photo-trail contract](../../docs/photo_trails.md).
+
+### Test 44: batch-reader heartbeat (offline)
+
+```bash
+python -m tgdata.smoke_tests.test_44_batch_heartbeat
+```
+
+31 tests use real Telethon1.45 request/download loops, SQLite and pool sources
+with synthetic wire replies and blocked sockets. Slow active downloads outlast
+a scaled silence watchdog; stalled chunks still cancel and clean up. Cases cover
+messages/window/dialog phases, repeated/cached waits, callback and logger errors,
+async callback refusal, cancellation, concurrent/background isolation, budget
+charges, source pending/replay, all pool APIs and existing injected readers.
+See [the heartbeat contract](../../docs/batch_heartbeat.md).

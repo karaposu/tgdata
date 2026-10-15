@@ -9,6 +9,7 @@ from telethon import utils as tl_utils
 from telethon.tl import types
 
 from .batch_files import download_blob, prepare_directory
+from .batch_heartbeat import heartbeat_scope
 from .message_batch import (
     BatchFormatError, MessageBatch, MAX_BATCH_MESSAGES, MAX_MESSAGE_ID, MAX_LONG,
     MIN_LONG, _identifier, _validate_record,
@@ -151,7 +152,15 @@ class BatchEngine:
         self._retain_cancelled_prefix = _retain_cancelled_prefix
 
     async def fetch_batch(self, group_id, *, after_id=0, limit=200, download_media_to=None,
-                          start_date=None, end_date=None, _capture=None):
+                          start_date=None, end_date=None, heartbeat=None, _capture=None):
+        with heartbeat_scope(heartbeat) as beat:
+            return await self._fetch_batch(group_id, after_id=after_id, limit=limit,
+                download_media_to=download_media_to, start_date=start_date,
+                end_date=end_date, _capture=_capture, _beat=beat)
+
+    async def _fetch_batch(self, group_id, *, after_id=0, limit=200, download_media_to=None,
+                           start_date=None, end_date=None, _capture=None, _beat=None):
+        beat = _beat if _beat is not None else lambda phase: None
         group_id = _group_argument(group_id)
         after_id = _integer(after_id, 'after_id', 0, MAX_MESSAGE_ID)
         limit = _integer(limit, 'limit', 1, MAX_BATCH_MESSAGES)
@@ -166,14 +175,18 @@ class BatchEngine:
         records = []
         scan_id = after_id
         try:
+            beat("connect")
             async with self.connection_engine.session() as client:
+                beat("connected")
+                beat("resolve")
                 if self._resolve_entity is not None:
                     entity = await self._resolve_entity(client, group_id)
                 else:
                     try:
                         entity = await client.get_entity(group_id)
                     except ValueError:
-                        entity = await MessageEngine._entity_after_dialog_sync(client, group_id)
+                        entity = await MessageEngine._entity_after_dialog_sync(client, group_id, beat)
+                beat("resolved")
                 if isinstance(entity, (types.ChatForbidden, types.ChannelForbidden)):
                     raise GroupAccessError('account has no access to the requested group')
                 if not isinstance(entity, (types.Chat, types.Channel)):
@@ -203,6 +216,7 @@ class BatchEngine:
                             raise BatchFormatError('message IDs did not advance after the cursor')
                         scan_id = ident
                         scanned += 1
+                        beat("message scanned")
                         if window is not None:
                             date = _utc(message.date, 'message.date', allow_naive=True)
                             if date >= window.end_date:
@@ -215,11 +229,13 @@ class BatchEngine:
                         media = record['media']
                         if media_directory is not None and media is not None and media['downloadable']:
                             async def writer(output):
-                                return await client.download_media(message, file=output)
+                                options = {} if _beat is None else {"progress_callback": lambda current, total: beat("media")}
+                                return await client.download_media(message, file=output, **options)
 
                             media['blob'] = await download_blob(media_directory, writer, expected_size=media['size'])
                         _validate_record(record, mode)
                         records.append(record)
+                        beat("messages")
                     if end_reached or scanned < remaining or scan_id == MAX_MESSAGE_ID:
                         break
                     # A full page of excluded lower-bound messages is not the

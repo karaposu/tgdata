@@ -16,6 +16,8 @@ from uuid import uuid4
 import telethon
 from telethon import errors as rpc_errors
 
+from .batch_heartbeat import heartbeat_kwargs
+
 from . import health
 from .batch_engine import _integer as _batch_integer
 from .batch_files import BatchStorageError, prepare_directory
@@ -468,15 +470,16 @@ class AccountPool(ProgressFacade):
             raise local from None
 
     async def _read(self, chat_id, *, after_id=0, limit=200, download_media_to=None,
-                    start_date=None, end_date=None, _capture=None):
+                    start_date=None, end_date=None, heartbeat=None, _capture=None):
         """Read once through the first successful eligible account, with provenance."""
+        progress = heartbeat_kwargs(heartbeat)
         chat_id = self._group(chat_id)
         after_id = _batch_integer(after_id, 'after_id', 0, MAX_MESSAGE_ID)
         limit = _batch_integer(limit, 'limit', 1, MAX_BATCH_MESSAGES)
         _HistoryWindow.from_dates(start_date, end_date)
         root = prepare_directory(download_media_to) if download_media_to is not None else None
         options = dict(after_id=after_id, limit=limit, download_media_to=root,
-                       start_date=start_date, end_date=end_date)
+                       start_date=start_date, end_date=end_date, **progress)
         with self._operation():
             raw, document = await self._load()
             attempts, tried = [], set()
@@ -520,33 +523,33 @@ class AccountPool(ProgressFacade):
             raise PoolUnavailable(statuses.accounts, attempts, retry_after) from None
 
     async def read(self, chat_id, *, capture, after_id=0, limit=200,
-                   download_media_to=None, start_date=None, end_date=None):
+                   download_media_to=None, start_date=None, end_date=None, heartbeat=None):
         """Read with a caller-retained, single-use data destination."""
         with _capture_call(capture) as writer:
             result = await self._read(chat_id, after_id=after_id, limit=limit,
                 download_media_to=download_media_to, start_date=start_date,
-                end_date=end_date, _capture=writer)
+                end_date=end_date, _capture=writer, **heartbeat_kwargs(heartbeat))
             writer.offer(result.batch)
             return result
 
     async def _read_batch(self, group_id, *, after_id=0, limit=200,
-                          download_media_to=None, start_date=None, end_date=None, _capture=None):
+                          download_media_to=None, start_date=None, end_date=None, heartbeat=None, _capture=None):
         result = await self._read(group_id, after_id=after_id, limit=limit,
             download_media_to=download_media_to, start_date=start_date,
-            end_date=end_date, _capture=_capture)
+            end_date=end_date, _capture=_capture, **heartbeat_kwargs(heartbeat))
         return result.batch
 
     async def get_message_batch(self, group_id, *, capture, after_id=0, limit=200,
-                                download_media_to=None, start_date=None, end_date=None):
+                                download_media_to=None, start_date=None, end_date=None, heartbeat=None):
         """Return a bounded batch; keep capture to inspect data after a stop."""
         with _capture_call(capture) as writer:
             batch = await self._read_batch(group_id, after_id=after_id, limit=limit,
                 download_media_to=download_media_to, start_date=start_date,
-                end_date=end_date, _capture=writer)
+                end_date=end_date, _capture=writer, **heartbeat_kwargs(heartbeat))
             writer.offer(batch)
             return batch
 
-    async def sync_group(self, chat_id, *, capture, limit=200, download_media_to=None):
+    async def sync_group(self, chat_id, *, capture, limit=200, download_media_to=None, heartbeat=None):
         """Prepare/replay daily delivery with a new caller-retained capture.
 
         Only the saved pending batch's receipt can acknowledge progress. The
@@ -554,22 +557,23 @@ class AccountPool(ProgressFacade):
         """
         with _capture_call(capture) as writer:
             batch = await self.sync_engine.prepare(chat_id, limit=limit,
-                download_media_to=download_media_to, _capture=writer)
+                download_media_to=download_media_to, _capture=writer, **heartbeat_kwargs(heartbeat))
             writer.offer(batch)
             return batch
 
     def _new_backfill_engine(self, collection):
         return BackfillEngine(self._backfill_store, collection, read_batch=self._read_batch)
 
-    async def prepare_backfill(self, context, *, capture, download_media_to=None):
+    async def prepare_backfill(self, context, *, capture, download_media_to=None, heartbeat=None):
         """Prepare/replay one historical turn with a new retained capture.
 
         Source closure and progress publication have separate lifetimes; this
         call finalizes its capture only after its own preparation ends.
         """
         with _capture_call(capture) as writer:
+            progress = heartbeat_kwargs(heartbeat)
             engine, context = self._backfill_for(context, BackfillPrepareContext)
-            turn = await engine.prepare(context, download_media_to=download_media_to, _capture=writer)
+            turn = await engine.prepare(context, download_media_to=download_media_to, _capture=writer, **progress)
             writer.offer(turn.batch)
             return turn
 

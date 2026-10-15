@@ -30,6 +30,8 @@ A production-grade Python library for extracting and processing Telegram group a
 - 🩺 **Account Health Events**: Every wait, logout, ban, restriction or lost group is reported as a plain-data event — through one callback, a log line and a per-account summary — and "ok" when it ends
 - **Per-account read budgets**: An optional shared SQLite ledger limits message pulls over a rolling 24 hours, with persistent warm-up steps and recoverable partial results
 - **Versioned message batches**: Read bounded raw snapshots with canonical JSON, replayable batch IDs, safe continuation cursors and optional content-addressed media
+- **Album assembly across batches**: Combine observed album members into stable post revisions, preserving every caption and media reference with explicit caller-owned persistence
+- **Optional photo trails**: Associate a user's following photo-only posts in a provisional view, retaining all originals and explicit heuristic provenance
 - **Durable daily continuation**: Keep per-group progress and pending batches in a pluggable store, replay after restart, and advance only after explicit acknowledgment
 - **Reading worker**: Run a serial process that accepts explicit-account JSON jobs for batches, group lookup, access checks and joining, with correlated health replies
 
@@ -777,6 +779,70 @@ operation/type and preserves the original error or cancellation; storage that
 refuses cleanup may leave a private temporary file. The exact schema, limits,
 interruption rules
 and delivery protocol are in [Message batch v1](docs/message_batch_v1.md).
+
+### Albums across message batches
+
+Use the opt-in assembler to keep one logical post as more album members arrive:
+
+```python
+from tgdata import album_post_ids, assemble_albums
+
+# In-memory illustration for a new collection; retain these posts across calls.
+known_posts = {}
+for batch in batches:
+    previous = {key: known_posts.get(key) for key in album_post_ids(batch)}
+    for post in assemble_albums(batch, previous=previous):
+        known_posts[post.post_id] = post
+        print(post.post_id, post.revision, post.member_ids)
+```
+
+Album IDs include the chat; each post retains all original member records and
+captions. Identical replay keeps the same revision. Album membership remains
+`unconfirmed`: a batch limit, fixed window or history end cannot prove that every
+member was seen. Assembly performs no additional reads and changes no raw batch
+hash, cursor or acknowledgment.
+
+For restartable collection, commit the original records and input recognition in
+your destination **before** acknowledging the raw delivery. Confirm an already
+accepted input from those records without rebuilding a growing album. The SQLite
+example's `accept` returns no post payload; `load(post_id)` reads the current view
+separately. Do not replace lost destination state with an empty dictionary. The
+[album contract](docs/album_assembly.md) explains updates, limits and storage;
+`python examples/album_assembly.py --demo` demonstrates SQLite restart and lost-ack
+replay without Telegram.
+
+### Batch-reader liveness
+
+Pass a quick synchronous `heartbeat(phase)` to `get_message_batch`, `sync_group`
+or `prepare_backfill` (also through AccountPool) to observe message, media-chunk
+and request progress. This lets a caller distinguish a slow download from a
+silent read. Defaults, batch hashes and acknowledgments stay unchanged. See
+[heartbeat and watchdog guidance](docs/batch_heartbeat.md) for callback isolation,
+replay behavior and the SDK-wait limit.
+
+### Optional photo trails
+
+For a text or album followed by additional photo-only posts, explicitly enable
+the conservative heuristic over your current original observations:
+
+```python
+from tgdata import PhotoTrailPolicy, fold_photo_trails
+
+view = fold_photo_trails(current_posts, policy=PhotoTrailPolicy(enabled=True))
+print(view.groups)          # tuples of original post IDs, anchor first
+print(view.folded_posts, view.folded_photos)
+```
+
+The default policy is disabled. Every original `TelegramPost` and caption remains
+in `view.posts`. A later observation can withdraw an inferred association; replace
+the earlier view for your chosen scope instead of appending final posts. Counts
+describe the current view, not additional work on each retry.
+
+The helper makes no source requests or acknowledgments. The optional SQLite
+example reuses saved original records and refuses a range that cuts a known
+album, preserving intervening context. See [photo-trail views](docs/photo_trails.md)
+for policy, limits and restart/acknowledgment guidance, or run
+`python examples/photo_trails.py --demo` without Telegram.
 
 ### Daily continuation across restarts
 
