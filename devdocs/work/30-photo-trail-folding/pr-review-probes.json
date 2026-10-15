@@ -1,0 +1,410 @@
+{
+  "head": "1cd001ea3ecf37aaad0c69f09b506a5359549f2b",
+  "root": "/private/tmp/tgdata-30-photo-trail-pr",
+  "results": [
+    {
+      "name": "interleaved whole followers and reply chains",
+      "status": "PASS",
+      "seconds": 0.0033,
+      "details": {
+        "groups": [
+          [
+            1,
+            3,
+            5,
+            6
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "counts": [
+          3,
+          4
+        ]
+      }
+    },
+    {
+      "name": "unknown member inside follower album",
+      "status": "PASS",
+      "seconds": 0.0033,
+      "details": {
+        "groups": [
+          [
+            1
+          ],
+          [
+            2,
+            4,
+            5
+          ],
+          [
+            3
+          ]
+        ],
+        "counts": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "name": "other known user unsafe activity remains independent",
+      "status": "PASS",
+      "seconds": 0.0021,
+      "details": {
+        "groups": [
+          [
+            1,
+            2,
+            4,
+            5
+          ],
+          [
+            3
+          ]
+        ],
+        "counts": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "name": "connected overlap cluster and recovery",
+      "status": "PASS",
+      "seconds": 0.0031,
+      "details": {
+        "groups": [
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            7
+          ],
+          [
+            8,
+            9
+          ]
+        ],
+        "counts": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "name": "mixed post late barrier",
+      "status": "PASS",
+      "seconds": 0.0026,
+      "details": {
+        "groups": [
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            5
+          ],
+          [
+            6,
+            7
+          ]
+        ],
+        "counts": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "name": "foreign reply refusal and independent new album anchor",
+      "status": "PASS",
+      "seconds": 0.0026,
+      "details": {
+        "groups": [
+          [
+            1,
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4,
+            5,
+            6
+          ]
+        ],
+        "counts": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "name": "atomic count failure then new album trail",
+      "status": "PASS",
+      "seconds": 0.0024,
+      "details": {
+        "groups": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4,
+            5,
+            6
+          ]
+        ],
+        "counts": [
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "name": "datetime extremes and exact boundary",
+      "status": "PASS",
+      "seconds": 0.0017,
+      "details": {
+        "exact": {
+          "groups": [
+            [
+              1,
+              2
+            ]
+          ],
+          "counts": [
+            1,
+            1
+          ]
+        },
+        "far": {
+          "groups": [
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "counts": [
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "name": "chat chronology independence",
+      "status": "PASS",
+      "seconds": 0.0014,
+      "details": {
+        "groups": [
+          [
+            "tg:-1000000000008:message:1",
+            "tg:-1000000000008:message:2"
+          ],
+          [
+            "tg:-1000000000007:message:1",
+            "tg:-1000000000007:message:2"
+          ]
+        ],
+        "folded_photos": 2
+      }
+    },
+    {
+      "name": "backfilled unknown evidence withdraws old link",
+      "status": "PASS",
+      "seconds": 0.0209,
+      "details": {
+        "old": [
+          [
+            10,
+            12,
+            14,
+            16
+          ]
+        ],
+        "new": [
+          [
+            10
+          ],
+          [
+            12,
+            14,
+            16
+          ],
+          [
+            13
+          ]
+        ],
+        "original_replay": "confirmed"
+      }
+    },
+    {
+      "name": "backfilled earlier album member poisons overlap",
+      "status": "PASS",
+      "seconds": 0.0166,
+      "details": {
+        "old": [
+          [
+            10,
+            12,
+            14,
+            16
+          ]
+        ],
+        "new": [
+          [
+            8,
+            12,
+            14
+          ],
+          [
+            10
+          ],
+          [
+            16
+          ]
+        ],
+        "original_replay": "confirmed"
+      }
+    },
+    {
+      "name": "future reply remains ineligible",
+      "status": "PASS",
+      "seconds": 0.0027,
+      "details": {
+        "groups": [
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ]
+        ],
+        "counts": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "disabled policy still rejects identity conflict",
+      "status": "PASS",
+      "seconds": 0.0017,
+      "details": {
+        "refusal": "identity collision even when disabled"
+      }
+    },
+    {
+      "name": "rehash attacks and explicit policy replacement",
+      "status": "PASS",
+      "seconds": 0.0668,
+      "details": {
+        "rehashed_refusals": 10,
+        "fresh_policy_groups": [
+          [
+            1,
+            2
+          ],
+          [
+            3
+          ]
+        ]
+      }
+    },
+    {
+      "name": "seeded observation properties and random receiver arrival",
+      "status": "PASS",
+      "seconds": 0.8768,
+      "details": {
+        "fixed_seed": 3036,
+        "observation_sets": 128,
+        "random_SQLite_arrival_histories": 16
+      }
+    },
+    {
+      "name": "WAL growth between preflight and extent query",
+      "status": "PASS",
+      "seconds": 0.0094,
+      "details": {
+        "snapshot_groups": [
+          [
+            2,
+            4
+          ]
+        ],
+        "subsequent_split": "refused"
+      }
+    },
+    {
+      "name": "Unicode and embedded-NUL exact collection identity",
+      "status": "PASS",
+      "seconds": 0.0133,
+      "details": {
+        "distinct_namespaces": 4
+      }
+    },
+    {
+      "name": "cancellation survives cleanup failure",
+      "status": "PASS",
+      "seconds": 0.0045,
+      "details": {
+        "primary": "same CancelledError",
+        "originals": "unchanged"
+      }
+    },
+    {
+      "name": "daily receipt survives view limit failure",
+      "status": "PASS",
+      "seconds": 0.0092,
+      "details": {
+        "reads": 1,
+        "cursor": 2,
+        "view_limit": "did not block original replay/ack"
+      }
+    },
+    {
+      "name": "backfill receipt survives invalid view policy",
+      "status": "PASS",
+      "seconds": 0.0151,
+      "details": {
+        "reads": 1,
+        "cursor": 2,
+        "terminal": "completed",
+        "receipt": "exact original delivery"
+      }
+    }
+  ],
+  "passed": 20,
+  "product_hashes": {
+    "tgdata/photo_trails.py": "9be88edefcab93829511f6d183fd923a6760fc7ba1b9c10c2ade29016b1428ee",
+    "examples/photo_trails.py": "96e5cd47174a01da8a615f4aad8ad9874eab70c902587ddf198c19edb9333a4e",
+    "tgdata/smoke_tests/test_43_photo_trails.py": "c7e4478fb61cee9437c49105464f41eb0323fa22dc5d30c284e3d6726c6d0e5c"
+  }
+}
