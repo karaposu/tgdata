@@ -1,0 +1,13 @@
+daily media error preserves prefix and original exception: PASS
+pool progresses then genuinely stalls: PASS
+premium and server retry parity under failing callback: PASS
+pool source error with broken callback keeps capture: PASS
+one concurrent budgeted read cancels independently: PASS
+deferred Future completion after scope emits nothing: PASS
+nested scopes restore exact observer: PASS
+batched SDK MultiError identity survives observation: PASS
+cancelled publication cannot retain source heartbeat: PASS
+actual connection recovery wait stays alive: PASS
+invalid callback refuses all pool entry points before admission: PASS
+failed callback object is released after scope: PASS
+All 12 fresh PR review histories passed.

@@ -1,0 +1,139 @@
+{
+  "head": "15241bf9a91883137cf154700f6e26fbd64ed085",
+  "results": [
+    {
+      "name": "daily media error preserves prefix and original exception",
+      "status": "PASS",
+      "seconds": 0.0129,
+      "details": {
+        "prefix": 101,
+        "pending_replay": true,
+        "media_before_error": 1,
+        "same_error": true
+      }
+    },
+    {
+      "name": "pool progresses then genuinely stalls",
+      "status": "PASS",
+      "seconds": 0.1517,
+      "details": {
+        "media_beats": 2,
+        "stalled": true,
+        "captured_prefix": 101,
+        "budget_used": 2,
+        "no_failover": true
+      }
+    },
+    {
+      "name": "premium and server retry parity under failing callback",
+      "status": "PASS",
+      "seconds": 0.0146,
+      "details": {
+        "sleeps": [
+          1,
+          2
+        ],
+        "requests": 3,
+        "used": 3,
+        "reserved": 2,
+        "threshold": 60
+      }
+    },
+    {
+      "name": "pool source error with broken callback keeps capture",
+      "status": "PASS",
+      "seconds": 0.0207,
+      "details": {
+        "prefix": 100,
+        "source_error": "ChannelPrivateError",
+        "capture_state": "failed",
+        "budget": 200
+      }
+    },
+    {
+      "name": "one concurrent budgeted read cancels independently",
+      "status": "PASS",
+      "seconds": 0.0047,
+      "details": {
+        "cancelled_beat_count": 11,
+        "other_cursor": 201,
+        "budget": 2
+      }
+    },
+    {
+      "name": "deferred Future completion after scope emits nothing",
+      "status": "PASS",
+      "seconds": 0.0001,
+      "details": {
+        "future_identity": true,
+        "late_beats": 0
+      }
+    },
+    {
+      "name": "nested scopes restore exact observer",
+      "status": "PASS",
+      "seconds": 0.0005,
+      "details": {
+        "outer_requests": 2,
+        "inner_requests": 1
+      }
+    },
+    {
+      "name": "batched SDK MultiError identity survives observation",
+      "status": "PASS",
+      "seconds": 0.0007,
+      "details": {
+        "results": [
+          2,
+          "State",
+          "ChannelPrivateError"
+        ],
+        "same_original_error": true
+      }
+    },
+    {
+      "name": "cancelled publication cannot retain source heartbeat",
+      "status": "PASS",
+      "seconds": 0.0034,
+      "details": {
+        "source_complete": true,
+        "cancelled_publication": true,
+        "no_saved_receipt": true,
+        "late_beats": 0
+      }
+    },
+    {
+      "name": "actual connection recovery wait stays alive",
+      "status": "PASS",
+      "seconds": 1.0082,
+      "details": {
+        "connect_attempts": 2,
+        "wait_beats": 49,
+        "cursor": 101
+      }
+    },
+    {
+      "name": "invalid callback refuses all pool entry points before admission",
+      "status": "PASS",
+      "seconds": 0.0351,
+      "details": {
+        "no_admission": [
+          "raw",
+          "batch",
+          "daily",
+          "backfill"
+        ]
+      }
+    },
+    {
+      "name": "failed callback object is released after scope",
+      "status": "PASS",
+      "seconds": 0.0199,
+      "details": {
+        "callback_released": true
+      }
+    }
+  ],
+  "passed": 12,
+  "helper_sha256": "3c361434a87dfb804653cb88d645a85b323279b7904d9808a4eb0bed404b9ee5"
+}
