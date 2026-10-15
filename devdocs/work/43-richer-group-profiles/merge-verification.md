@@ -49,5 +49,6 @@ Current-turn model/effort verified as gpt-6-astra/xhigh
 (2026-10-15T19:37:26.609Z). Reviews remain f7f88b6 (merge fidelity) and afb7428
 (fresh critic accepted,0 High/Medium/Low;13 groups/29 fresh probe cases).
 
-#43 is complete on dev and may be closed manually because the default branch is
-main. #44/#45/#46 remain separate requests; this merge starts none of them.
+#43 is complete on dev and was closed manually because the default branch is
+main; GitHub read-back confirms CLOSED/COMPLETED and PR47 MERGED.
+#44/#45/#46 remain separate requests; this merge starts none of them.

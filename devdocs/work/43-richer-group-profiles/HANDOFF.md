@@ -37,5 +37,5 @@ on2026-10-15T19:41:00Z. Actual merged-tree verification:952 offline checks/32 su
 matches the tested local merge. See merge-verification.md and merge-parity.json.
 
 No work-folder/archaeology files entered dev. Both branches are retained. #43 is
-complete; close manually for the dev target. Main/version0.1.1 and original
+complete and was closed manually for the dev target. Main/version0.1.1 and original
 checkout edits are unchanged. No release/deployment. #44/#45/#46 are separate.
