@@ -124,7 +124,7 @@ class AlbumTests(unittest.TestCase):
         for name in ('TelegramPost', 'AlbumAssemblyError', 'album_post_ids', 'assemble_albums'):
             self.assertIs(getattr(tgdata, name), globals()[name])
             self.assertIn(name, tgdata.__all__)
-        self.assertEqual(tgdata.__version__, '0.1')
+        self.assertEqual(tgdata.__version__, '0.1.1')
 
     def test_sdk_large_ids_captions_and_cross_chat(self):
         rows = (record(1, 'first'), record(2, 'second'))
