@@ -551,6 +551,20 @@ failures raise their original error with completed metadata on `partial_result`
 when supported. Profile success makes no general history-access claim. See
 [group profiles](docs/group_profiles.md) for fields, errors and heartbeat support.
 
+### Activity and engagement measurement
+
+`await tg.measure_group_activity("@example_group", account_id=expected_id,
+start_date=start, end_date=end, max_messages=3000)` returns raw message observations,
+daily activity, author counts and views/reactions/forwards/replies distributions.
+Dates are explicit aware datetimes; the publication window includes start and excludes end.
+
+Check `coverage_complete` and `stop_reason` before treating the result as a whole-window
+measurement. The cap counts every source slot; missing counters remain distinct from
+zero. Counters are observed at collection time, and albums count as raw messages.
+The operation uses the existing verified account, read allowance, heartbeat and
+cleanup policies. See [activity measurement](docs/group_activity.md) for the example,
+precise populations, partial failures and visibility limits.
+
 ### Group discovery — finding groups you are not in
 
 `list_groups` shows what the account already follows. To find *new* rooms there are three
@@ -1226,9 +1240,9 @@ The ID must be a positive integer, not a string or boolean. The call is synchron
 it does no connection, authentication or recovery. The returned dictionaries are
 independent copies, with the same fields as the health summary above.
 
-`lookup_group`, `check_group_access`, `get_group_profile` and `join_group` populate this account-owned view. Existing
+`lookup_group`, `check_group_access`, `get_group_profile`, `measure_group_activity` and `join_group` populate this account-owned view. Existing
 message reads and `health_check()` still use their existing health view; the views
-are not combined. A join or profile result does not clear an earlier history-access failure.
+are not combined. A join, profile or activity result does not clear an earlier history-access failure.
 
 Internally, an observation begins after a temporary client proves the expected
 account. Its event and retained state keep that numeric owner even if a cached
