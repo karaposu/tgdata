@@ -1,0 +1,21 @@
+{
+  "pr": {
+    "baseRefName": "main",
+    "headRefOid": "7d9840fa725fada9592051fa561a2f901b8e154e",
+    "mergeCommit": {
+      "oid": "05904d12d3960b5af837d83fb177cc7f9b557b8a"
+    },
+    "mergedAt": "2026-10-15T09:01:21Z",
+    "state": "MERGED",
+    "url": "https://github.com/karaposu/tgdata/pull/39"
+  },
+  "published_tree": "4f5062bdb67038313a084425e2ce0008503a6d99",
+  "parents": [
+    "1ddfb4ec7d43a05e36f464646fd4f867e5076c0c",
+    "7d9840fa725fada9592051fa561a2f901b8e154e"
+  ],
+  "identical_to_tested_dev": true,
+  "dev": "7d9840fa725fada9592051fa561a2f901b8e154e",
+  "version": "0.1",
+  "new_release_or_tag": false
+}
