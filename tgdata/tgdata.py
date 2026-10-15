@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any, Union, Callable
 import pandas as pd
 
-from .batch_heartbeat import heartbeat_kwargs
+from .batch_heartbeat import heartbeat_kwargs, heartbeat_scope
 
 from . import health
 from .account_operation import _expected_account_id
@@ -35,6 +35,7 @@ from .models import GroupInfo
 from .group_operations import (
     GroupLookup, GroupAccess, GroupJoin, _parse_target, _lookup_group, _check_group_access, _join_group,
 )
+from .group_profile import GroupProfile, _get_group_profile, _pin_limit
 from .read_budget import ReadBudgetError, ReadBudgetExceeded
 from .join_budget import JoinBudget, JoinBudgetConfigError
 from .join_client import _join_policy
@@ -287,6 +288,24 @@ class TgData(ProgressFacade):
             if result.readable is True:
                 observation.confirm_group_access()
             return result
+
+    async def get_group_profile(self, target: Union[str, int], *, account_id: int,
+                                pinned_limit: int = 0, heartbeat=None) -> GroupProfile:
+        """Observe full metadata and optionally one bounded pinned-message response.
+
+        Requires the expected authenticated account; never logs in or joins.
+        Pins default off; 1..100 requests that many message slots under the existing
+        read budget. Pin failures keep completed metadata on error.partial_result.
+        Neither profile nor pin success asserts general history access.
+        See docs/group_profiles.md for coverage, errors and observation timestamps.
+        """
+        reference = _parse_target(target)
+        pinned_limit = _pin_limit(pinned_limit)
+        heartbeat_kwargs(heartbeat)
+        with heartbeat_scope(heartbeat) as beat:
+            async with self._account_health_operation(
+                    account_id, 'get_group_profile', reference.label) as (operation, _):
+                return await _get_group_profile(operation, reference, pinned_limit, beat)
 
     async def join_group(self, target: Union[str, int], *, account_id: int) -> GroupJoin:
         """Join through an expected authenticated account and explicit allowance.
