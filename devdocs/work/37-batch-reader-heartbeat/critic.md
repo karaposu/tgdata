@@ -13,6 +13,8 @@ Must precede: adoption of production Step1, including all later production steps
 Disqualifying result: the contract requires a new retry/ownership model, SDK-global interception or false timer liveness to satisfy the cases, or tests must weaken data/cancellation expectations.
 Passing result: complete candidate meets the stated notification and compatibility behavior; underlying sends, waits, charges, raw/pending values and cancellation remain authoritative. Then fold the recorded qualification and adopt exact tested bytes.
 
+Result: PASS — complete candidate31/31 new tests,16 existing related suites and3 demos;472 executed offline checks, no live tests or watchdog failures in the combined run. Product/source hashes preserved.2026-10-15. See prebuild/report.md and result.json.
+
 ## High-level summary
 
 The plan adds a notification to existing work without making that notification a new authority over retries, messages or acknowledgment. Chunk progress is the correct signal for the reported large-download stall. Request observation addresses consecutive SDK waits; known library sleeps can be sliced. The explicit single-SDK-wait limitation prevents overstating what this observer provides.
