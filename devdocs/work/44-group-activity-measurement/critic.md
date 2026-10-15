@@ -13,6 +13,8 @@ Must precede: step1 and every product edit. The plan already names this ordering
 Disqualifying result: after correcting only probe-setup mistakes, raw SDK calls cannot retain source row/response evidence under existing owner/admission/cleanup contracts, or decoded request precision cannot support the planned conservative seek. That changes the collector composition and invalidates the plan.
 Passing result: one combined run passes raw paging/codec/date/optional-counter preservation, actual owner and allowance, error and heartbeat/cancellation/cleanup histories; all observations match declared outcomes. Fixture source packets do not qualify live Telegram order/visibility.
 
+Result: PASS — seven combined groups passed with real Telethon1.45.0 dispatch/codec, stored sessions, SQLite budget, owned health, heartbeat and cleanup; 2026-10-15T20:17:11Z. No live source evidence.
+
 ## High-level summary
 The plan's shape fits the inquiry and existing lifecycle. One Medium performance detail should be folded; no High or Low finding. The unexecuted combined prebuild must run before any product step. Live verification remains optional and unqualified, not an invented hard blocker. No PR review is implied by this plan critique.
 

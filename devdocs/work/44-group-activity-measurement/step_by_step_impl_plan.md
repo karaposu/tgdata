@@ -2,7 +2,9 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# #44 implementation plan — revision 1
+# #44 implementation plan — revision 2
+
+**Critic folded:** 2026-10-15T20:17:11Z — 1 robust mitigation (2 steps changed, 0 added); combined prebuild PASS before product step1.
 
 ### What is the task
 Provide one bounded expected-account operation measuring visible raw messages published in a fixed period. Return raw facts, deterministic descriptive statistics and explicit coverage so an application's capped/failed read cannot look like complete weekly or monthly activity. Basis: desc.md and traverse/finding.md at dev490cf5f, Telethon1.45.0, Python3.7 grammar floor.
@@ -33,6 +35,8 @@ Work-folder script only; no product imports that do not exist yet. Use test34's 
 New `tgdata/group_activity.py` contains frozen `ActivityMessage` and `GroupActivity`, no external dependencies. `ActivityMessage`: id, kind (`message`/`service`), UTC date, observed_at, sender_kind (`user`/`channel`/`unknown`), sender_id orNone, grouped_id orNone, optional views/reactions/forwards/replies, optional replies_are_comments. Service rows have no engagement population. Grouped IDs serialize as decimal text to preserve signed64-bit values.
 
 `GroupActivity`: schema_version1; account_id/target/group metadata; start_date/end_date; collection_started_at/collection_finished_at; max_messages; scanned_messages, unavailable_messages, pages; stop_reason (`window_start`, `history_end`, `message_limit`, `error`, `cancelled`); coverage_complete; oldest_observed_message_date/newest_observed_message_date among all validated dated source rows; tuple messages containing only in-window observations. No credentials/text/media/SDK entities. `to_dict()` produces detached JSON primitives and ISOUTC dates. Group metadata uses its existing value; target uses normalized safe label.
+
+[folded: Risk 1, robust] Group ordinary rows once into UTC-day accumulators with global/daily author sets and four counter vectors; emit date buckets once and sort only counter vectors for exact medians. Complexity O(messages log messages + days), space O(messages + days); no days×messages rescan.
 
 Pure statistics property derives a fresh dictionary each time; it cannot mutate observations. Ordinary counts and distinct sender-ID sets exclude service rows. Unknown-author messages separate. Latest observed ordinary message date isNone on empty population. All UTC dates intersecting the window appear, even observed-zero dates; daily entries expose their intersection start/end/duration, ordinary count, known-user count, channel-sender count, unknown-author messages. They are observed counts; incomplete coverage never makes them guaranteed zero-activity days.
 
@@ -82,6 +86,8 @@ expected_account_id, group reference parsing, owned health, lifecycle cancellati
 
 ## Step 4 — public tests and documentation
 ### Proposed changes
+[folded: Risk 1, robust] Include a wide sparse-window known-output case; review aggregation for one-pass grouping rather than unstable timing assertions.
+
 New `tgdata/smoke_tests/test_46_group_activity.py` on actual SDK/TL/SQLite fixture34 with sockets forbidden. Test explicit expected values, not mirrored algorithm: fractions/equal timestamps/endexclusive, complete empty/sparse/dense>100, short page needing another call, exact cap false, empty placeholders, service/album unit, users/channel/unknown, zero/missing counters and changing observations, JSON/frozen/detached behavior, malformed whole-page rejection and preserved prefix, all response types and wrong peers/nonprogress, wrong owner/cached owner/headless auth, budget accounting including raw slots and refusal before send, source failures/health ownership/no recovery reset, heartbeat actual work/callback exceptions/stalled cancellation, cleanup errors and repeated cancellation, invalid inputs before I/O.
 
 Add `docs/group_activity.md` with example, fields/definitions, cap and coverage, error.partial_result usage, observation-time limitations, budget requirement/configuration, read-only guarantees, differences from get_statistics/batches/profiles and no snapshot promise. README group section links it; smoke-test README lists46. No unsolicited demo unless it adds verification beyond suite46.
