@@ -15,5 +15,8 @@
   "product_tree_identical": true,
   "existing_offline_checks": 952,
   "existing_demos": 7,
-  "live_skips": 3
+  "live_skips": 3,
+  "downloaded_pr_diff_sha256": "00d8c0ad9ed7e07acef2d22cec9d13e994c1733f02618a4d8f795bfe7879c3a5",
+  "downloaded_diff_matches_git_hunks": true,
+  "diff_context_note": "GitHub and local Git differ only in descriptive function labels after hunk headers. Exact raw diff preserved, including context-line whitespace."
 }
