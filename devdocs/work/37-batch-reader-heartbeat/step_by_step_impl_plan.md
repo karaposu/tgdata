@@ -2,7 +2,11 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# Batch heartbeat implementation — revision1
+# Batch heartbeat implementation — revision2
+
+**Critic folded:**2026-10-15 — zero mitigations selected; qualification ordering retained. Complete candidate PASS recorded before this fold.
+
+**Qualification:**31 new tests,16 related existing suites and3 demos;472 offline checks passed. Exact product/source hashes are recorded in prebuild/result.json. No design change was required. The initial fixture and local authoring corrections are recorded in prebuild/report.md.
 
 ### What is the task
 Carry the established synchronous phase heartbeat into bounded batch/daily/pool reads so a caller distinguishes real download/request progress from silence, preserving data, retry, budget and cancellation contracts. Inputs: desc.md9cde140, triage8ee0a73 and source-request.md. Existing branch only, as instructed.
