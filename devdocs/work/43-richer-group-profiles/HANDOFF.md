@@ -2,7 +2,7 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# #43 — implementation and review complete; merge pending
+# #43 — merged into dev
 
 Branch: `feat/43-richer-group-profiles`, based on dev `abd1f57`.
 Worktree: `/private/tmp/tgdata-43-richer-group-profiles`.
@@ -31,7 +31,11 @@ Fresh in-session critic-d ACCEPTED:0 High/0 Medium/0 Low;13 fresh probe groups,
 29 cases passed against the actual PR checkout. See pr-critic.md, pr-probes.py
 and pr-probe-results.json. No product change during review. §9 verified Astra/xhigh.
 
-**Next: merge only with the user's go-ahead.** PR47 targets dev with Closes #43;
-no work-folder/archaeology files are in the PR. Preserve both branches as archives.
-Not merged or released. Version remains0.1.1. Original checkout and unrelated
-files were untouched. #44/#45/#46 remain separate requests.
+The user's go-ahead was received. PR47 merged into dev at490cf5f4aaf682a1ed9fcf8c680be56f2ec14c92
+on2026-10-15T19:41:00Z. Actual merged-tree verification:952 offline checks/32 suites,
+7 demos PASS,3 live skips;100-source compile/grammar PASS. Published tree exactly
+matches the tested local merge. See merge-verification.md and merge-parity.json.
+
+No work-folder/archaeology files entered dev. Both branches are retained. #43 is
+complete; close manually for the dev target. Main/version0.1.1 and original
+checkout edits are unchanged. No release/deployment. #44/#45/#46 are separate.
