@@ -53,6 +53,16 @@ Tests polling and real-time features:
 
 ## Running Tests
 
+### Group activity and engagement (offline)
+
+`python -m tgdata.smoke_tests.test_46_group_activity` exercises bounded public
+measurement on real Telethon 1.45.0 dispatch/TL decoding and SQLite budgets.
+It covers exact/fractional date boundaries, pagination and cap evidence, unavailable
+slots, raw albums/services, author populations, zero/missing counters, daily exposure,
+immutable JSON, malformed-page atomicity, source errors, account ownership, budget,
+heartbeat and cancellation/cleanup. Sockets and login are forbidden; synthetic
+replies are not live qualification. See [the contract](../../docs/group_activity.md).
+
 ### Richer group profiles (offline)
 
 `python -m tgdata.smoke_tests.test_45_group_profile` exercises the public profile
