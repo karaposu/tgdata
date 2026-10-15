@@ -62,9 +62,9 @@ Add a warning that wide windows may be slow.
 ### Mitigation — Robust
 Group ordinary rows into UTC-day accumulators in one pass, with global/daily author sets and four counter vectors. Emit daily buckets in one pass over dates; compute exact counter medians with at most four sorts. O(messages log messages + days), O(messages + days) space; do not rescan all messages per date. Add a wide sparse-window test with known output and one-pass structure checked in review.
 **Why this is robust:** permanently removes the cross-product at its only new source without altering public semantics.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 **Note**
-*Why chosen:* —
+*Why chosen:* Phase3: no genuine shared class exists. utils.get_message_statistics uses a supplied DataFrame and different populations; progress/backfill track cursors, not daily analytics. A common mechanism would need per-case branches. One-pass local aggregation closes this instance with minimal extent; robust is selected/elegant, not last_resort.
 *For future:* —
 
 ### Mitigation — Long-term
