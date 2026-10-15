@@ -4,7 +4,7 @@ effort: xhigh
 ---
 # Implementation and verification — batch heartbeat #37
 
-**Complete through implementation.** Product commit `b789846` on the existing `feat/30-photo-trail-folding` branch. No new branch was created. The product-only photo-trail branch/PR36 remains at its reviewed1cd001e head; no merge, release or consumer deployment occurred.
+**Merged into dev7d9840f via PR38 after completed reviews and merged-tree verification.** Product commit `b789846` on the existing `feat/30-photo-trail-folding` branch. No new branch was created. PR36 retains its historical reviewed1cd001e head; the reused product branch carries heartbeat15241bf. No release or consumer deployment occurred.
 
 ## Delivered behavior
 
@@ -34,4 +34,8 @@ The new tests prove a real SDK chunked download outlasts a scaled silence watchd
 
 Worktree: `/private/tmp/tgdata-30-photo-trail-folding`. Branch: `feat/30-photo-trail-folding`. Product-only heartbeat commit: `b789846`; work evidence is separate. Original checkout `/Users/ns/Desktop/projects/telegram-group-scraper` remains on a47ba80 with the user's existing __version__ edit only. No Duncan files, credentials or real account state were changed.
 
-Next review steps for#37: merge check → publication decision using the existing branches → fresh PR critique. Existing PR36 covers only#30 and remains unchanged. Do not call the heartbeat merged, released or installed in ScrapeOps. Preserve the archive and product branches. No extra branch is authorized by this request.
+Review gates for#37 are complete and PR38 merged the heartbeat into dev. PR36 remains the historical photo-trail PR. Heartbeat is not released to PyPI or installed in ScrapeOps. Preserve the archive and product branches; no new branch was created.
+
+## Final review and merge
+
+The later maintainer merge request authorized the remaining gates. Merge check8b9c0ec and fresh same-session critique fd6bbb1 passed;12 fresh histories found no defect. PR38 reused the existing product branch and merged into dev7d9840f at2026-10-15T08:06:00Z. Its actual merge candidate passed914 offline checks/7 demos and the published tree/parents match exactly. See [merge-report.md](merge-report.md). Earlier unmerged handoff sections above record the pre-review state. No new branch, release or consumer deployment.
