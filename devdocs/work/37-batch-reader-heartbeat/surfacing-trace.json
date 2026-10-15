@@ -1,0 +1,294 @@
+{
+  "trace": [
+    {
+      "sequence": 1,
+      "region": "api",
+      "item": "tgdata/tgdata.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.293700+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 2,
+      "region": "api",
+      "item": "tgdata/progress_facade.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.260846+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 3,
+      "region": "reader",
+      "item": "tgdata/batch_engine.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.250746+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 4,
+      "region": "reader",
+      "item": "tgdata/message_engine.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.255630+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 5,
+      "region": "sdk",
+      "item": "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/lib/python3.11/site-packages/telethon/client/users.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-03T09:09:32.893062+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 6,
+      "region": "sdk",
+      "item": "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/lib/python3.11/site-packages/telethon/client/downloads.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-03T09:09:32.891600+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 7,
+      "region": "client",
+      "item": "tgdata/connection_engine.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.251752+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 8,
+      "region": "client",
+      "item": "tgdata/budget_client.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.251395+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 9,
+      "region": "progress",
+      "item": "tgdata/sync_engine.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.292494+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 10,
+      "region": "progress",
+      "item": "tgdata/backfill_engine.py",
+      "relevance": "sub",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.249941+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 11,
+      "region": "pool",
+      "item": "tgdata/account_pool.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.248968+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 12,
+      "region": "pool",
+      "item": "tgdata/pool_source.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.258159+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 13,
+      "region": "pool",
+      "item": "tgdata/pool_lifecycle.py",
+      "relevance": "sub",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.256843+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 14,
+      "region": "pool",
+      "item": "tgdata/pool_observation.py",
+      "relevance": "sub",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.257253+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 15,
+      "region": "storage",
+      "item": "tgdata/batch_files.py",
+      "relevance": "sub",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.251015+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 16,
+      "region": "validation",
+      "item": "tgdata/smoke_tests/test_14_flood_threshold.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.272115+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 17,
+      "region": "validation",
+      "item": "tgdata/smoke_tests/test_18_read_budget.py",
+      "relevance": "sub",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.273718+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 18,
+      "region": "validation",
+      "item": "tgdata/smoke_tests/test_19_message_batches.py",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.275707+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 19,
+      "region": "validation",
+      "item": "tgdata/smoke_tests/test_31_account_pool.py",
+      "relevance": "sub",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.285462+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 20,
+      "region": "validation",
+      "item": "tgdata/smoke_tests/test_40_pool_outcomes.py",
+      "relevance": "sub",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.290053+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 21,
+      "region": "consumer",
+      "item": "/private/tmp/claude-501/-Users-ns-Desktop-projects-flatmir-scrapeops/1087e71a-4931-4a2b-9a13-c6fc1e7dd149/scratchpad/wt-21/devdocs/work/21-group-reading-positions/tgdata_batch_heartbeat_request.md",
+      "relevance": "core",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T20:38:42.918327+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    },
+    {
+      "sequence": 22,
+      "region": "workflow",
+      "item": "CONTRIBUTING.md",
+      "relevance": "umbrella",
+      "confidence": "HIGH",
+      "recency": {
+        "source": "filesystem",
+        "value": "2026-10-14T21:02:16.214628+00:00"
+      },
+      "coverage": "relevant complete functions/interfaces; unchanged larger-module context retained"
+    }
+  ],
+  "summary": {
+    "purpose": "Bounded batch heartbeat without changing source, retry, budget or receipt authority",
+    "territory": "existing tgdata batch/progress/client/pool and installed Telethon1.45 SDK; read-only consumer request/watchdog",
+    "coverage": {
+      "api": "confirmed at relevant function/interface resolution",
+      "reader": "confirmed at relevant function/interface resolution",
+      "sdk": "confirmed at relevant function/interface resolution",
+      "client": "confirmed at relevant function/interface resolution",
+      "progress": "confirmed at relevant function/interface resolution",
+      "pool": "confirmed at relevant function/interface resolution",
+      "storage": "confirmed at relevant function/interface resolution",
+      "validation": "confirmed at relevant function/interface resolution",
+      "consumer": "confirmed at relevant function/interface resolution",
+      "workflow": "confirmed at relevant function/interface resolution"
+    },
+    "confirmed_absent": [
+      "new schema or persistent heartbeat state",
+      "author/chat metadata changes"
+    ],
+    "frontier": [],
+    "workspace_populated": true,
+    "mode": "artifact",
+    "entry": "signal-first",
+    "cycles": 4,
+    "verdict": "PROCEED"
+  }
+}
