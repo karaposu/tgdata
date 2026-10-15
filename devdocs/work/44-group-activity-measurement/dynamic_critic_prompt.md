@@ -1,0 +1,12 @@
+# Dynamic critic prompt — #44
+Critique `step_by_step_impl_plan.md` revision1 against desc.md, traverse/finding.md and current dev490cf5f. Work in this warmed session, sequentially; no delegated reviewer.
+
+Read actual group/owned-operation, budget, heartbeat, strict MessageBatch, fixed-window and SDK history interfaces. Challenge the premise that raw GetHistory can preserve page/end/placeholder evidence while keeping verified ownership, actual-send charging and cancellation. Distinguish vendor-documented behavior, real local component behavior and synthetic packet inputs; fixtures cannot prove live server semantics.
+
+Test the concepts: explicit publication versus observation clocks; cap versus coverage; unknown versus zero; known users versus channel/anonymous identities; raw albums versus assembled posts; UTC edge exposure; immutable observations versus mutable derived output; source/local failures versus Telegram health; page-atomic partial evidence; cleanup versus caller cancellation. Check API/package compatibility, schema/storage impact, security, memory/CPU and future sampling scope. Flag underspecified delicate steps as Medium, not hand-waving advice.
+
+Create a `critic.md` in the same directory with model/effort frontmatter, document-level verdict immediately after it, falsifier and affordability lines, then a high-level summary. Verdicts: IMPLEMENT AS WRITTEN; IMPLEMENT AFTER FOLDING THESE IN; REORDER — TEST BEFORE BUILD; DO NOT IMPLEMENT — MEANING GAP (or WRONG LAYER).
+
+Compute a waste-ranked Premise Inventory before risks: premise, first dependent step, waste, scheduled test, cheapest earlier real-component test/cost and covering/non-covering evidence. Affordable unresolved falsifier means REORDER, with experiment/cost/first dependent step/disqualifying and passing outcomes. A wrong premise requires deprecating the plan and recording its blocker, not mitigation padding. Carry known external conditions unchanged. Include Restart Check and Inherited Lessons with concrete mechanisms and ordered tests.
+
+Every risk uses two paragraphs (plain consequence, then exact path/symbol/trigger), Severity, Category, Impact, NoobEng and affected areas. For Medium/High offer quick/robust/long-term mitigations, robust and long-term explanations, unticked selected/elegant/last_resort boxes and empty Why chosen/For future notes. No risk tables. After phase2, separately select by actual class reach versus changed extent; name genuine other instances before generalizing. Only selected proposals may enter the fold.
