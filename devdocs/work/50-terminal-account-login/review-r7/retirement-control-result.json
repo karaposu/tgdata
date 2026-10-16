@@ -1,0 +1,14 @@
+[
+  {
+    "mode": "original_based",
+    "quit_signal_while_hidden": true,
+    "echo_during_stage": false,
+    "restored": true
+  },
+  {
+    "mode": "protected_based",
+    "quit_signal_while_hidden": false,
+    "echo_during_stage": false,
+    "restored": true
+  }
+]
