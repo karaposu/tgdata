@@ -1,0 +1,15 @@
+{"mode": "normal", "outcome": "value", "failure": null, "stop": false, "signals": 0, "restored": true, "value_present": true, "value_correct": true, "fd_closed": true, "observed_restored": true}
+{"mode": "unicode", "outcome": "value", "failure": null, "stop": false, "signals": 0, "restored": true, "value_present": true, "value_correct": true, "fd_closed": true, "observed_restored": true}
+{"mode": "editing", "outcome": "value", "failure": null, "stop": false, "signals": 0, "restored": true, "value_present": true, "value_correct": true, "fd_closed": true, "observed_restored": true}
+{"mode": "eof", "outcome": "eof", "failure": null, "stop": false, "signals": 0, "restored": true, "value_present": false, "value_correct": true, "fd_closed": true, "observed_restored": true}
+{"mode": "invalid_encoding", "outcome": "error", "failure": "UnicodeDecodeError", "stop": false, "signals": 0, "restored": true, "value_present": false, "value_correct": true, "fd_closed": true, "observed_restored": true}
+{"mode": "long_input", "outcome": "error", "failure": "ValueError", "stop": false, "signals": 0, "restored": true, "value_present": false, "value_correct": true, "fd_closed": true, "observed_restored": true}
+{"mode": "stop_acquired", "outcome": "stop", "failure": null, "stop": true, "signals": 1, "restored": true, "value_present": false, "value_correct": true, "fd_closed": true, "observed_restored": true}
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/inquiries/2026-10-16_19-25__terminal-login-ownership/evidence/owned_terminal_probe.py", line 133, in <module>
+    result=parent(mode);rows.append(result);print(json.dumps({k:v for k,v in result.items() if k!='events'}),flush=True)
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/inquiries/2026-10-16_19-25__terminal-login-ownership/evidence/owned_terminal_probe.py", line 117, in parent
+    if proc.poll() is None:raise AssertionError('probe timeout '+mode)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: probe timeout stop_snapshot

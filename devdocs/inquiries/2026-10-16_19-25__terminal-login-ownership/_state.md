@@ -9,14 +9,14 @@ A → Su → S → D → I → C → R (always)
 - [x] Sensemaking
 - [x] Decomposition
 - [x] Innovation
-- [ ] Critique
+- [x] Critique
 - [ ] Routelister
 ## Iteration
 1
 ## Status
 ACTIVE
 ## Next Discipline
-Critique
+Routelister
 ## Relationships
 - CONTINUES FROM: ../../work/50-terminal-account-login/traverse/ (re-test original scope/ownership commitments after two PR rejections)
 ## History
@@ -25,3 +25,4 @@ Critique
 - 2026-10-16_19-37: Sensemaking complete:SV1–SV6,9 ambiguity pairs,3 native semantics observations plus fresh restoration reproduction. Sandbox/PTY fixture limits recorded, no product changes. Manual8/8. Next Decomposition.
 - 2026-10-16_19-39: Decomposition complete:5 questions,9 interfaces,explicit terminal determination/settlement boundary; manual7/7. No implementation plan. Next Innovation.
 - 2026-10-16_19-46: Innovation complete:all7 mechanisms,15 tested variations,5 meta-pieces with generic/focused/contrarian and shape inversion; two input assemblies remain for adversarial comparison. Manual9/9. Next Critique.
+- 2026-10-16_19-55: Critique complete:7 weighted dimensions,15 variants/helper branch/3 assemblies; explicit private terminal contract survives.22 native boundary cases passed after a child-reaping harness correction, evidence retained. Manual8/8. Next Routelister.
