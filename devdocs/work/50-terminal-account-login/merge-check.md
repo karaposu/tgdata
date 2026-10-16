@@ -2,106 +2,108 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# #50 merge check — PASS
+# #50 renewed merge check — PASS
 
-Subject: terminal account login, folded revision2 plan and actual product diff.
-Archive product `df7972828e2e608204a0043c391d895b51210389`.
-Product-only PR head `69c240731e9f8dcee794e3f4a88372d8cd9af118`, tree
-`c770611f2ade008a5d7103d6c6dc35d830e8cbb2`, on fetched dev
-`77f2f53eba8bdc6922127a3b9118bf17de4efabf`.
-
-This is the fidelity gate, not the fresh soundness verdict or merge permission.
-The PR critic remains pending at this artifact's creation.
+Subject: PR51 revision4, product head34907d42b7b1de1186e4b848eff4a50b2349e9ee,
+tree9e9b562acbc1b1355277b69b71345ff8a36d156a, against freshly fetched
+base77f2f53eba8bdc6922127a3b9118bf17de4efabf. Archive productda890a1 and work18d6747.
+The previous check/rejected critique/prompt are preserved as *_r1.md.
+This is fidelity PASS; the renewed fresh PR critique is pending at this record.
 
 ## 0 — Warmth, weight and model
 
-Same warmed session as #43/#44/#45 and #50 implementation. Triage, description,
-folded plan, both plan findings, implementation/verification records and all seven
-changed files were read together. LoginFlow was reread fully; existing session,
-SDK, configured reader, owned cleanup and fixtures remain in the warmed context.
-No substantial base movement occurred. Description's triage77c1e85 and concluded
-traverse15de8c2 are ancestors of the archive branch. The product-only branch omits
-these work artifacts deliberately under §7.6, rather than losing their provenance.
-
-Triage says feature-heavy and GitHub has enhancement/heavy/open-to-implement.
-That weight remains appropriate for authentication plus credential publication.
-Current-thread metadata at2026-10-16T11:31:47.031Z confirms gpt-6-astra/xhigh;
-§9 verification is satisfied for this review. No subagent was used.
+Same warmed session as the implementation and prior review, with full relevant
+login/session/native SDK/file/reader/terminal context retained. Read triage,
+description, folded revision4, plan critique/result, prior rejection, prebuild and
+verification with the actual published seven-file diff. Current CLI/publisher and
+public docs were reread; test functions remain the same executed prebuild/permanent
+ASTs. No base movement or unfamiliar subsystem requires archaeology refresh.
+Triage77c1e85 and traverse15de8c2 are archive ancestors; their absence from the
+product-only PR is intentional under §7.6. Heavy matches GitHub's heavy/enhancement
+labels and remains appropriate. No subagent was used. Current-thread
+2026-10-16T12:53:53.496Z verifies gpt-6-astra/xhigh; §9 is satisfied.
 
 ## 0b — Scope against surfacing
 
-The triage surfaced authentication, native/opaque session representations,
-configured reader naming/ownership, installed commands and public/test guidance.
-The two new implementation modules, terminal guide and smoke48 are the planned
-new files within those surfaces. README/setup/smoke README are their integration
-points. No unsurfaced concept or extra subsystem entered the implementation.
-LoginFlow, StoredSession, ConnectionEngine, account operations, reader APIs and
-package version/exports are byte-unchanged. No work folder, archaeology refresh,
-unrelated guide, duncan or original-checkout version edit enters the PR.
+All seven product files belong to the surfaced authentication/session/publication,
+entry-point, docs and tests territory. Revision4 changes four of those files:
+login_cli, smoke48, terminal guide and smoke README. No new subsystem/public API,
+worker supervisor, dependency, version or reader/session behavior entered. Work
+records and unrelated checkout/version/duncan/guide edits stay outside the PR.
 
 ## 1 — Fidelity and deviations
 
-Step1 is login_file.LoginDestination: private staging, initial identity/content
-snapshot, no-clobber creation, deliberate replacement, old-file backup, sync barriers,
-three publication outcomes and cleanup reporting. Step2 uses StoredSession and
-native SQLite APIs, validates own-ID0 and optional account cache, reads back and
-retires native connections before publication. Step3 is login_cli: one retained
-loop, eligible hidden inputs, safe status/error handling, authorization-only check,
-settled cleanup, same-credential local save retry and SIGINT-aware publication.
-Step4 supplies installed/module commands and the operator guide. Step5 supplies
-18 permanent groups, including8 actual PTY scenarios. Step6 records compile,
-regression/demo and isolated installed-command checks with separate product/work
-commits. Default collision refusal occurs before authentication; replacement
-requires explicit confirmation of the target/account and stopped readers.
+_TerminalRun owns persistent stop intent, retained loop and original signal policy.
+Its exact action registrations prevent cancellation from reaching a later action;
+retirement is admissible after stop. Input raises only the first interruption,
+with the input flag cleared before terminal restoration; async signals request
+cancellation instead of injecting arbitrary task exceptions. Completed tasks are
+consumed without re-running the loop. The final exit is chosen after _retire/close.
+_publish feeds the same stop flag to the unchanged native publisher. These implement
+revision4 steps1/3, including separate stop intent and saved/uncertain file effects.
 
-No design deviation. The unavailable wheel/build packages were handled with the
-existing offline setuptools65.5 managed installation into a temporary source/lib/
-scripts tree. The generated installed entry point and isolated imports were tested;
-no dependency or active environment was changed. Native Python3.7 execution is
-not inferred from its grammar check. A fixture-only macOS path-alias correction
-preceded the passing full prebuild; original failed evidence remains preserved.
+Step2's full experiment was committed ate0d764f before productda890a1:23 groups,
+25 real PTYs,17 retained review histories,8 stop transitions and14 publication
+crossings. Candidate CLI bytes equal the product and every permanent test function
+AST equals its executed prebuild counterpart. Step4's tests/docs cover executing,
+suspended, terminal and retiring phases. Step5 has committed full/targeted/installed
+evidence and a product-only PR update. No design deviation or test weakening.
 
-## 2 — Does the plan still hold?
+The offline setuptools managed install remains the recorded packaging substitution
+for unavailable wheel/build packages. It tests isolated imports, actual generated
+entry, native-SRP interruption and help/headless behavior without changing the active
+environment. A single extra EOF blank line in an extracted work helper was removed;
+the executed candidate/combined suite and expectations were unchanged.
 
-Yes, within its explicit scope. Real LoginFlow/native SQLite/ordinary-reader
-composition works on Python3.11.10 and Telethon1.45.0. Source authentication and
-local publication retain separate outcomes. Existing readers do not participate
-in a CLI-specific lock; the operator must stop them. Trusted local POSIX semantics,
-not hostile writers/distributed coordination/universal crash recovery, are the
-contract. The resulting two modules do not require an authentication redesign,
-a generic converter framework or a durable checkpoint service.
+Documentation housekeeping in this check annotates stale “not yet qualified” plan
+phrases with their later e0d764f result; it changes no planned behavior or evidence.
+Issue step2's old “full composition pending” sentence is likewise updated to the
+already-committed PASS when this review is posted. Historical critic prose is kept
+as written, with its explicit Result: PASS supplement as the later gate evidence.
 
-## 3 — Plan findings answered
+## 2 — Plan still valid
 
-- Medium Risk1: login_file.__init__ syncs the destination parent after private
-  staging creation. save verifies/syncs previous.session and the private directory
-  before replace, then syncs the destination parent before recording published.
-  Permanent prepublication-barrier and post-replace-uncertainty cases observe
-  actual old/new bytes and retained backup. Full prebuild preceded product work.
-- Medium Risk2: _source requires the own-ID0 marker while allowing the actual
-  account row to be absent. _prepare_candidate copies and reads back optional
-  presence exactly. The real LoginFlow case without access_hash publishes and
-  authenticates an ordinary reader without another code request.
+Yes. The observed failure was terminal task-driving ownership, and the replacement
+stays at that boundary. Existing LoginFlow/native SQLite publication and ordinary
+readers remain byte-unchanged. The revised stop model accommodates in-flight remote
+effects without promising rollback; it prohibits later actions and preserves file
+truth. Local POSIX/stopped-reader and no bounded underlying latency limits remain
+explicit. No broader auth/store rewrite or new cross-command abstraction was needed.
 
-No unaddressed High/Medium and no consciously omitted Low in the plan review.
-The prebuild REORDER gate was satisfied atdc63a03 before productdf79728; the two
-product modules match that passing candidate byte for byte.
+## 3 — Findings and experimental gates answered
 
-## 4 — Honest issue status and exact-tree verification
+- Original plan Medium1 (recovery directory persistence): staging parent sync,
+  verified/synced old backup and private-directory barrier remain before replace;
+  destination parent sync remains the success barrier. Actual contents/effects are
+  covered in retained fault tests and full prebuild.
+- Original plan Medium2 (optional own-account cache): required row0 plus conditional
+  actual-account row transfer remains, with real native reader restore without hash.
+- Rejected PR Medium R1 (Ctrl-C inside authentication hangs): no async signal-raised
+  KeyboardInterrupt policy; pending action cancelled once; done result consumed
+  without another loop run. Actual native-SRP/PTY interruption now returns130,
+  restores termios state and settles source ownership, including the installed
+  generated command. Defensive done-task tests cover the exact old loop trigger.
+- Fresh revision3 plan critique had no new rated risks; its REORDER gate is closed
+  by the complete e0d764f experiment, not merely the six planning probes.
 
-Issue50 preserves the maintainer request and the qualified file-first scope.
-T/0/1/2/3/4/5 are checked with committed artifact IDs;6/7 are still unchecked until
-this merge-check/PR and subsequent fresh critique are committed and posted. That
-is accurate; no review or merge completion is claimed ahead of its evidence.
+No unaddressed High/Medium or consciously omitted Low in these earlier findings.
+This does not pre-judge fresh soundness findings in the next gate.
 
-The exact product-only PR tree passed1,005 actual offline checks in34 suites,
-seven demos,106 source compilation/Python3.7 grammar checks and isolated installed
-command/import/hash/help/headless checks. Three live cases were deliberately
-skipped, excluded from the offline count. Evidence and source manifests are in
-pr-verification/. No source changed during verification. Diff whitespace is clean;
-the seven product paths equal the archive implementation. #45/test47 is separate.
+## 4 — Status and verification
 
-Live Telegram delivery/real-account2FA, native Python3.7 and physical power-loss
-qualification remain unperformed, as declared. No login, release or merge occurred.
-Next: publish the product-only PR, post this check and conduct a fresh in-session
-critic-d review against its published diff and folded revision2 plan.
+Issue T/0/1/2/3/4/5 are backed by committed artifacts. Renewed6/7 are unchecked;
+no current review PASS/merge has been claimed. The one stale historical step2
+phrase is corrected as noted above. PR51 remains draft and unmerged.
+
+Current source manifests were compared to the committed full verification: all106
+files match the exact PR tree. Published/local patches match after stripping only
+GitHub's hunk-heading labels. Product diff equals the archive implementation and
+whitespace is clean. The recent1,010 offline checks/34 suites, seven demos, compile/
+3.7 grammar and installed-command PASS therefore apply unchanged; no redundant
+full rerun was necessary. Fresh independent probes follow in the soundness gate.
+Three live cases remain deliberately skipped/excluded; live Telegram, native3.7,
+physical power-loss and active/arbitrary writers are not qualified.
+
+Next: fresh in-session critic-d on this exact head plus folded plan, commit/post
+its verdict, then apply §7.3. A second rejected PR gate would require returning to
+description/traverse under §7.4. No product edit, merge, release or deployment here.

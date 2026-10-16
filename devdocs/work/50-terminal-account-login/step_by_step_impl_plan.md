@@ -8,12 +8,13 @@ effort: xhigh
 Fresh critique: REORDER — TEST BEFORE BUILD; no new rated risks. Phase3 has no
 mitigation selection. Full combined prebuild **PASS** is recorded in prebuild-r4/result.json:23 groups,
 25 actual PTY scenarios,17 retained histories,8 stop transitions and14 publication
-combinations, before product changes. This textual fold follows the user's explicit sequence;
-it is not implementation clearance. Revision3 is preserved in
+combinations, before product changes. The textual fold followed the user's explicit
+sequence; the fold alone was not implementation clearance. The complete gate
+subsequently passed in e0d764f before product da890a1. Revision3 is preserved in
 step_by_step_impl_plan_r3.md and revision2 in step_by_step_impl_plan_r2.md.
 
 Inputs: desc.md, triage77c1e85, traverse15de8c2, selected robust R1 in
-pr-critic.md (93ba179 / d10104b), and the actual code/probes. Archive productdf79728
+pr-critic_r1.md (93ba179 / d10104b), and the actual code/probes. Archive productdf79728
 is identical to PR51 product69c2407. Fetched dev remains77f2f53. Same warmed session;
 no subagent. Current-thread2026-10-16T12:07:55.242Z verifies gpt-6-astra/xhigh.
 Feature-heavy still applies. One rejected PR critique exists; neither the skill's
@@ -41,8 +42,10 @@ six-case probe in replan-r3/ observes that cooperative cancellation plus termina
 result consumption works with actual LoginFlow/SDK cleanup. This resolves the
 local feasibility question without changing authentication or file representation.
 
-The complete command owner and its phase boundaries are **not yet qualified**.
-That is reachable experimental work, not an inaccessible planning blocker; step2
+At revision3 planning time, the complete command owner and its phase boundaries
+were unqualified. Step2 subsequently passed the full combined prebuild at e0d764f
+within the declared offline/local scope. This was reachable experimental work,
+not an inaccessible planning blocker; step2
 puts the full combined prebuild before every product change. If the composition
 fails the stated design falsifier, stop and return to the description rather than
 implementing around an unproved lifetime.
@@ -129,7 +132,8 @@ still pending. Repeated signals do not create another cancellation or skip clean
 A queued signal before task registration is retained and handled before source
 admission. Clear registrations before closing the loop, so signals cannot enqueue
 work against a closed loop. The six planning probes support these primitives;
-the full phase/registration design is still a step2 experiment.
+the full phase/registration design was qualified by the step2 combined prebuild
+recorded at e0d764f, before product promotion.
 
 For synchronous terminal input, preserve getpass' exception-based unwind so echo
 restoration executes. Scope that behavior to the input operation; clear the input
