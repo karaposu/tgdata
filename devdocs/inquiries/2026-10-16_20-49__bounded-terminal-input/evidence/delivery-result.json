@@ -1,0 +1,38 @@
+[
+  {
+    "canonical": true,
+    "sent": 10,
+    "requested": 10,
+    "observed": 0,
+    "newline_observed": false,
+    "max_input": 1024,
+    "future_write_survives_prior_flush": true
+  },
+  {
+    "canonical": false,
+    "sent": 10,
+    "requested": 10,
+    "observed": 10,
+    "newline_observed": false,
+    "max_input": 1024,
+    "future_write_survives_prior_flush": true
+  },
+  {
+    "canonical": true,
+    "sent": 5001,
+    "requested": 5001,
+    "observed": 0,
+    "newline_observed": false,
+    "max_input": 1024,
+    "future_write_survives_prior_flush": true
+  },
+  {
+    "canonical": false,
+    "sent": 1022,
+    "requested": 5001,
+    "observed": 1022,
+    "newline_observed": false,
+    "max_input": 1024,
+    "future_write_survives_prior_flush": true
+  }
+]
