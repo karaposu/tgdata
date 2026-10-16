@@ -4,102 +4,125 @@ effort: xhigh
 ---
 # #50 — Terminal account login
 
-**Session warmth:** same warmed #43/#44/#45 session; base dev
-77f2f53eba8bdc6922127a3b9118bf17de4efabf. LoginFlow, StoredSession, native
-SQLite/MemorySession, terminal input, session naming/factory and login fixture
-contracts refreshed. Existing ownership/health/budget context retained. Triage
-77c1e85 is feature-heavy; full traverse concluded at15de8c2. No archaeology
-refresh was necessary. PROJECT_SPECIFICS.md/AGENTS.md absent. Current-thread
-metadata2026-10-16T09:35:25.016Z verifies gpt-6-astra/xhigh.
+**Current contract:** upstream revision after two rejected PR reviews. The full
+[terminal-ownership traverse](../../inquiries/2026-10-16_19-25__terminal-login-ownership/finding.md)
+concluded at 47d3c99. The previous description is preserved in `desc_r1.md`.
+Revision 4's plan and product remain historical evidence; do not resume that plan
+unchanged. A new plan, fresh critique and full combined prebuild are pending.
+
+**Session warmth:** same warmed #43/#44/#45/#50 session, base dev
+77f2f53eba8bdc6922127a3b9118bf17de4efabf. LoginFlow, StoredSession, native SDK
+sessions, reader identity, private publication, terminal input, signal/event-loop
+behavior and CLI test contracts were read. Both rejected reviews and their probes
+were consumed. Triage 77c1e85 remains feature-heavy. AGENTS.md and
+PROJECT_SPECIFICS.md are absent. Current-thread metadata
+2026-10-16T16:23:26.250Z verifies gpt-6-astra/xhigh.
 
 ## Problem Statement
 
-The existing LoginFlow API supports deliberate phone/code/optional password
-authentication but does not provide an installed terminal command or publish a
-reader session. A human operator currently needs application code around the API
-or an application-specific login command. Its returned opaque StoredSession text
-cannot simply be written as a native Telethon `.session` database.
+LoginFlow already supports deliberate phone/code/optional-password authentication,
+but users need an installed terminal command that saves a session ordinary tgdata
+readers can reopen. Its opaque StoredSession text is not a native Telethon SQLite
+`.session` file and cannot simply be written under that filename.
+
+Two implementation reviews exposed an additional contract gap. A task result or
+an outer “input is active” flag was treated as evidence that underlying work had
+settled. The latest failure leaves terminal echo disabled when the first Ctrl-C
+arrives during restoration after ordinary input or EOF. The command needs explicit
+ownership of terminal input through restoration, alongside the existing separate
+authentication and file-publication outcomes.
 
 ## User Value Proposition
 
-An operator runs one command with the reader's configuration, supplies the current
-login inputs, and obtains a session the ordinary reader can reopen. Re-login is
-explicit, failures preserve the prior credential where publication has not
-occurred, and a failed local save can be retried without another code request.
+An operator uses the reader's configuration, enters the current login inputs and
+obtains a reusable session. Stopping does not require another keystroke or silently
+leave terminal settings changed. Re-login is explicit; save failures preserve
+truthful file outcomes and can permit local retry without another code request.
 ScrapeOps can later wrap this command rather than duplicate authentication.
 
 ## Success Criteria
 
-1. An installed terminal entry point and module invocation use the same command
-   path. They consume the ordinary reader configuration and show the resolved
-   native session destination before a code is requested.
-2. The command drives existing LoginFlow methods without changing their
-   authentication, proxy/device, waiting, unsupported-response or cleanup rules.
-   It owns one flow/event loop and prompts only at an eligible settled step.
-3. Input is deliberate terminal interaction. Secrets are not accepted through
-   command arguments or printed in output/logs. Password/code input never falls
-   back to echo; EOF and Ctrl-C have explicit stop outcomes.
-4. A completed and settled login is converted into a private native SQLite
-   candidate using the existing codec and SDK APIs. The candidate preserves the
-   actual key/DC and own identity needed by an ordinary reader. Local read-back
-   and end-to-end reader authentication tests demonstrate reuse without prompting.
-5. New-file publication refuses collisions. Existing-file replacement is opt-in
-   and requires explicit operator confirmation of the destination/account and
-   stopped readers. Symlinks, unsupported file types, SQLite sidecars and a target
-   changed during the conversation refuse. These checks are not a global lock.
-6. Before publication, a failure leaves the previous destination untouched.
-   Replacement preserves prior bytes privately before switching. Confirmed
-   publication, pre-publication failure and uncertain publication have distinct
-   safe outcomes. Uncertainty retains recovery material; cleanup failure does not
-   erase evidence or rewrite the original outcome.
-7. A recoverable local preparation/save failure permits an explicit same-process
-   retry using the retained completed credential, with no new SendCode or SignIn.
-   Conflicts or uncertain publication do not silently broaden replacement
-   authorization. No automatic restart, resend or remote replay is introduced.
-8. Cancellation during source work settles owned cleanup before exit. Terminal
-   interruption during publication cannot falsely claim the destination stayed
-   unchanged after a possible write. Exit codes/messages distinguish operator
-   stop, source refusal/failure, local publication failure and uncertainty.
-9. A combined actual SDK/session/filesystem/TTY prebuild precedes product edits.
-   Permanent tests cover first login, real SRP fixture, native reader reopen,
-   create/replace/conflict/sidecar paths, save retry, secrecy, waits/unsupported
-   responses, EOF/Ctrl-C, repeated cancellation and cleanup failures. Relevant and
-   full offline baseline/demos pass; installed command behavior is tested too.
+1. Installed and module invocations use the same command path and ordinary reader
+   configuration. The resolved native destination is shown before requesting a code.
+2. Existing LoginFlow owns authentication, proxy/device policy, waits, uncertain or
+   unsupported responses and source cleanup. One flow/event loop serves the command;
+   prompts and subsequent actions begin only at eligible, settled steps.
+3. One private input owner retains the exact selected terminal and its original
+   settings through acquisition, input, every exit path, restoration and release.
+   It does not assume the selected terminal is stdin. A value reaches the next
+   login action only after restoration is established.
+4. EOF, normal input, input error and first/repeated Ctrl-C all have explicit
+   outcomes. Stop ends the input wait without additional user input. SIGINT during
+   command-owned work records stop intent without throwing through terminal
+   acquisition/restoration. Repeated stops do not create competing cleanup owners.
+5. An actual restoration failure releases no input value and admits no further
+   login/save action. It reports a safe failure rather than claiming restoration
+   succeeded. Arbitrary OS/device failure is not promised to be repairable.
+6. Secret input never falls back to echo. Codes/passwords are not command arguments;
+   credentials, codes, passwords and checkpoints do not appear in output/logs.
+   Supported terminal contexts, encoding and input limits are explicit and tested.
+7. Stop closes admission to new prompts, authentication actions and save attempts.
+   An in-flight source action settles under its existing cleanup contract; stopping
+   does not imply a remote request never happened. A final stop exit does not erase
+   a known or uncertain publication outcome.
+8. A completed, settled credential becomes a private native SQLite candidate through
+   the existing codec/SDK APIs. Read-back and ordinary-reader authentication tests
+   preserve the actual account, authorization key and data centre without prompting.
+9. Creation refuses collisions. Replacement is opt-in and requires confirmation of
+   the target/account with readers stopped. Symlinks, unsupported types, sidecars
+   and a destination changed during the conversation refuse; these are conflict
+   checks, not a lock on all readers.
+10. Before publication, failures preserve the old destination. Replacement preserves
+    prior bytes privately before switching. Pre-publication failure, confirmed
+    publication and uncertainty remain distinct; uncertainty retains recovery
+    material and cleanup errors do not overwrite the original outcome.
+11. A recoverable local save failure permits explicit same-process retry with the
+    completed credential, without another SendCode/SignIn. Conflicts and uncertain
+    writes do not broaden replacement authorization or permit automatic replay.
+12. A later full combined prebuild qualifies actual LoginFlow, native SDK sessions,
+    publication, ordinary-reader reopen and terminal input before product edits.
+    Tests cross normal/EOF/error exits with first/repeated stops and acquisition,
+    mode-change, wait, restoration and release boundaries. Existing source/native
+    SRP, publication, save-retry, secrecy and cleanup tests remain relevant.
+    Permanent tests, installed-command checks, offline baseline and demos must pass;
+    the inquiry's 22-case feasibility probe is not complete-candidate qualification.
 
 ## Scope Boundaries
 
-Initial CLI publication supports native file sessions on qualified local POSIX
-filesystems with the required link/replace/sync behavior and a trusted directory.
-Other platforms/filesystems must refuse unsupported publication capabilities
-before authentication; no universal durability or hostile-directory guarantee.
+The initial delivery is a deliberate local POSIX terminal command and native-file
+publication on qualified trusted filesystems. Foreground/main-thread interaction
+and the exact supported terminal contexts must be declared and tested. Unsupported
+contexts must refuse safely before authentication. No universal terminal, filesystem
+or process-cooperation guarantee is implied.
 
-Application-owned stores remain supported through the existing Python LoginFlow
-and store API. No arbitrary CLI plugin loader, public generic session converter,
-durable CLI checkpoint/recovery database or automatic reader-rotation system is
-part of this delivery. No signup, QR/web login, proxy exit-IP check, background
-automatic login, media read or ScrapeOps migration/deployment. No package version
-bump, PR, merge or release in this task-impl run.
+Keep LoginFlow, StoredSession conversion and native publication as separate
+responsibilities. The preferred input direction is one private terminal owner with
+nonthrowing stop intent and a controllable wait. This is a responsibility boundary,
+not approval to promote the inquiry prototype or add a public terminal framework.
+
+Custom-store users continue using the Python APIs. No CLI plugin loader, generic
+session converter/supervisor, durable CLI resume, background input thread or
+active-reader rotation is required. No signup, QR/web login, background automatic
+login, proxy exit-IP check, media read or ScrapeOps migration/deployment.
+
+This upstream pass changes the description and inquiry records only. Product
+implementation, merge/release, version changes and real Telegram login are outside
+this pass. Live tests remain separately authorized supplemental qualification.
 
 ## Priority Level
 
-Medium (P2). Removes duplicated manual onboarding work and makes re-login
-predictable. It does not block the separate immediate production recovery path.
+Medium (P2). Removes duplicated onboarding/re-login work. It is not a prerequisite
+for the separate immediate downstream production recovery path.
 
-## Decisions and assumptions
+## Decisions and Assumptions
 
-The contract follows `traverse/finding.md`. File-first is the qualified initial
-consumer; create-only is the default, with deliberate replacement under explicit
-preconditions. Exact command spelling, exit values and publication mechanics are
-plan decisions. [ASSUMPTION] operators can stop readers and control the local
-destination directory; the command must not imply it can enforce external
-process cooperation. The basic native conversion/link/backup probes passed;
-they do not replace the combined prebuild.
+Retain file-first publication, create-only by default and deliberate replacement
+under the stated conditions. [ASSUMPTION] operators control the trusted directory
+and can stop readers; the command must not claim to enforce their cooperation.
+A helper process, guarded getpass reuse or create-only-only scope becomes relevant
+only under the explicit revival conditions in the new finding.
 
-## Known Blockers
-
-No planning blocker or required offline execution blocker identified. Actual
-combined publication/TTY composition must be proved before product edits, rather
-than assumed from isolated probes. Live Telegram delivery/real-account 2FA needs
-an explicitly authorized exclusive setup and remains supplemental, unperformed
-qualification. Native Python3.7 runtime qualification is unavailable; syntax
-compatibility and the supported Python3.11/Telethon1.45 run are reported separately.
+No new planning blocker is established. Production input policy and complete
+composition remain qualification obligations. Native Python 3.7 runtime testing
+is unavailable; syntax compatibility is distinct from Python 3.11/Telethon 1.45
+execution evidence. Live source delivery/real-account 2FA remain unperformed.
