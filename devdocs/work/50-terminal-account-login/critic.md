@@ -4,257 +4,134 @@ effort: xhigh
 ---
 **REORDER — TEST BEFORE BUILD**
 
-Falsifier: the actual LoginFlow, retained event loop, terminal signals and native
-SQLite/filesystem publication cannot preserve original outcomes and old credentials
-under the proposed command lifetime without replacing the two-module design.
-Affordable now: yes — bounded local prototype and tests, no credentials/network.
+Falsifier: the complete command's persistent stop owner cannot compose with actual
+LoginFlow/SDK cleanup, real terminal restoration and native publication outcomes
+without changing the established authentication or file-publication contract.
+Affordable now: yes — bounded work-folder candidate and synthetic real-component
+runs; no live credentials, remote access or deployment required.
 
-Experiment: full work-folder candidate combining actual LoginFlow/StoredSession,
-native SQLiteSession and ordinary verified reader with controlled source replies;
-actual PTY input/SIGINT and actual local publication, with injected I/O failures.
-Include the explicit backup persistence barriers selected below. Test successful
-phone/code and real-SRP paths, same-process local retry with one code request,
-create/replace/conflicts/sidecars, key/DC/own-row reader restore, all publication
-effect phases, SQLite commit/close failure, no-echo fallback, and first/repeated
-source/input/cleanup interruption plus deferred SIGINT during publication.
-Cost: local development and bounded execution; no real account, login or release.
-Must precede: step1 and every product edit. The plan already orders the experiment
-there; REORDER enforces the unrun gate rather than counting its prose as evidence.
-Disqualifying result: after fixture-only corrections, real component composition
-cannot meet the described ownership/publication/interrupt guarantees without a
-different auth, reader-rotation or durable-recovery architecture.
-Passing result: one combined run satisfies every listed case with native objects,
-source effects counted, old/new bytes checked, safe outcome/exit assertions, no
-secret output and no live sockets. An isolated conversion test or a fake flow/
-publisher supplying the desired behavior is non-covering.
-
-Result: PASS — 14 combined groups, including8 actual PTY scenarios, passed with
-unchanged candidate hashes after one fixture-only macOS path normalization; 2026-10-16T10:25:23Z.
-Actual LoginFlow/native SQLite/ordinary reader/SRP, source effects, file barriers,
-old-byte retention and first/repeated/deferred SIGINT exercised. No live source.
+Experiment: revision3 step2's entire combined prebuild, including all prior18
+permanent groups,17 fresh functional histories and the six-part phase matrix.
+Use the complete candidate, actual SDK/SRP/session/filesystem/reader/getpass/PTYs,
+controlled wire replies and actual process signals. Include real executing-code
+SIGINT, repeated signals during input restoration/retirement, admission/completion
+transitions and create/replace/uncertain-publication crossings. Candidate and
+product source hashes are recorded before/after; no product edits before PASS.
+Cost: local candidate/test development and bounded subprocess runs; no real account.
+Must precede: step3 product promotion and all product edits. The user explicitly
+requested critique → revision4 fold → full prebuild → implementation; the textual
+fold may occur first but does not clear or substitute for this experimental gate.
+Disqualifying result: the complete lifetime cannot satisfy these stated contracts
+with actual existing auth/file components, or candidate mechanics violate them;
+only fixture corrections preserving acceptance assertions may precede a full
+rerun. Record FAIL and return to the description under task-impl; do not promote
+local patches to a candidate that disproved its planned lifetime.
+Passing result: one complete run covers every stated phase and retained behavior,
+settles owned work (or truthfully reports deliberate retirement failure), restores
+terminal settings, preserves file effects and secret-free outcomes, with no timeout
+kill treated as a successful stop. Isolated/callback-only mocks do not close it.
 
 ## High-level summary
 
-The bounded file-first approach survives. Two Medium corrections are needed: make
-the recovery directory's own persistence barrier explicit before replacing the
-old destination, and preserve optional own-account cache data without requiring
-an access hash that LoginFlow does not require. No High or Low findings. No planning blocker is established;
-the full combined behavioral premise is still untested and gates product work.
+No new High, Medium or Low plan findings. Revision3 targets the established defect
+at the terminal lifetime boundary; it does not rebuild a layer that the failure
+bypassed. Its sequencing already puts the full experiment ahead of product edits.
+REORDER enforces that still-unrun behavioral gate, not a demand for an extra feature.
+The current product/PR remains rejected until revised implementation and renewed
+merge/PR reviews. This verdict is not a product soundness PASS.
+
+Subject: revision3 ate7e94c5, desc.md and selected PR-critic R1 (d10104b), against
+productdf79728 / PRhead69c2407 and unchanged dev77f2f53. Same warmed session, no
+subagent. Model proof: current-thread2026-10-16T12:07:55.242Z gpt-6-astra/xhigh.
+No PARKED description; one rejected PR critique; no open planning blocker. Earlier
+plan critique/prompt preserved as critic_r1.md/dynamic_critic_prompt_r1.md.
 
 ## Premise Inventory — ranked by waste if false
 
-### P1 — one local publication lifetime preserves usable old state
-First dependent step1, then2–5. A false effect/persistence model invalidates the
-publisher and operator outcomes. Scheduled beforestep1, not yet run. Cheapest
-covering test: real SQLite files/link/replace/fsync plus fault injection, checking
-bytes and recorded effect phase; instrument sync ordering to establish the chosen
-barriers. Isolated inquiries prove native primitives but not the full lifetime.
-Documentation explains syscall contracts, not actual platform support or power-loss
-behavior. Real local sync support was observed; universal crash durability is not claimed.
+### P1 — a single stop owner covers the full command lifetime
 
-### P2 — terminal input and repeated stop share correct lifetime ownership
-First dependent step3, but must be tested beforestep1 to avoid building a publisher
-for an unusable command driver. One loop with input between settled actions is
-plausible from LoginFlow's loop binding and Python's signal behavior. Only actual
-PTY/SIGINT and real flow cleanup can close the composition premise. Input stubs
-and mocked complete statuses are non-covering. Scheduled combined prebuild, then
-permanent tests; no current covering combined run.
+First dependent step1's design, product cost step3 through5. False admission/
+completion/retirement semantics would invalidate the terminal integration and its
+acceptance tests. Scheduled step2 before product promotion. Cheapest covering
+experiment: the complete candidate plus actual executing/suspended/completed task
+and real terminal/publication histories. Six planning cases observed real SDK/SRP
+settlement, but their phase-local driver is **non-covering for command-wide sticky
+stop and transitions**. R3 explicitly says so and requires the missing observation.
 
-### P3 — conversion produces a usable ordinary reader session
-First dependent step2. The actual codec/native SQLite/verified-reader isolated
-probe already passed, including own-ID0/account rows and no extra SendCode.
-Still combine it with the chosen publication/driver and real-SRP path before
-product work; a file containing the expected bytes alone is not the entire claim.
+The design specifies action identity binding, stop before/after registration,
+at-most-once cancellation, retirement admission after stop, terminal result
+consumption and exit selection after finalization. A callback must check its exact
+registration and one-shot state when it runs; the signal handler cannot transfer
+cancellation ownership by changing the current task reference. Reentrant/repeated
+requests must remain harmless. These are already required by step1, not new scope.
 
-### P4 — safe local retries preserve remote effects
-First dependent step3. Existing LoginFlow retains completed credentials and
-refuses inappropriate action order, but the new command could accidentally call
-start/submit again on a local failure. Count actual controlled source calls across
-preparation failure/retry and uncertainty. The prebuild must also exercise
-complete status plus a reported error and cleanup_pending, rather than assume
-every exception means no authorization occurred.
+### P2 — terminal interruption restores state through repeated signals
 
-### P5 — conditional live/runtime qualification
-Live Telegram delivery/real-account2FA and native Python3.7 remain unqualified.
-Exclusive live setup is unavailable and not a required implementation step;
-controlled source replies do not close this premise. Python3.11/Telethon1.45 and
-Python3.7 grammar are the bounded runtime evidence. These declared limits are
-carried unchanged, not rated as new findings.
+First dependent step1's input phase and product step3. Native getpass uses finally
+to restore terminal attributes; repeated exception injection could interrupt that
+finally. The plan explicitly switches the input phase to stop-only before the first
+unwind and requires actual termios observation in step2. Existing secret-echo tests
+alone are **non-covering for complete terminal restoration**. The cheap covering
+experiment is a PTY with first/repeated SIGINT at input/unwind plus state snapshots,
+run before promotion. That remains pending in the combined experiment.
+
+### P3 — stop and persistence effects remain independently observable
+
+First dependent step3 integration; the original file publisher itself is unchanged.
+A late stop cannot erase known saved/uncertain status or cause another save. The
+plan retains publisher barriers and stop predicates, computes exit after cleanup,
+and requires actual create/replace/fault histories in step2. Prior native file tests
+and17 fresh PR histories establish file semantics; they are **non-covering for the
+new owner's cross-phase integration**. Cheap combined local file/TTY/SIGINT cases
+are available now and precede product edits. No physical crash qualification follows.
+
+### P4 — async cancellation may leave known or uncertain source effects
+
+First dependent step1 admission contract. Six real-component planning cases passed,
+including native SRP with one password request and uncertain state, all observed
+wires closed. The plan correctly prohibits NEW actions after stop while allowing
+in-flight effects and retaining actual LoginFlow status. It does not promise remote
+rollback or automatically check authorization after stop. Full command must preserve
+that distinction in step2; a mocked return of complete/cancelled would not cover it.
+
+### P5 — deployment/runtime limits
+
+Live Telegram code delivery/real-account2FA and native Python3.7 remain unqualified,
+as inherited from desc.md. No authorized exclusive live setup is available here;
+those are supplemental limits, not required offline execution blockers. Actual
+Python3.11.10/Telethon1.45 and Python3.7 grammar claims stay separate. Trusted local
+POSIX, stopped readers and unbounded underlying computation/filesystem/disconnect
+latency are explicit preconditions; no hypothetical failure outside them is rated.
 
 ## Restart Check
 
-No earlier #50 failed implementation exists. The user's missing command/persistence
-layer is addressed by steps1–4, while the completed LoginFlow API remains unchanged.
-The observed representation mismatch is addressed by step2 and real reader reopen.
-Nothing in this request justifies rebuilding authentication or changing readers.
+| Observed failure | Established mechanism | Design element that addresses it |
+|---|---|---|
+| Ctrl-C inside phone/SRP action hangs, including real terminal/native SRP | Default SIGINT injects KeyboardInterrupt; _drive re-enters an already-done future whose Python completion callback does not stop the loop | Step1 records stop and requests cooperative cancellation; consumes done tasks exactly once; step2 repeats actual executing-code signals before promotion |
+| Waiting-state cancellation tests passed while the executing-state failure remained | A signal while blocked on a Future takes a different path from a signal inside coroutine bytecode | Step2 covers executing, suspended, terminal and retiring phases with real components |
+| Earlier plan omitted a backup parent barrier | Private directory contents and its parent entry need distinct synchronization | Step3 retains the already-tested staging-parent/old-bytes/backup-directory ordering |
+| Earlier plan assumed an own-account access-hash row | A valid completed flow can lack that optional cache row | Step3 retains required ID0 and optional actual-account row, with real reader reopen |
 
-## Inherited Lessons
+## Inherited Lessons and scope
 
-- Auth completion is not a saved session: separate outcome in step1, actual retry/
-  persistence histories beforestep1, operator reporting in step3.
-- Valid SQLite bytes alone do not prove safe publication: full combined prebuild
-  beforestep1 rather than treating the isolated conversion probe as sufficient.
-- CLI-only locks cannot coordinate readers: stopped-reader precondition and
-  observed conflict/sidecar refusal, no invented global safety promise.
-- Source retry cannot repair local storage: same retained credential and actual
-  SendCode/SignIn counts in the prebuild/permanent suite.
-- Echo suppression can fail: actual getpass fallback refuses before reading;
-  real terminal handling is separately exercised before implementation.
+Step2 precedes product promotion for every newly uncertain composition claim.
+Stop is command intent, not proof of source rollback (step1). Authentication is
+not publication (step3 retained outcome model). More waiting-state tests do not
+prove executing-state behavior (step2's actual SRP/validation signals). Cleanup
+failure is not permission to resume or misreport saved state (step1 final exit and
+step2 fault cases). No reader-wide lock or checkpoint framework is introduced.
 
-## Risk1 — the recovery directory needs its own parent persistence barrier
+Read coverage: revision2/3 plans, description/blockers, triage/traverse/rejection,
+complete current CLI/publisher/LoginFlow/session modules and fixture41/48 in the
+same warmed session; actual Python run_until_complete callback, signal scheduling
+and getpass implementation; retained verification and planning-probe source/results.
+No interface/schema/dependency/version change beyond the private CLI lifetime is
+needed. The worker has a different process/job contract; sharing a generic supervisor
+would add coupling without a demonstrated common consumer.
 
-**Risk**
+## Phase 2 risks
 
-The plan keeps the previous session inside a newly created private directory
-before replacing it. Saving the backup's entry inside that directory does not
-necessarily persist the directory's own name in its parent. If replacement later
-has an uncertain durability outcome, the promised recovery path could lack one
-of the persistence steps needed to preserve the old credential across a crash.
-
-Step1 creates a staging directory and later says to sync “that directory” after
-hardlinking previous.session. It does not explicitly require the destination
-parent to be synced after the staging directory is created and before replacement.
-Python's tempfile.mkdtemp performs mkdir, not a parent fsync. A directory's entries
-and its own parent entry are distinct metadata. The plan's post-replace parent sync
-is too late to establish the backup's pre-replacement persistence ordering when
-that sync is the operation that fails.
-
-**Severity:** Medium
-**Category:** Publication durability / ordering
-**Impact:** an incomplete recovery guarantee on supported local filesystems during
-the very post-publication uncertainty case the backup is meant to address.
-**NoobEng:** synchronizing the contents of a new directory and synchronizing the
-parent entry naming that directory are separate operations. A file-level sync
-does not implicitly flush all of its containing directory links.
-**Affected areas:** planstep1 staging/backup barriers, step5 fault/order coverage,
-mandatory combined prebuild.
-
-Primary basis: [fsync's directory-entry requirement](https://man7.org/linux/man-pages/man2/fsync.2.html).
-The actual local mkdir/link/fsync primitives were exercised in the inquiry; no
-claim is made that a power-loss fault was reproduced on this machine.
-
-### Mitigation — Quick
-Weaken the recovery wording and leave the backup as a best-effort diagnostic file.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* —
-
-### Mitigation — Robust
-Make the barrier sequence explicit: sync the destination parent after creating
-the private staging directory before authentication/publication; ensure the prior
-file's bytes are synced and its backup link matches the initial snapshot; sync the
-private directory after creating that link; only then attempt replacement. Keep
-the post-publication destination-parent sync as the success barrier. Every failure
-of the pre-replacement barriers leaves the destination untouched and cannot proceed
-to replace. The combined/permanent tests trace and fault each barrier, rather than
-claiming a simulated crash proves physical storage guarantees.
-**Why this is robust:** closes the missing ordering within this publisher with
-explicit local barriers and tests; no global transaction framework is needed.
-- [x] selected   - [x] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* No other consumer has this complete credential replacement/backup
-contract. batch_files shares file primitives but only publishes non-replacing
-artifacts; a single full protocol would need per-case branches. The local barriers
-close this instance permanently with minimal extent. No external pressure forces
-a lesser fix; robust is selected on reach/extent, not as a last resort.
-*For future:* —
-
-### Mitigation — Long-term
-Introduce a shared durable filesystem transaction abstraction for all library
-artifacts, recovery copies and credential publication.
-**Why this is long term effective:** could centralize directory/inode persistence
-semantics if multiple concrete consumers need the same replacement contract.
-Existing batch_files only publishes non-replacing artifacts; it does not need
-credential replacement/backup outcomes and is not yet the same full protocol.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* Revisit only when another concrete replacement/recovery consumer
-requires the same protocol. The local barrier semantics would survive extraction,
-so this is a possible future improvement, not prerequisite work.
-
-## Scope checks
-
-No new dependency, reader schema migration or LoginFlow behavior change. The
-planned native bridge uses the SDK schema rather than reimplementing it. All
-arbitrary-store/public-converter/durable-checkpoint expansion remains excluded.
-No need to ask the user for a design decision that current code/probes can settle.
-Proceed to tier selection, then the mandatory experiment before folding/product work.
-
-## Phase 2 supplement — optional own-account entity data
-
-This new evidence was obtained during prebuild preparation, before the combined
-experiment or any product edit. The original Risk1 and its selection are unchanged.
-This is an additional Phase2 finding with initially unticked proposals, followed
-by a separate Phase3 selection; it is not a silent rewrite during tier selection.
-
-## Risk2 — a complete login need not have a separate own-account cache row
-
-**Risk**
-
-A successfully authenticated account can lack optional cached access data. The
-planned conversion could reject that finished login if it assumes the separate
-account cache entry must exist. The user would have entered a valid code but still
-be unable to save a usable session, even though the native reader can identify the
-account from the session's dedicated own-ID marker.
-
-Step2 requires reconstructing the actual-account input-peer row and verifying own
-identity, without specifying optional absence. LoginFlow._observe_user accepts
-a valid User without access_hash. Actual Telethon/StoredSession processing omits
-that user's cache row while _save_states_and_entities preserves row0 with the
-authenticated ID. A real LoginFlow/test41 controlled-source probe, with
-service.user.access_hash=None, returned:
-`step complete account 4242 own-zero (0, 4242) account-row None`.
-Requiring source.get_entity_rows_by_id(account_id) to be present would therefore
-reject an API-supported completed credential.
-
-**Severity:** Medium
-**Category:** Native session compatibility / optional metadata
-**Impact:** needless save failure after successful authentication for a valid
-completed-flow state; encourages repeated login when the problem is local copying.
-**NoobEng:** the authorization key proves the login; the zero-ID cache entry tells
-the reader its own account ID. A separate access-hash cache entry is useful but
-not necessary to restore that login.
-**Affected areas:** planstep2 native candidate transfer/read-back; prebuild and
-step5's source-shape coverage.
-
-### Mitigation — Quick
-Report an unsupported completed credential when its own-account cache row is absent.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* —
-
-### Mitigation — Robust
-Require the dedicated own-ID0 marker to agree with the completed account and
-preserve it. Copy the separate actual-account input-peer row only if present;
-validate its identity/hash when present and never invent a missing hash. Read-back
-compares optional presence as well as values. Add an actual completed flow with
-missing access_hash, convert it and authenticate an ordinary reader without a
-second code request. Preserve available update state independently.
-**Why this is robust:** matches the existing valid session representation at this
-one conversion boundary and avoids changing the authentication API.
-- [x] selected   - [x] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* This is the only conversion consumer; existing readers already
-handle optional entity data and need no change. A local conditional copy plus
-read-back/real-reader case closes the instance with less extent than a public
-transfer protocol. Selected on merit, not due to an external blocker.
-*For future:* —
-
-### Mitigation — Long-term
-Define a general public capability-based session transfer protocol for optional
-entity/cache metadata across every backend.
-**Why this is long term effective:** could serve multiple real transfer consumers,
-but this is the only new converter and ordinary readers already tolerate absence.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* —
-*For future:* —
+None beyond the unresolved behavioral premises enforced by the experiment.
+No mitigation tiers are manufactured for declared preconditions or a gate already
+specified in the plan. The implementation detail is sufficient to build a falsifiable
+complete candidate, but reading it cannot establish that candidate's behavior.
