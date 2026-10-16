@@ -34,7 +34,7 @@ Type: project-space × epistemic × REFINE
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Specify which terminal is selected and retained, and which original state must be returned.
 Lands: A precise resource-binding contract.
-Touches: sensemaking.md A3; evidence/semantics-result.json (native identity/mode observations)
+Touches: docarchive/sensemaking.md A3; evidence/semantics-result.json (native identity/mode observations)
 WHY: The description cannot promise safe input while leaving the affected terminal ambiguous.
 Priority:HIGH; Confidence:HIGH; Essentiality:core.
 Guidance Mode:compact.
@@ -46,7 +46,7 @@ Type: project-space × teleological × DEVELOP
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Develop the explicit input/stop/restore boundary within the chosen local support scope.
 Lands: An interaction whose value is released only after settlement.
-Touches: critique.md Q2-F/A1 (bounded surviving direction)
+Touches: docarchive/critique.md Q2-F/A1 (bounded surviving direction)
 WHY: The goal gains a concrete local ownership boundary instead of another opaque helper assumption.
 Priority:HIGH; Confidence:MED; Essentiality:core.
 Guidance Mode:compact.
@@ -60,7 +60,7 @@ Type: project-space × epistemic × TEST
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Test how one stop request closes admission and ends waiting while retirement remains possible.
 Lands: Observed stop/settlement semantics across active and ending work.
-Touches: decomposition.md Q1; critique.md D3 (control contract)
+Touches: docarchive/decomposition.md Q1; docarchive/critique.md D3 (control contract)
 WHY: A credible description must distinguish stopping from simply abandoning resource effects.
 Priority:HIGH; Confidence:HIGH; Essentiality:core.
 Guidance Mode:compact.
@@ -72,7 +72,7 @@ Type: project-space × epistemic × TEST
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Exercise hidden input and error/reporting paths without exposing secret payloads.
 Lands: Confidentiality observations for success and refusal.
-Touches: sensemaking.md E1; critique.md D4 (secret/effect truth)
+Touches: docarchive/sensemaking.md E1; docarchive/critique.md D4 (secret/effect truth)
 WHY: The end goal includes reusable login without transferring credential handling risk to diagnostics.
 Priority:HIGH; Confidence:HIGH; Essentiality:core.
 Guidance Mode:compact.
@@ -84,7 +84,7 @@ Type: project-space × epistemic × CONSOLIDATE
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Consolidate settled-input admission with the existing safe status and cleanup contract.
 Lands: One clear auth boundary in the feature description.
-Touches: decomposition.md Q3/I3-I4 (existing action/status interface)
+Touches: docarchive/decomposition.md Q3/I3-I4 (existing action/status interface)
 WHY: The goal retains established auth behavior while preventing premature input consumption.
 Priority:MED; Confidence:HIGH; Essentiality:core.
 Guidance Mode:compact.
@@ -98,7 +98,7 @@ Type: project-space × epistemic × TEST
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Check that terminal/stop changes preserve absent, confirmed and uncertain save observations.
 Lands: Evidence that old credentials and publication truth remain intact.
-Touches: decomposition.md Q4; critique.md Q4-F (retained private publisher)
+Touches: docarchive/decomposition.md Q4; docarchive/critique.md Q4-F (retained private publisher)
 WHY: The end goal still requires a reusable saved session, not merely a repaired terminal.
 Priority:MED; Confidence:HIGH; Essentiality:core.
 Guidance Mode:compact.
@@ -110,7 +110,7 @@ Type: project-space × epistemic × REFINE
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Define admitted foreground/platform/input conditions and explicit refusal cases.
 Lands: A bounded, discoverable support statement.
-Touches: sensemaking.md RF1-RF3; critique.md D7 (host qualification)
+Touches: docarchive/sensemaking.md RF1-RF3; docarchive/critique.md D7 (host qualification)
 WHY: The description gains truthful guarantees instead of accidental sandbox or OS assumptions.
 Priority:HIGH; Confidence:MED; Essentiality:core.
 Guidance Mode:compact.
@@ -122,7 +122,7 @@ Type: project-space × teleological × DEVELOP
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Develop an observation matrix over acquisition, waiting, completion, restoration and release.
 Lands: Coverage tied to effects and exit origins.
-Touches: critique.md Q5-F; evidence/owned-terminal-result.json (22 observations)
+Touches: docarchive/critique.md Q5-F; evidence/owned-terminal-result.json (22 observations)
 WHY: The goal gains a way to detect hidden assumptions before another large implementation.
 Priority:HIGH; Confidence:MED; Essentiality:core.
 Guidance Mode:compact.
@@ -136,7 +136,7 @@ Type: project-space × epistemic × TEST
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Test the chosen terminal behavior with actual auth, native files and ordinary-reader reuse.
 Lands: Bounded evidence about the assembled command.
-Touches: critique.md A1; original file-first finding (composition commitment)
+Touches: docarchive/critique.md A1; original file-first finding (composition commitment)
 WHY: The goal requires assumptions to hold together, not only in isolated primitives.
 Priority:HIGH; Confidence:MED; Essentiality:core.
 Guidance Mode:compact.
@@ -148,7 +148,7 @@ Type: project-space × epistemic × TEST
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Test whether an independent guardian can prove helper/resource binding and full retirement.
 Lands: Evidence for or against a smaller reuse alternative.
-Touches: innovation.md Q2-G; critique.md Q2-G/A2 (reserve candidate)
+Touches: docarchive/innovation.md Q2-G; docarchive/critique.md Q2-G/A2 (reserve candidate)
 WHY: The goal gains a defensible simplicity comparison; reuse is optional, not a prerequisite.
 Priority:MED; Confidence:LOW; Essentiality:supporting.
 Guidance Mode:compact.
@@ -160,7 +160,7 @@ Type: project-space × teleological × PURSUE-SEED
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Examine parent-owned restoration when input executes in a helper process.
 Lands: A bounded isolation alternative with its additional obligations exposed.
-Touches: innovation.md Q2-C helper branch; critique.md A3 (reserve)
+Touches: docarchive/innovation.md Q2-C helper branch; docarchive/critique.md A3 (reserve)
 WHY: Indirect benefit: another implementation direction if a required context defeats local interaction.
 Priority:LOW; Confidence:MED; Essentiality:peripheral.
 Guidance Mode:compact.
@@ -172,7 +172,7 @@ Type: project-space × epistemic × REFRAME
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Compare immutable new destinations with explicit replacement as a delivery boundary.
 Lands: A clear scope/value tradeoff for re-login.
-Touches: innovation.md Q4-C; critique.md Q4-C (conditional narrower scope)
+Touches: docarchive/innovation.md Q4-C; docarchive/critique.md Q4-C (conditional narrower scope)
 WHY: The goal gains an honest fallback if publication scope itself becomes the problem; it does not fix input.
 Priority:LOW; Confidence:HIGH; Essentiality:supporting.
 Guidance Mode:compact.
@@ -184,7 +184,7 @@ Type: project-space × epistemic × TEST
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Characterize live delivery/2FA observations under an authorized exclusive setup.
 Lands: Source acceptance evidence distinct from local component behavior.
-Touches: sensemaking.md qualification limits; critique.md Q3-F/external observations (controlled source only)
+Touches: docarchive/sensemaking.md qualification limits; docarchive/critique.md Q3-F/external observations (controlled source only)
 WHY: Indirect later operational confidence; the present description can land with this limit explicit.
 Priority:LOW; Confidence:LOW; Essentiality:peripheral.
 Guidance Mode:compact.
@@ -196,7 +196,7 @@ Type: project-space × teleological × INVESTIGATE-FRONTIER
 Goal: An evidence-qualified #50 description with explicit ownership/acceptance boundaries, justified scope and no premature implementation plan.
 Move: Investigate whether another concrete consumer shares the same terminal lifetime.
 Lands: Evidence for or against a reusable framework boundary.
-Touches: innovation.md Q1-G/Q5-G; critique.md generic-candidate kills
+Touches: docarchive/innovation.md Q1-G/Q5-G; docarchive/critique.md generic-candidate kills
 WHY: Indirect future reuse only; the current goal gains by avoiding unsupported generalization.
 Priority:LOW; Confidence:LOW; Essentiality:peripheral.
 Guidance Mode:compact.

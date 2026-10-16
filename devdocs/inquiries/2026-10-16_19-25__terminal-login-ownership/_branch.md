@@ -12,7 +12,7 @@ do it
 ```
 
 ## Articulation Reference
-- File: articulate_simple.md
+- File: docarchive/articulate_simple.md
 - Itemize count:1; identifiers:I1; verdict:HIGH-PROCEED; flagged conditions:none.
 
 ## Question
