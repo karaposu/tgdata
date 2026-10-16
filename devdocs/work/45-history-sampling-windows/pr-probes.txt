@@ -1,0 +1,19 @@
+32 base/current page results and exact exception texts match
+PASS probe_activity_extraction_parity
+metadata-stage cancellation: no invented capture or history send; cleanup PASS
+PASS probe_cancel_during_metadata_no_capture
+40 rehashed malformed field variants refused with HistorySampleError
+PASS probe_capture_reload_adversarial_types
+Account operation cleanup failed (OSError)
+concurrent222/333 outcome, allowance and event ownership PASS
+PASS probe_concurrent_owners_and_cleanup_error
+last-call completion and per-day unknown evidence PASS
+PASS probe_last_request_end_and_partial_completion
+36 wire histories; 216 independent selection/replay comparisons PASS
+PASS probe_randomized_source_and_independent_selection
+OBSERVED loader accepts rehashed100 accepted pages/zero slots/history_end as complete
+Native collector stops on first empty page; valid native capture had1 page
+PASS probe_rehashed_impossible_page_counts
+wide window: 20454 buckets, 0.527s capture+selection, 3805081 bytes
+PASS probe_wide_window_and_sampling_cost
+8 fresh probe groups; 0 harness failures; one explicit loader observation
