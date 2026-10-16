@@ -199,3 +199,9 @@ After execution, per-case text transcripts were normalized from PTY CRLF and
 trailing prompt spaces for git whitespace hygiene. raw-transcripts.json preserves
 the exact pre-normalization text and SHA256 for every case. No probe, product,
 expectation or observed outcome changed; no rerun was needed.
+
+## Phase 3 — selection complete
+
+Completed after Phase2 commit625b4d0. Zero rated findings means zero mitigation
+proposals to select. No risk, verdict or severity changed. No last-resort choice
+or deferred class-wide prerequisite was manufactured. Product head remainsb1d9dcc.

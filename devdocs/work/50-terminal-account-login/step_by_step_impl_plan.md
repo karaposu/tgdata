@@ -7,7 +7,8 @@ effort: xhigh
 **Critic folded:** 2026-10-16T21:33:21.243305+03:00 — 1 robust mitigation (2 implementation steps changed, 0 added).
 **Status:** fresh critique REORDER; full combined prebuild PASS (prebuild-r8/result.json).
 The experimental gate is satisfied; product promotion and verification are complete.
-See implementation.md/verification.md. Renewed merge check and fresh PR critique remain pending.
+See implementation.md/verification.md. Renewed merge check0ca6da9 and fresh PR
+critique625b4d0 PASS (zero findings,35 fresh histories); merge awaits go-ahead.
 First complete run:23 retained groups plus all50 terminal/20 profile-control/46 framing/
 7 handoff cases and isolated installed entry/native-SRP checks; source hashes unchanged. Revision6 remains deprecated;
 its failed critique is critic_r6_prebuild.md. The prior selected plan critique is
