@@ -1,0 +1,23 @@
+{
+  "result": "PASS",
+  "archive_product": "eb1f564f68f692b1151cbfb55f0a18402d7ce7a7",
+  "pr_head": "b1d9dcc7f218876df7f5201dd93e80891fb64720",
+  "base": "77f2f53eba8bdc6922127a3b9118bf17de4efabf",
+  "source_files": 111,
+  "all_tested_hashes_match": true,
+  "product_diff_equal": true,
+  "pr_changed_paths": [
+    "README.md",
+    "docs/terminal_login.md",
+    "setup.py",
+    "tgdata/_terminal_input.py",
+    "tgdata/login_cli.py",
+    "tgdata/login_file.py",
+    "tgdata/smoke_tests/README.md",
+    "tgdata/smoke_tests/_terminal_login_framing.py",
+    "tgdata/smoke_tests/_terminal_login_handoffs.py",
+    "tgdata/smoke_tests/_terminal_login_modes.py",
+    "tgdata/smoke_tests/_terminal_login_observer.py",
+    "tgdata/smoke_tests/test_48_terminal_login.py"
+  ]
+}

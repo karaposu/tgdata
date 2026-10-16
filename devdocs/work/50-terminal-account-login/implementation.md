@@ -2,69 +2,67 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# #50 implementation complete under revision4
+# #50 implementation under revision 8
 
-Archive product: da890a1. Product-only PR51 head:34907d4.
-Base: dev77f2f53eba8bdc6922127a3b9118bf17de4efabf.
-Earlier revision2 implementation/verification are preserved as *_r2.md; its
-rejected PR critique remains unchanged as evidence, not current approval.
+Archive product: eb1f564. Product-only PR head: b1d9dcc.
+Base remains dev77f2f53. The user authorized implementation with “continue” after
+the complete prebuild passed. Prior implementation/verification are preserved in
+implementation_r4.md and verification_r4.md; both rejected PR critiques remain
+historical evidence, not clearance for this revision.
 
-## Result
+## What changed
 
-Terminal stop intent now belongs to one _TerminalRun lifetime. SIGINT cancels an
-active authentication action once, consumes completed tasks without re-entering
-the event loop, and remains recorded through subsequent cleanup. Input interruption
-restores terminal settings before repeated signals can interfere. Explicit retirement
-can run after stop. Publication uses the same persistent flag and existing effect
-receipt; final exit is chosen after cleanup so a late stop cannot erase saved or
-uncertain file state.
+The CLI uses a private byte-observable terminal reader for every hidden value and
+confirmation. It retains at most128 UTF-8 bytes, permanently invalidates oversized
+or unsupported-control lines, and discards the remainder through Enter/EOF/stop.
+Erase/clear cannot turn a rejected suffix into a credential. Unsupported terminal
+profiles refuse before mutation/source work. Input is admitted only after exact
+terminal restoration and owned-fd retirement have succeeded.
 
-The actual native-password/real-terminal hang from PR-critic R1 now exits130 with
-restored terminal attributes and settled source work. Admission tests prove no new
-prompt/action/save follows stop. Already in-flight source effects may be uncertain;
-that is preserved rather than described as remote rollback.
+SIGINT records stop without raising into input restoration. The intermediate
+canonical transition retains the active protected controls: echo, extended/flow
+processing and quit/suspend remain disabled until the final original-mode write.
+A failure retains separate primary-operation and cleanup facts and releases no value.
+The existing one-action cancellation driver, LoginFlow and native publisher remain.
 
-## Plan and gate sequence
+## Qualification and promotion
 
-- Revision3 e7e94c5 was freshly critiqued in-session: prompt46aeed9, Phase2 verdict
-  51f47e9, no new rated risks and a mandatory full combined prebuild.
-- Revision4 fold d435a54 records zero selected mitigations and the still-pending
-  prebuild. This textual fold followed the user's requested order; no product edit
-  preceded the experiment.
-- e0d764f commits the full prebuild PASS:23 groups,25 real-PTY scenarios,17 retained
-  review histories,8 stop transitions and14 publication/stop combinations. First
-  run passed, with candidate/product hashes unchanged.
-- da890a1 promotes the exact passing CLI bytes, extends permanent smoke48 with the
-  executed test functions, and updates the terminal guide/smoke README. Product
-  and work records remain separate. 34907d4 is the same product commit on PR51's
-  product-only branch; all106 verified source files match and product diff is equal.
+- Fresh plan critic81598e2 found one Medium in intermediate control restoration.
+  Its real native probe showed SIGQUIT could be delivered while echo remained off.
+- Fold70d32cf selected the robust active-profile restoration sequence in revision8.
+- Full prebuild PASS b0caa03 was committed before the first product edit. One complete
+  run covered every retained and new history and the isolated installed command.
+- Both promoted product modules match the exact passing candidate bytes. The native
+  publisher is unchanged. verification-r8/promotion.json records hashes/adaptations.
+- Permanent smoke48 retains23 groups and adds3 matrix groups:70 terminal/profile
+  cases,46 framing histories and7 real SDK/native-file handoffs. Four test-only
+  helpers keep producers, fault injection and observations out of product code.
+- Public docs define the128-byte limit, hidden confirmations, supported editing,
+  irreversible invalid-line discard, per-prompt invitation and truthful cleanup.
 
-Steps1–5 are complete within the implementation scope. Existing LoginFlow,
-LoginDestination/native conversion, StoredSession, configured readers, package
-exports/version and setup entry points are unchanged from the reviewed product.
-No generic supervisor or new dependency was added. Version stays0.1.1.
+No design deviation or product correction occurred during implementation. Harness
+packaging changes replace candidate loaders with product imports, use portable
+paths, remove work-folder result writes, invoke the actual product module and import
+the installed suite in the installation probe.21 retained test functions have
+identical ASTs; the argument-redaction test was renamed and the module-entry test
+now invokes the product module. All qualified helper assertions are retained.
+The outer smoke48 verification allowance is240 seconds instead of120 because it
+now includes all three native matrices; case deadlines remain unchanged, and a
+killed process is never counted as success.
 
-## Verification and corrections
+The plan changes the obsolete getpass seam: observable hidden-input/refusal native
+coverage replaces its fallback unit test. The qualified small-canonical-limit case
+now succeeds because byte streaming does not depend on the kernel canonical limit.
+Persistent restoration faults continue to report failure, with fixture repair kept
+separate from product success. These decisions were established before promotion.
 
-New23-group suite passed; targeted15/17/32/41/48 passed97 checks. Full supported
-34 suites passed1,010 actual offline checks; seven demos passed; three live cases
-were deliberately skipped. All106 Python files compile and satisfy3.7 grammar.
-The isolated installed tgdata-login entry also passes actual native-SRP interruption
-through a real PTY, help/headless checks and installed import/source matching.
+## Verification and handoff
 
-No candidate, product or test-expectation correction was needed. One extracted
-work-folder helper's extra EOF blank line was trimmed for diff hygiene; the executed
-combined suite/candidate bytes were unchanged. No design deviation or unsupported
-behavior was patched during verification. See verification.md for evidence paths.
+See verification.md and verification-r8/ for actual run results. Renewed merge
+check and fresh in-session PR critique remain pending. PR51 stays draft; no merge,
+release, live Telegram login, environment deployment or ScrapeOps change.
 
-## Handoff
-
-Next: renewed merge-check against the revised diff/plan, then fresh in-session
-critic-d PR critique. Historical merge-check98f4a59 and rejected critique93ba179/
-d10104b apply to the old head and do not clear this revision. PR51 stays draft.
-§9 current-thread2026-10-16T12:07:55.242Z confirms gpt-6-astra/xhigh; no subagent.
-
-No merge, release, live Telegram login, environment deployment or ScrapeOps change.
-Original checkout/version edit, duncan, unrelated guides and separate PR49 remain
-untouched. Native3.7, live Telegram delivery/real-account2FA, physical power loss
-and arbitrary/active-writer filesystem behavior remain unqualified.
+Current-thread model/effort metadata verifies gpt-6-astra/xhigh for this continuation;
+see model-verification-r8.md. No subagent. Version remains0.1.1; no dependency/export
+change. Original checkout/version edit, duncan, unrelated guides and #45/PR49 stay
+separate. Native3.7, other hosts and live delivery/real-account2FA are not qualified.

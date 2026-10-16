@@ -2,69 +2,66 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# #50 revision4 verification — PASS
+# #50 revision 8 verification — PASS
 
-Product da890a1; identical PR head34907d4. Python3.11.10 / Telethon1.45.0.
+Archive producteb1f564; byte-identical PR productb1d9dcc.
+Python3.11.10 / Telethon1.45.0, native macOS terminal tests. No live login.
 
-| Check | Result |
+| Check | Observed result |
 |---|---|
-| Complete prebuild before product changes | First run PASS:23 groups,25 actual PTY scenarios |
-| Retained review/failure histories within prebuild | 17 PASS |
-| Stop admission/completion/finalization phases | 8 PASS |
-| Create/replace publication-stop combinations | 14 PASS |
-| Permanent smoke48 | 23 passed;0 failed |
-| Targeted15/17/32/41/48 | 97 checks /5 suites PASS |
-| Full12–19/22–46 plus48 | 1,010 actual offline checks /34 suites PASS |
-| Seven existing demos | PASS |
-| Compile / Python3.7 grammar | 106 files PASS; native3.7 not run |
-| Isolated installed command | Actual entry/native-SRP/PTY interruption, help, headless, isolated imports/hashes PASS |
-| Exact PR-tree equivalence | All106 tested source hashes and product diff match |
-| Live cases | 3 deliberate skips, excluded from offline count |
+| Full prebuild before product changes | First complete run PASS, committed b0caa03 |
+| Retained prebuild groups/scenarios | 23 groups;25 PTY;17 source/file;8 stop;14 publication-stop |
+| Additional terminal/profile/control cases | 50 +20 PASS |
+| Framing histories / real-component handoffs | 46 /7 PASS |
+| Permanent smoke48 | 26 groups PASS, including all three additional matrices |
+| Targeted15/17/32/41/48 | 100 checks /5 suites PASS |
+| Full12–19/22–46 plus48 | 1,013 offline checks /34 suites PASS |
+| Existing demos | 7 PASS |
+| Compile / Python3.7 grammar | 111 /111 files PASS; native3.7 not run |
+| Isolated installed command | Actual entry/native-SRP interruption, module/console help, headless refusal PASS |
+| Candidate/product equality | Both product modules byte-identical to qualified candidates |
+| PR-tree equivalence | All111 source hashes and complete product diff match |
+| Live checks | 3 skipped, excluded from offline count |
 
-The CLI bytes equal the prebuild candidate:
-8191362b69692824de82a3b70ac65a54103f79de29c1204b283d6bc1f8849d24.
-Every permanent test function's AST equals its executed prebuild counterpart; only
-candidate loading/root setup differs. The native publisher retains its previous
-hash3b526f483d3f0c137ebc45023f2326710781000ec71af090ed83c1b10d001290.
+The 123 new matrix histories run inside three of smoke48's26 groups; they are not
+added again to the reported1,013 suite checks. The full runner records exits,
+counts, durations and hashes and confirms source did not change during the run.
+No product, candidate or expected-outcome correction was needed in verification.
+Permanent-test extraction/packaging adaptations are listed in implementation.md
+and verification-r8/promotion.json; behavioral assertions are retained.
 
-## Evidence
+## Evidence and reproduction
 
-prebuild-r4/result.json and attempt-1.txt preserve the complete candidate gate;
-prebuild-r4/README.md describes components and phase coverage.
-verification-r4/initial-test48.txt, evidence/targeted/result.json and
-evidence/full/result.json preserve counts/exits/durations and source manifests.
-Individual suite/demo logs sit beside their result JSONs. verify.py checks source
-hashes before and after tests. pr-equivalence.json records the identical PR tree;
-no unnecessary full-suite repeat was used for a byte-identical cherry-pick.
+- prebuild-r8/result.json, result-attempt-1.json, attempt-1.txt and README.md:
+  full experimental gate and its exact candidate/source hashes.
+- verification-r8/evidence/targeted/result.json and evidence/full/result.json:
+  five affected and34 full suites, with every suite/demo log beside each manifest.
+- verification-r8/promotion.json: exact candidate/product hashes and retained ASTs.
+- verification-r8/pr-equivalence.json: tested archive/PR equality and product-only paths.
+- verification-r8/install-result.json, install-build.txt, installed-interruption.txt:
+  isolated install with the actual generated console script and installed modules.
 
-verification-r4/verify_install.py uses existing offline setuptools65.5 in temporary
-source/lib/script directories. No wheel/build dependency was installed. Its
-installed_probe.py runs the real generated console entry via runpy in an isolated
-PTY child with controlled transport and actual native SRP, then verifies exit130,
-terminal restoration and owned cleanup. Parent/child both assert imports from the
-isolated library. installed-interruption.txt records:
+Commands, using /Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python:
+
+```text
+python devdocs/work/50-terminal-account-login/verification-r8/verify.py targeted
+python devdocs/work/50-terminal-account-login/verification-r8/verify_install.py
+python devdocs/work/50-terminal-account-login/verification-r8/verify.py full
+```
+
+Installed native-SRP output:
 
 ```text
 PTY_PHASE native_srp terminal restored; exit130
 INSTALLED_NATIVE_SRP_STOP_PASS
 ```
 
-Commands use /Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python:
+No active environment was changed. The offline setuptools managed install uses
+separate temporary source/library/scripts, existing dependencies and no network.
+Its source is the product tree, with no candidate overlay. Login tests forbid socket
+connect/connect_ex; test12's full-suite proxy fixture uses local loopback only.
 
-```text
-python devdocs/work/50-terminal-account-login/prebuild-r4/run.py
-python -m tgdata.smoke_tests.test_48_terminal_login
-python devdocs/work/50-terminal-account-login/verification-r4/verify.py targeted
-python devdocs/work/50-terminal-account-login/verification-r4/verify_install.py
-python devdocs/work/50-terminal-account-login/verification-r4/verify.py full
-```
-
-No verification failure or product correction occurred. The sole formatting
-cleanup removed an unused extra EOF blank line from the extracted review_cases.py
-work helper; executed combined-suite/candidate bytes and expectations did not change.
-All tested changes are within the folded revision4 contract.
-
-These are actual SDK/SRP/session/file/terminal tests with controlled source replies,
-not live Telegram qualification. Network connection is forbidden in login tests;
-full test12 uses its local loopback proxy fixture. Native3.7 execution and physical
-power-loss/arbitrary-writer guarantees are not claimed. #45/test47 remains separate.
+Native3.7, other-host terminal behavior, live code delivery/real-account2FA and
+physical power-loss/arbitrary-writer filesystem behavior are unqualified. Existing
+three live skips are intentional. #45/test47 remains separate. Renewed merge check
+and fresh in-session PR critique are still required; PR51 remains draft.

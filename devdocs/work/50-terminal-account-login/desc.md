@@ -9,7 +9,8 @@ effort: xhigh
 at e2f5ab6. Earlier description preserved in desc_r2.md; original in desc_r1.md.
 Revision6 remains DEPRECATED_step_by_step_impl_plan.md, with its failed experiment
 in critic_r6_prebuild.md. Revision8 folds the fresh plan critique; its full combined prebuild passed before
-product edits. Implementation remains pending. The inquiry prototype is not product code.
+product edits (b0caa03). Revision8 is now implemented and verified: see implementation.md
+and verification.md. Renewed merge check and fresh PR critique remain pending.
 
 **Session warmth:** same retained #43/#44/#45/#50 context; dev77f2f53. LoginFlow,
 SDK/SRP, session conversion, native publisher, reader, command lifecycle and full
@@ -126,6 +127,6 @@ No shortened value is admitted; persistent cleanup faults correctly remain failu
 Historical failure remains in critic_r6_prebuild.md and prebuild-r6/.
 
 No open planning blocker identified. The complete revision8 experimental composition has now passed before product
-changes; promotion and product verification remain pending. Live
+changes; promotion and product verification now pass. Renewed review remains pending. Live
 source delivery/real-account2FA requires an authorized exclusive setup; native3.7
 runtime remains unavailable. Current-turn §9 verification is resolved by the matching trace.

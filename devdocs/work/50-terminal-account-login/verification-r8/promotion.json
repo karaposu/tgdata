@@ -1,0 +1,36 @@
+{
+  "candidate_product_equal": {
+    "_terminal_input.py": "35823d748ec0a2f9c2b1a58160c5176cce03287901b9b56beb5682cfa3c86fc2",
+    "login_cli.py": "7b003b50d28ce6f5f5d6f530df6b94a6a1226da31f06af1691b80ade3ee1d298"
+  },
+  "retained_test_functions_ast_identical": [
+    "test_native_reopen_and_optional_cache",
+    "test_new_existing_and_replacement",
+    "test_invalid_inputs_wait_and_unsupported",
+    "test_uncertain_check_without_replaying_code",
+    "test_local_retry_never_authenticates_again",
+    "test_preflight_sidecar_symlink_and_missing_tty",
+    "test_changed_and_appeared_destination",
+    "test_prepublication_barriers_preserve_old_bytes",
+    "test_post_replace_uncertainty_retains_old_backup",
+    "test_native_commit_and_close_failures_retire_connections",
+    "test_output_failure_does_not_reverse_saved_state",
+    "test_config_name_precedence_and_working_directory",
+    "test_last_moment_no_clobber_collision",
+    "test_cleanup_failure_preserves_confirmed_publication",
+    "test_real_flow_cleanup_retry_and_secret_logs",
+    "test_real_terminal_composition",
+    "test_stop_admission_and_finalization",
+    "test_terminal_results_and_stale_cancel_registration",
+    "test_stop_across_publication_effects",
+    "test_real_phase_terminal_matrix",
+    "test_review_source_and_storage_histories"
+  ],
+  "adaptations": [
+    "Permanent imports instead of candidate loader; portable repository roots.",
+    "Module entry invokes actual product module; argument-redaction test renamed after removal of obsolete getpass seam.",
+    "Three matrix groups invoke 70/46/7 qualified cases through test-only helpers with no JSON writes in product tree.",
+    "Installed probe imports the actual installed permanent suite; no candidate overlay."
+  ],
+  "behavioral_fixes": []
+}

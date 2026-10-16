@@ -6,7 +6,8 @@ effort: xhigh
 
 **Critic folded:** 2026-10-16T21:33:21.243305+03:00 — 1 robust mitigation (2 implementation steps changed, 0 added).
 **Status:** fresh critique REORDER; full combined prebuild PASS (prebuild-r8/result.json).
-The experimental gate is satisfied; product promotion/verification remain pending.
+The experimental gate is satisfied; product promotion and verification are complete.
+See implementation.md/verification.md. Renewed merge check and fresh PR critique remain pending.
 First complete run:23 retained groups plus all50 terminal/20 profile-control/46 framing/
 7 handoff cases and isolated installed entry/native-SRP checks; source hashes unchanged. Revision6 remains deprecated;
 its failed critique is critic_r6_prebuild.md. The prior selected plan critique is
@@ -26,7 +27,8 @@ LoginFlow and native session publication. Input must be observed and framed whil
 arriving, so oversized pastes are refused without truncated credentials or a lost
 line delimiter. One private owner keeps the terminal hidden through invalid-line
 disposal and restores exact settings before any value reaches authentication.
-This pass reviews/folds and runs the full prebuild only; product implementation remains a later phase.
+The initial pass reviewed/folded and completed the prebuild. The user then said
+“continue”; product promotion and verification are now complete under this plan.
 
 ### Huge Hard Blockers
 
