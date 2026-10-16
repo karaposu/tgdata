@@ -2,12 +2,11 @@
 
 import argparse
 import asyncio
-import getpass
 import signal
 import sys
 import threading
-import warnings
 
+from ._terminal_input import read_hidden, terminal_preflight, TerminalInputError
 from .login import LoginFlow, LoginError
 from .login_file import LoginDestination, LoginFileError
 
@@ -34,14 +33,12 @@ def _safe_say(message):
         pass
 
 
-def _hidden(prompt):
-    with warnings.catch_warnings():
-        warnings.simplefilter('error', getpass.GetPassWarning)
-        return getpass.getpass(prompt, stream=sys.stderr)
+def _hidden(prompt, *, stop_requested):
+    return read_hidden(prompt, stop_requested)
 
 
-def _confirm(prompt, expected='yes'):
-    return input(prompt).strip().lower() == expected.lower()
+def _confirm(prompt, expected='yes', *, stop_requested):
+    return read_hidden(prompt, stop_requested).strip().lower() == expected.lower()
 
 
 class _TerminalRun:
@@ -50,18 +47,12 @@ class _TerminalRun:
     def __init__(self, loop):
         self.loop = loop
         self.stopped = False
-        self._input = False
         self._active = None
         self._previous_handler = signal.getsignal(signal.SIGINT)
         signal.signal(signal.SIGINT, self._signal)
 
     def _signal(self, signum, frame):
         self.stopped = True
-        if self._input:
-            # Only the first signal unwinds input. Further signals must not
-            # interrupt getpass' terminal restoration in its finally block.
-            self._input = False
-            raise KeyboardInterrupt
         registration = self._active
         if registration is not None and not registration['retire']:
             self._request_cancel(registration)
@@ -85,12 +76,7 @@ class _TerminalRun:
 
     def prompt(self, function, *args):
         self.check()
-        self._input = True
-        try:
-            self.check()
-            value = function(*args)
-        finally:
-            self._input = False
+        value = function(*args, stop_requested=lambda: self.stopped)
         self.check()
         return value
 
@@ -136,7 +122,6 @@ class _TerminalRun:
     def close(self):
         # No active registration survives into loop close or handler restoration.
         self._active = None
-        self._input = False
         try:
             self.loop.close()
         finally:
@@ -322,6 +307,8 @@ def main(argv=None):
     phase, status = 'preflight', 2
     try:
         run.check()
+        terminal_preflight()
+        run.check()
         flow = LoginFlow(args.config)
         run.check()
         destination = LoginDestination(flow._engine._load_config().session_file,
@@ -343,8 +330,15 @@ def main(argv=None):
         else:
             _safe_say('Interrupted; session not published.')
         status = 130
-    except (LoginError, LoginFileError) as error:
+    except (LoginError, LoginFileError, TerminalInputError) as error:
         _safe_say('Stopped: ' + error.kind)
+        if isinstance(error, TerminalInputError):
+            if error.operation_kind == 'input_stopped':
+                run.stopped = True
+            if error.operation_kind and error.cleanup_kinds:
+                _safe_say('Input outcome: ' + error.operation_kind)
+            if error.cleanup_kinds:
+                _safe_say('Terminal cleanup: ' + ', '.join(error.cleanup_kinds))
         if destination is not None:
             _safe_report(destination.outcome)
         status = 2 if phase == 'preflight' else 3 if phase == 'login' else 4
