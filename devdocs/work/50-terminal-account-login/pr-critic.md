@@ -4,186 +4,162 @@ effort: xhigh
 ---
 **IMPLEMENT AFTER FOLDING THESE IN**
 
-Falsifier: the existing LoginFlow/native-session/terminal composition cannot
-preserve settled source ownership and truthful publication outcomes within a
-bounded command adapter, so the two-module plan would need replacement.
-Affordable now: no remaining unexecuted observation of that scope — the cheapest
-combined experiment ran before implementation, and fresh actual-component probes
-have now run against this PR. They establish a local interruption defect, not a
-failure of the source/session representation or the file-first contract. A revised
-driver still needs its own combined prebuild before implementation; this verdict
-does not claim that an unwritten correction has passed.
+Falsifier: terminal, source and publication ownership cannot be kept within the
+bounded command adapter, requiring replacement of the feature's auth/file contracts.
+Affordable now: no remaining unexecuted test of that structural claim — the current
+complete component probes have run. They establish the concrete local terminal
+ownership defect below, not a need to replace LoginFlow/native publication. A new
+input contract/candidate requires the upstream description/traverse pass before
+its experiment; this verdict does not approve any unbuilt correction.
 
 ## High-level summary — PR gate REJECTED
 
-One **Medium** finding; no High or Low findings. A real Ctrl-C delivered inside an
-authentication coroutine can finish its task with KeyboardInterrupt. The command
-then runs that completed task through the event loop again and hangs. Additional
-Ctrl-C does not resolve it. This violates the explicit interruption contract and
-was reproduced with actual terminal input and actual native SRP computation.
+One **Medium** finding; zero High/Low. A first Ctrl-C during hidden-input terminal
+restoration can prevent echo from being re-enabled. It occurs after ordinary input
+or EOF and was reproduced in an actual PTY. The existing repeated-Ctrl-C test starts
+with interruption during the read, which clears the input flag earlier and therefore
+passes a different history.
 
-The other17 fresh functional cases passed. Existing exact-tree1,005 offline
-checks/34 suites, seven demos and isolated installation also passed, but their
-terminal interruption cases hit suspended/waiting work and missed this branch.
-The file-first design and existing LoginFlow remain reusable; no finding justifies
-rebuilding authentication or adding a general persistence framework.
+The old native-password-processing hang is fixed: its actual-SRP/PTY falsifier now
+returns130 without timeout or publication. Thirteen other fresh source/storage/
+retirement histories passed. No product edit occurred during review.
 
-Under CONTRIBUTING §7.3 one Medium rejects. PR51 must remain draft. Under §7.4,
-next is revision3 re-planning, taking this finding as input, then a fresh plan
-critique/fold and combined real-component prebuild before implementation. No
-product patch or merge is performed during this review.
+This is the **second rejected PR gate** (first:pr-critic_r1.md). CONTRIBUTING §7.4
+requires returning to description/traverse before another plan, not patching this
+finding or automatically generating revision5. PR51 remains draft/unmerged. The
+selected mitigation below will inform that upstream pass, not bypass it.
 
-## Subject, provenance and reading
+## Subject, provenance and scope
 
-PR51: head69c240731e9f8dcee794e3f4a88372d8cd9af118, base
-77f2f53eba8bdc6922127a3b9118bf17de4efabf; folded revision2 plan on archive
-feat/50-terminal-account-login. Published diff downloaded after opening PR and
-compared to local diff; only the setup.py hunk-heading label differs, no patch
-content. Same warmed session, no subagent. Current-thread metadata
-2026-10-16T11:31:47.031Z confirms gpt-6-astra/xhigh (§9 satisfied).
+Head34907d42b7b1de1186e4b848eff4a50b2349e9ee, tree
+9e9b562acbc1b1355277b69b71345ff8a36d156a, base
+77f2f53eba8bdc6922127a3b9118bf17de4efabf; folded revision4.
+Same warmed session, no subagent. Current-thread2026-10-16T12:53:53.496Z confirms
+gpt-6-astra/xhigh. Renewed merge-check6314d33 is fidelity PASS, not soundness approval.
 
-Read all seven changed files in full with triage/desc/plan/plan-critic/prebuild/
-verification. Reread full LoginFlow, StoredSession, native SQLiteSession and
-controlled transport fixture41, plus owned disconnect and the actual Python3.11
-run_until_complete callback/driver. Config/factory/ordinary-reader and health/budget
-context retained from the same warmed implementation session. Permanent tests are
-supplementary evidence, not the source of the fresh verdict.
+Read triage/description/folded plan/plan-critic/result/previous rejection and actual
+published whole-feature diff. Current CLI, publisher and public documentation were
+reread in full. Permanent tests, LoginFlow/StoredSession/native SDK/reader/owned
+cleanup/getpass implementations remain in the same full warmed context; native
+getpass restoration source was checked directly again for this finding. All106
+verified product source hashes still match. No redundant full-suite repeat was
+needed for unchanged code; new behavioral probes are below.
 
-## Premise Inventory
+## Premise Inventory — ranked by waste if false
 
-### P1 — interruption and owned retirement compose across every execution phase
+### P1 — the input flag represents all terminal resource cleanup
 
-First dependent step3; waste is its terminal driver plus step5's acceptance coverage
-and packaging if a fundamentally different lifecycle is needed. Scheduled in the
-combined prebuild beforestep1, then permanent PTY cases. Cheapest earlier covering
-test is real SIGINT during a running native authentication coroutine, not only while
-its event loop is waiting. The existing source-stop PTY case interrupts a held
-Future and is **non-covering for this specific executing-task branch**.
+First dependent revision4 step1/3; waste is the input portion of the lifetime,
+its phase tests and operator guarantees. Scheduled in full prebuild before product
+promotion, but its input-restoration test sends the first signal during the read
+and a second during restoration. That is **non-covering for a first signal after
+ordinary input or EOF**, when _input remains true through getpass's own finally.
 
-Fresh signal_inside_action and actual PTY/SRP probes fail. This is a missed branch
-in the existing ownership mechanism, with a concrete local trigger and code path.
-There is no evidence that LoginFlow or native file conversion must be replaced.
-The revised driver must be tested in the full composition before product edits.
+Cheapest covering earlier test: actual getpass/PTY with the first real SIGINT at
+native restoration following Enter or EOF; bounded local execution, no account.
+Now run: both fail, with echo disabled after main returns. The read-time first-
+signal control passes. This is concrete ownership evidence, not a claim that
+Python finally is universally safe or that a generic terminal framework is needed.
 
-### P2 — local publication preserves old bytes and distinguishes uncertain effects
+### P2 — stop intent survives active actions and retirement
 
-First dependent step1 and then2–5; false publication semantics would invalidate
-the file owner and operator contract. Full combined prebuild precededstep1. Fresh
-late-sidecar, changed-target retry and four real link/replace before/after-effect
-fault histories pass. They observe contents and retained recovery files, rather
-than supplying a fake publication result. The previously selected parent/backup
-barriers remain present and permanent fault tests pass. No claim of physical
-power-loss or uncooperative-writer qualification follows from these probes.
+First dependent step1/3. The full candidate preceded product edits. New13-case
+crossings supplement it with errors/waits, authorization-only recovery, failed
+close, storage failure, explicit retries and actual pending-task/async-generator
+cleanup. They use real LoginFlow/SDK/native files and actual SIGINT, and pass with
+source effects/bytes/cleanup observed. The old actual native-SRP falsifier also
+passes. Neither success supplies the missing input-restoration behavior in P1.
 
-### P3 — completed credential is reusable by the ordinary reader
+### P3 — source completion and file effects remain separate
 
-First dependent step2. Real codec/native SQLite and actual ordinary-reader reopen
-were tested before implementation, including optional account-cache absence and
-SRP. Fresh native DC migration with its different auth key reopens through an
-actual account operation. Fractional available update date, large takeout ID and
-absent optional cache transfer correctly through native state export/publication.
-Native constructor failure retires the opened sqlite3 connection and preserves
-old bytes. A hand-made complete flow or dummy file is not the coverage used here.
+First dependent original conversion/publication steps; retained in revision4 step3.
+Real source/native SQLite/ordinary-reader composition and file barriers were tested
+before promotion. Fresh backup-barrier-failure plus stop preserves old bytes; a
+post-mutation sync failure followed by a shutdown stop retains old backup and
+reports uncertain publication with130. Repeated local save retries authenticate
+only once. Mocked complete/file-success receipts are not the evidence used.
 
-### P4 — local retries and uncertain source replies do not replay authentication
+### P4 — qualification and ownership limits
 
-First dependent step3. The prebuild and permanent suite covered successful local
-retry. Fresh source-loss/check/re-input, second uncertainty, expiration, wrong/
-correct SRP and target-change-during-local-retry histories count actual controlled
-SendCode/SignIn calls. Seventeen additional functional cases pass. Native DC
-migration legitimately makes two SendCode requests as existing LoginFlow specifies;
-no local save retry does so. Repeatedly failed retirement refuses publication.
-
-### P5 — qualification limits carried unchanged
-
-Live Telegram delivery/real-account2FA and native Python3.7 execution remain
-unqualified, as declared. Controlled source responses cannot establish Telegram's
-live acceptance. No exclusive authorized live setup is available for this gate;
-it is supplemental, not an unfulfilled required offline step. Grammar checks
-establish syntax only. Filesystem scope remains trusted local POSIX and stopped
-readers; it does not promise global ownership, bounded syscall latency or SIGKILL
-recovery. These are preconditions/limits, not new rated findings.
+Carry desc.md's supplemental live delivery/real-account2FA and nativePython3.7
+limits unchanged. Synthetic replies cannot establish live Telegram behavior.
+Trusted local POSIX/stopped readers, no hostile/concurrent-writer guarantee and
+no bounded native computation/filesystem/disconnect latency remain explicit.
+Those exclusions are not rated findings; terminal restoration within an actual
+supported PTY is inside the command's stated contract.
 
 ## Restart Check
 
-No earlier rejected #50 PR exists. The missing installed command/persistence layer
-is addressed by the terminal adapter and private native publisher. The known
-opaque-string/native-SQLite mismatch is handled by actual conversion/reopen. Plan
-Risk1's missing backup-directory barrier is answered before replacement. Plan
-Risk2's optional own-cache row is answered without inventing an access hash. The
-new observed failure is in terminal event-loop driving; a broader auth/store
-rewrite would not target its established mechanism.
+| Observed failure | Established mechanism | Current design result |
+|---|---|---|
+| Old Ctrl-C during executing authentication hangs | Re-entering run_until_complete on a done KeyboardInterrupt task | Fixed: persistent stop/cancel/consume path; old actual-SRP falsifier exits130 |
+| Old waiting-state tests miss executing state | Different task phase at first signal | Expanded prebuild/permanent phase tests address that earlier omission |
+| First signal during restoration leaves echo off | _input remains true while getpass executes its finally; the signal raises before native restore | Not addressed by clearing _input only on a prior signal or after getpass returns |
+| Original backup-directory/optional-cache plan issues | Missing persistence barrier / optional account row assumed required | Retained publisher barrier and conditional copy remain verified |
 
 ## Inherited Lessons
 
-Authentication is not publication: separate outcomes and actual file-effect probes
-precede product work. A CLI marker cannot coordinate existing readers: documented
-stopped-reader precondition, with actual late-conflict checks. Storage retry must
-not resend codes: source effects counted in combined/fresh histories. Optional
-metadata is not identity: row0 validated and absent own hash accepted. More passing
-waiting-state cancellation tests do not prove interruption while synchronous code
-runs inside a coroutine: that last lesson was missing, and the revised ordering
-must put actual executing-task signal cases in the combined prebuild.
+The experiment ran before product promotion and actual signal-active SRP was used;
+those earlier lessons were followed. New lesson: “input is active” is not the same
+as “the terminal is awaiting bytes.” The opaque getpass call also contains terminal
+acquisition and restoration. Protecting cleanup only after a prior interruption
+misses ordinary-return and EOF cleanup. The next description/traverse must establish
+who owns terminal state until restoration is observed, across every exit path.
 
-## R1 — Ctrl-C inside an authentication task can leave the command stuck
+Authentication is still not publication; in-flight effects remain possible and
+later actions are blocked after stop. No evidence calls for rebuilding the existing
+authentication/session/publisher layers or sharing this policy with the worker.
+
+## R1 — first Ctrl-C during terminal restoration can leave echo disabled
 
 **Risk**
 
-An operator presses Ctrl-C while the command is processing a login input or
-computing the password proof. Instead of stopping, the command can remain stuck
-indefinitely, even after another Ctrl-C. The code meant to finish cleanup starts
-waiting again on work that has already ended with an interruption exception.
-The operator must terminate the process externally and loses the current login
-conversation. A normal stop cannot be trusted in the very authentication phase
-where the command promises it.
+After someone finishes entering a hidden phone number, code or password—or sends
+EOF—the command must restore normal terminal input. If their first Ctrl-C arrives
+while that restoration is happening, it can interrupt the restoration itself.
+The command returns as interrupted while the terminal still has echo disabled.
+Subsequent input can remain invisible unless the surrounding program or shell
+repairs the terminal. The command's promised restoration therefore depends on
+where the first signal lands, even though its repeated-signal case works.
 
-In tgdata/login_cli.py:40–59, _drive catches KeyboardInterrupt from
-loop.run_until_complete(task), sets stopped and cancels only if task is not done.
-It unconditionally loops back to run_until_complete even when task is already done
-with KeyboardInterrupt. On Python3.11.10, asyncio.base_events._run_until_complete_cb
-explicitly returns without loop.stop for a future carrying KeyboardInterrupt or
-SystemExit, because the initial exception already ended run_forever. Re-entering
-run_until_complete on that done task therefore leaves the loop running with no
-completion callback that will stop it. Real SIGINT within LoginFlow.start's
-validation or the password/SRP action reproduces this. The installed default
-SIGINT handler in main makes this a real terminal interleaving, not an artificial
-unsupported exception type. Another SIGINT re-enters the same faulty path.
+In tgdata/login_cli.py:86–95, _TerminalRun.prompt keeps _input=True for the entire
+_hidden/getpass call and clears it only in its outer finally. _signal at58–64 raises
+KeyboardInterrupt whenever that flag is true. Python3.11.10 getpass.unix_getpass
+restores terminal attributes in its own finally (installed getpass.py:75–80).
+Following normal _raw_input return or EOFError, a first SIGINT before the restoration
+termios.tcsetattr at79 raises out of that finally. The outer prompt finally only
+clears the flag; it does not restore termios. The permanent phase_child input-repeat
+case instead sends its first signal while reading, which already clears _input,
+so its second signal during restoration cannot expose this path.
 
 **Severity:** Medium
-**Category:** Cancellation / command lifecycle
-**Impact:** Ctrl-C fails to terminate a deliberate authentication; the user needs
-external process termination and cannot rely on the documented stop/cleanup outcome.
-The probes do not demonstrate an overwritten old credential or secret disclosure.
-**NoobEng:** KeyboardInterrupt can enter Python while code is running inside an
-async task, not only while the event loop waits. A task that already failed needs
-its result consumed and owned cleanup settled; running the finished task through
-the loop again is not equivalent to draining pending work.
-**Affected areas:** login_cli._drive, main's SIGINT policy, source/cleanup lifetime,
-planstep3/5 and the terminal interruption guarantee in docs/terminal_login.md.
+**Category:** Terminal resource ownership / interruption
+**Impact:** command exits with altered terminal state; subsequent input may remain
+invisible. A caller may independently restore it, but the command does not guarantee
+its own documented cleanup. No credential disclosure or old-session loss was observed.
+**NoobEng:** getpass is not just a blocking read. It disables echo, reads, then
+restores echo before returning. An outer “inside input” flag cannot distinguish
+those inner phases. Cleanup needs protection and resource ownership even when no
+previous Ctrl-C occurred.
+**Affected areas:** _TerminalRun.prompt/_signal, _hidden/getpass boundary,
+revision4 step1/2/4 terminal ownership/acceptance, docs/terminal_login.md:140–144.
 
-**Evidence:** signal_runner.py reports both uninstrumented histories timed out at
-5 seconds. Both diagnostic runs record `DONE_TASK_KEYBOARD_INTERRUPT_REENTER 1`
-before timing out. pty_native_srp.py uses actual getpass, actual SRP compute_check
-and an actual SIGINT while computation is active, then another SIGINT:
+**Observed evidence** — pr-probes-r2/input-restore-result.json:
 
 ```text
-native_srp_interrupted=true
-all_hidden_inputs_sent=true
-additional_sigint_sent=true
-timed_out=true
-exit=-9
-child_result=false
-secret_echo=false
+normal_input: exit130, terminal_restored=false, echo_enabled=false, codes0
+EOF:          exit130, terminal_restored=false, echo_enabled=false, codes0
+read_stop:    exit130, terminal_restored=true,  echo_enabled=true,  codes0
 ```
 
-Exit-9 is the probe parent's bounded kill of its own synthetic child after7 seconds,
-not an exit returned by the command. Native Python driver source confirms the
-callback behavior above. The existing permanent source_stop case interrupts an
-awaited Future, which follows a different cancellation path and passes.
+The wrapper sends actual SIGINT at the native restore boundary, then would call
+original tcsetattr; it supplies neither a fake getpass result nor fabricated terminal
+state. Termios is observed after command return. The probe restores its own PTY
+only after recording the failed state, so no test terminal is left altered.
 
 ### Mitigation — Quick
-Detect a done task in the KeyboardInterrupt handler and immediately report stop,
-without establishing the state of other owned work or changing signal ownership.
+Document a terminal-recovery command and warn that cancellation near input return
+may require caller cleanup, leaving the current input boundary unchanged.
 - [ ] selected   - [ ] elegant   - [ ] last_resort
 
 **Note**
@@ -191,51 +167,43 @@ without establishing the state of other owned work or changing signal ownership.
 *For future:* —
 
 ### Mitigation — Robust
-Re-plan the terminal driver's interruption ownership: distinguish pending work
-from an already completed interrupted task, consume terminal results exactly once,
-and settle all work it owns before returning the original stop. Consider converting
-SIGINT into an owned cancellation request while async actions run, retaining the
-separate input and publication policies. Cover first/repeated signals during
-actual validation, native SRP, source awaits and cleanup, including complete auth
-and post-publication stop, in the full combined prebuild before product changes.
-**Why this is robust:** closes the local driver lifetime rather than merely
-avoiding one loop iteration; uses the existing auth and publisher contracts and
-tests the actual phase distinction that failed.
-- [x] selected   - [x] elegant   - [ ] last_resort
-
-**Note**
-*Why chosen:* The only concrete consumer of this mixed hidden-input/async-login/
-synchronous-publication lifetime is login_cli. The worker has a different process
-and job contract; one shared mechanism is not established without special cases.
-The local ownership correction and full composition tests close this instance
-with the least extent. Quick can abandon owned work; a new cross-command framework
-adds unproved coupling. Robust is selected on merit, not external pressure. It
-informs revision3 re-planning; this selection does not authorize an in-place patch.
-*For future:* —
-
-### Mitigation — Long-term
-Introduce a common process/terminal task supervisor for all commands and migrate
-the worker and future interactive tools to its signal and cleanup lifecycle.
-**Why this is long term effective:** could centralize such policy if multiple
-commands need exactly this mixed synchronous-input/async-auth/synchronous-publication
-contract. The existing worker owns a different job/process lifecycle, so that
-shared class has not been established.
+Establish explicit ownership of the exact terminal descriptor and original modes
+through the entire hidden-input lifetime. Restoration must execute under the
+stop-only policy on normal return, EOF, input failure and first/repeated interruption,
+and finish before ownership is released. Keep source admission closed after stop.
+Qualify the chosen adapter with real PTYs/signals at acquisition/read/restore/return
+and its failure paths before product work. Do not infer completion from an opaque
+getpass call merely leaving its outer frame.
+**Why this is robust:** closes the resource-ownership gap at the one private hidden-
+input boundary without changing the existing authentication or file publisher.
 - [ ] selected   - [ ] elegant   - [ ] last_resort
 
 **Note**
 *Why chosen:* —
 *For future:* —
 
-## Verification and records
+### Mitigation — Long-term
+Build a reusable terminal-input backend using non-throwing signal/wakeup handling,
+explicit descriptor/mode ownership and event-driven input for every CLI consumer.
+**Why this is long term effective:** could centralize these guarantees if multiple
+commands need the same terminal mode protocol. The worker's job input is not the
+same hidden-input/restore lifetime; no second matching consumer is established.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
 
-pr-probes/ contains scripts, both matrix attempts, timeout/diagnostic results and
-the native-PTY transcript. The first matrix run's direct session-state mutation
-was overwritten by native disconnect; its fixture was corrected to populate the
-actual message box, with the same expected values. Full17-case matrix then passed.
-No product or permanent test changed. Source hashes match the published tree.
+**Note**
+*Why chosen:* —
+*For future:* —
 
-Issue50's steps through5 and merge-check evidence are committed. Step6 may now name
-PR51/merge-check98f4a59; step7 must record this completed but rejected critique,
-not imply merge clearance. PR remains draft; no merge, release, real login or
-ScrapeOps deployment occurred. Phase3 will select mitigation only; §7.4 re-planning
-remains the next development step.
+## Verification and review status
+
+13 fresh crossings PASS; three real-terminal restoration histories expose two
+failures and one passing control; original actual-SRP/PTY falsifier PASS. Scripts,
+outputs and hashes are in pr-probes-r2/. No fixture corrections, product edits or
+expectation weakening. The regression's outcome expectation changes from old hang
+to revision4's specified130; the signal/native computation remains unchanged.
+
+Recent immutable1,010 offline checks/34 suites, seven demos and installed-command
+PASS still apply to this exact head, with3 live checks skipped. They did not cover
+the new first-signal restoration branch. Issue steps6/7 must record this review's
+completion and rejection honestly; they are not merge permission. The description/
+traverse return required by the second rejection is the next development step.

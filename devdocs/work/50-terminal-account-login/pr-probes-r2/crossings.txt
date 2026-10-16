@@ -1,0 +1,14 @@
+{"case": "invalid_phone_stop", "exit": 130, "old_bytes": true, "closed": true, "codes": 0}
+{"case": "wait_and_stop", "exit": 130, "old_bytes": true, "closed": true, "codes": 1}
+{"case": "source_error_and_stop", "exit": 130, "old_bytes": true, "closed": true, "codes": 1}
+{"case": "recovery_complete_stop", "exit": 130, "old_bytes": true, "closed": true, "codes": 1}
+{"case": "recovery_error_stop", "exit": 130, "old_bytes": true, "closed": true, "codes": 1}
+{"case": "known_auth_close_failure_stop", "exit": 130, "old_bytes": true, "closed": true, "codes": 1}
+{"case": "backup_bytes_stop_error", "exit": 130, "codes": 1, "signins": 1, "local_attempts": 0}
+{"case": "backup_directory_stop_error", "exit": 130, "codes": 1, "signins": 1, "local_attempts": 0}
+{"case": "retry_answer_stop", "exit": 130, "codes": 1, "signins": 1, "local_attempts": 1}
+{"case": "uncertain_then_shutdown_stop", "exit": 130, "codes": 1, "signins": 1, "local_attempts": 0}
+{"case": "two_local_retries", "exit": 0, "codes": 1, "signins": 1, "local_attempts": 3}
+{"case": "late_task_retirement", "exit": 130, "saved": true, "settled": true}
+{"case": "late_async_generator_retirement", "exit": 130, "saved": true, "settled": true}
+FRESH_CROSSINGS 13 PASS
