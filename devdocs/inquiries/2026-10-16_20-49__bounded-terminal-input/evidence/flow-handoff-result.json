@@ -1,0 +1,61 @@
+{
+  "result": "PASS",
+  "cases": [
+    {
+      "mode": "plain",
+      "status": 0,
+      "codes": 1,
+      "saved": true,
+      "terminal_restored": true,
+      "settled_values": 2
+    },
+    {
+      "mode": "two_factor",
+      "status": 0,
+      "codes": 1,
+      "saved": true,
+      "terminal_restored": true,
+      "settled_values": 3
+    },
+    {
+      "mode": "overflow_phone",
+      "status": 3,
+      "codes": 0,
+      "saved": false,
+      "terminal_restored": true,
+      "settled_values": 0
+    },
+    {
+      "mode": "overflow_password",
+      "status": 3,
+      "codes": 1,
+      "saved": false,
+      "terminal_restored": true,
+      "settled_values": 2
+    },
+    {
+      "mode": "overflow_retry",
+      "status": 4,
+      "codes": 1,
+      "saved": false,
+      "terminal_restored": true,
+      "settled_values": 3
+    },
+    {
+      "mode": "stop_overflow",
+      "status": 130,
+      "codes": 0,
+      "saved": false,
+      "terminal_restored": true,
+      "settled_values": 0
+    },
+    {
+      "mode": "first_restore_stop",
+      "status": 130,
+      "codes": 0,
+      "saved": false,
+      "terminal_restored": true,
+      "settled_values": 0
+    }
+  ]
+}

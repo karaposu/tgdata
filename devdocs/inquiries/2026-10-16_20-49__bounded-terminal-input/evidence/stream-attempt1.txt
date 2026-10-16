@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/inquiries/2026-10-16_20-49__bounded-terminal-input/evidence/stream_matrix.py", line 164, in <module>
+    main()
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/inquiries/2026-10-16_20-49__bounded-terminal-input/evidence/stream_matrix.py", line 159, in main
+    row=parent(mode);results.append(row);print(json.dumps(row),flush=True)
+        ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/inquiries/2026-10-16_20-49__bounded-terminal-input/evidence/stream_matrix.py", line 143, in parent
+    assert process.returncode==0,(mode,text)
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('plain', 'INPUT_READY\r\nTraceback (most recent call last):\r\n  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/inquiries/2026-10-16_20-49__bounded-terminal-input/evidence/stream_matrix.py", line 163, in <module>\r\n    if len(sys.argv)>1:raise SystemExit(child(sys.argv[2]))\r\n                                        ^^^^^^^^^^^^^^^^^^\r\n  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/inquiries/2026-10-16_20-49__bounded-terminal-input/evidence/stream_matrix.py", line 88, in child\r\n    else:assert restored,(mode,\'modes changed\')\r\n                ^^^^^^^^\r\nAssertionError: (\'plain\', \'modes changed\')\r\n')
