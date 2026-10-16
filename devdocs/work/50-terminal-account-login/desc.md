@@ -126,3 +126,30 @@ No new planning blocker is established. Production input policy and complete
 composition remain qualification obligations. Native Python 3.7 runtime testing
 is unavailable; syntax compatibility is distinct from Python 3.11/Telethon 1.45
 execution evidence. Live source delivery/real-account 2FA remain unperformed.
+
+## Known Blockers
+
+### Canonical input does not provide the planned overflow observation — CLOSED
+
+**Observation:** revision6's complete prebuild failed on 5,000 input bytes plus
+newline. The macOS canonical terminal accepted all5,001 bytes at the PTY master,
+but the input descriptor never became readable before the12-second test deadline.
+An independent native probe reproduced no readable line after the write;128/129-byte
+lines plus newline were delivered correctly. PC_MAX_CANON reported1,024.
+
+**Misunderstanding resolved:** checking a small application limit after canonical
+os.read does not guarantee detection of input exceeding the kernel line buffer.
+The final newline may not yield a readable line. No timeout kill counts as a stop.
+
+**What must change before another plan:** establish an input-framing contract and
+real-component evidence that covers oversized input before relying on post-read
+validation. This may change byte observation, editing or deliberate timeout/refusal
+semantics; it must not silently relax the existing no-truncation/stop guarantees.
+The explicit terminal owner and retained LoginFlow/native publication conclusions
+remain supported; this failure does not justify rewriting authentication/storage.
+
+**Found by:** fresh critic-d's full experiment for revision6,2026-10-16.
+Evidence: prebuild-r6/result.json and canonical-overflow-result.json. The failed
+plan is DEPRECATED_step_by_step_impl_plan.md; no product changes were made.
+This is a closed false premise with a new contract decision pending, not an
+open question that a working assumption can conceal.

@@ -2,9 +2,9 @@
 model: unknown
 effort: unknown
 ---
-# #50 implementation plan — revision 6
+# #50 implementation plan — revision 6 (DEPRECATED after failed prebuild)
 
-**Critic folded:** 2026-10-16T20:18:38.182284+03:00 — 1 selected robust mitigation (2 steps changed, 0 added). Full combined prebuild remains PENDING; no product clearance.
+**Critic folded:** 2026-10-16T20:18:38.182284+03:00 — 1 selected robust mitigation (2 steps changed, 0 added). Full combined prebuild FAILED; plan deprecated. No product clearance.
 
 Based on revised desc.md dbe9d97 and traverse finding 47d3c99, with both rejected
 PR reviews as inputs. Revision 4 is preserved in step_by_step_impl_plan_r4.md.

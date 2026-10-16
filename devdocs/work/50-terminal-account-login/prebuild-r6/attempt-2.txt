@@ -1,0 +1,141 @@
+RUN combined_suite.py
+PASS test_changed_and_appeared_destination
+PASS test_cleanup_failure_preserves_confirmed_publication
+PASS test_config_name_precedence_and_working_directory
+PASS test_invalid_inputs_wait_and_unsupported
+PASS test_last_moment_no_clobber_collision
+PASS test_local_retry_never_authenticates_again
+PASS test_module_entry_help_and_headless_refusal
+PASS test_native_commit_and_close_failures_retire_connections
+native file + normal reader: plain, SRP and missing access_hash PASS
+PASS test_native_reopen_and_optional_cache
+PASS test_new_existing_and_replacement
+PASS test_no_echo_fallback_and_redacted_arguments
+PASS test_output_failure_does_not_reverse_saved_state
+PASS test_post_replace_uncertainty_retains_old_backup
+PASS test_preflight_sidecar_symlink_and_missing_tty
+PASS test_prepublication_barriers_preserve_old_bytes
+PASS test_real_flow_cleanup_retry_and_secret_logs
+PTY_PHASE phone_eof terminal restored; exit130
+PTY_PHASE phone_repeat terminal restored; exit130
+PTY_PHASE code_eof terminal restored; exit130
+PTY_PHASE code_repeat terminal restored; exit130
+PTY_PHASE password_eof terminal restored; exit130
+PTY_PHASE password_repeat terminal restored; exit130
+PTY_PHASE replace_eof terminal restored; exit130
+PTY_PHASE replace_repeat terminal restored; exit130
+PTY_PHASE retry_eof terminal restored; exit130
+PTY_PHASE retry_repeat terminal restored; exit130
+PTY_PHASE validation terminal restored; exit130
+PTY_PHASE native_srp terminal restored; exit130
+PTY_PHASE connect_stop terminal restored; exit130
+PTY_PHASE cleanup_hold terminal restored; exit130
+PTY_PHASE auth_cleanup_hold terminal restored; exit130
+PTY_PHASE explicit_retire_hold terminal restored; exit130
+PTY_PHASE final_retire_hold terminal restored; exit130
+PASS test_real_phase_terminal_matrix
+PTY plain exit 0 secret echo absent
+PTY password exit 0 secret echo absent
+PTY replace exit 0 secret echo absent
+PTY input_stop exit 130 secret echo absent
+PTY code_eof exit 130 secret echo absent
+PTY source_stop exit 130 secret echo absent
+PTY before_publish exit 130 secret echo absent
+PTY during_publish exit 130 secret echo absent
+PASS test_real_terminal_composition
+REVIEW_HISTORY expired {"exit": 3, "saved": false, "codes": 1, "signins": 1}
+REVIEW_HISTORY phone_reply_lost {"exit": 3, "saved": false, "codes": 1, "signins": 0}
+REVIEW_HISTORY code_retry {"exit": 0, "saved": true, "codes": 1, "signins": 2}
+REVIEW_HISTORY code_loss_twice {"exit": 3, "saved": false, "codes": 1, "signins": 2}
+REVIEW_HISTORY wrong_password {"exit": 0, "saved": true, "codes": 1, "signins": 1}
+REVIEW_HISTORY migration {"exit": 0, "saved": true, "codes": 2, "signins": 1}
+REVIEW_HISTORY late_-wal {"exit": 4, "old_bytes_preserved": true}
+REVIEW_HISTORY late_-shm {"exit": 4, "old_bytes_preserved": true}
+REVIEW_HISTORY late_-journal {"exit": 4, "old_bytes_preserved": true}
+REVIEW_HISTORY link_before_effect {"exit": 5, "recovery_retained": true, "effect": false}
+REVIEW_HISTORY link_after_effect {"exit": 5, "recovery_retained": true, "effect": true}
+REVIEW_HISTORY replace_before_effect {"exit": 5, "recovery_retained": true, "effect": false}
+REVIEW_HISTORY replace_after_effect {"exit": 5, "recovery_retained": true, "effect": true}
+REVIEW_HISTORY retry_refuses_changed_target {"exit": 4, "candidate_attempts": 1, "codes": 1}
+REVIEW_HISTORY constructor_failure_retired {"exit": 4, "connections": 1}
+REVIEW_HISTORY available_state_and_optional_hash {"exit": 0, "fractional_date": true, "takeout_exact": true}
+REVIEW_HISTORY unsettled_auth_not_published {"exit": 3, "old_bytes_preserved": true, "signins": 1}
+PASS test_review_source_and_storage_histories
+PUBLICATION_STOP False before_save
+PUBLICATION_STOP False prepared
+PUBLICATION_STOP False mutated
+PUBLICATION_STOP False parent_sync
+PUBLICATION_STOP False uncertain
+PUBLICATION_STOP False cleanup
+PUBLICATION_STOP False output
+PUBLICATION_STOP True before_save
+PUBLICATION_STOP True prepared
+PUBLICATION_STOP True mutated
+PUBLICATION_STOP True parent_sync
+PUBLICATION_STOP True uncertain
+PUBLICATION_STOP True cleanup
+PUBLICATION_STOP True output
+PASS test_stop_across_publication_effects
+STOP_PHASE preflight saved False
+STOP_PHASE before_task saved False
+STOP_PHASE registered saved False
+STOP_PHASE completed saved False
+STOP_PHASE authenticated saved False
+STOP_PHASE finalizing saved True
+STOP_PHASE asyncgens saved True
+STOP_PHASE report saved True
+PASS test_stop_admission_and_finalization
+PASS test_terminal_results_and_stale_cancel_registration
+PASS test_uncertain_check_without_replaying_code
+23 passed; 0 failed
+RUN terminal_matrix.py
+OWNED_TERMINAL {"mode": "first_phone_normal", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "first_phone_eof", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "first_code_normal", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "first_code_eof", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "first_password_normal", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "first_password_eof", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "first_replace_normal", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "first_replace_eof", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "first_retry_normal", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "first_retry_eof", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "after_restore_normal", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "after_restore_eof", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "stop_acquire", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "stop_snapshot", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "stop_hidden", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "stop_wait", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "stop_read", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "stop_flush", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "stop_close", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "fault_acquire", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "fault_snapshot", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "fault_apply_before", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "fault_apply_after", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "fault_wait", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "fault_read", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "fault_flush", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "fault_restore", "exit": 3, "terminal_restored": false, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "fault_restore_stop", "exit": 130, "terminal_restored": false, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "fault_restore_after", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "fault_readback", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "fault_close", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "fault_output", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "unicode", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": true, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "editing", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": true, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "limit128", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": true, "two_terminals_observed": false}
+OWNED_TERMINAL {"mode": "limit129", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false}
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/work/50-terminal-account-login/prebuild-r6/terminal_matrix.py", line 254, in <module>
+    run()
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/work/50-terminal-account-login/prebuild-r6/terminal_matrix.py", line 247, in run
+    row=parent(mode);results.append(row)
+        ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/work/50-terminal-account-login/prebuild-r6/terminal_matrix.py", line 228, in parent
+    process.wait(timeout=max(0.1,deadline-time.monotonic()))
+  File "/Users/ns/miniconda3/lib/python3.11/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/subprocess.py", line 2045, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python', '/private/tmp/tgdata-50-terminal-account-login/devdocs/work/50-terminal-account-login/prebuild-r6/terminal_matrix.py', '--child', 'kernel_overflow']' timed out after 0.1 seconds

@@ -1,0 +1,26 @@
+[
+  {
+    "payload_bytes": 129,
+    "accepted_by_write": 129,
+    "max_canon": 1024,
+    "readable_after_newline": true,
+    "observed_bytes": 129,
+    "ends_in_newline": true
+  },
+  {
+    "payload_bytes": 130,
+    "accepted_by_write": 130,
+    "max_canon": 1024,
+    "readable_after_newline": true,
+    "observed_bytes": 130,
+    "ends_in_newline": true
+  },
+  {
+    "payload_bytes": 5001,
+    "accepted_by_write": 5001,
+    "max_canon": 1024,
+    "readable_after_newline": false,
+    "observed_bytes": null,
+    "ends_in_newline": null
+  }
+]

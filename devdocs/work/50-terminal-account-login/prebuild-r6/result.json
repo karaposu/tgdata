@@ -1,0 +1,17 @@
+{
+  "result": "FAIL",
+  "reason": "canonical input larger than kernel line buffer did not become readable after newline",
+  "final_full_attempt": 2,
+  "retained_groups_passed": 23,
+  "retained_pty_passed": 25,
+  "new_terminal_cases_passed": 36,
+  "new_terminal_case_failed": "kernel_overflow",
+  "remaining_new_terminal_cases": "not executed after the disqualifying failure",
+  "product_unchanged": true,
+  "candidate_unchanged_between_runs": true,
+  "diagnostic": "canonical-overflow-result.json",
+  "full_results": [
+    "result-attempt-1.json",
+    "result-attempt-2.json"
+  ]
+}

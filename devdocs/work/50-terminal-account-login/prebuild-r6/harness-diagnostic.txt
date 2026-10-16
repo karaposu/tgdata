@@ -1,0 +1,10 @@
+'Session destination: \'/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-w0w5ww3n/account.session\'\r\nPhone number with country code (hidden): Stopped: terminal_input_failed\r\n<synthetic-PHONE>\r\nMATRIX_RESULT {"mode": "fault_wait", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false}\r\n'
+Traceback (most recent call last):
+  File "<stdin>", line 12, in <module>
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/work/50-terminal-account-login/prebuild-r6/terminal_matrix.py", line 229, in parent
+    base.no_secrets(text)
+  File "<stdin>", line 10, in diagnostic
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/work/50-terminal-account-login/prebuild-r6/combined_suite.py", line 106, in no_secrets
+    assert value not in text, 'secret appeared in output'
+           ^^^^^^^^^^^^^^^^^
+AssertionError: secret appeared in output
