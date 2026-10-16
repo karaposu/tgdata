@@ -565,6 +565,20 @@ The operation uses the existing verified account, read allowance, heartbeat and
 cleanup policies. See [activity measurement](docs/group_activity.md) for the example,
 precise populations, partial failures and visibility limits.
 
+### History sampling across days
+
+`await tg.capture_group_history("@example_group", account_id=expected_id,
+start_date=start, end_date=end, max_messages=3000, max_requests=100)` captures
+bounded raw content across UTC days. Then `capture.sample(size=300)` chooses
+messages locally; optional `eligible_ids` applies your content-selection rules.
+Retain the capture JSON to reproduce selections without further Telegram reads.
+
+Source coverage and intentional sample omissions are reported separately. The
+unit is a raw message: services are excluded, selected albums disclose omitted
+observed members, and no photo-trail inference runs. A sample is descriptive,
+not a progress cursor or delivery acknowledgment. See [history sampling](docs/history_sampling.md)
+for the two-action example, bounds, deterministic algorithm and error semantics.
+
 ### Group discovery — finding groups you are not in
 
 `list_groups` shows what the account already follows. To find *new* rooms there are three
@@ -1240,9 +1254,10 @@ The ID must be a positive integer, not a string or boolean. The call is synchron
 it does no connection, authentication or recovery. The returned dictionaries are
 independent copies, with the same fields as the health summary above.
 
-`lookup_group`, `check_group_access`, `get_group_profile`, `measure_group_activity` and `join_group` populate this account-owned view. Existing
+`lookup_group`, `check_group_access`, `get_group_profile`, `measure_group_activity`,
+`capture_group_history` and `join_group` populate this account-owned view. Existing
 message reads and `health_check()` still use their existing health view; the views
-are not combined. A join, profile or activity result does not clear an earlier history-access failure.
+are not combined. A join, profile, activity or history-capture result does not clear an earlier history-access failure.
 
 Internally, an observation begins after a temporary client proves the expected
 account. Its event and retained state keep that numeric owner even if a cached

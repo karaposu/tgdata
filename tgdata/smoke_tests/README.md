@@ -53,6 +53,16 @@ Tests polling and real-time features:
 
 ## Running Tests
 
+### History sampling across days (offline)
+
+`python -m tgdata.smoke_tests.test_47_history_sampling` covers distributed source
+capture and pure deterministic selection through real Telethon 1.45.0 dispatch/TL
+decoding and SQLite budgets. Cases include 599-to-300 selection, 60 sparse days,
+busy-day fairness, caps, exact/fractional boundaries, services/albums, immutable
+replay, strict reload refusal, partial failures, ownership, heartbeat and cleanup.
+Sockets and login are forbidden. These synthetic source packets are not live
+qualification. See [history sampling](../../docs/history_sampling.md).
+
 ### Group activity and engagement (offline)
 
 `python -m tgdata.smoke_tests.test_46_group_activity` exercises bounded public
