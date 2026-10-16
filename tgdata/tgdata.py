@@ -10,7 +10,7 @@ import json
 import logging
 import os
 from contextlib import asynccontextmanager
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional, List, Dict, Any, Union, Callable
 import pandas as pd
 
@@ -36,6 +36,7 @@ from .group_operations import (
     GroupLookup, GroupAccess, GroupJoin, _parse_target, _lookup_group, _check_group_access, _join_group,
 )
 from .group_profile import GroupProfile, _get_group_profile, _pin_limit
+from .group_activity import GroupActivity, _measure_group_activity, _measurement_parameters
 from .read_budget import ReadBudgetError, ReadBudgetExceeded
 from .join_budget import JoinBudget, JoinBudgetConfigError
 from .join_client import _join_policy
@@ -306,6 +307,28 @@ class TgData(ProgressFacade):
             async with self._account_health_operation(
                     account_id, 'get_group_profile', reference.label) as (operation, _):
                 return await _get_group_profile(operation, reference, pinned_limit, beat)
+
+    async def measure_group_activity(self, target: Union[str, int], *, account_id: int,
+                                     start_date: datetime, end_date: datetime,
+                                     max_messages: int = 3000, heartbeat=None) -> GroupActivity:
+        """Measure bounded visible history in the half-open UTC publication window.
+
+        Counts raw messages, keeping service rows and missing counters distinct.
+        max_messages bounds all returned source slots, not just in-window posts.
+        Partial/capped observations never claim complete coverage. Source failures
+        keep their type and expose validated data on error.partial_result when possible.
+        See docs/group_activity.md for populations, timing and budget semantics.
+        """
+        started = datetime.now(timezone.utc)
+        reference = _parse_target(target)
+        account_id = _expected_account_id(account_id)
+        window = _measurement_parameters(start_date, end_date, max_messages, started)
+        heartbeat_kwargs(heartbeat)
+        with heartbeat_scope(heartbeat) as beat:
+            async with self._account_health_operation(
+                    account_id, 'measure_group_activity', reference.label) as (operation, _):
+                return await _measure_group_activity(
+                    operation, reference, window, max_messages, started, beat)
 
     async def join_group(self, target: Union[str, int], *, account_id: int) -> GroupJoin:
         """Join through an expected authenticated account and explicit allowance.
