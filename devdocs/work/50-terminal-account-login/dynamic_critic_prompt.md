@@ -2,60 +2,67 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# Dynamic critic — #50 terminal account login
+# Revision3 dynamic plan critique — #50
 
-Subject: revision1 step_by_step_impl_plan.md in this folder, against desc.md,
-traverse/finding.md and dev77f2f53. Run in this warmed session, no subagent.
-Read declared blockers first. No planning blocker is declared; optional live and
-native3.7 qualification remain preconditions/evidence limits, not new findings.
+Subject: step_by_step_impl_plan.md revision3, desc.md, the actual LoginFlow/CLI/
+publisher composition and the rejected PR51 critique. Run in the warmed session,
+never a subagent. Preserve the previous planning critique/prompt and the rejection.
 
-Ultrathink. Question the two-module shape as well as its details. Read actual
-LoginFlow/StoredSession/native SQLiteSession, factory/session naming, account
-cleanup, getpass/loop behavior, packaging and source fixtures. No product changes.
-Create critic.md with verified model/effort frontmatter, skill verdict, falsifier,
-high-level summary, Premise Inventory before risks, Restart Check and Inherited
-Lessons. Preserve actual uncertainty rather than treating documentation as a
-behavioral test.
+Ultrathink. Determine whether persistent command stop intent plus phase-specific
+input/action/retirement/publication behavior addresses the established failure,
+without changing authentication or native session ownership. Read complete relevant
+modules, the revision2/3 plans, actual Python task callback/getpass behavior and
+both prior failed probes and the six limited planning probes. Do not infer a full
+composition PASS from the phase-local driver experiment.
 
-Compute premises by waste if false: publication and backup visibility/durability;
-one retained event loop with first/repeated Ctrl-C through real terminal input and
-source cleanup; native conversion/reader identity; safe retry without remote replay.
-For each give first dependent step, wasted work, scheduled test, cheapest earlier
-test/cost and covering versus non-covering evidence. Fake flow/publisher success
-returns cannot close these premises. The isolated inquiry probes do not replace
-the full combined prebuild. If affordable local composition remains unrun, enforce
-REORDER before every product step, with exact passing/disqualifying results.
+Attack these concepts:
+- Signal intent persists across registration, completion, prompt and save. A queued
+  cancellation must belong to one exact action, never a subsequent cleanup future.
+  First/repeated signals must neither inject arbitrary task exceptions nor cancel
+  a drain. Examine reentrancy and already-completed futures.
+- Input must unwind with terminal settings restored; repeated signals cannot
+  interrupt restoration. There must be no default-handler gaps between phases.
+- A stopped in-flight auth may have remote effects. The command must stop new
+  actions, retain known/uncertain observations and settle cleanup without promising
+  impossible remote rollback or silently sending an auth-only check.
+- Explicit retirement remains admissible after stop, can fail truthfully, and
+  cannot be skipped by finalization. A late stop must affect the final exit while
+  preserving a saved/uncertain publication and original failure evidence.
+- Existing native file backup/sync/collision/sidecar rules and optional own-cache
+  conversion remain intact. Scope is trusted local POSIX/stopped readers, not
+  hostile writers, universal durability, distributed locks or bounded disconnect.
+- The complete real SDK/SRP/TTY/filesystem candidate and installed-command tests
+  precede product promotion. Existing passing tests and callback-only mocks are
+  non-covering for execution-phase signals. Is the whole phase matrix executable,
+  with observable effects, stable assertions and failures that cannot be hidden?
+- Resist a cross-command supervisor unless another concrete consumer shares this
+  exact lifetime. Check API/dependency/runtime/docs changes and implementation
+  detail proportionate to the delicate boundaries. Name any genuinely underspecified
+  complex step as Medium; do not manufacture noise from known exclusions.
 
-Attack:
-- New-file collision and deliberate replacement; old-file snapshots, hardlink
-  side effects, sidecars, changed parent/path, backup retention and exact sync
-  ordering. Does a newly created recovery directory itself persist before the old
-  destination can be replaced? Do not promise arbitrary active-reader safety.
-- Native candidate key/DC/own0 and account rows/update-state preservation, all
-  commit/close/read-back paths and no open SQLite writer during removal.
-- Status versus exception after observed authorization, cleanup_pending,
-  password_setup, waits/unsupported/uncertain checks, no implicit resend and no
-  auth request caused by save retry.
-- One loop across settled calls; input outside asynchronous source actions;
-  actual first/repeated SIGINT/EOF, deferral only through the synchronous commit
-  boundary, preservation of known publication on later stop/output/cleanup error.
-- Nonterminal/echo refusal before secrets/source, no secret argv/checkpoint/stdout,
-  redacted config/source/storage errors, exact installed entry point.
-- Scope/compatibility: current readers/LoginFlow remain unchanged; no speculative
-  store plugin, recovery database or generalized transaction framework. Explicit
-  platform and live-evidence limits. Identify an actual prerequisite if one exists,
-  not unfinished readable homework.
+Create critic.md beside the plan. First YAML model/effort from session metadata,
+then exactly one skill verdict: IMPLEMENT AS WRITTEN; IMPLEMENT AFTER FOLDING THESE
+IN; REORDER — TEST BEFORE BUILD; DO NOT IMPLEMENT — MEANING GAP (WRONG LAYER variant
+where justified). Then Falsifier and Affordable now. Affordable unrun real-component
+falsifiers force REORDER: name experiment, cost, first dependent step, passing and
+disqualifying results. User-authorized artifact order is critique → revision4 fold
+→ full prebuild → product implementation; folding does not clear the prebuild gate.
 
-Restart Check: the requested missing terminal/persistence layer is not a failed
-LoginFlow; verify no rewrite of the working API. Inherited lessons: more valid
-SQLite bytes do not prove publication safety; auth completion is not a save;
-CLI-only locks do not coordinate readers; isolated probes are not combined proof.
-Each lesson needs a matching test before dependent implementation.
+High-level summary first, then Premise Inventory ranked by waste if false. Per
+premise: claim, first dependent step, waste, scheduled test, cheapest earlier test,
+covering/non-covering evidence. Carry declared live/native-Python3.7 limitations
+as preconditions, not new findings. Restart Check maps each observed failure to
+its established mechanism and the actual design element addressing it. Inherited
+Lessons must map to plan order, particularly execution-phase tests before promotion.
 
-For each real risk: two Risk paragraphs (plain self-contained then technical),
-Severity High/Medium/Low, Category, Impact, NoobEng, affected areas. Medium/High
-requires quick/robust/long-term proposals with robust/long-term justification and
-empty selected/elegant/last_resort boxes plus Why chosen/For future notes.
-No speculative padding. Commit Phase2 before Phase3; Phase3 only selects tiers
-and writes notes using real-class reach/extent, size and delicacy. Wrong premise
-uses the skill's deprecation/blocker procedure; otherwise preserve the plan.
+Each genuine risk uses sections: Risk as two paragraphs (plain/self-contained
+consequence, then exact symbols/files/triggers); Severity High/Medium/Low; Category;
+Impact; NoobEng; Affected areas. Medium/High get quick/robust/long-term proposals
+with robust/long-term rationale. Under each emit unticked selected/elegant/last_resort
+and empty Why chosen/For future notes. Commit Phase2 before Phase3, which changes
+only selections/notes. Select by concrete shared instances and reach/extent, not
+tier names; split oversized frameworks. No findings means no tier selection.
+
+A meaning gap follows the skill's deprecation/blocker procedure. REORDER keeps
+the plan alive and specifies the full experiment. Do not patch product during
+critique; quote actual evidence and distinguish observations from predictions.
