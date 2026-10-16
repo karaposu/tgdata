@@ -6,8 +6,9 @@ effort: xhigh
 
 **Critic folded:** 2026-10-16T12:11:17.879086+00:00 —0 mitigations (0 implementation steps changed,0 added).
 Fresh critique: REORDER — TEST BEFORE BUILD; no new rated risks. Phase3 has no
-mitigation selection. Full combined prebuild is **PENDING** and remains mandatory
-before product changes. This textual fold follows the user's explicit sequence;
+mitigation selection. Full combined prebuild **PASS** is recorded in prebuild-r4/result.json:23 groups,
+25 actual PTY scenarios,17 retained histories,8 stop transitions and14 publication
+combinations, before product changes. This textual fold follows the user's explicit sequence;
 it is not implementation clearance. Revision3 is preserved in
 step_by_step_impl_plan_r3.md and revision2 in step_by_step_impl_plan_r2.md.
 
@@ -193,7 +194,7 @@ Fresh in-session critic-d on revision3 with desc.md and the rejected PR critique
 is complete (critic.md): no rated findings; full combined prebuild required. Preserve the earlier planning critic/prompt and PR critique;
 use revision-specific copies before replacing canonical planning artifacts. Fold
 selected mitigations into revision4 before promoting any product code. A meaning
-gap returns to the description. The zero-mitigation fold is recorded above; no full-prebuild PASS is claimed yet.
+gap returns to the description. The zero-mitigation fold and full-prebuild PASS are recorded above.
 
 Build the complete revised command candidate only under the work folder, composing
 its actual lifetime owner/terminal driver with the existing real LoginFlow,

@@ -31,6 +31,10 @@ settles owned work (or truthfully reports deliberate retirement failure), restor
 terminal settings, preserves file effects and secret-free outcomes, with no timeout
 kill treated as a successful stop. Isolated/callback-only mocks do not close it.
 
+Result: PASS — full combined candidate,23 groups including25 actual PTY scenarios,
+17 retained review histories,8 stop transitions and14 publication/stop combinations;
+no product changes or source drift; 2026-10-16T12:37:40.952764+00:00.
+
 ## High-level summary
 
 No new High, Medium or Low plan findings. Revision3 targets the established defect
