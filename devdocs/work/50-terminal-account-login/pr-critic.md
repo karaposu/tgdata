@@ -201,10 +201,16 @@ and post-publication stop, in the full combined prebuild before product changes.
 **Why this is robust:** closes the local driver lifetime rather than merely
 avoiding one loop iteration; uses the existing auth and publisher contracts and
 tests the actual phase distinction that failed.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* The only concrete consumer of this mixed hidden-input/async-login/
+synchronous-publication lifetime is login_cli. The worker has a different process
+and job contract; one shared mechanism is not established without special cases.
+The local ownership correction and full composition tests close this instance
+with the least extent. Quick can abandon owned work; a new cross-command framework
+adds unproved coupling. Robust is selected on merit, not external pressure. It
+informs revision3 re-planning; this selection does not authorize an in-place patch.
 *For future:* —
 
 ### Mitigation — Long-term
