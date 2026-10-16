@@ -1,0 +1,7 @@
+{
+  "result": "PASS",
+  "pr_head": "34907d42b7b1de1186e4b848eff4a50b2349e9ee",
+  "verified_source_files": 106,
+  "product_diff_identical": true,
+  "additional_test_run": false
+}

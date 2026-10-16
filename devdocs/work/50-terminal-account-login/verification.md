@@ -2,70 +2,69 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# #50 verification — PASS
+# #50 revision4 verification — PASS
 
-Date: 2026-10-16. Product: `df7972828e2e608204a0043c391d895b51210389`.
-Runtime: Python3.11.10, Telethon1.45.0.
+Product da890a1; identical PR head34907d4. Python3.11.10 / Telethon1.45.0.
 
 | Check | Result |
 |---|---|
-| Full combined prebuild before product edits | 14 groups PASS, including8 actual PTY scenarios |
-| New permanent suite48 | 18 passed;0 failed |
-| Targeted15/17/32/41/48 | 92 checks in5 suites PASS |
-| Full12–19/22–46 plus48 | 1,005 actual offline checks in34 suites PASS |
-| Seven existing offline demos | PASS |
-| Source compilation / Python3.7 grammar | 106 files PASS, including setup.py |
-| Isolated installed tgdata-login | PASS: actual entry, isolated import, matching source, help and noTTY refusal |
-| Live12/13 | 3 deliberate skips, excluded from1,005 |
-| Diff whitespace / unchanged auth-reader scope | PASS |
+| Complete prebuild before product changes | First run PASS:23 groups,25 actual PTY scenarios |
+| Retained review/failure histories within prebuild | 17 PASS |
+| Stop admission/completion/finalization phases | 8 PASS |
+| Create/replace publication-stop combinations | 14 PASS |
+| Permanent smoke48 | 23 passed;0 failed |
+| Targeted15/17/32/41/48 | 97 checks /5 suites PASS |
+| Full12–19/22–46 plus48 | 1,010 actual offline checks /34 suites PASS |
+| Seven existing demos | PASS |
+| Compile / Python3.7 grammar | 106 files PASS; native3.7 not run |
+| Isolated installed command | Actual entry/native-SRP/PTY interruption, help, headless, isolated imports/hashes PASS |
+| Exact PR-tree equivalence | All106 tested source hashes and product diff match |
+| Live cases | 3 deliberate skips, excluded from offline count |
 
-The current dev baseline contains987 offline checks;18 new groups yield1,005.
-Unmerged #45/test47 is not included in this branch or count. Native Python3.7
-execution is not claimed by the grammar check. No live code delivery, real-account
-2FA, physical power-loss or arbitrary-filesystem qualification is claimed.
+The CLI bytes equal the prebuild candidate:
+8191362b69692824de82a3b70ac65a54103f79de29c1204b283d6bc1f8849d24.
+Every permanent test function's AST equals its executed prebuild counterpart; only
+candidate loading/root setup differs. The native publisher retains its previous
+hash3b526f483d3f0c137ebc45023f2326710781000ec71af090ed83c1b10d001290.
 
-## Evidence and commands
+## Evidence
 
-Using `/Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python`:
+prebuild-r4/result.json and attempt-1.txt preserve the complete candidate gate;
+prebuild-r4/README.md describes components and phase coverage.
+verification-r4/initial-test48.txt, evidence/targeted/result.json and
+evidence/full/result.json preserve counts/exits/durations and source manifests.
+Individual suite/demo logs sit beside their result JSONs. verify.py checks source
+hashes before and after tests. pr-equivalence.json records the identical PR tree;
+no unnecessary full-suite repeat was used for a byte-identical cherry-pick.
+
+verification-r4/verify_install.py uses existing offline setuptools65.5 in temporary
+source/lib/script directories. No wheel/build dependency was installed. Its
+installed_probe.py runs the real generated console entry via runpy in an isolated
+PTY child with controlled transport and actual native SRP, then verifies exit130,
+terminal restoration and owned cleanup. Parent/child both assert imports from the
+isolated library. installed-interruption.txt records:
 
 ```text
-python -m tgdata.smoke_tests.test_48_terminal_login
-python devdocs/work/50-terminal-account-login/verify.py targeted
-python devdocs/work/50-terminal-account-login/verify_install.py
-python devdocs/work/50-terminal-account-login/verify.py full
+PTY_PHASE native_srp terminal restored; exit130
+INSTALLED_NATIVE_SRP_STOP_PASS
 ```
 
-`evidence/targeted/result.json` and `evidence/full/result.json` retain individual
-counts/exit codes/durations and source SHA256 manifests. The verifier hashes all
-tested sources before and after execution. Individual logs sit beside the JSON.
-`install-result.json` and `install-build.txt` record isolated package installation.
-`prebuild.md`, both attempted full-run logs and result JSONs preserve the prebuild.
+Commands use /Users/ns/Desktop/projects/telegram-group-scraper/.venv/bin/python:
 
-The new suite uses real LoginFlow, native SDK/SRP/session codecs, actual SQLite
-files and the ordinary verified reader with test41's controlled source transport.
-Sockets are forbidden. PTY subprocesses test hidden inputs, EOF, first/repeated
-SIGINT and interruption on both sides of publication; signals target only those
-synthetic child processes. Existing test12 uses a local loopback proxy fixture.
-Missing configuration is supplied to live12/13.
+```text
+python devdocs/work/50-terminal-account-login/prebuild-r4/run.py
+python -m tgdata.smoke_tests.test_48_terminal_login
+python devdocs/work/50-terminal-account-login/verification-r4/verify.py targeted
+python devdocs/work/50-terminal-account-login/verification-r4/verify_install.py
+python devdocs/work/50-terminal-account-login/verification-r4/verify.py full
+```
 
-## Corrections and limitations
+No verification failure or product correction occurred. The sole formatting
+cleanup removed an unused extra EOF blank line from the extracted review_cases.py
+work helper; executed combined-suite/candidate bytes and expectations did not change.
+All tested changes are within the folded revision4 contract.
 
-No product verification failure occurred and no product code was changed to make
-tests pass. Permanent suite48 passed on its first run, followed by targeted and
-full PASS. Both product modules match the passing prebuild candidates byte for byte.
-
-The earlier prebuild had three failures caused by one fixture path mismatch:
-`/var` versus `/private/var` prevented its fault hooks from firing. Only fixture
-path normalization changed; candidate hashes and expected outcomes did not. The
-entire prebuild was rerun and passed. Its PTY carriage returns are escaped in the
-text rendering while an exact JSON log string preserves the original evidence.
-
-The isolated installer used existing setuptools65.5's managed install because
-wheel/build were absent. No network or dependency change was needed. The installed
-entry point was `tgdata.login_cli:main`, its modules matched the product SHA256s,
-help exited0 and headless invocation exited2 before configuration/login.
-
-Operator guarantees are bounded: local POSIX publication, a trusted destination
-directory and stopped readers for replacement. A CLI-only marker would not
-coordinate existing readers, so none is claimed. Uncertain publication retains
-private recovery material and requires inspection rather than an automatic retry.
+These are actual SDK/SRP/session/file/terminal tests with controlled source replies,
+not live Telegram qualification. Network connection is forbidden in login tests;
+full test12 uses its local loopback proxy fixture. Native3.7 execution and physical
+power-loss/arbitrary-writer guarantees are not claimed. #45/test47 remains separate.

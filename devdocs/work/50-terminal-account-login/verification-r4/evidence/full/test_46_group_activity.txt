@@ -1,0 +1,83 @@
+PASS test_bad_page_is_atomic_and_previous_page_survives
+PASS test_budget_counts_all_raw_slots_and_reserves_full_request
+PASS test_cached_owner_policy_and_actual_budget_owner
+Account operation cleanup failed (RuntimeError)
+Account operation cleanup failed (RuntimeError)
+PASS test_cleanup_errors_preserve_return_and_original_failure
+PASS test_counter_changes_do_not_mutate_prior_observations
+PASS test_daily_boundaries_and_unique_author_denominators
+PASS test_dense_pagination_and_exact_cap
+PASS test_empty_history_complete_and_no_unknown_zero_counters
+PASS test_empty_placeholders_are_not_lost_or_complete
+PASS test_exact_end_and_equal_timestamp_page_boundary
+PASS test_exports_frozen_values_and_json
+PASS test_forward_origin_does_not_invent_forward_count
+PASS test_half_open_fractional_bounds_and_wire_seek
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+PASS test_heartbeat_progress_callback_failures_and_no_legacy_mutation
+PASS test_history_success_does_not_clear_access_restriction
+PASS test_invalid_inputs_precede_all_io
+PASS test_later_source_error_and_owned_health_preserve_prefix
+PASS test_local_errors_and_refused_annotation_remain_original
+PASS test_malformed_vectors_counters_and_peers_refuse
+PASS test_nonprogress_and_date_order_refuse
+PASS test_oversized_response_is_not_accepted
+PASS test_owner_change_at_later_admission_refuses
+PASS test_raw_albums_services_and_identity_populations
+PASS test_reaction_totals_and_reply_counter_meaning
+PASS test_repeated_cleanup_cancellation_still_waits_for_disconnect
+PASS test_short_page_is_not_history_end
+PASS test_stalled_later_page_cancels_with_partial_evidence
+PASS test_supported_peer_families_and_numeric_cached_reference
+PASS test_timezone_normalization
+PASS test_unknown_slot_prevents_boundary_completion
+PASS test_user_target_refuses_before_history
+PASS test_wait_has_no_retry_or_sleep
+PASS test_wide_sparse_window_has_all_days_without_row_cross_product
+PASS test_wrong_owner_and_missing_auth_prevent_group_work
+PASS test_zero_missing_and_counter_distribution_population
+35 passed; 0 failed

@@ -2,64 +2,69 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# #50 implementation complete under revision 2
+# #50 implementation complete under revision4
 
-Product commit: `df7972828e2e608204a0043c391d895b51210389`.
-Base: dev `77f2f53eba8bdc6922127a3b9118bf17de4efabf`.
-Branch: `feat/50-terminal-account-login`.
+Archive product: da890a1. Product-only PR51 head:34907d4.
+Base: dev77f2f53eba8bdc6922127a3b9118bf17de4efabf.
+Earlier revision2 implementation/verification are preserved as *_r2.md; its
+rejected PR critique remains unchanged as evidence, not current approval.
 
-The installed `tgdata-login --config CONFIG [--replace]` command and
-`python -m tgdata.login_cli` share one terminal driver. It uses the existing
-LoginFlow API, hides phone/code/password input, maintains one event loop and
-separates source authentication from native session publication.
+## Result
 
-The file publisher prepares a private native SQLite candidate, verifies it locally,
-refuses collisions/stale targets/sidecars and supports explicit replacement under
-the stopped-reader precondition. Prior bytes are protected through replacement
-until publication is confirmed. Uncertain publication retains recovery files;
-cleanup or output failure does not erase known success. Local retry uses the same
-completed credential and performs no new auth request.
+Terminal stop intent now belongs to one _TerminalRun lifetime. SIGINT cancels an
+active authentication action once, consumes completed tasks without re-entering
+the event loop, and remains recorded through subsequent cleanup. Input interruption
+restores terminal settings before repeated signals can interfere. Explicit retirement
+can run after stop. Publication uses the same persistent flag and existing effect
+receipt; final exit is chosen after cleanup so a late stop cannot erase saved or
+uncertain file state.
 
-## Plan completion
+The actual native-password/real-terminal hang from PR-critic R1 now exits130 with
+restored terminal attributes and settled source work. Admission tests prove no new
+prompt/action/save follows stop. Already in-flight source effects may be uncertain;
+that is preserved rather than described as remote rollback.
 
-1. Destination/publication owner implemented in login_file.py, including explicit
-   parent/backup sync barriers selected for critic Risk1.
-2. Native completed-login conversion implemented with actual SDK APIs, own-ID0
-   validation and optional account-cache preservation selected for Risk2. Native
-   commit/close failures retire the underlying SQLite connection.
-3. Terminal driver implemented in login_cli.py with eligible prompts, safe status/
-   exit outcomes, explicit authorization-only checking and stop/cleanup ownership.
-4. Installed console entry point, public guide and Authentication README added.
-5. Permanent suite48 adds18 groups, including eight real PTY child scenarios;
-   smoke README updated. Test47 remains assigned to unmerged #45.
-6. New/targeted/full suites and isolated installed-command checks passed. Product
-   and work records remain separate commits.
+## Plan and gate sequence
 
-The two product modules are byte-identical to the complete prebuild candidate
-that passed before product work. No product correction was required during
-verification. The prebuild's one fixture-only path normalization and log rendering
-are documented in prebuild.md; original evidence is preserved.
+- Revision3 e7e94c5 was freshly critiqued in-session: prompt46aeed9, Phase2 verdict
+  51f47e9, no new rated risks and a mandatory full combined prebuild.
+- Revision4 fold d435a54 records zero selected mitigations and the still-pending
+  prebuild. This textual fold followed the user's requested order; no product edit
+  preceded the experiment.
+- e0d764f commits the full prebuild PASS:23 groups,25 real-PTY scenarios,17 retained
+  review histories,8 stop transitions and14 publication/stop combinations. First
+  run passed, with candidate/product hashes unchanged.
+- da890a1 promotes the exact passing CLI bytes, extends permanent smoke48 with the
+  executed test functions, and updates the terminal guide/smoke README. Product
+  and work records remain separate. 34907d4 is the same product commit on PR51's
+  product-only branch; all106 verified source files match and product diff is equal.
 
-## Scope and deviations
+Steps1–5 are complete within the implementation scope. Existing LoginFlow,
+LoginDestination/native conversion, StoredSession, configured readers, package
+exports/version and setup entry points are unchanged from the reviewed product.
+No generic supervisor or new dependency was added. Version stays0.1.1.
 
-No design deviation. The build environment had setuptools65.5 but no wheel/build
-package, so installed-command verification used setuptools' offline managed install
-in a temporary copy. It generated the actual entry point and verified isolated
-imports and exact module bytes. No dependency was downloaded or installed into the
-user's active environment.
+## Verification and corrections
 
-LoginFlow, StoredSession, ConnectionEngine, TgData, package exports/version and
-ordinary reader behavior are byte-unchanged from the base. No custom-store plugin,
-durable CLI checkpoint, reader rotation lock, live Telegram login, ScrapeOps change,
-version bump, PR, merge or release occurred. The command's supported publication
-contract is local POSIX with a trusted directory and operator-coordinated readers.
+New23-group suite passed; targeted15/17/32/41/48 passed97 checks. Full supported
+34 suites passed1,010 actual offline checks; seven demos passed; three live cases
+were deliberately skipped. All106 Python files compile and satisfy3.7 grammar.
+The isolated installed tgdata-login entry also passes actual native-SRP interruption
+through a real PTY, help/headless checks and installed import/source matching.
 
-## Review handoff
+No candidate, product or test-expectation correction was needed. One extracted
+work-folder helper's extra EOF blank line was trimmed for diff hygiene; the executed
+combined suite/candidate bytes were unchanged. No design deviation or unsupported
+behavior was patched during verification. See verification.md for evidence paths.
 
-Next: merge check against triage, description, folded revision2 plan, critic and
-actual product diff; product-only PR; fresh in-session critic-d review. Work-folder
-documents stay on this archive branch. §9 gpt-6-astra/xhigh was verified for this
-session. #45/PR49 is separate and still awaits its own merge decision.
+## Handoff
 
-The original checkout stays on its old branch with the user's uncommitted version
-edit. That edit, duncan and unrelated guide files are not part of this delivery.
+Next: renewed merge-check against the revised diff/plan, then fresh in-session
+critic-d PR critique. Historical merge-check98f4a59 and rejected critique93ba179/
+d10104b apply to the old head and do not clear this revision. PR51 stays draft.
+§9 current-thread2026-10-16T12:07:55.242Z confirms gpt-6-astra/xhigh; no subagent.
+
+No merge, release, live Telegram login, environment deployment or ScrapeOps change.
+Original checkout/version edit, duncan, unrelated guides and separate PR49 remain
+untouched. Native3.7, live Telegram delivery/real-account2FA, physical power loss
+and arbitrary/active-writer filesystem behavior remain unqualified.

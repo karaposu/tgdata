@@ -1,0 +1,15 @@
+{
+  "result": "PASS",
+  "runtime": "3.11.10",
+  "entry_point": "tgdata.login_cli:main",
+  "isolated_import": true,
+  "console_help": 0,
+  "headless_exit": 2,
+  "native_srp_interruption": true,
+  "native_files_match": {
+    "login_cli.py": "8191362b69692824de82a3b70ac65a54103f79de29c1204b283d6bc1f8849d24",
+    "login_file.py": "3b526f483d3f0c137ebc45023f2326710781000ec71af090ed83c1b10d001290"
+  },
+  "network": false,
+  "method": "offline setuptools managed install"
+}
