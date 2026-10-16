@@ -9,8 +9,9 @@ from typing import Optional, Tuple, Union
 from telethon.tl import functions, types
 
 from .group_operations import (
-    GroupMetadata, GroupReferenceError, GroupResponseError, _identity, _integer, _resolve,
+    GroupMetadata, GroupReferenceError, GroupResponseError, _integer, _resolve,
 )
+from .history_observation import history_page
 from .history_window import _HistoryWindow
 
 
@@ -175,15 +176,6 @@ def _count(value):
     return value
 
 
-def _date(value):
-    try:
-        if not isinstance(value, datetime) or value.utcoffset() is None:
-            raise ValueError
-        return value.astimezone(timezone.utc)
-    except (TypeError, ValueError, OverflowError):
-        raise GroupResponseError('Invalid activity message date') from None
-
-
 def _message(message, date, observed_at):
     sender = message.from_id
     if sender is not None and not isinstance(sender, (types.PeerUser, types.PeerChannel,
@@ -227,40 +219,8 @@ def _message(message, date, observed_at):
 
 
 def _page(reply, peer_id, limit, last_id, last_date, window, observed_at):
-    """Validate the entire page before exposing any of its facts to the accumulator."""
-    if not isinstance(reply, (types.messages.Messages, types.messages.MessagesSlice,
-                              types.messages.ChannelMessages)):
-        raise GroupResponseError('Unexpected activity history response')
-    rows = reply.messages
-    if not isinstance(rows, (list, tuple)) or len(rows) > limit:
-        raise GroupResponseError('Invalid activity history vector')
-    messages, dates, unavailable = [], [], 0
-    for row in rows:
-        if not isinstance(row, (types.Message, types.MessageService, types.MessageEmpty)):
-            raise GroupResponseError('Invalid activity history message')
-        if not _integer(row.id, 1, _MAX_INT) or (last_id is not None and row.id >= last_id):
-            raise GroupResponseError('Activity history IDs do not progress')
-        last_id = row.id
-        peer = row.peer_id
-        if not (peer is None and isinstance(row, types.MessageEmpty)):
-            if (not isinstance(peer, (types.PeerChat, types.PeerChannel))
-                    or _identity(peer)[2] != peer_id):
-                raise GroupResponseError('Activity message belongs to another peer')
-        if isinstance(row, types.MessageEmpty):
-            unavailable += 1
-            continue
-        date = _date(row.date)
-        if last_date is not None and date > last_date:
-            raise GroupResponseError('Activity history dates do not progress')
-        dates.append(date)
-        last_date = date
-        observation = _message(row, date, observed_at)
-        if window.contains(date):
-            messages.append(observation)
-    boundary = any(date < window.start_date for date in dates)
-    ended = not rows or isinstance(reply, types.messages.Messages)
-    reason = 'window_start' if boundary else 'history_end' if ended else None
-    return messages, dates, unavailable, len(rows), last_id, last_date, reason
+    return history_page(reply, peer_id, limit, last_id, last_date, window, observed_at,
+                        _message, label='Activity')
 
 
 async def _measure_group_activity(operation, target, window, max_messages, started_at, beat=None):
