@@ -146,10 +146,14 @@ to replace. The combined/permanent tests trace and fault each barrier, rather th
 claiming a simulated crash proves physical storage guarantees.
 **Why this is robust:** closes the missing ordering within this publisher with
 explicit local barriers and tests; no global transaction framework is needed.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* No other consumer has this complete credential replacement/backup
+contract. batch_files shares file primitives but only publishes non-replacing
+artifacts; a single full protocol would need per-case branches. The local barriers
+close this instance permanently with minimal extent. No external pressure forces
+a lesser fix; robust is selected on reach/extent, not as a last resort.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -163,7 +167,9 @@ credential replacement/backup outcomes and is not yet the same full protocol.
 
 **Note**
 *Why chosen:* —
-*For future:* —
+*For future:* Revisit only when another concrete replacement/recovery consumer
+requires the same protocol. The local barrier semantics would survive extraction,
+so this is a possible future improvement, not prerequisite work.
 
 ## Scope checks
 
