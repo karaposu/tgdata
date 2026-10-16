@@ -1,0 +1,8 @@
+Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-gpj8943p/account.session'
+Phone number with country code (hidden):
+Telegram code (hidden):
+Login: transport_error
+Login outcome uncertain. Check authorization without another code? Type yes:
+Login outcome uncertain; session not published.
+
+FRESH_RESULT {"mode": "uncertain_no", "exit": 3, "saved": false, "restored": true, "codes": 1, "signins": 1, "password_proofs": 0, "settled_inputs": 3, "close_attempts": 3, "fault_or_stop_fired": false}

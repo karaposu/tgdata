@@ -1,0 +1,142 @@
+{
+  "mode_change_code.txt": {
+    "sha256": "043162f00bc325addd1f0e32e4774caf205aabd883b49681c9dc45008ca96a11",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-c5ckgd06/account.session'\r\nPhone number with country code (hidden): \r\nStopped: terminal_mode_unsupported\r\n\r\nFRESH_RESULT {\"mode\": \"mode_change_code\", \"exit\": 3, \"saved\": false, \"restored\": false, \"codes\": 1, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 1, \"close_attempts\": 2, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "close_after_code.txt": {
+    "sha256": "ee99165ac083fbc8d052e6588874ab1ab6dca294c2aebd12d6d070d920e8bbf6",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-ii7lhoxv/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nStopped: terminal_close_failed\r\nTerminal cleanup: terminal_close_failed\r\n\r\nFRESH_RESULT {\"mode\": \"close_after_code\", \"exit\": 3, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 1, \"close_attempts\": 2, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "zero_byte.txt": {
+    "sha256": "c9685ed2871e813c781ac11a56ee0748b87e0b6d951dbc0773e7a5a51a70805e",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-t1xcmwng/account.session'\r\nPhone number with country code (hidden): \r\nInput rejected; finishing this line. Ctrl-C stops.\r\n\r\nStopped: terminal_input_control\r\n\r\nFRESH_RESULT {\"mode\": \"zero_byte\", \"exit\": 3, \"saved\": false, \"restored\": true, \"codes\": 0, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 0, \"close_attempts\": 1, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "uncertain_yes.txt": {
+    "sha256": "495947a7043c76ca59c0055779b3df562efc3918c81080a93fecca10b0e23683",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-bqh5wha8/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nLogin: transport_error\r\nLogin outcome uncertain. Check authorization without another code? Type yes: \r\nAuthenticated account 4242.\r\nSaved session for account 4242 to '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-bqh5wha8/account.session'.\r\n\r\nFRESH_RESULT {\"mode\": \"uncertain_yes\", \"exit\": 0, \"saved\": true, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 3, \"close_attempts\": 3, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "eof_close_retry.txt": {
+    "sha256": "1b082d69b4bd94dcff5ec9864316667597961a3dcf24abf628d232115501f1ed",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-xhl64h7t/account.session'\r\nReplacement requested. All readers must be stopped before saving.\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nAuthenticated account 4242.\r\nReplace '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-xhl64h7t/account.session' with account 4242 after stopping ALL readers? Type REPLACE: \r\nSession not published (OSError).\r\nRetry saving this completed login without another code? Type yes: Stopped: terminal_close_failed\r\nInput outcome: input_stopped\r\nTerminal cleanup: terminal_close_failed\r\nSession not published (OSError).\r\n\r\nFRESH_RESULT {\"mode\": \"eof_close_retry\", \"exit\": 130, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 3, \"close_attempts\": 4, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "custom_eof.txt": {
+    "sha256": "90cc9f1e611f430254cc2ab3bfa830a423f715f9a92cbe4823940adf0d62cb0e",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-ul5ied5c/account.session'\r\nPhone number with country code (hidden): Interrupted; session not published.\r\n\r\nFRESH_RESULT {\"mode\": \"custom_eof\", \"exit\": 130, \"saved\": false, \"restored\": true, \"codes\": 0, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 0, \"close_attempts\": 1, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "source_wait.txt": {
+    "sha256": "fd6fca093991544d54657214e7332f9f5f439fbe364fd38309a4409c9ddd764d",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-7sf91wek/account.session'\r\nPhone number with country code (hidden): \r\nLogin: wait\r\nRetry after 12 seconds; no code resent.\r\n\r\nFRESH_RESULT {\"mode\": \"source_wait\", \"exit\": 3, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 1, \"close_attempts\": 1, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "preprompt_stop_code.txt": {
+    "sha256": "72d5c4462cc50bb43a85bcbc513e65a97feccb10f9d0d825ea05e3956e0355fc",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-ihewtcv7/account.session'\r\nPhone number with country code (hidden): \r\nInterrupted; session not published.\r\n\r\nFRESH_RESULT {\"mode\": \"preprompt_stop_code\", \"exit\": 130, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 1, \"close_attempts\": 2, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "intermediate_fail_password.txt": {
+    "sha256": "48742d6a0b7900100e016efed47c80a3eeb1b302201a17fc0338b1284706e2c0",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-iy5fbyb6/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nTwo-factor password (hidden): \r\nStopped: terminal_restore_failed\r\nTerminal cleanup: terminal_restore_failed\r\n\r\nFRESH_RESULT {\"mode\": \"intermediate_fail_password\", \"exit\": 3, \"saved\": false, \"restored\": false, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 2, \"close_attempts\": 3, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "eof_close_code.txt": {
+    "sha256": "438e982148a122684a3aaa9557891754762b0a7b9afbe78176448deb53d91b39",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-cij6gxmp/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): Stopped: terminal_close_failed\r\nInput outcome: input_stopped\r\nTerminal cleanup: terminal_close_failed\r\n\r\nFRESH_RESULT {\"mode\": \"eof_close_code\", \"exit\": 130, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 1, \"close_attempts\": 2, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "empty_phone.txt": {
+    "sha256": "16534e264f05061eb387f9451d7645661bc60c22b3f27cc40bb0b02ab3bef2c6",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-wt0vlcgh/account.session'\r\nPhone number with country code (hidden): \r\nLogin: invalid_phone\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nAuthenticated account 4242.\r\nSaved session for account 4242 to '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-wt0vlcgh/account.session'.\r\n\r\nFRESH_RESULT {\"mode\": \"empty_phone\", \"exit\": 0, \"saved\": true, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 3, \"close_attempts\": 3, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "password_retry.txt": {
+    "sha256": "4ab6d428d0a7a6fc0a930d08d6818d9334d898518b70c18f3c7478e6a9224c68",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-hy4f09mq/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nTwo-factor password (hidden): \r\nLogin: invalid_password\r\nTwo-factor password (hidden): \r\nAuthenticated account 4242.\r\nSaved session for account 4242 to '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-hy4f09mq/account.session'.\r\n\r\nFRESH_RESULT {\"mode\": \"password_retry\", \"exit\": 0, \"saved\": true, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 2, \"settled_inputs\": 4, \"close_attempts\": 4, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "unknown_control_phone.txt": {
+    "sha256": "6b8b425fcf778c3348e40a5620c9d37b9f729599d5fe728b40e20bddcd6b9ede",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-2y2ych4l/account.session'\r\nPhone number with country code (hidden): \r\nInput rejected; finishing this line. Ctrl-C stops.\r\n\r\nStopped: terminal_input_control\r\n\r\nFRESH_RESULT {\"mode\": \"unknown_control_phone\", \"exit\": 3, \"saved\": false, \"restored\": true, \"codes\": 0, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 0, \"close_attempts\": 1, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "eof_close_check.txt": {
+    "sha256": "7e5280c60f196fc38ef0702a95b04d49b041f3c24f3f80d57961cf0f72c350d5",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-0k6rwcgd/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nLogin: transport_error\r\nLogin outcome uncertain. Check authorization without another code? Type yes: Stopped: terminal_close_failed\r\nInput outcome: input_stopped\r\nTerminal cleanup: terminal_close_failed\r\n\r\nFRESH_RESULT {\"mode\": \"eof_close_check\", \"exit\": 130, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 2, \"close_attempts\": 3, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "noflsh_interrupt.txt": {
+    "sha256": "b26eb7db0cd7eca6ccf75720da733ac5b57ce11c4cc30f95dbb8ea9348dac064",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-d5a_uhuj/account.session'\r\nPhone number with country code (hidden): Interrupted; session not published.\r\n\r\nFRESH_RESULT {\"mode\": \"noflsh_interrupt\", \"exit\": 130, \"saved\": false, \"restored\": true, \"codes\": 0, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 0, \"close_attempts\": 1, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "swapped_erase_eof.txt": {
+    "sha256": "537e5d83178c1e4d6350b87056a0ab27831099e402337aa347464d6ba59fed80",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-ughyvfuf/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nAuthenticated account 4242.\r\nSaved session for account 4242 to '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-ughyvfuf/account.session'.\r\n\r\nFRESH_RESULT {\"mode\": \"swapped_erase_eof\", \"exit\": 0, \"saved\": true, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 2, \"close_attempts\": 2, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "post_return_replace.txt": {
+    "sha256": "11abd562f21d76071e473d70528771ff93138564e26044dd02d2c9bdda4beb36",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-o1t3uvtw/account.session'\r\nReplacement requested. All readers must be stopped before saving.\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nAuthenticated account 4242.\r\nReplace '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-o1t3uvtw/account.session' with account 4242 after stopping ALL readers? Type REPLACE: \r\nInterrupted; session not published.\r\n\r\nFRESH_RESULT {\"mode\": \"post_return_replace\", \"exit\": 130, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 3, \"close_attempts\": 3, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "custom_edit.txt": {
+    "sha256": "28704658cd4555f54935fb867da3cdef6a469447c889e5f9262333f89124baba",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-eaqkdk_7/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nAuthenticated account 4242.\r\nSaved session for account 4242 to '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-eaqkdk_7/account.session'.\r\n\r\nFRESH_RESULT {\"mode\": \"custom_edit\", \"exit\": 0, \"saved\": true, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 2, \"close_attempts\": 2, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "eof_close_password.txt": {
+    "sha256": "e70df9871120b3e4f8324856da8dfb2ac77f5dac45fb65eaf09be7825001d50d",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-ihkj0byk/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nTwo-factor password (hidden): Stopped: terminal_close_failed\r\nInput outcome: input_stopped\r\nTerminal cleanup: terminal_close_failed\r\n\r\nFRESH_RESULT {\"mode\": \"eof_close_password\", \"exit\": 130, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 2, \"close_attempts\": 3, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "eof_close_replace.txt": {
+    "sha256": "da430c4ddde5bb0ae3a2ce35196217012e726b2a7441199185c10244dea5f28c",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-5qej8b_e/account.session'\r\nReplacement requested. All readers must be stopped before saving.\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nAuthenticated account 4242.\r\nReplace '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-5qej8b_e/account.session' with account 4242 after stopping ALL readers? Type REPLACE: Stopped: terminal_close_failed\r\nInput outcome: input_stopped\r\nTerminal cleanup: terminal_close_failed\r\n\r\nFRESH_RESULT {\"mode\": \"eof_close_replace\", \"exit\": 130, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 2, \"close_attempts\": 3, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "uncertain_overflow.txt": {
+    "sha256": "561c2b2b7e86e6cf754498d13342e5192b451438e92b5d6b588d61da108293b5",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-ht2m9u9t/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nLogin: transport_error\r\nLogin outcome uncertain. Check authorization without another code? Type yes: \r\nInput rejected; finishing this line. Ctrl-C stops.\r\n\r\nStopped: terminal_input_too_long\r\n\r\nFRESH_RESULT {\"mode\": \"uncertain_overflow\", \"exit\": 3, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 2, \"close_attempts\": 3, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "restore_after_phone.txt": {
+    "sha256": "d01ec27f9823935aa7e5d8987757a43545f7b4249acbfd086039e3e73c8daa82",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-cgdyfi2e/account.session'\r\nPhone number with country code (hidden): \r\nStopped: terminal_restore_failed\r\nTerminal cleanup: terminal_restore_failed\r\n\r\nFRESH_RESULT {\"mode\": \"restore_after_phone\", \"exit\": 3, \"saved\": false, \"restored\": true, \"codes\": 0, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 0, \"close_attempts\": 1, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "overflow_custom_clear.txt": {
+    "sha256": "1d1ca2fcf351188567cbb1dc68795fdf6840c82067bb7616486f5c1ab9a52b04",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-vrc9efly/account.session'\r\nPhone number with country code (hidden): \r\nInput rejected; finishing this line. Ctrl-C stops.\r\n\r\nStopped: terminal_input_too_long\r\n\r\nFRESH_RESULT {\"mode\": \"overflow_custom_clear\", \"exit\": 3, \"saved\": false, \"restored\": true, \"codes\": 0, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 0, \"close_attempts\": 1, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "final_flush_fail_code.txt": {
+    "sha256": "2e10e77eb0d380160dc4e36b6e4cbd7541859247edfd26c5d921529201c13292",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-19vxdims/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nStopped: terminal_restore_failed\r\nTerminal cleanup: terminal_restore_failed\r\n\r\nFRESH_RESULT {\"mode\": \"final_flush_fail_code\", \"exit\": 3, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 1, \"close_attempts\": 2, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "uncertain_reinput.txt": {
+    "sha256": "f2580be20be94eef98cbf6857528653135d56d025287bd4b697b59d65c8a63f1",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-7rqybr9s/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nLogin: transport_error\r\nLogin outcome uncertain. Check authorization without another code? Type yes: \r\nTelegram code (hidden): \r\nAuthenticated account 4242.\r\nSaved session for account 4242 to '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-7rqybr9s/account.session'.\r\n\r\nFRESH_RESULT {\"mode\": \"uncertain_reinput\", \"exit\": 0, \"saved\": true, \"restored\": true, \"codes\": 1, \"signins\": 2, \"password_proofs\": 0, \"settled_inputs\": 4, \"close_attempts\": 4, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "eof_close_phone.txt": {
+    "sha256": "81857db844412e3354f88a76b66ce9b27bbb196254d9512b361ed5b2b3beb10b",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-rk8lnq48/account.session'\r\nPhone number with country code (hidden): Stopped: terminal_close_failed\r\nInput outcome: input_stopped\r\nTerminal cleanup: terminal_close_failed\r\n\r\nFRESH_RESULT {\"mode\": \"eof_close_phone\", \"exit\": 130, \"saved\": false, \"restored\": true, \"codes\": 0, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 0, \"close_attempts\": 1, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "unicode129_password.txt": {
+    "sha256": "41236f5d4ea5d702f042cd16dab781ff706ce3ffed51bf1f1e85d345128f9335",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-kmlf9862/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nTwo-factor password (hidden): \r\nInput rejected; finishing this line. Ctrl-C stops.\r\n\r\nStopped: terminal_input_too_long\r\n\r\nFRESH_RESULT {\"mode\": \"unicode129_password\", \"exit\": 3, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 2, \"close_attempts\": 3, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "uncertain_stop_final.txt": {
+    "sha256": "fc83bf47043b8f2faeb75d8ac983235125553e32b1617a0090df02c40c9565d3",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-g8uabsdd/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nLogin: transport_error\r\nLogin outcome uncertain. Check authorization without another code? Type yes: \r\nInterrupted; session not published.\r\n\r\nFRESH_RESULT {\"mode\": \"uncertain_stop_final\", \"exit\": 130, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 2, \"close_attempts\": 3, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "erase_unicode_limit.txt": {
+    "sha256": "af36a8ed499476d3b8bb34b8c8165b6f745a5eb315b328e93a8e9073ae9e3635",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-reh3_ain/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nTwo-factor password (hidden): \r\nAuthenticated account 4242.\r\nSaved session for account 4242 to '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-reh3_ain/account.session'.\r\n\r\nFRESH_RESULT {\"mode\": \"erase_unicode_limit\", \"exit\": 0, \"saved\": true, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 1, \"settled_inputs\": 3, \"close_attempts\": 3, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "unicode128_password.txt": {
+    "sha256": "a979777329556055415eb91c9e1b6a5420d2436611ad23c23348ef358fdd75bd",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-4ih3tp96/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nTwo-factor password (hidden): \r\nAuthenticated account 4242.\r\nSaved session for account 4242 to '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-4ih3tp96/account.session'.\r\n\r\nFRESH_RESULT {\"mode\": \"unicode128_password\", \"exit\": 0, \"saved\": true, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 1, \"settled_inputs\": 3, \"close_attempts\": 3, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "uncertain_no.txt": {
+    "sha256": "aea31df90cb1636db852280cd36aa7c361e3997157ea22745491ec7423fc9e3e",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-gpj8943p/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nLogin: transport_error\r\nLogin outcome uncertain. Check authorization without another code? Type yes: \r\nLogin outcome uncertain; session not published.\r\n\r\nFRESH_RESULT {\"mode\": \"uncertain_no\", \"exit\": 3, \"saved\": false, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 0, \"settled_inputs\": 3, \"close_attempts\": 3, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "output_fail_discard.txt": {
+    "sha256": "dd8bf8fc54654f03e8dbf9675286a4c4d26cc7c8a5ec117459efd21c125dd61e",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-rzlpjxpv/account.session'\r\nPhone number with country code (hidden): Stopped: terminal_input_failed\r\n\r\nFRESH_RESULT {\"mode\": \"output_fail_discard\", \"exit\": 3, \"saved\": false, \"restored\": true, \"codes\": 0, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 0, \"close_attempts\": 1, \"fault_or_stop_fired\": true}\r\n"
+  },
+  "bad_code_typeahead.txt": {
+    "sha256": "fb9fa39905baf300b9e81544029b42ccfe52b2eeb4acfea59f7b4b0755bf4da0",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-tthxir_a/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nLogin: invalid_code\r\nTelegram code (hidden): \r\nAuthenticated account 4242.\r\nSaved session for account 4242 to '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-tthxir_a/account.session'.\r\n\r\nFRESH_RESULT {\"mode\": \"bad_code_typeahead\", \"exit\": 0, \"saved\": true, \"restored\": true, \"codes\": 1, \"signins\": 2, \"password_proofs\": 0, \"settled_inputs\": 3, \"close_attempts\": 3, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "incomplete_utf8_erase.txt": {
+    "sha256": "36c9610d536c2cca3b865befe04d56099049cab02e5c84ebaa7fe14fe3466362",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-_5tys9jv/account.session'\r\nPhone number with country code (hidden): \r\nInput rejected; finishing this line. Ctrl-C stops.\r\n\r\nStopped: terminal_input_encoding\r\n\r\nFRESH_RESULT {\"mode\": \"incomplete_utf8_erase\", \"exit\": 3, \"saved\": false, \"restored\": true, \"codes\": 0, \"signins\": 0, \"password_proofs\": 0, \"settled_inputs\": 0, \"close_attempts\": 1, \"fault_or_stop_fired\": false}\r\n"
+  },
+  "local_retry_two_factor.txt": {
+    "sha256": "841e0a925fe9f9ea8f7353254ea3d15da865180194347ab076e52250bc4873ff",
+    "text": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-xrsdjv6x/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nTwo-factor password (hidden): \r\nAuthenticated account 4242.\r\nSession not published (OSError).\r\nRetry saving this completed login without another code? Type yes: \r\nSaved session for account 4242 to '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-xrsdjv6x/account.session'.\r\n\r\nFRESH_RESULT {\"mode\": \"local_retry_two_factor\", \"exit\": 0, \"saved\": true, \"restored\": true, \"codes\": 1, \"signins\": 1, \"password_proofs\": 1, \"settled_inputs\": 4, \"close_attempts\": 4, \"fault_or_stop_fired\": false}\r\n"
+  }
+}

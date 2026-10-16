@@ -1,0 +1,7 @@
+Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-eaqkdk_7/account.session'
+Phone number with country code (hidden):
+Telegram code (hidden):
+Authenticated account 4242.
+Saved session for account 4242 to '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-eaqkdk_7/account.session'.
+
+FRESH_RESULT {"mode": "custom_edit", "exit": 0, "saved": true, "restored": true, "codes": 1, "signins": 1, "password_proofs": 0, "settled_inputs": 2, "close_attempts": 2, "fault_or_stop_fired": false}

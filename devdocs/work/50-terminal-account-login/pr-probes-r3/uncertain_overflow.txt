@@ -1,0 +1,10 @@
+Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-ht2m9u9t/account.session'
+Phone number with country code (hidden):
+Telegram code (hidden):
+Login: transport_error
+Login outcome uncertain. Check authorization without another code? Type yes:
+Input rejected; finishing this line. Ctrl-C stops.
+
+Stopped: terminal_input_too_long
+
+FRESH_RESULT {"mode": "uncertain_overflow", "exit": 3, "saved": false, "restored": true, "codes": 1, "signins": 1, "password_proofs": 0, "settled_inputs": 2, "close_attempts": 3, "fault_or_stop_fired": false}

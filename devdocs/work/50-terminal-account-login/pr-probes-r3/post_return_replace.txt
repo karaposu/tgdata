@@ -1,0 +1,9 @@
+Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-o1t3uvtw/account.session'
+Replacement requested. All readers must be stopped before saving.
+Phone number with country code (hidden):
+Telegram code (hidden):
+Authenticated account 4242.
+Replace '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-o1t3uvtw/account.session' with account 4242 after stopping ALL readers? Type REPLACE:
+Interrupted; session not published.
+
+FRESH_RESULT {"mode": "post_return_replace", "exit": 130, "saved": false, "restored": true, "codes": 1, "signins": 1, "password_proofs": 0, "settled_inputs": 3, "close_attempts": 3, "fault_or_stop_fired": true}

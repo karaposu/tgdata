@@ -1,0 +1,6 @@
+Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-7sf91wek/account.session'
+Phone number with country code (hidden):
+Login: wait
+Retry after 12 seconds; no code resent.
+
+FRESH_RESULT {"mode": "source_wait", "exit": 3, "saved": false, "restored": true, "codes": 1, "signins": 0, "password_proofs": 0, "settled_inputs": 1, "close_attempts": 1, "fault_or_stop_fired": false}

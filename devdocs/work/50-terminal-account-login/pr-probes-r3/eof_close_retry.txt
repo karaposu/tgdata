@@ -1,0 +1,13 @@
+Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-xhl64h7t/account.session'
+Replacement requested. All readers must be stopped before saving.
+Phone number with country code (hidden):
+Telegram code (hidden):
+Authenticated account 4242.
+Replace '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-xhl64h7t/account.session' with account 4242 after stopping ALL readers? Type REPLACE:
+Session not published (OSError).
+Retry saving this completed login without another code? Type yes: Stopped: terminal_close_failed
+Input outcome: input_stopped
+Terminal cleanup: terminal_close_failed
+Session not published (OSError).
+
+FRESH_RESULT {"mode": "eof_close_retry", "exit": 130, "saved": false, "restored": true, "codes": 1, "signins": 1, "password_proofs": 0, "settled_inputs": 3, "close_attempts": 4, "fault_or_stop_fired": true}

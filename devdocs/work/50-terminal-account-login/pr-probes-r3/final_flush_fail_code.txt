@@ -1,0 +1,7 @@
+Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-19vxdims/account.session'
+Phone number with country code (hidden):
+Telegram code (hidden):
+Stopped: terminal_restore_failed
+Terminal cleanup: terminal_restore_failed
+
+FRESH_RESULT {"mode": "final_flush_fail_code", "exit": 3, "saved": false, "restored": true, "codes": 1, "signins": 0, "password_proofs": 0, "settled_inputs": 1, "close_attempts": 2, "fault_or_stop_fired": true}

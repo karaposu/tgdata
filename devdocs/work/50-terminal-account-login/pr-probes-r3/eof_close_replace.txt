@@ -1,0 +1,10 @@
+Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-5qej8b_e/account.session'
+Replacement requested. All readers must be stopped before saving.
+Phone number with country code (hidden):
+Telegram code (hidden):
+Authenticated account 4242.
+Replace '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-5qej8b_e/account.session' with account 4242 after stopping ALL readers? Type REPLACE: Stopped: terminal_close_failed
+Input outcome: input_stopped
+Terminal cleanup: terminal_close_failed
+
+FRESH_RESULT {"mode": "eof_close_replace", "exit": 130, "saved": false, "restored": true, "codes": 1, "signins": 1, "password_proofs": 0, "settled_inputs": 2, "close_attempts": 3, "fault_or_stop_fired": true}

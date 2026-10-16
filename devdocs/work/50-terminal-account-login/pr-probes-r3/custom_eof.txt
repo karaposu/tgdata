@@ -1,0 +1,4 @@
+Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-ul5ied5c/account.session'
+Phone number with country code (hidden): Interrupted; session not published.
+
+FRESH_RESULT {"mode": "custom_eof", "exit": 130, "saved": false, "restored": true, "codes": 0, "signins": 0, "password_proofs": 0, "settled_inputs": 0, "close_attempts": 1, "fault_or_stop_fired": false}

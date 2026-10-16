@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "cases": 35,
+  "first_attempt": true,
+  "fixture_corrections": 0,
+  "product_changes": 0,
+  "source_files_unchanged": 111,
+  "head": "b1d9dcc7f218876df7f5201dd93e80891fb64720",
+  "base": "77f2f53eba8bdc6922127a3b9118bf17de4efabf",
+  "script_sha256": "520bf56e049c345cf58c1d1fbf8da60b68eb03de7a4692b4f161d7009119c74b",
+  "network": false
+}

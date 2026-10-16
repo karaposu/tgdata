@@ -1,0 +1,4 @@
+Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/login-output-rzlpjxpv/account.session'
+Phone number with country code (hidden): Stopped: terminal_input_failed
+
+FRESH_RESULT {"mode": "output_fail_discard", "exit": 3, "saved": false, "restored": true, "codes": 0, "signins": 0, "password_proofs": 0, "settled_inputs": 0, "close_attempts": 1, "fault_or_stop_fired": true}
