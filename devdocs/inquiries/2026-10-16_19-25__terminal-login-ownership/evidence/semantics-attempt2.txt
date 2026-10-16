@@ -1,0 +1,12 @@
+OBSERVED_TTYS True False
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/inquiries/2026-10-16_19-25__terminal-login-ownership/evidence/semantics_probe.py", line 71, in <module>
+    rows=[descriptor_scope(),run_child('different_tty'),run_child('nonthrowing')]
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/inquiries/2026-10-16_19-25__terminal-login-ownership/evidence/semantics_probe.py", line 52, in run_child
+    os.write(ma,b'synthetic-input\n');wait('NATIVE_INPUT_LENGTH');proc.wait(timeout=2)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/inquiries/2026-10-16_19-25__terminal-login-ownership/evidence/semantics_probe.py", line 41, in wait
+    if time.monotonic()>deadline:raise AssertionError('probe timeout; mode='+mode+' child='+str(proc.poll())+' transcript='+repr(data.decode(errors='replace')))
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: probe timeout; mode=different_tty child=None transcript='NATIVE_PROMPT: synthetic-input\r\n'

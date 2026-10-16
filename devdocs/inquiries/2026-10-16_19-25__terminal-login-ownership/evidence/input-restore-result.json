@@ -1,0 +1,32 @@
+[
+  {
+    "case": "normal_input",
+    "exit": 130,
+    "signal_at_restore": true,
+    "terminal_restored": false,
+    "echo_enabled": false,
+    "saved": false,
+    "codes": 0,
+    "child_exit": 0
+  },
+  {
+    "case": "eof",
+    "exit": 130,
+    "signal_at_restore": true,
+    "terminal_restored": false,
+    "echo_enabled": false,
+    "saved": false,
+    "codes": 0,
+    "child_exit": 0
+  },
+  {
+    "case": "read_stop_control",
+    "exit": 130,
+    "signal_at_restore": true,
+    "terminal_restored": true,
+    "echo_enabled": true,
+    "saved": false,
+    "codes": 0,
+    "child_exit": 0
+  }
+]

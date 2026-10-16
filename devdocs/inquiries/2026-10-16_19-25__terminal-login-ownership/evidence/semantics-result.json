@@ -1,0 +1,19 @@
+[
+  {
+    "case": "terminal_not_descriptor_state",
+    "duplicate_echo": false,
+    "closing_mutator_restored": false,
+    "explicit_restore": true
+  },
+  {
+    "case": "controlling_terminal_differs_from_stdin",
+    "controlling_echo": false,
+    "stdin_echo": true,
+    "restored": true
+  },
+  {
+    "case": "nonthrowing_signal_does_not_wake_read",
+    "waited_for_more_input": true,
+    "stop_recorded": true
+  }
+]
