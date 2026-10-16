@@ -135,3 +135,9 @@ None beyond the unresolved behavioral premises enforced by the experiment.
 No mitigation tiers are manufactured for declared preconditions or a gate already
 specified in the plan. The implementation detail is sufficient to build a falsifiable
 complete candidate, but reading it cannot establish that candidate's behavior.
+
+## Phase 3 selection
+
+No rated risks or proposals; no mitigation tier to select. The full combined
+experiment remains mandatory. Revision4 may record the zero-mitigation fold in
+the user-requested artifact order; product promotion still requires PASS.

@@ -2,17 +2,19 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# #50 implementation plan — revision 3
+# #50 implementation plan — revision 4
 
-Status: re-planned after the first rejected PR critique; **not yet critiqued or
-folded, and not cleared for implementation**. This supersedes revision2, preserved
-byte-for-byte in step_by_step_impl_plan_r2.md. Original plan/critic/prebuild and
-PR-critic evidence remain in history and their existing files.
+**Critic folded:** 2026-10-16T12:11:17.879086+00:00 —0 mitigations (0 implementation steps changed,0 added).
+Fresh critique: REORDER — TEST BEFORE BUILD; no new rated risks. Phase3 has no
+mitigation selection. Full combined prebuild is **PENDING** and remains mandatory
+before product changes. This textual fold follows the user's explicit sequence;
+it is not implementation clearance. Revision3 is preserved in
+step_by_step_impl_plan_r3.md and revision2 in step_by_step_impl_plan_r2.md.
 
 Inputs: desc.md, triage77c1e85, traverse15de8c2, selected robust R1 in
 pr-critic.md (93ba179 / d10104b), and the actual code/probes. Archive productdf79728
 is identical to PR51 product69c2407. Fetched dev remains77f2f53. Same warmed session;
-no subagent. Current-thread2026-10-16T11:52:52.581Z verifies gpt-6-astra/xhigh.
+no subagent. Current-thread2026-10-16T12:07:55.242Z verifies gpt-6-astra/xhigh.
 Feature-heavy still applies. One rejected PR critique exists; neither the skill's
 three-rejection guard nor CONTRIBUTING's second-rejection return-to-description
 rule has been reached. This is a regenerated lifecycle plan, not a list of patches.
@@ -187,11 +189,11 @@ cleanup ownership, synchronous file effects, final exit precedence.
 
 ### Proposed changes
 
-First run fresh in-session critic-d on this revision3 plan with desc.md and the
-rejected PR critique. Preserve the earlier planning critic/prompt and PR critique;
+Fresh in-session critic-d on revision3 with desc.md and the rejected PR critique
+is complete (critic.md): no rated findings; full combined prebuild required. Preserve the earlier planning critic/prompt and PR critique;
 use revision-specific copies before replacing canonical planning artifacts. Fold
 selected mitigations into revision4 before promoting any product code. A meaning
-gap returns to the description. No plan PASS or fold is claimed by this document.
+gap returns to the description. The zero-mitigation fold is recorded above; no full-prebuild PASS is claimed yet.
 
 Build the complete revised command candidate only under the work folder, composing
 its actual lifetime owner/terminal driver with the existing real LoginFlow,
