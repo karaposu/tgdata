@@ -89,6 +89,22 @@ keep working, but new configs should set `session_file` and omit `username`
 
 ### Logging in
 
+For a deliberate terminal login that saves the configured native session, run:
+
+```bash
+tgdata-login --config config.ini
+# Re-login at an existing destination, with explicit replacement confirmation:
+tgdata-login --config config.ini --replace
+```
+
+The command reuses `LoginFlow`, hides phone/code/password input and saves a native
+`.session` file for ordinary readers. Replacement requires stopped readers;
+failed saves never trigger another code request automatically. See
+[terminal login](docs/terminal_login.md) for destination rules, safe retry,
+publication uncertainty, supported local POSIX filesystems and exit codes.
+
+The existing reader's first-run login behavior also remains available:
+
 The first run of a new session, started by hand in a terminal, asks for the
 code Telegram sends you. After that, tgdata never asks Telegram for a login
 code on its own: before connecting it checks with Telegram whether the session

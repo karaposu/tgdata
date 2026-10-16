@@ -53,6 +53,18 @@ Tests polling and real-time features:
 
 ## Running Tests
 
+### Terminal account login (offline)
+
+`python -m tgdata.smoke_tests.test_48_terminal_login` combines actual LoginFlow,
+Telethon1.45.0/SRP/session codecs, native SQLite publication and ordinary-reader
+authentication with controlled source replies. It also runs real PTY children for
+hidden input, EOF, first/repeated Ctrl-C and interruption around publication.
+Cases cover optional account-cache data, save retry without extra login requests,
+replacement/conflict/sidecar refusal, sync barriers, retained recovery files,
+commit/close failures, safe diagnostics and installed-module entry behavior.
+Sockets are forbidden; these cases do not qualify live Telegram code delivery.
+See [terminal login](../../docs/terminal_login.md).
+
 ### Group activity and engagement (offline)
 
 `python -m tgdata.smoke_tests.test_46_group_activity` exercises bounded public
