@@ -24,6 +24,7 @@ from .group_operations import (
 )
 from .group_profile import GroupProfile, GroupPinnedMessage
 from .group_activity import GroupActivity, ActivityMessage
+from .history_sample import HistoryCapture, HistorySample, HistorySampleError
 from .connection_engine import AuthRequiredError, ProxyConfigError
 from .login import LoginFlow, LoginStatus, LoginError
 from .discovery_engine import DiscoveryInterrupted
@@ -118,6 +119,9 @@ __all__ = [
     "GroupPinnedMessage",
     "GroupActivity",
     "ActivityMessage",
+    "HistoryCapture",
+    "HistorySample",
+    "HistorySampleError",
     "GroupReferenceError",
     "GroupResponseError",
     "AuthRequiredError",

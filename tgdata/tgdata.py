@@ -37,6 +37,9 @@ from .group_operations import (
 )
 from .group_profile import GroupProfile, _get_group_profile, _pin_limit
 from .group_activity import GroupActivity, _measure_group_activity, _measurement_parameters
+from .history_capture import _capture_group_history
+from .history_sample import HistoryCapture, _limits as _capture_limits
+from .history_window import _HistoryWindow
 from .read_budget import ReadBudgetError, ReadBudgetExceeded
 from .join_budget import JoinBudget, JoinBudgetConfigError
 from .join_client import _join_policy
@@ -329,6 +332,31 @@ class TgData(ProgressFacade):
                     account_id, 'measure_group_activity', reference.label) as (operation, _):
                 return await _measure_group_activity(
                     operation, reference, window, max_messages, started, beat)
+
+    async def capture_group_history(self, target: Union[str, int], *, account_id: int,
+                                    start_date: datetime, end_date: datetime,
+                                    max_messages: int = 3000, max_requests: int = 100,
+                                    heartbeat=None) -> HistoryCapture:
+        """Capture bounded raw content across UTC days for reproducible local sampling.
+
+        Limits count returned source slots and logical history calls. They do not
+        replace the account's read allowance. The returned input can be retained
+        and sampled repeatedly without I/O; neither capture nor sample is a cursor.
+        See docs/history_sampling.md for coverage, selection and failure semantics.
+        """
+        started = datetime.now(timezone.utc)
+        reference = _parse_target(target)
+        account_id = _expected_account_id(account_id)
+        window = _HistoryWindow(start_date, end_date)
+        if window.end_date > started:
+            raise ValueError('end_date must not be in the future')
+        _capture_limits(max_messages, max_requests)
+        heartbeat_kwargs(heartbeat)
+        with heartbeat_scope(heartbeat) as beat:
+            async with self._account_health_operation(
+                    account_id, 'capture_group_history', reference.label) as (operation, _):
+                return await _capture_group_history(
+                    operation, reference, window, max_messages, max_requests, started, beat)
 
     async def join_group(self, target: Union[str, int], *, account_id: int) -> GroupJoin:
         """Join through an expected authenticated account and explicit allowance.
