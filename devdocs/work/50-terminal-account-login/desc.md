@@ -1,155 +1,131 @@
 ---
-model: gpt-6-astra
-effort: xhigh
+model: unknown
+effort: unknown
 ---
 # #50 — Terminal account login
 
-**Current contract:** upstream revision after two rejected PR reviews. The full
-[terminal-ownership traverse](../../inquiries/2026-10-16_19-25__terminal-login-ownership/finding.md)
-concluded at 47d3c99. The previous description is preserved in `desc_r1.md`.
-Revision 4's plan and product remain historical evidence; do not resume that plan
-unchanged. A new plan, fresh critique and full combined prebuild are pending.
+**Current contract:** bounded input framing established by the
+[streaming-input inquiry](../../inquiries/2026-10-16_20-49__bounded-terminal-input/finding.md)
+at e2f5ab6. Earlier description preserved in desc_r2.md; original in desc_r1.md.
+Revision6 remains DEPRECATED_step_by_step_impl_plan.md, with its failed experiment
+in critic_r6_prebuild.md. Revision7 is based on this contract; fresh plan critique
+and full combined prebuild remain pending. The inquiry prototype is not product code.
 
-**Session warmth:** same warmed #43/#44/#45/#50 session, base dev
-77f2f53eba8bdc6922127a3b9118bf17de4efabf. LoginFlow, StoredSession, native SDK
-sessions, reader identity, private publication, terminal input, signal/event-loop
-behavior and CLI test contracts were read. Both rejected reviews and their probes
-were consumed. Triage 77c1e85 remains feature-heavy. AGENTS.md and
-PROJECT_SPECIFICS.md are absent. Current-thread metadata
-2026-10-16T16:23:26.250Z verifies gpt-6-astra/xhigh.
+**Session warmth:** same retained #43/#44/#45/#50 context; dev77f2f53. LoginFlow,
+SDK/SRP, session conversion, native publisher, reader, command lifecycle and full
+prior test/review contracts retained; terminal/runtime/queue behavior refreshed with
+primary source and native evidence. Feature-heavy triage77c1e85 still applies.
+No AGENTS.md/PROJECT_SPECIFICS.md. Current-turn model/effort is unavailable; earlier
+Astra/xhigh evidence does not verify this turn. §9 confirmation remains pending.
 
 ## Problem Statement
 
-LoginFlow already supports deliberate phone/code/optional-password authentication,
-but users need an installed terminal command that saves a session ordinary tgdata
-readers can reopen. Its opaque StoredSession text is not a native Telethon SQLite
-`.session` file and cannot simply be written under that filename.
+LoginFlow already implements phone/code/optional-password authentication without
+publishing the configured session. Operators need an installed terminal command
+that saves a native session ordinary readers can reopen. Its opaque StoredSession
+text is not a Telethon SQLite `.session` file.
 
-Two implementation reviews exposed an additional contract gap. A task result or
-an outer “input is active” flag was treated as evidence that underlying work had
-settled. The latest failure leaves terminal echo disabled when the first Ctrl-C
-arrives during restoration after ordinary input or EOF. The command needs explicit
-ownership of terminal input through restoration, alongside the existing separate
-authentication and file-publication outcomes.
+Earlier reviews exposed missing task/terminal settlement boundaries. Revision6's
+prebuild then showed that canonical terminal input can withhold an oversized line,
+so a post-read length check is never reached. Input needs its own bounded framing
+and invalid-line completion contract, within the existing terminal owner.
 
 ## User Value Proposition
 
-An operator uses the reader's configuration, enters the current login inputs and
-obtains a reusable session. Stopping does not require another keystroke or silently
-leave terminal settings changed. Re-login is explicit; save failures preserve
-truthful file outcomes and can permit local retry without another code request.
-ScrapeOps can later wrap this command rather than duplicate authentication.
+An operator uses the ordinary reader configuration, enters each requested login
+value and obtains a reusable session. Oversized input is safely refused, Ctrl-C
+remains responsive, and terminal state is restored before another action. Explicit
+re-login and local save retry preserve truthful credential/file outcomes.
 
 ## Success Criteria
 
-1. Installed and module invocations use the same command path and ordinary reader
-   configuration. The resolved native destination is shown before requesting a code.
-2. Existing LoginFlow owns authentication, proxy/device policy, waits, uncertain or
-   unsupported responses and source cleanup. One flow/event loop serves the command;
-   prompts and subsequent actions begin only at eligible, settled steps.
-3. One private input owner retains the exact selected terminal and its original
-   settings through acquisition, input, every exit path, restoration and release.
-   It does not assume the selected terminal is stdin. A value reaches the next
-   login action only after restoration is established.
-4. EOF, normal input, input error and first/repeated Ctrl-C all have explicit
-   outcomes. Stop ends the input wait without additional user input. SIGINT during
-   command-owned work records stop intent without throwing through terminal
-   acquisition/restoration. Repeated stops do not create competing cleanup owners.
-5. An actual restoration failure releases no input value and admits no further
-   login/save action. It reports a safe failure rather than claiming restoration
-   succeeded. Arbitrary OS/device failure is not promised to be repairable.
-6. Secret input never falls back to echo. Codes/passwords are not command arguments;
-   credentials, codes, passwords and checkpoints do not appear in output/logs.
-   Supported terminal contexts, encoding and input limits are explicit and tested.
-7. Stop closes admission to new prompts, authentication actions and save attempts.
-   An in-flight source action settles under its existing cleanup contract; stopping
-   does not imply a remote request never happened. A final stop exit does not erase
-   a known or uncertain publication outcome.
-8. A completed, settled credential becomes a private native SQLite candidate through
-   the existing codec/SDK APIs. Read-back and ordinary-reader authentication tests
-   preserve the actual account, authorization key and data centre without prompting.
-9. Creation refuses collisions. Replacement is opt-in and requires confirmation of
-   the target/account with readers stopped. Symlinks, unsupported types, sidecars
-   and a destination changed during the conversation refuse; these are conflict
-   checks, not a lock on all readers.
-10. Before publication, failures preserve the old destination. Replacement preserves
-    prior bytes privately before switching. Pre-publication failure, confirmed
-    publication and uncertainty remain distinct; uncertainty retains recovery
-    material and cleanup errors do not overwrite the original outcome.
-11. A recoverable local save failure permits explicit same-process retry with the
-    completed credential, without another SendCode/SignIn. Conflicts and uncertain
-    writes do not broaden replacement authorization or permit automatic replay.
-12. A later full combined prebuild qualifies actual LoginFlow, native SDK sessions,
-    publication, ordinary-reader reopen and terminal input before product edits.
-    Tests cross normal/EOF/error exits with first/repeated stops and acquisition,
-    mode-change, wait, restoration and release boundaries. Existing source/native
-    SRP, publication, save-retry, secrecy and cleanup tests remain relevant.
-    Permanent tests, installed-command checks, offline baseline and demos must pass;
-    the inquiry's 22-case feasibility probe is not complete-candidate qualification.
+1. Installed/module invocations share the existing command path/configuration and
+   show the resolved native destination before requesting a code.
+2. Use existing LoginFlow authentication, proxy/device, wait, unsupported/uncertain
+   outcome and cleanup semantics; one flow/event loop, no duplicate auth engine.
+3. One private owner retains the selected controlling terminal and original modes.
+   Supported context is validated before source work and at each prompt; no stdin
+   fallback, echoed secret fallback or background input thread.
+4. Input is observed incrementally. At most128 UTF-8 bytes are retained for a value,
+   with strict decoding and no silent truncation/normalization. A finite paste beyond
+   the kernel line limit reaches an explicit refusal without a timeout kill.
+5. Oversize or unsupported-control input becomes permanently invalid for that line.
+   Clear the candidate and discard the remainder while hidden through Enter, EOF or
+   Ctrl-C. Editing cannot make the invalid suffix eligible for authentication.
+   Missing newline may still wait, visibly rejected and cancellable; no new automatic
+   whole-prompt deadline is implied.
+6. Support the terminal's configured erase/clear-line controls before overflow;
+   Unicode erase removes one scalar. Enter completes input; EOF stops without a
+   partial value. Cursor/history, literal-next and other unsupported controls refuse
+   instead of silently entering the password. All prompts use the same hidden path.
+7. Discard queued input after hiding and before inviting a prompt, plus queued/
+   already-read trailing input at retirement. A value is admitted only after exact
+   restoration and descriptor release. The native canonical-mode transition must be
+   settled while echo is still disabled; cleanup failures report safe fixed kinds,
+   release no value and cannot be disguised as successful restoration.
+8. First/repeated SIGINT records stop without throwing through owned input cleanup.
+   Stop needs no additional input byte, prevents new prompt/auth/save admission and
+   settles existing source work. It does not undo in-flight remote or file effects.
+9. No codes/passwords as arguments; no credential, code, password or checkpoint in
+   logs/output. Protect owned input and discard queued bytes; do not claim control
+   over arbitrary future input after the command has returned.
+10. Convert only completed/settled credentials into a private verified native SQLite
+    candidate using existing codec/SDK APIs. An ordinary reader reopens the actual
+    account/key/DC without another login prompt.
+11. Creation refuses collisions. Replacement is explicit, confirms target/account and
+    stopped readers, rejects symlink/type/sidecar/change conflicts and preserves prior
+    bytes before switching. Pre-publication failure, confirmed save and uncertainty
+    stay distinct; uncertainty retains recovery material.
+12. Explicit local save retry uses the retained credential without another code/sign-in.
+    Conflicts or uncertainty do not broaden replacement authorization. Cleanup failure
+    does not overwrite an already observed source/publication outcome.
+13. Fresh plan critique and a FULL combined candidate prebuild precede product edits.
+    Retain source/SRP/file/stop/secrecy cases and add native size/fragmentation/partial-
+    write/edit/EOF/invalid-remainder/queue/restore coverage.46 native inquiry cases and
+    7 selected real handoffs establish the premise, not complete product readiness.
 
 ## Scope Boundaries
 
-The initial delivery is a deliberate local POSIX terminal command and native-file
-publication on qualified trusted filesystems. Foreground/main-thread interaction
-and the exact supported terminal contexts must be declared and tested. Unsupported
-contexts must refuse safely before authentication. No universal terminal, filesystem
-or process-cooperation guarantee is implied.
+One deliberate local POSIX terminal command and native file publication on qualified
+trusted filesystems. Main-thread/foreground terminal, explicit mode/control checks
+and supported input policy; unsupported contexts refuse before authentication.
+Native evidence is currently macOS/Python3.11/Telethon1.45. Broader runtime/host claims
+require qualification; no universal terminal, durability or process-cooperation claim.
 
-Keep LoginFlow, StoredSession conversion and native publication as separate
-responsibilities. The preferred input direction is one private terminal owner with
-nonthrowing stop intent and a controllable wait. This is a responsibility boundary,
-not approval to promote the inquiry prototype or add a public terminal framework.
+Keep the input module private, with basic editing rather than a general editor.
+Retain LoginFlow, StoredSession bridge and LoginDestination. No CLI store plugin,
+generic converter/supervisor, durable CLI resume, reader rotation, signup, QR/web
+login, background auto-login, proxy exit-IP check or ScrapeOps migration/deployment.
+Applications with different input/storage needs retain the existing Python APIs.
 
-Custom-store users continue using the Python APIs. No CLI plugin loader, generic
-session converter/supervisor, durable CLI resume, background input thread or
-active-reader rotation is required. No signup, QR/web login, background automatic
-login, proxy exit-IP check, media read or ScrapeOps migration/deployment.
-
-This upstream pass changes the description and inquiry records only. Product
-implementation, merge/release, version changes and real Telegram login are outside
-this pass. Live tests remain separately authorized supplemental qualification.
+This pass establishes the contract and replacement plan only. No product edits,
+merge, release, dependency/version change or real Telegram login. Later full
+candidate qualification remains mandatory before implementation.
 
 ## Priority Level
 
-Medium (P2). Removes duplicated onboarding/re-login work. It is not a prerequisite
-for the separate immediate downstream production recovery path.
+Medium (P2). Removes duplicated onboarding/re-login work; not a prerequisite for
+the separate immediate downstream production recovery path.
 
 ## Decisions and Assumptions
 
-Retain file-first publication, create-only by default and deliberate replacement
-under the stated conditions. [ASSUMPTION] operators control the trusted directory
-and can stop readers; the command must not claim to enforce their cooperation.
-A helper process, guarded getpass reuse or create-only-only scope becomes relevant
-only under the explicit revival conditions in the new finding.
-
-No new planning blocker is established. Production input policy and complete
-composition remain qualification obligations. Native Python 3.7 runtime testing
-is unavailable; syntax compatibility is distinct from Python 3.11/Telethon 1.45
-execution evidence. Live source delivery/real-account 2FA remain unperformed.
+File-first, create-only default, deliberate replacement under stated preconditions.
+[ASSUMPTION] operators control the trusted directory, stop readers and provide one
+prompted input at a time; this command does not enforce external process cooperation.
+A mature input backend, prompt timeout or producer framing protocol needs a concrete
+consumer requirement before expanding this bounded interface.
 
 ## Known Blockers
 
-### Canonical input does not provide the planned overflow observation — CLOSED
+### Canonical post-read overflow detection — CLOSED, false premise replaced
+Revision6's5,000-byte-plus-newline case failed before a readable line existed.
+The new inquiry establishes byte-observable bounded framing with partial-write
+backpressure, invalid-line discard and exact staged restoration. Its final46 native
+cases and7 real handoffs pass expected outcomes, including500,000 bytes plus newline.
+No shortened value is admitted; persistent cleanup faults correctly remain failures.
+Historical failure remains in critic_r6_prebuild.md and prebuild-r6/.
 
-**Observation:** revision6's complete prebuild failed on 5,000 input bytes plus
-newline. The macOS canonical terminal accepted all5,001 bytes at the PTY master,
-but the input descriptor never became readable before the12-second test deadline.
-An independent native probe reproduced no readable line after the write;128/129-byte
-lines plus newline were delivered correctly. PC_MAX_CANON reported1,024.
-
-**Misunderstanding resolved:** checking a small application limit after canonical
-os.read does not guarantee detection of input exceeding the kernel line buffer.
-The final newline may not yield a readable line. No timeout kill counts as a stop.
-
-**What must change before another plan:** establish an input-framing contract and
-real-component evidence that covers oversized input before relying on post-read
-validation. This may change byte observation, editing or deliberate timeout/refusal
-semantics; it must not silently relax the existing no-truncation/stop guarantees.
-The explicit terminal owner and retained LoginFlow/native publication conclusions
-remain supported; this failure does not justify rewriting authentication/storage.
-
-**Found by:** fresh critic-d's full experiment for revision6,2026-10-16.
-Evidence: prebuild-r6/result.json and canonical-overflow-result.json. The failed
-plan is DEPRECATED_step_by_step_impl_plan.md; no product changes were made.
-This is a closed false premise with a new contract decision pending, not an
-open question that a working assumption can conceal.
+No open planning blocker identified. Complete production composition remains an
+execution/qualification gate before product changes, not an assumed pass. Live
+source delivery/real-account2FA requires an authorized exclusive setup; native3.7
+runtime and current-turn §9 metadata verification remain unavailable/pending.
