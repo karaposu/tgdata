@@ -2,7 +2,9 @@
 model: unknown
 effort: unknown
 ---
-# #50 implementation plan — revision 5
+# #50 implementation plan — revision 6
+
+**Critic folded:** 2026-10-16T20:18:38.182284+03:00 — 1 selected robust mitigation (2 steps changed, 0 added). Full combined prebuild remains PENDING; no product clearance.
 
 Based on revised desc.md dbe9d97 and traverse finding 47d3c99, with both rejected
 PR reviews as inputs. Revision 4 is preserved in step_by_step_impl_plan_r4.md.
@@ -83,7 +85,9 @@ fallback, stdin fallback or background input thread. Help/import must still work
 where termios is unavailable; operational preflight safely refuses there.
 
 Initial input policy: canonical terminal line editing, ISIG enabled, CR-to-LF input
-mapping and no conflicting CR/LF conversion, UTF-8 strict decoding. Limit each
+mapping and no conflicting CR/LF conversion, UTF-8 strict decoding.
+[folded: R1, robust] Reject ISTRIP and IUCLC when available at both preflight and
+every prompt, before mutation/source work; do not silently normalize user settings. Limit each
 phone/code/password/confirmation line to128 UTF-8 bytes excluding newline; require
 PC_MAX_CANON to exceed the130-byte observation buffer, otherwise refuse before auth.
 Observe overflow rather than truncate. Read up to130 bytes so a128-byte line plus
@@ -139,8 +143,8 @@ cancellation, safe diagnostics, separate publication outcomes.
 ### Proposed changes
 
 Run fresh in-session critic-d on revision5 against the revised description, both
-rejections and actual code. Preserve critic_r3.md/dynamic_critic_prompt_r3.md. Fold
-only selected mitigations into revision6; preserve revision5. A meaning gap follows
+rejections and actual code. Preserve critic_r3.md/dynamic_critic_prompt_r3.md. Selected R1 is folded
+into revision6; revision5 is preserved. No re-critique of the fold is required. A meaning gap follows
 the skill's deprecation/stop procedure. This written fold does not qualify code.
 
 The critic's real-component experiment precedes all product edits. Candidate work
@@ -170,6 +174,8 @@ Required coverage in that same run:
   terminal, background process, noncanonical/unsupported mapping before source work.
 - Normal/Unicode/editing, exact128-byte input,129-byte input, kernel-overflow input,
   invalid UTF-8, empty/partial EOF, typeahead discarded, and no echo/secret diagnostics.
+  [folded: R1, robust] Actual ISTRIP initially and introduced after the phone action
+  must refuse before any next source request; test available IUCLC validation too.
 - Complete successful login/native reader reopen, actual2FA and executing-SRP stop;
   create and replacement; local retry without reauthentication; saved/uncertain
   publication plus late stop; all previous source/file failure histories.

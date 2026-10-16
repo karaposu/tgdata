@@ -142,9 +142,9 @@ mutation/source work. Retain explicit canonical editing semantics; test actual
 ISTRIP initially and changing between prompts, with no subsequent source request.
 **Why this is robust:** prevents the observed transformation at the owner that
 can inspect it, without changing the user's terminal policy or authentication.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 **Note**
-*Why chosen:* —
+*Why chosen:* One private CLI consumer is the only established instance. Refusing unsupported transformation flags closes the actual defect with less extent than normalizing more modes; it preserves the scoped contract. No external blocker or last-resort selection.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -182,4 +182,9 @@ merge/release or downstream deployment is part of this review/prebuild turn.
 
 ## Phase 3
 
-Pending selection; Phase2 proposals above are intentionally unticked.
+Completed after Phase2 commit c9d398c; only boxes/notes changed in the proposals.
+No genuine second module owns this same terminal input contract, so there is no
+class-wide mechanism to extract. Robust is selected + elegant, not last_resort.
+Quick does not detect valid ASCII produced by ISTRIP. Broader normalization adds
+mode policy/support obligations without a required additional consumer. No
+prerequisite framework or forced lesser fix; no long-term follow-up is required.
