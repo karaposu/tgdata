@@ -61,9 +61,9 @@ Document that quiet days may waste the allowance and recommend increasing max_me
 ### Mitigation — Robust
 On a bucket's first visit request one slot when remaining_requests is greater than the remaining planned visits in the round, leaving capacity for a later depth pass. Otherwise use the existing fair page size so a caller permitting no further round can use its last allowed page. Subsequent visits use the fair bounded page rule. Prove the60-day sparse case retains599 useful messages with less than1000 raw slots and at most100 logical calls; also test no-spare-request and tiny-cap cases.
 **Why this is robust:** one older row can close an empty bucket cheaply, while the explicit no-spare-request branch avoids imposing a one-message sample on a one-call policy. It fixes the new collector's scheduling policy without changing shared validation or existing readers.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 **Note**
-*Why chosen:* —
+*Why chosen:* Phase3: no genuine shared class exists. group_activity.py is a single-window census observation, while BatchEngine has forward cursor semantics; one scheduling mechanism would need policy-specific branches. The one-slot probe belongs only in the new day collector and has the best reach/extent. No external blocker forces this choice.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -97,9 +97,9 @@ Special-case the common default sample size and rely on an arbitrary loop ceilin
 ### Mitigation — Robust
 Handle target0 and target==sum(capacities) directly. Otherwise search L only in [0,max(capacities)] using integer binary search; construct quotas and evenly spaced residual allocations exactly as planned. Test empty, all-zero, full and partial populations with conservation, per-day capacity and deterministic remainder properties.
 **Why this is robust:** makes the existing algorithm total and finite without changing the chosen sampling policy.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 **Note**
-*Why chosen:* —
+*Why chosen:* Phase3: no other equal-day allocator exists. Source page fairness and existing progress budgets do not solve this quota problem, so a generic library would manufacture coupling. A finite-domain local helper permanently closes this instance with minimal extent; selected/elegant, not last_resort.
 *For future:* —
 
 ### Mitigation — Long-term
