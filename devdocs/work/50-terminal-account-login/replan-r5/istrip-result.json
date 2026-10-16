@@ -1,0 +1,15 @@
+{
+  "input_utf8": [
+    195,
+    169,
+    10
+  ],
+  "observed": [
+    67,
+    41,
+    10
+  ],
+  "decoded": "C)\n",
+  "silently_changed": true,
+  "max_canon": 1024
+}

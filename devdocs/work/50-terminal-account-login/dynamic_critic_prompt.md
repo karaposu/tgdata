@@ -1,68 +1,52 @@
 ---
-model: gpt-6-astra
-effort: xhigh
+model: unknown
+effort: unknown
 ---
-# Revision3 dynamic plan critique — #50
+# Fresh critic prompt — #50 revision 5 at e065575
 
-Subject: step_by_step_impl_plan.md revision3, desc.md, the actual LoginFlow/CLI/
-publisher composition and the rejected PR51 critique. Run in the warmed session,
-never a subagent. Preserve the previous planning critique/prompt and the rejection.
+Ultrathink. Review the whole plan against desc.md dbe9d97, terminal-ownership
+finding47d3c99, both pr-critic files and actual CLI/source/SDK/session/publisher/
+reader/test implementations. Same warmed session, no subagent. Challenge layer,
+scope, assumptions, complexity and detailed sufficiency, not just patch locations.
 
-Ultrathink. Determine whether persistent command stop intent plus phase-specific
-input/action/retirement/publication behavior addresses the established failure,
-without changing authentication or native session ownership. Read complete relevant
-modules, the revision2/3 plans, actual Python task callback/getpass behavior and
-both prior failed probes and the six limited planning probes. Do not infer a full
-composition PASS from the phase-local driver experiment.
+Inventory behavioral premises FIRST, ranked by waste if false. For each name the
+first dependent step, wasted work, scheduled test, cheapest earlier real-component
+test/cost and coverage. Flag mocked desired behavior as non-covering. Include
+terminal buffering/limits/encoding and full candidate composition, even though the
+plan explicitly discloses their qualification. Match both prior failures to their
+established mechanisms and addressing plan elements (Restart Check). Match each
+inherited lesson to actual ordering/acceptance, not acknowledgement alone.
 
-Attack these concepts:
-- Signal intent persists across registration, completion, prompt and save. A queued
-  cancellation must belong to one exact action, never a subsequent cleanup future.
-  First/repeated signals must neither inject arbitrary task exceptions nor cancel
-  a drain. Examine reentrancy and already-completed futures.
-- Input must unwind with terminal settings restored; repeated signals cannot
-  interrupt restoration. There must be no default-handler gaps between phases.
-- A stopped in-flight auth may have remote effects. The command must stop new
-  actions, retain known/uncertain observations and settle cleanup without promising
-  impossible remote rollback or silently sending an auth-only check.
-- Explicit retirement remains admissible after stop, can fail truthfully, and
-  cannot be skipped by finalization. A late stop must affect the final exit while
-  preserving a saved/uncertain publication and original failure evidence.
-- Existing native file backup/sync/collision/sidecar rules and optional own-cache
-  conversion remain intact. Scope is trusted local POSIX/stopped readers, not
-  hostile writers, universal durability, distributed locks or bounded disconnect.
-- The complete real SDK/SRP/TTY/filesystem candidate and installed-command tests
-  precede product promotion. Existing passing tests and callback-only mocks are
-  non-covering for execution-phase signals. Is the whole phase matrix executable,
-  with observable effects, stable assertions and failures that cannot be hidden?
-- Resist a cross-command supervisor unless another concrete consumer shares this
-  exact lifetime. Check API/dependency/runtime/docs changes and implementation
-  detail proportionate to the delicate boundaries. Name any genuinely underspecified
-  complex step as Medium; do not manufacture noise from known exclusions.
+Examine exact /dev/tty ownership versus stdin, foreground/mode preflight, canonical
+buffer limits/truncation, UTF-8/EOF, ECHO/ECHONL, queued input, signal timing during
+acquire/snapshot/apply/read/flush/restore/readback/close. Can source work see a value
+before resource settlement? Can a restore/flush failure skip later restoration?
+Does a stop wake the actual reader without another keystroke? Can errors/logging
+expose secrets? Do close uncertainty and signal-handler restoration tell the truth?
 
-Create critic.md beside the plan. First YAML model/effort from session metadata,
-then exactly one skill verdict: IMPLEMENT AS WRITTEN; IMPLEMENT AFTER FOLDING THESE
-IN; REORDER — TEST BEFORE BUILD; DO NOT IMPLEMENT — MEANING GAP (WRONG LAYER variant
-where justified). Then Falsifier and Affordable now. Affordable unrun real-component
-falsifiers force REORDER: name experiment, cost, first dependent step, passing and
-disqualifying results. User-authorized artifact order is critique → revision4 fold
-→ full prebuild → product implementation; folding does not clear the prebuild gate.
+Check real LoginFlow, native SRP, cancellation/retirement, stale action registration,
+completed-task consumption, native SQLite/reader, create/replace/backup barriers,
+local retry and uncertain publication. Is any existing auth/file contract changed
+without evidence? Does the complete prebuild observe independent normal/EOF/error
+and first/repeated-signal histories, or merely rerun the latest failure? Is the
+new private module smaller in responsibility than a supervisor/helper process?
 
-High-level summary first, then Premise Inventory ranked by waste if false. Per
-premise: claim, first dependent step, waste, scheduled test, cheapest earlier test,
-covering/non-covering evidence. Carry declared live/native-Python3.7 limitations
-as preconditions, not new findings. Restart Check maps each observed failure to
-its established mechanism and the actual design element addressing it. Inherited
-Lessons must map to plan order, particularly execution-phase tests before promotion.
+Create critic.md in this folder. Frontmatter model/effort from current evidence
+(unknown if unavailable), then exactly one verdict: IMPLEMENT AS WRITTEN;
+IMPLEMENT AFTER FOLDING THESE IN; REORDER — TEST BEFORE BUILD; DO NOT IMPLEMENT —
+MEANING GAP (or WRONG LAYER). Immediately follow with falsifier and affordability,
+then high-level summary, premise inventory, restart and inherited-lessons checks.
+An affordable unexecuted falsifier demands REORDER. Specify experiment/cost/first
+step it precedes/passing and disqualifying results. A wrong premise uses Phase2.5,
+not mitigation tiers. Carry declared execution limits unchanged and unrated.
 
-Each genuine risk uses sections: Risk as two paragraphs (plain/self-contained
-consequence, then exact symbols/files/triggers); Severity High/Medium/Low; Category;
-Impact; NoobEng; Affected areas. Medium/High get quick/robust/long-term proposals
-with robust/long-term rationale. Under each emit unticked selected/elegant/last_resort
-and empty Why chosen/For future notes. Commit Phase2 before Phase3, which changes
-only selections/notes. Select by concrete shared instances and reach/extent, not
-tier names; split oversized frameworks. No findings means no tier selection.
+Each real risk has TWO Risk paragraphs: plain self-contained user consequence,
+then exact paths/symbols/triggers. Include severity High/Medium/Low, category,
+impact, NoobEng and affected areas. Medium/High each gets quick/robust/long-term
+proposals, robust/long-term rationale, unticked selected/elegant/last_resort boxes
+and empty Why chosen/For future notes. Do not pad low risks. After Phase2, perform
+Phase3 selection: enumerate genuine other instances, test one-mechanism fit,
+compare reach/extent, apply size/blocker/delicacy gates. Tick boxes and notes only.
 
-A meaning gap follows the skill's deprecation/blocker procedure. REORDER keeps
-the plan alive and specifies the full experiment. Do not patch product during
-critique; quote actual evidence and distinguish observations from predictions.
+Keep current-turn §9 uncertainty, native3.7 and live delivery/2FA limitations honest.
+No product changes, real login, merge or release. Old product remains rejected.

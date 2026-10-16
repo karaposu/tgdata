@@ -1,147 +1,185 @@
 ---
-model: gpt-6-astra
-effort: xhigh
+model: unknown
+effort: unknown
 ---
 **REORDER — TEST BEFORE BUILD**
 
-Falsifier: the complete command's persistent stop owner cannot compose with actual
-LoginFlow/SDK cleanup, real terminal restoration and native publication outcomes
-without changing the established authentication or file-publication contract.
-Affordable now: yes — bounded work-folder candidate and synthetic real-component
-runs; no live credentials, remote access or deployment required.
+Falsifier: the complete command cannot satisfy terminal settlement, stop admission
+and retained source/file semantics with the private input owner and existing real
+components, or the candidate violates a specified acceptance history.
+Affordable now: yes — local candidate and bounded real-PTY/SDK/filesystem runs;
+no account, network login or deployment required.
 
-Experiment: revision3 step2's entire combined prebuild, including all prior18
-permanent groups,17 fresh functional histories and the six-part phase matrix.
-Use the complete candidate, actual SDK/SRP/session/filesystem/reader/getpass/PTYs,
-controlled wire replies and actual process signals. Include real executing-code
-SIGINT, repeated signals during input restoration/retirement, admission/completion
-transitions and create/replace/uncertain-publication crossings. Candidate and
-product source hashes are recorded before/after; no product edits before PASS.
-Cost: local candidate/test development and bounded subprocess runs; no real account.
-Must precede: step3 product promotion and all product edits. The user explicitly
-requested critique → revision4 fold → full prebuild → implementation; the textual
-fold may occur first but does not clear or substitute for this experimental gate.
-Disqualifying result: the complete lifetime cannot satisfy these stated contracts
-with actual existing auth/file components, or candidate mechanics violate them;
-only fixture corrections preserving acceptance assertions may precede a full
-rerun. Record FAIL and return to the description under task-impl; do not promote
-local patches to a candidate that disproved its planned lifetime.
-Passing result: one complete run covers every stated phase and retained behavior,
-settles owned work (or truthfully reports deliberate retirement failure), restores
-terminal settings, preserves file effects and secret-free outcomes, with no timeout
-kill treated as a successful stop. Isolated/callback-only mocks do not close it.
-
-Result: PASS — full combined candidate,23 groups including25 actual PTY scenarios,
-17 retained review histories,8 stop transitions and14 publication/stop combinations;
-no product changes or source drift; 2026-10-16T12:37:40.952764+00:00.
+Experiment: revision5 step2's FULL combined suite using both candidate modules,
+actual LoginFlow/Telethon1.45/native SRP/session/publisher/reader, controlled wire
+replies, real PTYs and real signals. Include all retained23 groups/25 terminal
+scenarios/17 source-file histories/8 stop phases/14 publication crossings plus
+new terminal lifetime, support/refusal and Enter/EOF first-signal histories. Add
+R1's actual ISTRIP refusal before source work and per-prompt mode-change refusal.
+Cost: bounded candidate/harness development and local subprocess execution.
+Must precede: every product edit/promotion (step3); step1 candidate work is the
+experiment itself. Fold selected R1 into revision6 before candidate qualification.
+Disqualifying result: any candidate contract failure in the complete composition;
+record FAIL and return under task-impl's meaning-gap procedure. Do not tune an
+architectural candidate failure into a pass. Proven harness-only corrections must
+preserve assertions, failed evidence and require a complete rerun.
+Passing result: one full run observes every required terminal/source/file outcome,
+including safe failure on deliberately irreparable restoration, with unchanged
+product hashes and no timeout kill counted as a successful stop. Input mocks are
+non-covering for terminal claims; live source delivery is not claimed.
 
 ## High-level summary
 
-No new High, Medium or Low plan findings. Revision3 targets the established defect
-at the terminal lifetime boundary; it does not rebuild a layer that the failure
-bypassed. Its sequencing already puts the full experiment ahead of product edits.
-REORDER enforces that still-unrun behavioral gate, not a demand for an extra feature.
-The current product/PR remains rejected until revised implementation and renewed
-merge/PR reviews. This verdict is not a product soundness PASS.
+One Medium, zero High/Low. The input mode checks omit a real byte transformation:
+ISTRIP changes valid UTF-8 input into different valid text before decoding. The
+private owner is the correct place to refuse it. No broader auth/file redesign is
+needed. The full candidate experiment remains unrun, so the behavioral gate is
+REORDER even though the plan already places it before product promotion.
 
-Subject: revision3 ate7e94c5, desc.md and selected PR-critic R1 (d10104b), against
-productdf79728 / PRhead69c2407 and unchanged dev77f2f53. Same warmed session, no
-subagent. Model proof: current-thread2026-10-16T12:07:55.242Z gpt-6-astra/xhigh.
-No PARKED description; one rejected PR critique; no open planning blocker. Earlier
-plan critique/prompt preserved as critic_r1.md/dynamic_critic_prompt_r1.md.
+Subject: revision5 e065575, desc dbe9d97, traverse47d3c99, both rejected reviews,
+actual product34907d4-equivalent archive and dev77f2f53. Fresh in the same warmed
+session, no subagent. Current CLI, complete retained combined harness and native
+terminal experiment read; LoginFlow/SDK/SRP/native publisher/reader contracts remain
+in the inherited full warmed context. New behavior was measured below. Current-turn
+model/effort cannot be verified from available metadata; unknown is not §9 clearance.
 
 ## Premise Inventory — ranked by waste if false
 
-### P1 — a single stop owner covers the full command lifetime
+### P1 — the explicit input lifetime composes with the whole command
 
-First dependent step1's design, product cost step3 through5. False admission/
-completion/retirement semantics would invalidate the terminal integration and its
-acceptance tests. Scheduled step2 before product promotion. Cheapest covering
-experiment: the complete candidate plus actual executing/suspended/completed task
-and real terminal/publication histories. Six planning cases observed real SDK/SRP
-settlement, but their phase-local driver is **non-covering for command-wide sticky
-stop and transitions**. R3 explicitly says so and requires the missing observation.
+First dependent product step3 (candidate cost step1); false ownership would waste
+integration/tests/docs through step5. Test scheduled step2 before promotion. Cheapest
+covering earlier test is that full local candidate experiment, affordable now.
+The inquiry22cases establish local feasibility but do not cover LoginFlow, native
+publication or full command transitions. Old r4 input mocks and its getpass matrix
+are non-covering for the replacement input module. Existing actual source/file
+histories are retained and rerun with the candidate; no fake success receipt counts.
 
-The design specifies action identity binding, stop before/after registration,
-at-most-once cancellation, retirement admission after stop, terminal result
-consumption and exit selection after finalization. A callback must check its exact
-registration and one-shot state when it runs; the signal handler cannot transfer
-cancellation ownership by changing the current task reference. Reentrant/repeated
-requests must remain harmless. These are already required by step1, not new scope.
+### P2 — supported canonical terminal modes preserve the submitted value
 
-### P2 — terminal interruption restores state through repeated signals
+First dependent step1 input decoding/validation and product step3. Wrong policy can
+submit altered credentials. Test scheduled step2 support matrix; cheapest earlier
+native observation is a few-line PTY probe, now run in replan-r5/istrip_probe.py.
+Observed UTF-8 bytes[195,169,10] became[67,41,10], decoding successfully to C) newline.
+The plan's strict decode does not establish original byte fidelity. R1 below closes
+this within the selected input boundary. Full candidate refusal still needs step2.
 
-First dependent step1's input phase and product step3. Native getpass uses finally
-to restore terminal attributes; repeated exception injection could interrupt that
-finally. The plan explicitly switches the input phase to stop-only before the first
-unwind and requires actual termios observation in step2. Existing secret-echo tests
-alone are **non-covering for complete terminal restoration**. The cheap covering
-experiment is a PTY with first/repeated SIGINT at input/unwind plus state snapshots,
-run before promotion. That remains pending in the combined experiment.
+### P3 — stop/wait/cleanup are separate effects
 
-### P3 — stop and persistence effects remain independently observable
+First dependent step1/3; false behavior invalidates terminal integration and final
+reporting. Scheduled full step2. Native inquiry proved nonthrowing flag alone does
+not wake ordinary read, fd close does not restore modes and getpass may use a
+controlling terminal different from stdin. Finite wait/nonblocking owned fd directly
+address these observations. Full first/repeated signal placement and restoration-
+failure matrix remains required; scalar stop/result mocks cannot supply it.
 
-First dependent step3 integration; the original file publisher itself is unchanged.
-A late stop cannot erase known saved/uncertain status or cause another save. The
-plan retains publisher barriers and stop predicates, computes exit after cleanup,
-and requires actual create/replace/fault histories in step2. Prior native file tests
-and17 fresh PR histories establish file semantics; they are **non-covering for the
-new owner's cross-phase integration**. Cheap combined local file/TTY/SIGINT cases
-are available now and precede product edits. No physical crash qualification follows.
+### P4 — native auth/publication contracts can remain unchanged
 
-### P4 — async cancellation may leave known or uncertain source effects
-
-First dependent step1 admission contract. Six real-component planning cases passed,
-including native SRP with one password request and uncertain state, all observed
-wires closed. The plan correctly prohibits NEW actions after stop while allowing
-in-flight effects and retaining actual LoginFlow status. It does not promise remote
-rollback or automatically check authorization after stop. Full command must preserve
-that distinction in step2; a mocked return of complete/cancelled would not cover it.
-
-### P5 — deployment/runtime limits
-
-Live Telegram code delivery/real-account2FA and native Python3.7 remain unqualified,
-as inherited from desc.md. No authorized exclusive live setup is available here;
-those are supplemental limits, not required offline execution blockers. Actual
-Python3.11.10/Telethon1.45 and Python3.7 grammar claims stay separate. Trusted local
-POSIX, stopped readers and unbounded underlying computation/filesystem/disconnect
-latency are explicit preconditions; no hypothetical failure outside them is rated.
+First dependent step3, already supported by prior real LoginFlow/SDK/SRP/SQLite/
+reader evidence. Step2 reruns the complete composition before integration. Cheapest
+earlier covering check is the retained suite with candidate input substituted.
+The two reviewed failures occurred in local lifetime handling, including one before
+any code request. No evidence calls for an auth, database schema or publisher change.
+Live delivery/real-account2FA and native3.7 remain explicitly unqualified execution
+limits, not claimed by controlled wire responses or grammar checks.
 
 ## Restart Check
 
-| Observed failure | Established mechanism | Design element that addresses it |
+| Observed failure | Established mechanism | Addressing design |
 |---|---|---|
-| Ctrl-C inside phone/SRP action hangs, including real terminal/native SRP | Default SIGINT injects KeyboardInterrupt; _drive re-enters an already-done future whose Python completion callback does not stop the loop | Step1 records stop and requests cooperative cancellation; consumes done tasks exactly once; step2 repeats actual executing-code signals before promotion |
-| Waiting-state cancellation tests passed while the executing-state failure remained | A signal while blocked on a Future takes a different path from a signal inside coroutine bytecode | Step2 covers executing, suspended, terminal and retiring phases with real components |
-| Earlier plan omitted a backup parent barrier | Private directory contents and its parent entry need distinct synchronization | Step3 retains the already-tested staging-parent/old-bytes/backup-directory ordering |
-| Earlier plan assumed an own-account access-hash row | A valid completed flow can lack that optional cache row | Step3 retains required ID0 and optional actual-account row, with real reader reopen |
+| Native-SRP Ctrl-C hangs | Completed task with KeyboardInterrupt is driven again | Retained completed-result consumption and one action registration; step2 real native-SRP regression |
+| First signal after Enter/EOF leaves echo off | Outer input flag injects exception into getpass restoration | Step1 removes exception input policy and owns exact fd/modes through checked restoration; step2 independent first-signal histories |
+| Isolated input success overstated composition | Earlier tested history differed in first-signal timing | Full step2 matrix crosses exit reason, timing and concrete resource effects before promotion |
 
-## Inherited Lessons and scope
+## Inherited Lessons
 
-Step2 precedes product promotion for every newly uncertain composition claim.
-Stop is command intent, not proof of source rollback (step1). Authentication is
-not publication (step3 retained outcome model). More waiting-state tests do not
-prove executing-state behavior (step2's actual SRP/validation signals). Cleanup
-failure is not permission to resume or misreport saved state (step1 final exit and
-step2 fault cases). No reader-wide lock or checkpoint framework is introduced.
+- Wrapper state is not resource settlement: step1 requires observed modes and no
+  returned value until retirement; step2 observes actual selected terminal.
+- A nonthrowing stop flag alone does not wake input: step1 requires finite wait and
+  nonblocking read; step2 stops actual waiting without more input.
+- Two TTYs can differ: both preflight and reader bind /dev/tty, with step2 two-terminal
+  observation. A stdin-only cleanup fixture cannot qualify that case.
+- Source/file outcomes survive later stop: retained actual publication/native-reader
+  histories in step2 precede integration; no newly invented rollback semantics.
+- More passing tests do not imply missing-history coverage: step2 names explicit
+  new normal/EOF/first-signal and failed-restoration outcomes before product work.
+- Avoid a shared framework without a second matching consumer: private CLI module
+  only; no worker/frontend/public API changes.
 
-Read coverage: revision2/3 plans, description/blockers, triage/traverse/rejection,
-complete current CLI/publisher/LoginFlow/session modules and fixture41/48 in the
-same warmed session; actual Python run_until_complete callback, signal scheduling
-and getpass implementation; retained verification and planning-probe source/results.
-No interface/schema/dependency/version change beyond the private CLI lifetime is
-needed. The worker has a different process/job contract; sharing a generic supervisor
-would add coupling without a demonstrated common consumer.
+## Risk R1 — input can be silently changed before UTF-8 decoding
 
-## Phase 2 risks
+**Risk**
+An operator can type the correct password, but a supported-looking terminal can
+change its bytes before the command reads them. The changed text may still be valid
+UTF-8, so decoding succeeds and the command submits a different password. That can
+cause a failed login attempt without explaining the real cause.
 
-None beyond the unresolved behavioral premises enforced by the experiment.
-No mitigation tiers are manufactured for declared preconditions or a gate already
-specified in the plan. The implementation detail is sufficient to build a falsifiable
-complete candidate, but reading it cannot establish that candidate's behavior.
+Revision5 step1 checks canonical/ISIG and CR/LF mappings but omits termios.ISTRIP
+(and IUCLC on hosts exposing it). In the planned tgdata/_terminal_input.py preflight
+and per-prompt validation, ISTRIP can convert bytes0xc3,0xa9 for é into ASCII C).
+replan-r5/istrip-result.json reproduces this with real termios and PTY input. Strict
+decode at the future reader does not detect the alteration. No product patch made.
 
-## Phase 3 selection
+**Severity:** Medium.
+**Category:** input compatibility / authentication correctness.
+**Impact:** incorrect credential submission and avoidable remote login failures.
+**NoobEng:** canonical editing and terminal byte transformations happen in the OS
+before os.read. LoginFlow sees only the resulting string and cannot reconstruct
+what the operator typed; the private input owner must admit only supported modes.
+**Affected areas:** candidate/private terminal preflight and per-prompt validation,
+CLI support docs, real-terminal tests; no auth or session schema change.
 
-No rated risks or proposals; no mitigation tier to select. The full combined
-experiment remains mandatory. Revision4 may record the zero-mitigation fold in
-the user-requested artifact order; product promotion still requires PASS.
+### Mitigation — Quick
+Reject all non-ASCII decoded strings.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
+**Note**
+*Why chosen:* —
+*For future:* —
+
+### Mitigation — Robust
+Reject ISTRIP and available IUCLC flags in preflight and every prompt before mode
+mutation/source work. Retain explicit canonical editing semantics; test actual
+ISTRIP initially and changing between prompts, with no subsequent source request.
+**Why this is robust:** prevents the observed transformation at the owner that
+can inspect it, without changing the user's terminal policy or authentication.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
+**Note**
+*Why chosen:* —
+*For future:* —
+
+### Mitigation — Long-term
+Normalize supported input transformations within the private owner, restoring all
+original settings, and qualify a broader line-input policy across supported hosts.
+**Why this is long term effective:** could accept additional terminal configurations
+by controlling the transformation rules rather than refusing them.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
+**Note**
+*Why chosen:* —
+*For future:* —
+
+## Other checked concerns
+
+No public API/database/dependency change. Private module needs safe import/help on
+non-POSIX, covered in the plan.128-byte policy is explicit, not silent truncation;
+canonical kernel overflow and partial EOF remain required real measurements. Flushing
+failure must not skip restoration, restore readback must not fabricate success,
+and close uncertainty blocks value release. Prompt output errors must settle modes.
+
+The full test adaptation must load both candidate modules in every child/entry
+path; an old-product module invocation is non-covering for the new candidate.
+Input-mocked source/file tests stay useful but cannot qualify terminal preflight.
+Two-terminal and refusal histories must use actual terminal state. The plan's
+acceptance statements already require these; they are experiment checks, not extra
+rated findings. SIGINT and cooperative foreground contexts are the declared scope;
+process kill, external terminal mutation and universal job-control recovery are not
+proved. No new guaranteed SDK/filesystem/disconnect time bound is introduced.
+
+## Execution limits carried unchanged
+
+Live account setup, native3.7 runtime and current-turn §9 verification remain OPEN
+as declared. No dependency installation, real login, product promotion, PR approval,
+merge/release or downstream deployment is part of this review/prebuild turn.
+
+## Phase 3
+
+Pending selection; Phase2 proposals above are intentionally unticked.
