@@ -1,0 +1,34 @@
+[
+  {
+    "case": "phone",
+    "diagnostic": false,
+    "timed_out": true,
+    "timeout_seconds": 5,
+    "output": "",
+    "error": ""
+  },
+  {
+    "case": "password",
+    "diagnostic": false,
+    "timed_out": true,
+    "timeout_seconds": 5,
+    "output": "",
+    "error": ""
+  },
+  {
+    "case": "phone",
+    "diagnostic": true,
+    "timed_out": true,
+    "timeout_seconds": 5,
+    "output": "",
+    "error": "DONE_TASK_KEYBOARD_INTERRUPT_REENTER 1\n"
+  },
+  {
+    "case": "password",
+    "diagnostic": true,
+    "timed_out": true,
+    "timeout_seconds": 5,
+    "output": "",
+    "error": "DONE_TASK_KEYBOARD_INTERRUPT_REENTER 1\n"
+  }
+]

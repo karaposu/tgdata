@@ -1,0 +1,23 @@
+{"case": "expired", "result": "PASS", "observed": {"exit": 3, "saved": false, "codes": 1, "signins": 1}}
+{"case": "phone_reply_lost", "result": "PASS", "observed": {"exit": 3, "saved": false, "codes": 1, "signins": 0}}
+{"case": "code_retry", "result": "PASS", "observed": {"exit": 0, "saved": true, "codes": 1, "signins": 2}}
+{"case": "code_loss_twice", "result": "PASS", "observed": {"exit": 3, "saved": false, "codes": 1, "signins": 2}}
+{"case": "wrong_password", "result": "PASS", "observed": {"exit": 0, "saved": true, "codes": 1, "signins": 1}}
+{"case": "migration", "result": "PASS", "observed": {"exit": 0, "saved": true, "codes": 2, "signins": 1}}
+{"case": "late_-wal", "result": "PASS", "observed": {"exit": 4, "old_bytes_preserved": true}}
+{"case": "late_-shm", "result": "PASS", "observed": {"exit": 4, "old_bytes_preserved": true}}
+{"case": "late_-journal", "result": "PASS", "observed": {"exit": 4, "old_bytes_preserved": true}}
+{"case": "link_before_effect", "result": "PASS", "observed": {"exit": 5, "recovery_retained": true, "effect": false}}
+{"case": "link_after_effect", "result": "PASS", "observed": {"exit": 5, "recovery_retained": true, "effect": true}}
+{"case": "replace_before_effect", "result": "PASS", "observed": {"exit": 5, "recovery_retained": true, "effect": false}}
+{"case": "replace_after_effect", "result": "PASS", "observed": {"exit": 5, "recovery_retained": true, "effect": true}}
+{"case": "retry_refuses_changed_target", "result": "PASS", "observed": {"exit": 4, "candidate_attempts": 1, "codes": 1}}
+{"case": "constructor_failure_retired", "result": "PASS", "observed": {"exit": 4, "connections": 1}}
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/work/50-terminal-account-login/pr-probes/probe_matrix.py", line 173, in <module>
+    with patch.object(socket.socket,'connect',side_effect=AssertionError('network forbidden')),patch.object(socket.socket,'connect_ex',side_effect=AssertionError('network forbidden')):run()
+                                                                                                                                                                                        ^^^^^
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/work/50-terminal-account-login/pr-probes/probe_matrix.py", line 150, in run
+    assert v is not None and v.pts==123 and v.date.microsecond==123456
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

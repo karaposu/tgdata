@@ -1,0 +1,10 @@
+{
+  "native_srp_interrupted": true,
+  "all_hidden_inputs_sent": true,
+  "additional_sigint_sent": true,
+  "timed_out": true,
+  "exit": -9,
+  "child_result": false,
+  "secret_echo": false,
+  "transcript": "Session destination: '/private/var/folders/3w/9l9mlgsx74xgqtr3v7hy_1kr0000gn/T/pr51-pty-owned-li85u77o/login-output-cs4plq4f/account.session'\r\nPhone number with country code (hidden): \r\nTelegram code (hidden): \r\nTwo-factor password (hidden): \r\nSIGINT_NATIVE_SRP_ACTIVE=True\r\n"
+}

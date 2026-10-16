@@ -1,0 +1,163 @@
+{
+  "cases": [
+    {
+      "case": "expired",
+      "result": "PASS",
+      "observed": {
+        "exit": 3,
+        "saved": false,
+        "codes": 1,
+        "signins": 1
+      }
+    },
+    {
+      "case": "phone_reply_lost",
+      "result": "PASS",
+      "observed": {
+        "exit": 3,
+        "saved": false,
+        "codes": 1,
+        "signins": 0
+      }
+    },
+    {
+      "case": "code_retry",
+      "result": "PASS",
+      "observed": {
+        "exit": 0,
+        "saved": true,
+        "codes": 1,
+        "signins": 2
+      }
+    },
+    {
+      "case": "code_loss_twice",
+      "result": "PASS",
+      "observed": {
+        "exit": 3,
+        "saved": false,
+        "codes": 1,
+        "signins": 2
+      }
+    },
+    {
+      "case": "wrong_password",
+      "result": "PASS",
+      "observed": {
+        "exit": 0,
+        "saved": true,
+        "codes": 1,
+        "signins": 1
+      }
+    },
+    {
+      "case": "migration",
+      "result": "PASS",
+      "observed": {
+        "exit": 0,
+        "saved": true,
+        "codes": 2,
+        "signins": 1
+      }
+    },
+    {
+      "case": "late_-wal",
+      "result": "PASS",
+      "observed": {
+        "exit": 4,
+        "old_bytes_preserved": true
+      }
+    },
+    {
+      "case": "late_-shm",
+      "result": "PASS",
+      "observed": {
+        "exit": 4,
+        "old_bytes_preserved": true
+      }
+    },
+    {
+      "case": "late_-journal",
+      "result": "PASS",
+      "observed": {
+        "exit": 4,
+        "old_bytes_preserved": true
+      }
+    },
+    {
+      "case": "link_before_effect",
+      "result": "PASS",
+      "observed": {
+        "exit": 5,
+        "recovery_retained": true,
+        "effect": false
+      }
+    },
+    {
+      "case": "link_after_effect",
+      "result": "PASS",
+      "observed": {
+        "exit": 5,
+        "recovery_retained": true,
+        "effect": true
+      }
+    },
+    {
+      "case": "replace_before_effect",
+      "result": "PASS",
+      "observed": {
+        "exit": 5,
+        "recovery_retained": true,
+        "effect": false
+      }
+    },
+    {
+      "case": "replace_after_effect",
+      "result": "PASS",
+      "observed": {
+        "exit": 5,
+        "recovery_retained": true,
+        "effect": true
+      }
+    },
+    {
+      "case": "retry_refuses_changed_target",
+      "result": "PASS",
+      "observed": {
+        "exit": 4,
+        "candidate_attempts": 1,
+        "codes": 1
+      }
+    },
+    {
+      "case": "constructor_failure_retired",
+      "result": "PASS",
+      "observed": {
+        "exit": 4,
+        "connections": 1
+      }
+    },
+    {
+      "case": "available_state_and_optional_hash",
+      "result": "PASS",
+      "observed": {
+        "exit": 0,
+        "fractional_date": true,
+        "takeout_exact": true
+      }
+    },
+    {
+      "case": "unsettled_auth_not_published",
+      "result": "PASS",
+      "observed": {
+        "exit": 3,
+        "old_bytes_preserved": true,
+        "signins": 1
+      }
+    }
+  ],
+  "source_sha256": {
+    "login_file.py": "3b526f483d3f0c137ebc45023f2326710781000ec71af090ed83c1b10d001290",
+    "login_cli.py": "860dedd62bef5b3e13134245f05f6b7d198ebd4321489287dc63b9cc3a467c1f"
+  }
+}

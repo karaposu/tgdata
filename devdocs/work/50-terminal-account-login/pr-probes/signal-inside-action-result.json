@@ -1,0 +1,12 @@
+[
+  {
+    "case": "phone",
+    "timed_out": true,
+    "timeout_seconds": 5
+  },
+  {
+    "case": "password",
+    "timed_out": true,
+    "timeout_seconds": 5
+  }
+]
