@@ -1,0 +1,28 @@
+PASS test_changed_and_appeared_destination
+PASS test_cleanup_failure_preserves_confirmed_publication
+PASS test_config_name_precedence_and_working_directory
+PASS test_invalid_inputs_wait_and_unsupported
+PASS test_last_moment_no_clobber_collision
+PASS test_local_retry_never_authenticates_again
+PASS test_module_entry_help_and_headless_refusal
+PASS test_native_commit_and_close_failures_retire_connections
+native file + normal reader: plain, SRP and missing access_hash PASS
+PASS test_native_reopen_and_optional_cache
+PASS test_new_existing_and_replacement
+PASS test_no_echo_fallback_and_redacted_arguments
+PASS test_output_failure_does_not_reverse_saved_state
+PASS test_post_replace_uncertainty_retains_old_backup
+PASS test_preflight_sidecar_symlink_and_missing_tty
+PASS test_prepublication_barriers_preserve_old_bytes
+PASS test_real_flow_cleanup_retry_and_secret_logs
+PTY plain exit 0 secret echo absent
+PTY password exit 0 secret echo absent
+PTY replace exit 0 secret echo absent
+PTY input_stop exit 130 secret echo absent
+PTY code_eof exit 130 secret echo absent
+PTY source_stop exit 130 secret echo absent
+PTY before_publish exit 130 secret echo absent
+PTY during_publish exit 130 secret echo absent
+PASS test_real_terminal_composition
+PASS test_uncertain_check_without_replaying_code
+18 passed; 0 failed
