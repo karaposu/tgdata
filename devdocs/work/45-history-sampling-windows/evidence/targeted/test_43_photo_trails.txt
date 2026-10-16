@@ -1,0 +1,9 @@
+.....................................................
+----------------------------------------------------------------------
+Ran 53 tests in 3.841s
+
+OK
+Lost acknowledgment replayed without another source read.
+Two photo messages were provisionally attached to the earlier text.
+A later album caption withdrew that association; all four originals remain.
+Source acknowledged through4; photo-trail views remain provisional.

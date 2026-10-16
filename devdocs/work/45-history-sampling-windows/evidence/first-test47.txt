@@ -1,0 +1,89 @@
+PASS test_599_to_300_spans_retained_input_and_replays
+PASS test_bad_page_is_atomic_and_earlier_day_survives
+PASS test_budget_all_slots_and_refusal_preserve_prior_day
+PASS test_busy_day_does_not_starve_quiet_days
+PASS test_cached_owner_policy_and_actual_budget_owner
+Account operation cleanup failed (RuntimeError)
+Account operation cleanup failed (RuntimeError)
+PASS test_cleanup_failure_preserves_result_and_original_error
+PASS test_cross_bucket_conflicting_id_refuses_whole_page
+PASS test_eligibility_normalizes_and_is_pure_after_cleanup
+PASS test_empty_days_have_finite_requests_and_complete_evidence
+PASS test_fractional_bounds_timezone_and_equal_timestamp_pagination
+PASS test_full_text_and_detached_immutable_exports
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+PASS test_heartbeat_is_observational_and_success_does_not_clear_access_failure
+PASS test_invalid_public_inputs_precede_configuration_io
+PASS test_loader_rejects_malformed_json_and_byte_overflow
+PASS test_loader_rejects_rehashed_contradictory_source_evidence
+PASS test_midnight_intersections_order_and_no_duplicate_boundary
+PASS test_no_spare_requests_use_available_page_capacity
+PASS test_nonprogress_dates_peers_and_oversized_pages_refuse
+PASS test_owner_change_at_later_admission_refuses
+FAIL test_raw_services_album_omissions_and_media_references
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-45-history-sampling-windows/tgdata/smoke_tests/test_47_history_sampling.py", line 533, in main
+    await asyncio.wait_for(test(),20)
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-45-history-sampling-windows/tgdata/smoke_tests/test_47_history_sampling.py", line 196, in test_raw_services_album_omissions_and_media_references
+    assert value.messages[-1]['media']['size'] == 5 and value.messages[-2]['media']['size'] == 6
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+PASS test_repeated_cleanup_cancellation_waits_for_disconnect
+PASS test_source_local_and_settlement_errors_preserve_original_and_prefix
+PASS test_sparse_60_days_preserve_capacity_for_busy_day
+PASS test_stalled_later_day_cancels_with_prior_capture_and_no_fake_beats
+PASS test_supported_peer_families_and_numeric_references
+PASS test_tiny_caps_distribute_visits_and_keep_unvisited_buckets
+PASS test_unknown_slots_are_bounded_but_never_complete
+PASS test_unusable_target_metadata_refuses_before_history
+PASS test_wait_no_retry_and_annotation_refusal_preserves_error
+PASS test_waterfill_totality_conservation_and_sparse_redistribution
+PASS test_wrong_owner_and_missing_auth_prevent_group_work
+30 passed; 1 failed
