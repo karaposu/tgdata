@@ -176,10 +176,16 @@ and its failure paths before product work. Do not infer completion from an opaqu
 getpass call merely leaving its outer frame.
 **Why this is robust:** closes the resource-ownership gap at the one private hidden-
 input boundary without changing the existing authentication or file publisher.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* The private hidden-input adapter is the concrete resource owner
+that must be established. Plain confirmations do not change terminal modes, and
+the worker has a different input contract; no second equivalent consumer justifies
+a shared framework. Explicit local ownership closes this instance with less extent
+than a generic backend; a warning transfers cleanup to the operator. Selected on
+merit, not external pressure. This informs the required description/traverse return
+after the second rejection; it does not authorize a patch or automatic revision5.
 *For future:* —
 
 ### Mitigation — Long-term
