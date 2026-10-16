@@ -8,7 +8,7 @@ A → Su → S → D → I → C → R (always)
 - [x] Surfacing
 - [x] Sensemaking
 - [x] Decomposition
-- [ ] Innovation
+- [x] Innovation
 - [ ] Critique
 - [ ] Routelister
 ## Iteration
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Innovation
+Critique
 ## Relationships
 - CONTINUES FROM: ../../work/50-terminal-account-login/traverse/ (re-test original scope/ownership commitments after two PR rejections)
 ## History
@@ -24,3 +24,4 @@ Innovation
 - 2026-10-16_19-28: Surfacing complete:27 tagged items,22 mtimes/5 unavailable,3 cycles; bounded native/API frontier explicit; FLAG for POSIX full-page retrieval (search excerpts only). Manual8/8 (checker absent). Next Sensemaking.
 - 2026-10-16_19-37: Sensemaking complete:SV1–SV6,9 ambiguity pairs,3 native semantics observations plus fresh restoration reproduction. Sandbox/PTY fixture limits recorded, no product changes. Manual8/8. Next Decomposition.
 - 2026-10-16_19-39: Decomposition complete:5 questions,9 interfaces,explicit terminal determination/settlement boundary; manual7/7. No implementation plan. Next Innovation.
+- 2026-10-16_19-46: Innovation complete:all7 mechanisms,15 tested variations,5 meta-pieces with generic/focused/contrarian and shape inversion; two input assemblies remain for adversarial comparison. Manual9/9. Next Critique.
