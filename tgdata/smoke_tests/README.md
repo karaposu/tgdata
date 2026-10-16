@@ -59,6 +59,9 @@ Tests polling and real-time features:
 Telethon1.45.0/SRP/session codecs, native SQLite publication and ordinary-reader
 authentication with controlled source replies. It also runs real PTY children for
 hidden input, EOF, first/repeated Ctrl-C and interruption around publication.
+The revised suite covers executing native password proofs, task completion and
+registration, explicit retirement, exact terminal restoration, and saved/uncertain
+file outcomes through late stops. Its23 groups include25 actual PTY scenarios.
 Cases cover optional account-cache data, save retry without extra login requests,
 replacement/conflict/sidecar refusal, sync barriers, retained recovery files,
 commit/close failures, safe diagnostics and installed-module entry behavior.
