@@ -1,0 +1,6 @@
+{"case": "validation", "stopped": true, "all_wires_closed": true, "native_srp_signal_active": false, "auth_step": "phone", "codes": 0, "password_requests": 0}
+{"case": "srp", "stopped": true, "all_wires_closed": true, "native_srp_signal_active": true, "auth_step": "uncertain", "codes": 1, "password_requests": 1}
+{"case": "cleanup", "stopped": true, "all_wires_closed": true, "native_srp_signal_active": false, "auth_step": "code", "codes": 1, "password_requests": 0}
+{"case": "wait", "stopped": true, "all_wires_closed": true, "native_srp_signal_active": false, "auth_step": "uncertain", "codes": 1, "password_requests": 0}
+{"case": "done_interrupt", "stopped": true, "all_wires_closed": true, "native_srp_signal_active": false, "auth_step": "phone", "codes": 0, "password_requests": 0}
+{"case": "retirement", "settled": true, "cancelled": false}
