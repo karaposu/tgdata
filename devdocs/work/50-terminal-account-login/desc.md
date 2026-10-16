@@ -8,8 +8,8 @@ effort: xhigh
 [streaming-input inquiry](../../inquiries/2026-10-16_20-49__bounded-terminal-input/finding.md)
 at e2f5ab6. Earlier description preserved in desc_r2.md; original in desc_r1.md.
 Revision6 remains DEPRECATED_step_by_step_impl_plan.md, with its failed experiment
-in critic_r6_prebuild.md. Revision7 is based on this contract; fresh plan critique
-and full combined prebuild remain pending. The inquiry prototype is not product code.
+in critic_r6_prebuild.md. Revision8 folds the fresh plan critique; its full combined prebuild passed before
+product edits. Implementation remains pending. The inquiry prototype is not product code.
 
 **Session warmth:** same retained #43/#44/#45/#50 context; dev77f2f53. LoginFlow,
 SDK/SRP, session conversion, native publisher, reader, command lifecycle and full
@@ -61,7 +61,7 @@ re-login and local save retry preserve truthful credential/file outcomes.
 7. Discard queued input after hiding and before inviting a prompt, plus queued/
    already-read trailing input at retirement. A value is admitted only after exact
    restoration and descriptor release. The native canonical-mode transition must be
-   settled while echo is still disabled; cleanup failures report safe fixed kinds,
+   settled with the protected controls and echo disabled until final restoration; cleanup failures report safe fixed kinds,
    release no value and cannot be disguised as successful restoration.
 8. First/repeated SIGINT records stop without throwing through owned input cleanup.
    Stop needs no additional input byte, prevents new prompt/auth/save admission and
@@ -125,7 +125,7 @@ cases and7 real handoffs pass expected outcomes, including500,000 bytes plus new
 No shortened value is admitted; persistent cleanup faults correctly remain failures.
 Historical failure remains in critic_r6_prebuild.md and prebuild-r6/.
 
-No open planning blocker identified. Complete production composition remains an
-execution/qualification gate before product changes, not an assumed pass. Live
+No open planning blocker identified. The complete revision8 experimental composition has now passed before product
+changes; promotion and product verification remain pending. Live
 source delivery/real-account2FA requires an authorized exclusive setup; native3.7
 runtime remains unavailable. Current-turn §9 verification is resolved by the matching trace.

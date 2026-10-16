@@ -5,7 +5,10 @@ effort: xhigh
 # #50 implementation plan — revision 8
 
 **Critic folded:** 2026-10-16T21:33:21.243305+03:00 — 1 robust mitigation (2 implementation steps changed, 0 added).
-**Status:** fresh critique REORDER; full combined prebuild PENDING. Fold alone is not implementation clearance. Revision6 remains deprecated;
+**Status:** fresh critique REORDER; full combined prebuild PASS (prebuild-r8/result.json).
+The experimental gate is satisfied; product promotion/verification remain pending.
+First complete run:23 retained groups plus all50 terminal/20 profile-control/46 framing/
+7 handoff cases and isolated installed entry/native-SRP checks; source hashes unchanged. Revision6 remains deprecated;
 its failed critique is critic_r6_prebuild.md. The prior selected plan critique is
 critic_r5.md. The new critic.md reviews revision7 at15e922d; revision7 is preserved in step_by_step_impl_plan_r7.md.
 
@@ -46,7 +49,7 @@ This establishes the contract, not the complete next candidate or all platforms.
 
 - **What must happen:** complete candidate qualification from step2. **Who:** the
   implementation agent after fresh plan critique/fold. **Blocks:** step3 and all
-  product edits. **Status:** OPEN; reachable work, not an inaccessible planning gap.
+  product edits. **Status:** DONE — first full prebuild passed before product edits; result.json records exact coverage and hashes.
 - **What must happen:** current-turn §9 model/effort verification. **Who:** session
   UI/metadata owner. **Blocks:** final review/merge clearance in step5. **Status:** DONE for this turn;
   matching active-thread metadata is recorded in model-verification-r8.md.
@@ -79,6 +82,9 @@ before moving any candidate into product files.
 ## Step 1 — fresh critique and fold
 
 ### Proposed changes
+
+Completed: fresh critic81598e2, robust R1 selection and fold70d32cf. The full experiment
+then passed as recorded at the top; the procedural description below is preserved.
 
 Run critic-d on this revision with desc.md, both PR rejections, the failed revision6
 experiment and the new inquiry evidence. Write a new dynamic_critic_prompt.md and

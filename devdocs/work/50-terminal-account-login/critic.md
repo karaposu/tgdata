@@ -27,6 +27,11 @@ Passing result: all required cases pass their specified outcomes in one complete
 including truthful no-value failure on irreparable cleanup, no timeout kill as success,
 no product source drift and no secret output. This is not live Telegram qualification.
 
+Result: PASS — 2026-10-16T18:49:39.695876+00:00; first complete run,23 retained groups,25 retained PTYs,
+17 histories,8 stop transitions,14 publication crossings,50 terminal cases,20 profile/
+control checks,46 framing cases,7 handoffs and isolated installed native-SRP/entry
+checks. All source hashes unchanged. See prebuild-r8/result.json;96.644seconds.
+
 ## High-level summary
 
 One Medium, zero High/Low. Revision7's intermediate canonical restoration must keep
@@ -35,9 +40,10 @@ original settings with only echo disabled. The latter re-enables the quit signal
 while the terminal remains hidden; a native probe establishes it. The private input
 shape survives; no new authentication/storage/editor framework is justified.
 
-The whole candidate remains unqualified.46 input cases and7 selected handoffs are
-premise evidence; they do not substitute for step2. The REORDER verdict enforces the
-unrun experimental gate even though the plan already places it ahead of promotion.
+At review time the whole candidate was unqualified;46 inquiry cases plus7 selected
+handoffs were only premise evidence. The full step2 experiment subsequently passed
+as recorded above. The original REORDER verdict is retained with its result; it is
+not a PR soundness review or a claim that product implementation has occurred.
 
 Subject: revision7 at15e922d, desc79c7327, finding e2f5ab6, both PR rejections and
 failed revision6, actual product34907d4-equivalent archive, dev77f2f53. Fresh in the
@@ -186,7 +192,7 @@ supply correct state to a candidate is not qualification. Native output stalls a
 external process-killing signals are not given new bounded-time guarantees. Input
 without a delimiter remains cancellable; no arbitrary prompt deadline is invented.
 
-Execution limits: full prebuild OPEN before step3; live account/native3.7/other-host
+Execution limits: full prebuild DONE before step3; live account/native3.7/other-host
 qualification OPEN only for those claims. §9 is now DONE with current-thread evidence.
 No merge/release/deployment or product implementation is authorized by this review.
 

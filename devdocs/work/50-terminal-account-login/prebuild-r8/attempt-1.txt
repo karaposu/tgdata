@@ -1,0 +1,218 @@
+RUN combined_suite.py
+PASS test_changed_and_appeared_destination
+PASS test_cleanup_failure_preserves_confirmed_publication
+PASS test_config_name_precedence_and_working_directory
+PASS test_invalid_inputs_wait_and_unsupported
+PASS test_last_moment_no_clobber_collision
+PASS test_local_retry_never_authenticates_again
+PASS test_module_entry_help_and_headless_refusal
+PASS test_native_commit_and_close_failures_retire_connections
+native file + normal reader: plain, SRP and missing access_hash PASS
+PASS test_native_reopen_and_optional_cache
+PASS test_new_existing_and_replacement
+PASS test_no_echo_fallback_and_redacted_arguments
+PASS test_output_failure_does_not_reverse_saved_state
+PASS test_post_replace_uncertainty_retains_old_backup
+PASS test_preflight_sidecar_symlink_and_missing_tty
+PASS test_prepublication_barriers_preserve_old_bytes
+PASS test_real_flow_cleanup_retry_and_secret_logs
+PTY_PHASE phone_eof terminal restored; exit130
+PTY_PHASE phone_repeat terminal restored; exit130
+PTY_PHASE code_eof terminal restored; exit130
+PTY_PHASE code_repeat terminal restored; exit130
+PTY_PHASE password_eof terminal restored; exit130
+PTY_PHASE password_repeat terminal restored; exit130
+PTY_PHASE replace_eof terminal restored; exit130
+PTY_PHASE replace_repeat terminal restored; exit130
+PTY_PHASE retry_eof terminal restored; exit130
+PTY_PHASE retry_repeat terminal restored; exit130
+PTY_PHASE validation terminal restored; exit130
+PTY_PHASE native_srp terminal restored; exit130
+PTY_PHASE connect_stop terminal restored; exit130
+PTY_PHASE cleanup_hold terminal restored; exit130
+PTY_PHASE auth_cleanup_hold terminal restored; exit130
+PTY_PHASE explicit_retire_hold terminal restored; exit130
+PTY_PHASE final_retire_hold terminal restored; exit130
+PASS test_real_phase_terminal_matrix
+PTY plain exit 0 secret echo absent
+PTY password exit 0 secret echo absent
+PTY replace exit 0 secret echo absent
+PTY input_stop exit 130 secret echo absent
+PTY code_eof exit 130 secret echo absent
+PTY source_stop exit 130 secret echo absent
+PTY before_publish exit 130 secret echo absent
+PTY during_publish exit 130 secret echo absent
+PASS test_real_terminal_composition
+REVIEW_HISTORY expired {"exit": 3, "saved": false, "codes": 1, "signins": 1}
+REVIEW_HISTORY phone_reply_lost {"exit": 3, "saved": false, "codes": 1, "signins": 0}
+REVIEW_HISTORY code_retry {"exit": 0, "saved": true, "codes": 1, "signins": 2}
+REVIEW_HISTORY code_loss_twice {"exit": 3, "saved": false, "codes": 1, "signins": 2}
+REVIEW_HISTORY wrong_password {"exit": 0, "saved": true, "codes": 1, "signins": 1}
+REVIEW_HISTORY migration {"exit": 0, "saved": true, "codes": 2, "signins": 1}
+REVIEW_HISTORY late_-wal {"exit": 4, "old_bytes_preserved": true}
+REVIEW_HISTORY late_-shm {"exit": 4, "old_bytes_preserved": true}
+REVIEW_HISTORY late_-journal {"exit": 4, "old_bytes_preserved": true}
+REVIEW_HISTORY link_before_effect {"exit": 5, "recovery_retained": true, "effect": false}
+REVIEW_HISTORY link_after_effect {"exit": 5, "recovery_retained": true, "effect": true}
+REVIEW_HISTORY replace_before_effect {"exit": 5, "recovery_retained": true, "effect": false}
+REVIEW_HISTORY replace_after_effect {"exit": 5, "recovery_retained": true, "effect": true}
+REVIEW_HISTORY retry_refuses_changed_target {"exit": 4, "candidate_attempts": 1, "codes": 1}
+REVIEW_HISTORY constructor_failure_retired {"exit": 4, "connections": 1}
+REVIEW_HISTORY available_state_and_optional_hash {"exit": 0, "fractional_date": true, "takeout_exact": true}
+REVIEW_HISTORY unsettled_auth_not_published {"exit": 3, "old_bytes_preserved": true, "signins": 1}
+PASS test_review_source_and_storage_histories
+PUBLICATION_STOP False before_save
+PUBLICATION_STOP False prepared
+PUBLICATION_STOP False mutated
+PUBLICATION_STOP False parent_sync
+PUBLICATION_STOP False uncertain
+PUBLICATION_STOP False cleanup
+PUBLICATION_STOP False output
+PUBLICATION_STOP True before_save
+PUBLICATION_STOP True prepared
+PUBLICATION_STOP True mutated
+PUBLICATION_STOP True parent_sync
+PUBLICATION_STOP True uncertain
+PUBLICATION_STOP True cleanup
+PUBLICATION_STOP True output
+PASS test_stop_across_publication_effects
+STOP_PHASE preflight saved False
+STOP_PHASE before_task saved False
+STOP_PHASE registered saved False
+STOP_PHASE completed saved False
+STOP_PHASE authenticated saved False
+STOP_PHASE finalizing saved True
+STOP_PHASE asyncgens saved True
+STOP_PHASE report saved True
+PASS test_stop_admission_and_finalization
+PASS test_terminal_results_and_stale_cancel_registration
+PASS test_uncertain_check_without_replaying_code
+23 passed; 0 failed
+RUN terminal_matrix.py
+OWNED_TERMINAL {"mode": "first_phone_normal", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 13, "producer_written": 13}
+OWNED_TERMINAL {"mode": "first_phone_eof", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 1, "producer_written": 1}
+OWNED_TERMINAL {"mode": "first_code_normal", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 6, "key_signals": 0, "producer_requested": 19, "producer_written": 19}
+OWNED_TERMINAL {"mode": "first_code_eof", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 6, "key_signals": 0, "producer_requested": 14, "producer_written": 14}
+OWNED_TERMINAL {"mode": "first_password_normal", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 9, "key_signals": 0, "producer_requested": 46, "producer_written": 46}
+OWNED_TERMINAL {"mode": "first_password_eof", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 9, "key_signals": 0, "producer_requested": 20, "producer_written": 20}
+OWNED_TERMINAL {"mode": "first_replace_normal", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 9, "key_signals": 0, "producer_requested": 27, "producer_written": 27}
+OWNED_TERMINAL {"mode": "first_replace_eof", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 9, "key_signals": 0, "producer_requested": 20, "producer_written": 20}
+OWNED_TERMINAL {"mode": "first_retry_normal", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 12, "key_signals": 0, "producer_requested": 31, "producer_written": 31}
+OWNED_TERMINAL {"mode": "first_retry_eof", "exit": 130, "terminal_restored": true, "codes": 1, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 12, "key_signals": 0, "producer_requested": 28, "producer_written": 28}
+OWNED_TERMINAL {"mode": "after_restore_normal", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 13, "producer_written": 13}
+OWNED_TERMINAL {"mode": "after_restore_eof", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 1, "producer_written": 1}
+OWNED_TERMINAL {"mode": "stop_acquire", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "stop_snapshot", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "stop_hidden", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "stop_wait", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "stop_read", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 13, "producer_written": 13}
+OWNED_TERMINAL {"mode": "stop_flush", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "stop_close", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 13, "producer_written": 13}
+OWNED_TERMINAL {"mode": "fault_acquire", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "fault_snapshot", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "fault_apply_before", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "fault_apply_after", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "fault_wait", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "fault_read", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 13, "producer_written": 13}
+OWNED_TERMINAL {"mode": "fault_flush", "exit": 3, "terminal_restored": false, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "fault_restore", "exit": 3, "terminal_restored": false, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 13, "producer_written": 13}
+OWNED_TERMINAL {"mode": "fault_restore_stop", "exit": 130, "terminal_restored": false, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 13, "producer_written": 13}
+OWNED_TERMINAL {"mode": "fault_restore_after", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 13, "producer_written": 13}
+OWNED_TERMINAL {"mode": "fault_readback", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 13, "producer_written": 13}
+OWNED_TERMINAL {"mode": "fault_close", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 13, "producer_written": 13}
+OWNED_TERMINAL {"mode": "fault_output", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "unicode", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": true, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 9, "producer_written": 9}
+OWNED_TERMINAL {"mode": "editing", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": true, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 5, "producer_written": 5}
+OWNED_TERMINAL {"mode": "limit128", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": true, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 129, "producer_written": 129}
+OWNED_TERMINAL {"mode": "limit129", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 130, "producer_written": 130}
+OWNED_TERMINAL {"mode": "kernel_overflow", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 5001, "producer_written": 5001}
+OWNED_TERMINAL {"mode": "invalid_utf8", "exit": 3, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 2, "producer_written": 2}
+OWNED_TERMINAL {"mode": "partial_eof", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 8, "producer_written": 8}
+OWNED_TERMINAL {"mode": "typeahead", "exit": 0, "terminal_restored": true, "codes": 1, "saved": true, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 6, "key_signals": 0, "producer_requested": 39, "producer_written": 39}
+OWNED_TERMINAL {"mode": "two_terminals", "exit": 0, "terminal_restored": true, "codes": 1, "saved": true, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": true, "candidate_mode_writes": 6, "key_signals": 0, "producer_requested": 19, "producer_written": 19}
+OWNED_TERMINAL {"mode": "no_controlling", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "background", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "noncanonical", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "istrip", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "istrip_afterphone", "exit": 3, "terminal_restored": false, "codes": 1, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 0, "producer_requested": 13, "producer_written": 13}
+OWNED_TERMINAL {"mode": "bad_cr", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "small_canon", "exit": 0, "terminal_restored": true, "codes": 1, "saved": true, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 6, "key_signals": 0, "producer_requested": 19, "producer_written": 19}
+OWNED_TERMINAL {"mode": "no_termios", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+OWNED_TERMINAL {"mode": "echo_off", "exit": 0, "terminal_restored": true, "codes": 1, "saved": true, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 6, "key_signals": 0, "producer_requested": 19, "producer_written": 19}
+PROFILE_CONTROL {"mode": "no_isig", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "inlcr", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "parmrk", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "no_icrnl", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "pendin", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "flusho", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "unknown_lflag", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "bad_intr", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "disabled_eof", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "overlap_controls", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "newline_control", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "bad_vdisable", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "short_cc", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "thread", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "running_loop", "exit": 2, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": false, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 0, "key_signals": 0, "producer_requested": 0, "producer_written": 0}
+PROFILE_CONTROL {"mode": "quit_intermediate", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 1, "producer_requested": 15, "producer_written": 15}
+PROFILE_CONTROL {"mode": "suspend_intermediate", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 1, "producer_requested": 15, "producer_written": 15}
+PROFILE_CONTROL {"mode": "intr_intermediate", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 1, "producer_requested": 14, "producer_written": 14}
+PROFILE_CONTROL {"mode": "keyboard_cancel", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 1, "producer_requested": 1, "producer_written": 1}
+PROFILE_CONTROL {"mode": "keyboard_discard", "exit": 130, "terminal_restored": true, "codes": 0, "saved": false, "signal_or_fault_fired": true, "value_checked": false, "two_terminals_observed": false, "candidate_mode_writes": 3, "key_signals": 1, "producer_requested": 5001, "producer_written": 5001}
+RUN framing_matrix.py
+FRAMING {"mode": "prequeued", "outcome": "value", "kind": null, "restored": true, "signals": 0, "read_bytes": 20, "retained_peak": 19, "chunk_peak": 20, "invalid": false, "producer_written": 20, "producer_requested": 20, "seconds": 0.5641}
+FRAMING {"mode": "plain", "outcome": "value", "kind": null, "restored": true, "signals": 0, "read_bytes": 20, "retained_peak": 19, "chunk_peak": 20, "invalid": false, "producer_written": 20, "producer_requested": 20, "seconds": 0.6113}
+FRAMING {"mode": "unicode", "outcome": "value", "kind": null, "restored": true, "signals": 0, "read_bytes": 9, "retained_peak": 8, "chunk_peak": 9, "invalid": false, "producer_written": 9, "producer_requested": 9, "seconds": 0.5388}
+FRAMING {"mode": "split_utf8", "outcome": "value", "kind": null, "restored": true, "signals": 0, "read_bytes": 9, "retained_peak": 8, "chunk_peak": 1, "invalid": false, "producer_written": 9, "producer_requested": 9, "seconds": 0.6972}
+FRAMING {"mode": "erase", "outcome": "value", "kind": null, "restored": true, "signals": 0, "read_bytes": 5, "retained_peak": 2, "chunk_peak": 5, "invalid": false, "producer_written": 5, "producer_requested": 5, "seconds": 0.534}
+FRAMING {"mode": "erase_unicode", "outcome": "value", "kind": null, "restored": true, "signals": 0, "read_bytes": 10, "retained_peak": 8, "chunk_peak": 10, "invalid": false, "producer_written": 10, "producer_requested": 10, "seconds": 0.5017}
+FRAMING {"mode": "clear", "outcome": "value", "kind": null, "restored": true, "signals": 0, "read_bytes": 12, "retained_peak": 5, "chunk_peak": 12, "invalid": false, "producer_written": 12, "producer_requested": 12, "seconds": 0.7545}
+FRAMING {"mode": "empty", "outcome": "value", "kind": null, "restored": true, "signals": 0, "read_bytes": 1, "retained_peak": 0, "chunk_peak": 1, "invalid": false, "producer_written": 1, "producer_requested": 1, "seconds": 0.5363}
+FRAMING {"mode": "limit128", "outcome": "value", "kind": null, "restored": true, "signals": 0, "read_bytes": 129, "retained_peak": 128, "chunk_peak": 129, "invalid": false, "producer_written": 129, "producer_requested": 129, "seconds": 0.6232}
+FRAMING {"mode": "unicode128", "outcome": "value", "kind": null, "restored": true, "signals": 0, "read_bytes": 129, "retained_peak": 128, "chunk_peak": 129, "invalid": false, "producer_written": 129, "producer_requested": 129, "seconds": 0.7327}
+FRAMING {"mode": "over129", "outcome": "error", "kind": "terminal_input_too_long", "restored": true, "signals": 0, "read_bytes": 130, "retained_peak": 128, "chunk_peak": 130, "invalid": true, "producer_written": 130, "producer_requested": 130, "seconds": 0.5119}
+FRAMING {"mode": "over5000", "outcome": "error", "kind": "terminal_input_too_long", "restored": true, "signals": 0, "read_bytes": 5001, "retained_peak": 128, "chunk_peak": 256, "invalid": true, "producer_written": 5001, "producer_requested": 5001, "seconds": 0.5346}
+FRAMING {"mode": "over500000", "outcome": "error", "kind": "terminal_input_too_long", "restored": true, "signals": 0, "read_bytes": 500001, "retained_peak": 128, "chunk_peak": 256, "invalid": true, "producer_written": 500001, "producer_requested": 500001, "seconds": 0.6764}
+FRAMING {"mode": "paced_over5000", "outcome": "error", "kind": "terminal_input_too_long", "restored": true, "signals": 0, "read_bytes": 5001, "retained_peak": 128, "chunk_peak": 64, "invalid": true, "producer_written": 5001, "producer_requested": 5001, "seconds": 1.1586}
+FRAMING {"mode": "overflow_erase", "outcome": "error", "kind": "terminal_input_too_long", "restored": true, "signals": 0, "read_bytes": 264, "retained_peak": 128, "chunk_peak": 256, "invalid": true, "producer_written": 264, "producer_requested": 264, "seconds": 0.4959}
+FRAMING {"mode": "overflow_clear", "outcome": "error", "kind": "terminal_input_too_long", "restored": true, "signals": 0, "read_bytes": 136, "retained_peak": 128, "chunk_peak": 136, "invalid": true, "producer_written": 136, "producer_requested": 136, "seconds": 0.5454}
+FRAMING {"mode": "invalid_utf8", "outcome": "error", "kind": "terminal_input_encoding", "restored": true, "signals": 0, "read_bytes": 2, "retained_peak": 1, "chunk_peak": 2, "invalid": false, "producer_written": 2, "producer_requested": 2, "seconds": 0.8723}
+FRAMING {"mode": "incomplete_utf8", "outcome": "error", "kind": "terminal_input_encoding", "restored": true, "signals": 0, "read_bytes": 2, "retained_peak": 1, "chunk_peak": 2, "invalid": false, "producer_written": 2, "producer_requested": 2, "seconds": 0.7152}
+FRAMING {"mode": "literal_next", "outcome": "error", "kind": "terminal_input_control", "restored": true, "signals": 0, "read_bytes": 5, "retained_peak": 2, "chunk_peak": 5, "invalid": true, "producer_written": 5, "producer_requested": 5, "seconds": 0.5789}
+FRAMING {"mode": "flow_stop", "outcome": "error", "kind": "terminal_input_control", "restored": true, "signals": 0, "read_bytes": 5, "retained_peak": 2, "chunk_peak": 5, "invalid": true, "producer_written": 5, "producer_requested": 5, "seconds": 0.6054}
+FRAMING {"mode": "quit_control", "outcome": "error", "kind": "terminal_input_control", "restored": true, "signals": 0, "read_bytes": 5, "retained_peak": 2, "chunk_peak": 5, "invalid": true, "producer_written": 5, "producer_requested": 5, "seconds": 0.5157}
+FRAMING {"mode": "suspend_control", "outcome": "error", "kind": "terminal_input_control", "restored": true, "signals": 0, "read_bytes": 5, "retained_peak": 2, "chunk_peak": 5, "invalid": true, "producer_written": 5, "producer_requested": 5, "seconds": 0.5304}
+FRAMING {"mode": "arrow_control", "outcome": "error", "kind": "terminal_input_control", "restored": true, "signals": 0, "read_bytes": 7, "retained_peak": 2, "chunk_peak": 7, "invalid": true, "producer_written": 7, "producer_requested": 7, "seconds": 0.5471}
+FRAMING {"mode": "two_lines", "outcome": "value", "kind": null, "restored": true, "signals": 0, "read_bytes": 33, "retained_peak": 11, "chunk_peak": 33, "invalid": false, "producer_written": 33, "producer_requested": 33, "seconds": 0.4973}
+FRAMING {"mode": "eof", "outcome": "stop", "kind": null, "restored": true, "signals": 0, "read_bytes": 1, "retained_peak": 0, "chunk_peak": 1, "invalid": false, "producer_written": 1, "producer_requested": 1, "seconds": 0.5664}
+FRAMING {"mode": "partial_eof", "outcome": "stop", "kind": null, "restored": true, "signals": 0, "read_bytes": 5, "retained_peak": 4, "chunk_peak": 5, "invalid": false, "producer_written": 5, "producer_requested": 5, "seconds": 0.4924}
+FRAMING {"mode": "cancel_empty", "outcome": "stop", "kind": null, "restored": true, "signals": 1, "read_bytes": 0, "retained_peak": 0, "chunk_peak": 0, "invalid": false, "producer_written": 0, "producer_requested": 0, "seconds": 0.5726}
+FRAMING {"mode": "cancel_overflow", "outcome": "stop", "kind": null, "restored": true, "signals": 1, "read_bytes": 4092, "retained_peak": 128, "chunk_peak": 256, "invalid": true, "producer_written": 5000, "producer_requested": 5000, "seconds": 0.5017}
+FRAMING {"mode": "repeat_cancel", "outcome": "stop", "kind": null, "restored": true, "signals": 3, "read_bytes": 0, "retained_peak": 0, "chunk_peak": 0, "invalid": false, "producer_written": 0, "producer_requested": 0, "seconds": 0.5795}
+FRAMING {"mode": "first_restore", "outcome": "stop", "kind": null, "restored": true, "signals": 1, "read_bytes": 4, "retained_peak": 3, "chunk_peak": 4, "invalid": false, "producer_written": 4, "producer_requested": 4, "seconds": 0.5668}
+FRAMING {"mode": "first_restore_eof", "outcome": "stop", "kind": null, "restored": true, "signals": 1, "read_bytes": 1, "retained_peak": 0, "chunk_peak": 1, "invalid": false, "producer_written": 1, "producer_requested": 1, "seconds": 0.4912}
+FRAMING {"mode": "restore_fault", "outcome": "error", "kind": "terminal_restore_failed", "restored": false, "signals": 0, "read_bytes": 4, "retained_peak": 3, "chunk_peak": 4, "invalid": false, "producer_written": 4, "producer_requested": 4, "seconds": 0.5384}
+FRAMING {"mode": "restore_fault_stop", "outcome": "error", "kind": "terminal_restore_failed", "restored": false, "signals": 1, "read_bytes": 4, "retained_peak": 3, "chunk_peak": 4, "invalid": false, "producer_written": 4, "producer_requested": 4, "seconds": 0.6716}
+FRAMING {"mode": "flush_fault", "outcome": "error", "kind": "terminal_restore_failed", "restored": false, "signals": 0, "read_bytes": 4, "retained_peak": 3, "chunk_peak": 4, "invalid": false, "producer_written": 4, "producer_requested": 4, "seconds": 0.6281}
+FRAMING {"mode": "two_terminals", "outcome": "value", "kind": null, "restored": true, "signals": 0, "read_bytes": 20, "retained_peak": 19, "chunk_peak": 20, "invalid": false, "producer_written": 20, "producer_requested": 20, "seconds": 0.5403}
+FRAMING {"mode": "istrip", "outcome": "error", "kind": "terminal_mode_unsupported", "restored": true, "signals": 0, "read_bytes": 0, "retained_peak": 0, "chunk_peak": 0, "invalid": false, "producer_written": 0, "producer_requested": 0, "seconds": 0.4959}
+FRAMING {"mode": "no_controlling", "outcome": "error", "kind": "terminal_unavailable", "restored": true, "signals": 0, "producer_written": 0, "producer_requested": 0, "seconds": 0.5699}
+FRAMING {"mode": "stop_acquired", "outcome": "stop", "kind": null, "restored": true, "signals": 1, "read_bytes": 0, "retained_peak": 0, "chunk_peak": 0, "invalid": false, "producer_written": 0, "producer_requested": 4, "seconds": 0.5412}
+FRAMING {"mode": "stop_snapshot", "outcome": "stop", "kind": null, "restored": true, "signals": 1, "read_bytes": 0, "retained_peak": 0, "chunk_peak": 0, "invalid": false, "producer_written": 0, "producer_requested": 4, "seconds": 0.5156}
+FRAMING {"mode": "stop_hidden", "outcome": "stop", "kind": null, "restored": true, "signals": 1, "read_bytes": 0, "retained_peak": 0, "chunk_peak": 0, "invalid": false, "producer_written": 0, "producer_requested": 4, "seconds": 0.5213}
+FRAMING {"mode": "stop_read", "outcome": "stop", "kind": null, "restored": true, "signals": 1, "read_bytes": 4, "retained_peak": 0, "chunk_peak": 4, "invalid": false, "producer_written": 4, "producer_requested": 4, "seconds": 0.5508}
+FRAMING {"mode": "stop_framed", "outcome": "stop", "kind": null, "restored": true, "signals": 1, "read_bytes": 4, "retained_peak": 3, "chunk_peak": 4, "invalid": false, "producer_written": 4, "producer_requested": 4, "seconds": 0.5107}
+FRAMING {"mode": "stop_decoded", "outcome": "stop", "kind": null, "restored": true, "signals": 1, "read_bytes": 4, "retained_peak": 3, "chunk_peak": 4, "invalid": false, "producer_written": 4, "producer_requested": 4, "seconds": 0.5019}
+FRAMING {"mode": "stop_settled", "outcome": "stop", "kind": null, "restored": true, "signals": 1, "read_bytes": 4, "retained_peak": 3, "chunk_peak": 4, "invalid": false, "producer_written": 4, "producer_requested": 4, "seconds": 0.5297}
+FRAMING {"mode": "stop_restore_final", "outcome": "stop", "kind": null, "restored": true, "signals": 1, "read_bytes": 4, "retained_peak": 3, "chunk_peak": 4, "invalid": false, "producer_written": 4, "producer_requested": 4, "seconds": 0.5366}
+FRAMING {"mode": "stop_closed", "outcome": "stop", "kind": null, "restored": true, "signals": 1, "read_bytes": 4, "retained_peak": 3, "chunk_peak": 4, "invalid": false, "producer_written": 4, "producer_requested": 4, "seconds": 0.507}
+RUN handoff_matrix.py
+HANDOFF_CASE {"mode": "plain", "status": 0, "codes": 1, "saved": true, "terminal_restored": true, "settled_values": 2}
+HANDOFF_CASE {"mode": "two_factor", "status": 0, "codes": 1, "saved": true, "terminal_restored": true, "settled_values": 3}
+HANDOFF_CASE {"mode": "overflow_phone", "status": 3, "codes": 0, "saved": false, "terminal_restored": true, "settled_values": 0}
+HANDOFF_CASE {"mode": "overflow_password", "status": 3, "codes": 1, "saved": false, "terminal_restored": true, "settled_values": 2}
+HANDOFF_CASE {"mode": "overflow_retry", "status": 4, "codes": 1, "saved": false, "terminal_restored": true, "settled_values": 3}
+HANDOFF_CASE {"mode": "stop_overflow", "status": 130, "codes": 0, "saved": false, "terminal_restored": true, "settled_values": 0}
+HANDOFF_CASE {"mode": "first_restore_stop", "status": 130, "codes": 0, "saved": false, "terminal_restored": true, "settled_values": 0}
+RUN verify_install.py
+{"result": "PASS", "runtime": "3.11.10", "entry_point": "tgdata.login_cli:main", "isolated_import": true, "console_help": 0, "headless_exit": 2, "native_srp_interruption": true, "native_files_match": {"login_cli.py": "7b003b50d28ce6f5f5d6f530df6b94a6a1226da31f06af1691b80ade3ee1d298", "_terminal_input.py": "35823d748ec0a2f9c2b1a58160c5176cce03287901b9b56beb5682cfa3c86fc2", "login_file.py": "3b526f483d3f0c137ebc45023f2326710781000ec71af090ed83c1b10d001290"}, "network": false, "method": "offline setuptools managed install"}
