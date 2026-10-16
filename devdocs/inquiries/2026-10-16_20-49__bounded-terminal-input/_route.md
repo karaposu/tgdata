@@ -11,14 +11,14 @@ First-seen: 2026-10-16_21-12; last-touched: 2026-10-16_21-12; presence: live.
 
 ## input-02: Bounded credential framing
 Own-depth pointer: none.
-Depth-signal: critique.md.
+Depth-signal: docarchive/critique.md.
 Manifestations: `it records the native size and fragmentation outcomes`; corresponding concept record in `routelister.md`.
 Individuation: own referent and goal-role; narrower manifestations grouped, distinct observation/framing/retirement retained.
 First-seen: 2026-10-16_21-12; last-touched: 2026-10-16_21-12; presence: live.
 
 ## input-03: Invalid-line remainder disposal
 Own-depth pointer: none.
-Depth-signal: innovation.md.
+Depth-signal: docarchive/innovation.md.
 Manifestations: `F2/F3 retain ownership without retaining rejected content`; corresponding concept record in `routelister.md`.
 Individuation: own referent and goal-role; narrower manifestations grouped, distinct observation/framing/retirement retained.
 First-seen: 2026-10-16_21-12; last-touched: 2026-10-16_21-12; presence: live.
@@ -60,28 +60,28 @@ First-seen: 2026-10-16_21-12; last-touched: 2026-10-16_21-12; presence: live.
 
 ## input-09: Future producer boundary
 Own-depth pointer: none.
-Depth-signal: sensemaking.md.
+Depth-signal: docarchive/sensemaking.md.
 Manifestations: `A5 separates queued bytes from later producer activity`; corresponding concept record in `routelister.md`.
 Individuation: own referent and goal-role; narrower manifestations grouped, distinct observation/framing/retirement retained.
 First-seen: 2026-10-16_21-12; last-touched: 2026-10-16_21-12; presence: live.
 
 ## input-10: Prompt deadline semantics
 Own-depth pointer: none.
-Depth-signal: innovation.md.
+Depth-signal: docarchive/innovation.md.
 Manifestations: `C1 preserves the smaller canonical alternative`; corresponding concept record in `routelister.md`.
 Individuation: own referent and goal-role; narrower manifestations grouped, distinct observation/framing/retirement retained.
 First-seen: 2026-10-16_21-12; last-touched: 2026-10-16_21-12; presence: live.
 
 ## input-11: Rich terminal frontend backend
 Own-depth pointer: none.
-Depth-signal: critique.md.
+Depth-signal: docarchive/critique.md.
 Manifestations: `G1 names the actual context that could justify it`; corresponding concept record in `routelister.md`.
 Individuation: own referent and goal-role; narrower manifestations grouped, distinct observation/framing/retirement retained.
 First-seen: 2026-10-16_21-12; last-touched: 2026-10-16_21-12; presence: live.
 
 ## input-12: Native support envelope
 Own-depth pointer: none.
-Depth-signal: critique.md.
+Depth-signal: docarchive/critique.md.
 Manifestations: `scope limits distinguish native premise evidence from general support`; corresponding concept record in `routelister.md`.
 Individuation: own referent and goal-role; narrower manifestations grouped, distinct observation/framing/retirement retained.
 First-seen: 2026-10-16_21-12; last-touched: 2026-10-16_21-12; presence: live.

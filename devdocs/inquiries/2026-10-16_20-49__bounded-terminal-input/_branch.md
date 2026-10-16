@@ -6,7 +6,7 @@ Next: establish input handling that survives oversized pastes, then re-plan
 ```
 
 ## Articulation Reference
-File: articulate_simple.md. Count:1; item:I1; verdict:HIGH-PROCEED; flags:none.
+File: docarchive/articulate_simple.md. Count:1; item:I1; verdict:HIGH-PROCEED; flags:none.
 
 ## Question
 I1 literal: “Next: establish input handling that survives oversized pastes, then

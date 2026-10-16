@@ -45,7 +45,7 @@ Lands: a bounded private input contract.
 WHY: safe login needs exact accepted values and explicit refusals.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
 Guidance Mode: compact.
-- `critique.md` (because it records the native size and fragmentation outcomes).
+- `docarchive/critique.md` (because it records the native size and fragmentation outcomes).
 Meaning-gaps: full consumer/terminal composition — mid — local and selected handoff proof do not establish the complete product interaction.
 Depth-link: none; depth-signal: native evidence present for the identity where cited; no separate depth run.
 
@@ -57,7 +57,7 @@ Lands: rejected tails cannot become credentials.
 WHY: oversized-paste handling needs a settled refusal.
 Priority: HIGH; Confidence: HIGH; Essentiality: core.
 Guidance Mode: compact.
-- `innovation.md` (because F2/F3 retain ownership without retaining rejected content).
+- `docarchive/innovation.md` (because F2/F3 retain ownership without retaining rejected content).
 Depth-link: none; depth-signal: native evidence present for the identity where cited; no separate depth run.
 
 ## 4. Basic input editing
@@ -123,7 +123,7 @@ Lands: a truthful temporal scope.
 WHY: secret-handling guarantees must not promise impossible control.
 Priority: MEDIUM; Confidence: HIGH; Essentiality: core.
 Guidance Mode: compact.
-- `sensemaking.md` (because A5 separates queued bytes from later producer activity).
+- `docarchive/sensemaking.md` (because A5 separates queued bytes from later producer activity).
 Depth-link: none; depth-signal: native evidence present for the identity where cited; no separate depth run.
 
 ## 10. Prompt deadline semantics
@@ -134,7 +134,7 @@ Lands: clear timeout tradeoffs.
 WHY: indirect benefit if operators need explicit input deadlines.
 Priority: LOW; Confidence: HIGH; Essentiality: peripheral.
 Guidance Mode: compact.
-- `innovation.md` (because C1 preserves the smaller canonical alternative).
+- `docarchive/innovation.md` (because C1 preserves the smaller canonical alternative).
 Depth-link: none; depth-signal: native evidence present for the identity where cited; no separate depth run.
 
 ## 11. Rich terminal frontend backend
@@ -145,7 +145,7 @@ Lands: a qualified backend option.
 WHY: indirect value for a future operator interface.
 Priority: LOW; Confidence: HIGH; Essentiality: peripheral.
 Guidance Mode: compact.
-- `critique.md` (because G1 names the actual context that could justify it).
+- `docarchive/critique.md` (because G1 names the actual context that could justify it).
 Depth-link: none; depth-signal: native evidence present for the identity where cited; no separate depth run.
 
 ## 12. Native support envelope
@@ -156,7 +156,7 @@ Lands: evidence that matches claimed support.
 WHY: the replacement plan stays useful without overstating portability.
 Priority: MEDIUM; Confidence: HIGH; Essentiality: supporting.
 Guidance Mode: compact.
-- `critique.md` (because scope limits distinguish native premise evidence from general support).
+- `docarchive/critique.md` (because scope limits distinguish native premise evidence from general support).
 Depth-link: none; depth-signal: native evidence present for the identity where cited; no separate depth run.
 
 ## Excluded
