@@ -10,13 +10,13 @@ A → Su → S → D → I → C → R (always)
 - [x] Decomposition
 - [x] Innovation
 - [x] Critique
-- [ ] Routelister
+- [x] Routelister
 ## Iteration
 1
 ## Status
 ACTIVE
 ## Next Discipline
-Routelister
+CONCLUDE
 ## Relationships
 - CONTINUES FROM: ../../work/50-terminal-account-login/traverse/ (re-test original scope/ownership commitments after two PR rejections)
 ## History
@@ -26,3 +26,4 @@ Routelister
 - 2026-10-16_19-39: Decomposition complete:5 questions,9 interfaces,explicit terminal determination/settlement boundary; manual7/7. No implementation plan. Next Innovation.
 - 2026-10-16_19-46: Innovation complete:all7 mechanisms,15 tested variations,5 meta-pieces with generic/focused/contrarian and shape inversion; two input assemblies remain for adversarial comparison. Manual9/9. Next Critique.
 - 2026-10-16_19-55: Critique complete:7 weighted dimensions,15 variants/helper branch/3 assemblies; explicit private terminal contract survives.22 native boundary cases passed after a child-reaping harness correction, evidence retained. Manual8/8. Next Routelister.
+- 2026-10-16_19-57: Routelister complete:14 concept identities,paired map/index,attributive fields only; manual5/5. Both files stay at inquiry root. Next CONCLUDE.
