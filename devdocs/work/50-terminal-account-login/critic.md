@@ -30,9 +30,10 @@ publisher supplying the desired behavior is non-covering.
 
 ## High-level summary
 
-The bounded file-first approach survives. One Medium correction is needed: make
+The bounded file-first approach survives. Two Medium corrections are needed: make
 the recovery directory's own persistence barrier explicit before replacing the
-old destination. No High or Low findings. No planning blocker is established;
+old destination, and preserve optional own-account cache data without requiring
+an access hash that LoginFlow does not require. No High or Low findings. No planning blocker is established;
 the full combined behavioral premise is still untested and gates product work.
 
 ## Premise Inventory — ranked by waste if false
@@ -178,3 +179,74 @@ planned native bridge uses the SDK schema rather than reimplementing it. All
 arbitrary-store/public-converter/durable-checkpoint expansion remains excluded.
 No need to ask the user for a design decision that current code/probes can settle.
 Proceed to tier selection, then the mandatory experiment before folding/product work.
+
+## Phase 2 supplement — optional own-account entity data
+
+This new evidence was obtained during prebuild preparation, before the combined
+experiment or any product edit. The original Risk1 and its selection are unchanged.
+This is an additional Phase2 finding with initially unticked proposals, followed
+by a separate Phase3 selection; it is not a silent rewrite during tier selection.
+
+## Risk2 — a complete login need not have a separate own-account cache row
+
+**Risk**
+
+A successfully authenticated account can lack optional cached access data. The
+planned conversion could reject that finished login if it assumes the separate
+account cache entry must exist. The user would have entered a valid code but still
+be unable to save a usable session, even though the native reader can identify the
+account from the session's dedicated own-ID marker.
+
+Step2 requires reconstructing the actual-account input-peer row and verifying own
+identity, without specifying optional absence. LoginFlow._observe_user accepts
+a valid User without access_hash. Actual Telethon/StoredSession processing omits
+that user's cache row while _save_states_and_entities preserves row0 with the
+authenticated ID. A real LoginFlow/test41 controlled-source probe, with
+service.user.access_hash=None, returned:
+`step complete account 4242 own-zero (0, 4242) account-row None`.
+Requiring source.get_entity_rows_by_id(account_id) to be present would therefore
+reject an API-supported completed credential.
+
+**Severity:** Medium
+**Category:** Native session compatibility / optional metadata
+**Impact:** needless save failure after successful authentication for a valid
+completed-flow state; encourages repeated login when the problem is local copying.
+**NoobEng:** the authorization key proves the login; the zero-ID cache entry tells
+the reader its own account ID. A separate access-hash cache entry is useful but
+not necessary to restore that login.
+**Affected areas:** planstep2 native candidate transfer/read-back; prebuild and
+step5's source-shape coverage.
+
+### Mitigation — Quick
+Report an unsupported completed credential when its own-account cache row is absent.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
+
+**Note**
+*Why chosen:* —
+*For future:* —
+
+### Mitigation — Robust
+Require the dedicated own-ID0 marker to agree with the completed account and
+preserve it. Copy the separate actual-account input-peer row only if present;
+validate its identity/hash when present and never invent a missing hash. Read-back
+compares optional presence as well as values. Add an actual completed flow with
+missing access_hash, convert it and authenticate an ordinary reader without a
+second code request. Preserve available update state independently.
+**Why this is robust:** matches the existing valid session representation at this
+one conversion boundary and avoids changing the authentication API.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
+
+**Note**
+*Why chosen:* —
+*For future:* —
+
+### Mitigation — Long-term
+Define a general public capability-based session transfer protocol for optional
+entity/cache metadata across every backend.
+**Why this is long term effective:** could serve multiple real transfer consumers,
+but this is the only new converter and ordinary readers already tolerate absence.
+- [ ] selected   - [ ] elegant   - [ ] last_resort
+
+**Note**
+*Why chosen:* —
+*For future:* —
