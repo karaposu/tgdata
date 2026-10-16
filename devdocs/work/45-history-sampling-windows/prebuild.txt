@@ -1,0 +1,11 @@
+PASS shared_parity_and_real_projection
+sparse source: 66 calls 660 slots 599 captured 300 selected
+PASS sparse_busy_days_and_replay
+PASS request_and_slot_bounds
+PASS date_ties_and_unknowns
+PASS owner_and_budget_refuse
+PASS later_failures_keep_capture
+PASS cancellation_and_cleanup
+quota combinations: 6875
+PASS quota_totality
+8 combined prebuild groups PASS; synthetic source, no live Telegram

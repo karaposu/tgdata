@@ -13,6 +13,8 @@ Must precede: step1 and all product edits. The plan already places the experimen
 Disqualifying result: after correcting probe setup only, the actual SDK/projection/owner/allowance/lifetime composition cannot support the specified capture or shared validator without replacing the plan's source/value/lifecycle split.
 Passing result: one combined run passes activity structural parity, decoded ordinary/service/photo/document projection, day seeks/ties/busy-empty allocation and finite calls, raw/selection/replay math, owner/quota/heartbeat and partial failure/cancellation outcomes. Source packets alone and arithmetic-only models are non-covering for SDK composition and never establish live visibility.
 
+Result: PASS — eight combined real-component groups passed on the first run, including66 calls/660 slots/599 captured/300 selected and6875 quota cases; 2026-10-16T08:12:16Z. Synthetic source packets, no live Telegram.
+
 ## High-level summary
 The contract and implementation shape survive. Two Medium details need focused correction: avoid wasting the first page on empty-day history when another request round is affordable; bound the exact water-filling level domain. No High or Low finding. No external planning blocker. Optional live qualification remains unavailable and is not mislabeled as passed.
 

@@ -2,7 +2,9 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# #45 implementation plan — revision 1
+# #45 implementation plan — revision 2
+
+**Critic folded:** 2026-10-16T08:12:16Z —2 robust mitigations,3 steps changed(2,3,5),0 added. Combined prebuild PASS before every product step.
 
 ### What is the task
 Provide bounded history content distributed across UTC days and reproducible local raw-message selection. The caller retains a portable capture, chooses explicit eligible IDs and obtains a smaller sample with honest source/omission evidence. Preserve existing activity/batch/progress/account contracts. Basis: desc.md and concluded traverse/finding.md, dev77f2f53, Telethon1.45.0.
@@ -57,6 +59,8 @@ Expose capture_id, account_id/group/window, messages (detached flattened raw rec
 
 Selection accepts plain integer size0..10000; eligible_ids is None or a concrete list/tuple/set/frozenset of canonical decimal-string or plain positive int32 message IDs, bounded by10000 input occurrences. Normalize duplicates/order into a numeric-sorted set; reject unknown/service IDs. None means every ordinary captured message; empty means none. No predicate callback parameter. Caller predicate failures occur before sample() and cannot alter capture or source health.
 
+[folded: Risk 2, robust] Handle target0 and full selection directly. For partial selection restrict the integer search level to [0,max(day_capacity)] and use terminating integer binary search; there is no unbounded largest-level search.
+
 Build eligible per-day lists in ascending date/id order. Target=min(size,total eligible). Allocate equally via water filling: find the largest integer level L with sum(min(day_capacity,L))<=target, then add one to an evenly spaced subset of days with remaining capacity for the residual. This redistributes sparse-day capacity without a days×messages loop. Even-index helper: k0 empty; k1 floor((n-1)/2); k>=2 indices floor(j*(n-1)/(k-1)), j0..k-1. Use the same helper to choose remainder days and within-day message ranks. Output chronological date/id order. Algorithm=`utc-day-even-rank/v1`, sampling_unit=`raw_message`; no randomness/seed or representativeness claim.
 
 Sample envelope retains schema/version/sample_id, algorithm/unit, capture_id, account/target/group/window, source summary and per-day source/selection metadata, policy {size,eligible_ids}, selected raw records and selected-album metadata. Metadata includes captured ordinary/service counts, eligibility exclusions, eligible/selected/omitted counts and unvisited/incomplete source facts. For each selected grouped_id report all captured ordinary member IDs, selected IDs and omitted captured IDs; membership remains unconfirmed. No photo-trail inference or whole-album promise. Hash the entire canonical sample excluding sample_id; no selection-time clock in the payload, so identical retained input/policy gives identical bytes/hash. Avoid duplicating unselected bodies in sample output.
@@ -72,6 +76,8 @@ canonical JSON/digests, raw v1 records, UTC partitions, raw/album unit semantics
 ## Step 3 — bounded day-distributed capture
 ### Proposed changes
 New `tgdata/history_capture.py` uses shared page validation, `_HistoryWindow`, `_resolve` and batch_engine._record/_validate_record. After resolution refuse unsupported/minimal/invite-only peers; validate capture metadata before the first history call. Create every UTC day intersection. Mutable internal bucket state also tracks last ID/date for pagination; these live continuation details are not resumable receipts in the saved value.
+
+[folded: Risk 1, robust] On a bucket's first visit, request1 slot when remaining_requests exceeds remaining planned visits in that round, preserving room for a depth pass. With no spare request opportunity, retain the fair bounded page size. All later visits use the fair rule. Empty buckets then consume one boundary witness where another pass is affordable.
 
 Each round takes unresolved buckets in chronological order. Let k=min(number active,remaining message slots,remaining logical requests); choose evenly spaced k active bucket indices when a whole round cannot fit. Give each chosen bucket one page. Request limit=min(100,max(1,remaining_slots//remaining_visits_in_this_round)). Recalculate remaining slots after each accepted page; quiet/empty days free capacity for later visits/rounds. Before each call increment that bucket's logical attempt count; never exceed max_requests. Source slots count all rows in accepted pages, including services, placeholders and out-of-day boundary rows. A refused/failed/invalid current page stops the operation; its attempted work may be charged but does not join accepted observation counts.
 
@@ -103,6 +109,8 @@ expected owner, existing health attribution, proxy/device/session policy, tempor
 
 ## Step 5 — tests and public documentation
 ### Proposed changes
+[folded: Risk 1 and Risk 2, robust] Add the60-day sparse-history case (59 empty requested days plus599 messages on one day), requiring599 captured/300 selected within100 calls and fewer than1000 returned slots; cover no-spare-request and tiny-cap branches. Exercise empty/all-zero/full/partial quota populations with conservation/capacity/deterministic remainder assertions.
+
 Add `tgdata/smoke_tests/test_47_history_sampling.py` on real SDK/TL/SQLite fixtures34/46, with sockets/login forbidden. Include source-side offset models with per-day datasets and separate expected selections, not only supplied desired outputs. Cover599/300 endpoints, one busy day among quiet days, sparse quota redistribution, sample size0/less-than-days, exact/fractional/UTC-offset bounds/ties, empty requests, explicit caps, MessageEmpty, malformed/duplicate/wrong-day data, metadata refusal, raw services/albums and omission reports, full text preservation and detached immutability.
 
 Replay: capture JSON round trip; repeated/reordered/duplicate eligibility yields identical sample; no source request during selection/load; reject duplicate JSON keys/nonfinite/unknown keys/wrong hash/rehash of inconsistent evidence, changed window partition, impossible counts, conflicting IDs, unknown/service eligibility and oversized input. Source budget refusal/storage failure/auth change and source/local failures preserve prior captured days; cancellation while a later day waits and repeated cleanup cancellation remain cancellation. Callback failure stays isolated. Activity's existing tests46 and full public value outputs stay compatible after shared extraction.
