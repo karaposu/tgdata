@@ -1,20 +1,20 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
-# #50 implementation plan — revision 7
+# #50 implementation plan — revision 8
 
-**Status:** replacement plan; fresh critic-d review and full combined prebuild pending.
-No Critic folded marker or implementation clearance. Revision6 remains deprecated;
+**Critic folded:** 2026-10-16T21:33:21.243305+03:00 — 1 robust mitigation (2 implementation steps changed, 0 added).
+**Status:** fresh critique REORDER; full combined prebuild PENDING. Fold alone is not implementation clearance. Revision6 remains deprecated;
 its failed critique is critic_r6_prebuild.md. The prior selected plan critique is
-critic_r5.md. Neither is a critique of this plan.
+critic_r5.md. The new critic.md reviews revision7 at15e922d; revision7 is preserved in step_by_step_impl_plan_r7.md.
 
 Inputs: desc.md79c7327, bounded-input finding e2f5ab6 and native evidence ffa0887,
 terminal-ownership finding47d3c99, both rejected PR reviews, actual code and failed
 prebuild-r6. Two PR gate rejections exist; the later failed plan experiment is not
 a third PR review. The required upstream returns are complete; no PARKED description.
 Same warmed session, no subagent; dev77f2f53 and product-only PR51 head34907d4 remain
-unchanged. Current-turn model/effort cannot be verified; unknown is not §9 clearance.
+unchanged. Current-thread2026-10-16T18:27:16.814Z verifies gpt-6-astra/xhigh; see model-verification-r8.md.
 
 ### What is the task
 
@@ -23,7 +23,7 @@ LoginFlow and native session publication. Input must be observed and framed whil
 arriving, so oversized pastes are refused without truncated credentials or a lost
 line delimiter. One private owner keeps the terminal hidden through invalid-line
 disposal and restores exact settings before any value reaches authentication.
-This pass writes the replacement plan only; steps below describe later work.
+This pass reviews/folds and runs the full prebuild only; product implementation remains a later phase.
 
 ### Huge Hard Blockers
 
@@ -48,8 +48,8 @@ This establishes the contract, not the complete next candidate or all platforms.
   implementation agent after fresh plan critique/fold. **Blocks:** step3 and all
   product edits. **Status:** OPEN; reachable work, not an inaccessible planning gap.
 - **What must happen:** current-turn §9 model/effort verification. **Who:** session
-  UI/metadata owner. **Blocks:** final review/merge clearance in step5; no compliant
-  current stamp is claimed. **Status:** OPEN; earlier Astra/xhigh proof is historical.
+  UI/metadata owner. **Blocks:** final review/merge clearance in step5. **Status:** DONE for this turn;
+  matching active-thread metadata is recorded in model-verification-r8.md.
 - **What must happen:** explicitly authorized exclusive account for supplemental
   live delivery/real-account2FA. **Who:** maintainer. **Blocks:** optional live part
   of step5 only. **Status:** OPEN; no live login is authorized here.
@@ -151,7 +151,10 @@ One full runner must cover all of the following, not just isolated successes:
    or disabled/overlapping bindings. Refuse before source work and before the first
    mode mutation. Background test cleanup belongs to its foreground fixture owner;
    the harness must not trigger job-control suspension by restoring from background.
-6. Input retirement failures and admission races: apply failure before/after effect;
+6. [folded: R1, robust] Use actual quit/suspend/interrupt bytes at the protected
+   intermediate canonical stage, before final original-mode restoration. No quit/
+   suspend signal is re-enabled while the owner still owes hidden-mode settlement.
+   Input retirement failures and admission races: apply failure before/after effect;
    stop before mutation; pre-prompt flush; invalid-line discard; both canonical/echo
    restoration stages; all flush/readback/close/output failures. Final restoration
    is attempted even if earlier cleanup fails. No unsupported-profile refusal should
@@ -230,8 +233,11 @@ cancellable. No new overall human prompt timeout is introduced. Discard bytes al
 read after the first delimiter; queued typeahead is discarded during retirement.
 
 **Retirement and errors.** On every potentially mutated path, discard queued input
-while hidden; restore canonical processing with echo still disabled; flush its pending
-input state; then attempt full original settings regardless of earlier cleanup error.
+while hidden; [folded: R1, robust] derive the intermediate state from the ACTIVE
+protected profile, changing only ICANON to its original setting. Keep echo off,
+VQUIT/VSUSP disabled, IEXTEN off and software-flow processing off. Flush the canonical
+transition, then attempt the full original settings regardless of earlier cleanup
+error. Only that final write restores original control bindings and echo together.
 This settles the observed Darwin PENDIN transition without ignoring the bit or waiting
 for output drain. Read back exact original attributes. Attempt owned-fd close once;
 an uncertain close is not retried against a potentially reused descriptor. Flush,

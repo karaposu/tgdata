@@ -1,6 +1,6 @@
 ---
-model: unknown
-effort: unknown
+model: gpt-6-astra
+effort: xhigh
 ---
 # #50 — Terminal account login
 
@@ -15,8 +15,8 @@ and full combined prebuild remain pending. The inquiry prototype is not product 
 SDK/SRP, session conversion, native publisher, reader, command lifecycle and full
 prior test/review contracts retained; terminal/runtime/queue behavior refreshed with
 primary source and native evidence. Feature-heavy triage77c1e85 still applies.
-No AGENTS.md/PROJECT_SPECIFICS.md. Current-turn model/effort is unavailable; earlier
-Astra/xhigh evidence does not verify this turn. §9 confirmation remains pending.
+No AGENTS.md/PROJECT_SPECIFICS.md. Current-thread2026-10-16T18:27:16.814Z verifies gpt-6-astra/xhigh;
+model-verification-r8.md records the recovered active-thread trace and prior contexts.
 
 ## Problem Statement
 
@@ -128,4 +128,4 @@ Historical failure remains in critic_r6_prebuild.md and prebuild-r6/.
 No open planning blocker identified. Complete production composition remains an
 execution/qualification gate before product changes, not an assumed pass. Live
 source delivery/real-account2FA requires an authorized exclusive setup; native3.7
-runtime and current-turn §9 metadata verification remain unavailable/pending.
+runtime remains unavailable. Current-turn §9 verification is resolved by the matching trace.

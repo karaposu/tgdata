@@ -159,9 +159,9 @@ Test actual quit/suspend/interrupt bytes at the intermediate native boundary and
 persistent failures of each restore/flush phase, including final-restore attempts.
 **Why this is robust:** closes the lifetime gap within its existing owner and applies
 to every command prompt without adding process-level signal policies.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 **Note**
-*Why chosen:* —
+*Why chosen:* This is one private terminal owner serving the existing prompts; no second independent interactive consumer justifies a shared backend. Preserving the protected profile closes the actual native gap with the smallest extent. No external pressure or last-resort choice.
 *For future:* —
 
 ### Mitigation — Long-term
@@ -191,4 +191,7 @@ qualification OPEN only for those claims. §9 is now DONE with current-thread ev
 No merge/release/deployment or product implementation is authorized by this review.
 
 ## Phase 3
-Pending selection; the three Phase2 proposal boxes are intentionally empty.
+Completed after Phase2 commit81598e2. Robust selected + elegant; no last_resort.
+No genuine second backend consumer exists. Worker JSON input has a different contract,
+so generalization would manufacture coupling. Quick changes unrelated process signal
+policy; long-term extent is unjustified. Only proposal boxes/notes changed in Phase3.
