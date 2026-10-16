@@ -137,11 +137,23 @@ After an uncertain source reply, the command offers one explicit authorization
 check that sends no code. It may discover the completed login or return to an
 eligible input step. It never replays the previous code/password automatically.
 
-EOF and Ctrl-C stop the command. During an asynchronous login action, the command
-cancels and drains that action, including its owned cleanup; repeated Ctrl-C does
-not skip the drain. Failed cleanup is reported safely and may prevent publication.
-There is no bounded disconnect timeout. No socket is held while waiting for the
-next input after a settled step.
+EOF and Ctrl-C request a stop for the whole command. At an input prompt, Ctrl-C
+unwinds the input and restores the terminal settings; another Ctrl-C does not
+interrupt that restoration. During authentication, it requests cancellation of the
+active action once and waits for its owned cleanup. Native password computation
+may need to finish before cancellation is observed. Repeated Ctrl-C does not skip
+cleanup or start another cancellation of the cleanup itself.
+
+An in-flight authentication request may already have reached Telegram before the
+stop is observed. The command preserves known or uncertain authorization state,
+but starts no next prompt, login action, authorization check or save after stopping.
+There is no automatic recovery of that in-memory login conversation.
+
+Cleanup remains eligible after a stop, and failed cleanup is reported safely.
+The exit code is chosen after finalization, so a late Ctrl-C still yields130 while
+an already saved or uncertain session keeps its reported publication outcome.
+There is no bounded computation, filesystem or disconnect timeout. No socket is
+held while waiting for the next input after a settled step.
 
 | Exit | Meaning |
 |---|---|
