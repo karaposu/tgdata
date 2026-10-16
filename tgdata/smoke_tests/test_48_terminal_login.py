@@ -35,8 +35,10 @@ from tgdata.smoke_tests import test_41_stepwise_login as fx
 
 from tgdata import login_file as publication
 from tgdata import login_cli as cli
+from tgdata import _terminal_input as terminal_input
+
+
 ORIGINAL_INPUT=builtins.input
-ORIGINAL_GETPASS=cli.getpass.getpass
 
 
 class Terminal(io.StringIO):
@@ -63,14 +65,14 @@ def fixture(*,two_factor=False,existing=False,no_hash=False):
 def invoke(config,values=(),confirmations=(),replace=False,tty=True):
     entered=iter(values);accepted=iter(confirmations)
     output=io.StringIO()
-    def hidden(prompt):
+    def hidden(prompt, **kwargs):
         try:return next(entered)
         except StopIteration:raise AssertionError('unexpected input '+prompt)
-    def confirm(prompt,expected='yes'):
+    def confirm(prompt,expected='yes', **kwargs):
         try:return next(accepted)
         except StopIteration:raise AssertionError('unexpected confirmation '+prompt)
     stream=Terminal() if tty else io.StringIO()
-    with patch.object(sys,'stdin',stream),patch.object(cli,'_hidden',hidden), \
+    with patch.object(cli,'terminal_preflight'),patch.object(sys,'stdin',stream),patch.object(cli,'_hidden',hidden), \
          patch.object(cli,'_confirm',confirm),redirect_stdout(output),redirect_stderr(output):
         status=cli.main(['--config',config]+(['--replace'] if replace else []))
     return status,output.getvalue()
@@ -272,11 +274,7 @@ def test_output_failure_does_not_reverse_saved_state():
         reopen(config,s)
 
 
-def test_no_echo_fallback_and_redacted_arguments():
-    with warnings_context(),patch.object(cli.getpass,'_raw_input',side_effect=AssertionError('echo input')):
-        try:cli.getpass.fallback_getpass('secret')
-        except cli.getpass.GetPassWarning:pass
-        else:raise AssertionError('echo fallback allowed')
+def test_redacted_arguments():
     output=io.StringIO()
     with redirect_stdout(output),redirect_stderr(output):
         try:cli.main(['--password',fx.PASSWORD])
@@ -349,13 +347,6 @@ def test_module_entry_help_and_headless_refusal():
         assert not list(Path(directory).iterdir())
 
 
-@contextmanager
-def warnings_context():
-    import warnings
-    with warnings.catch_warnings():
-        warnings.simplefilter('error',cli.getpass.GetPassWarning)
-        yield
-
 
 def test_real_flow_cleanup_retry_and_secret_logs():
     output=io.StringIO();handler=logging.StreamHandler(output);rootlog=logging.getLogger()
@@ -399,7 +390,7 @@ def child(scenario):
             result=prepare(*args)
             if scenario=='before_publish':os.kill(os.getpid(),signal.SIGINT)
             return result
-        with patch('builtins.input',ORIGINAL_INPUT),patch.object(cli.getpass,'getpass',ORIGINAL_GETPASS), \
+        with patch('builtins.input',ORIGINAL_INPUT), \
              patch.object(publication.os,'link',interrupted_link), \
              patch.object(publication,'_prepare_candidate',interrupted_prepare):
             status=cli.main(['--config',config]+(['--replace'] if scenario=='replace' else []))
@@ -644,30 +635,29 @@ def phase_child(scenario,release):
         stack=__import__('contextlib').ExitStack();timers=[];active=[False];repeated=[False];retirement=[0]
         # Use actual inputs, restoring the fixture's deliberate no-console guard.
         stack.enter_context(patch('builtins.input',ORIGINAL_INPUT))
-        stack.enter_context(patch.object(cli.getpass,'getpass',ORIGINAL_GETPASS))
-        if scenario.endswith('_repeat') and not scenario.startswith(('replace_','retry_')):
+        if scenario.endswith('_repeat'):
             tcsetattr=termios.tcsetattr
+            armed=[False]
             def restoring(fd,when,attrs):
-                if attrs[3]&termios.ECHO and not repeated[0]:
+                if armed[0] and attrs[3]&termios.ECHO and not repeated[0]:
                     repeated[0]=True;print('SIGNAL_DURING_INPUT_RESTORE',flush=True)
                     os.kill(os.getpid(),signal.SIGINT)
                 return tcsetattr(fd,when,attrs)
-            # Only arm repeated signal at the selected prompt, below.
-            hidden=cli._hidden
-            def selected_input(prompt):
-                selected=(scenario.startswith('phone_') and prompt.startswith('Phone')) or (scenario.startswith('code_') and prompt.startswith('Telegram code')) or (scenario.startswith('password_') and prompt.startswith('Two-factor'))
-                if selected:
-                    with patch.object(termios,'tcsetattr',restoring):return hidden(prompt)
-                return hidden(prompt)
+            stack.enter_context(patch.object(termios,'tcsetattr',restoring))
+            hidden=cli._hidden;confirm=cli._confirm
+            def selected(prompt):
+                return ((scenario.startswith('phone_') and prompt.startswith('Phone')) or
+                        (scenario.startswith('code_') and prompt.startswith('Telegram code')) or
+                        (scenario.startswith('password_') and prompt.startswith('Two-factor')) or
+                        (scenario.startswith('replace_') and 'Type REPLACE' in prompt) or
+                        (scenario.startswith('retry_') and 'Retry saving' in prompt))
+            def selected_input(prompt,**kwargs):
+                armed[0]=selected(prompt)
+                return hidden(prompt,**kwargs)
+            def confirmation(prompt,expected='yes',**kwargs):
+                armed[0]=selected(prompt)
+                return confirm(prompt,expected,**kwargs)
             stack.enter_context(patch.object(cli,'_hidden',selected_input))
-        if scenario.startswith(('replace_','retry_')) and scenario.endswith('_repeat'):
-            confirm=cli._confirm
-            def confirmation(prompt,expected='yes'):
-                selected=('Retry saving' in prompt) if scenario.startswith('retry_') else ('Type REPLACE' in prompt)
-                try:return confirm(prompt,expected)
-                except KeyboardInterrupt:
-                    if selected:repeated[0]=True;os.kill(os.getpid(),signal.SIGINT)
-                    raise
             stack.enter_context(patch.object(cli,'_confirm',confirmation))
         if scenario.startswith('retry_'):
             stack.enter_context(patch.object(publication,'_prepare_candidate',side_effect=OSError('synthetic local failure')))
@@ -791,6 +781,7 @@ def test_real_phase_terminal_matrix():
                      'connect_stop','cleanup_hold','auth_cleanup_hold','explicit_retire_hold','final_retire_hold'):
         phase_terminal_case(scenario)
 
+
 def test_review_source_and_storage_histories():
  from datetime import datetime, timezone
  from types import SimpleNamespace
@@ -879,7 +870,7 @@ def test_review_source_and_storage_histories():
    if count[0]==1:raise OSError(t.fx.PASSWORD)
    return prepare(*args)
   confirmations=[0]
-  def confirm(prompt,expected='yes'):
+  def confirm(prompt,expected='yes', **kwargs):
    confirmations[0]+=1
    if confirmations[0]==2:target.write_bytes(b'new independent destination')
    return True
@@ -939,6 +930,30 @@ def test_review_source_and_storage_histories():
     for wire in s.wires:
      if wire.up:await wire.disconnect()
    asyncio.run(cleanup())
+
+
+
+
+def _native_matrix(module, prefixes, expected):
+    result = subprocess.run(
+        [sys.executable, '-m', 'tgdata.smoke_tests.' + module],
+        cwd=ROOT, env=dict(os.environ, PYTHONPATH=str(ROOT), PYTHONDONTWRITEBYTECODE='1'),
+        capture_output=True, text=True, timeout=180)
+    print(result.stdout, end='', flush=True)
+    assert result.returncode == 0, result.stderr
+    assert sum(line.startswith(prefixes) for line in result.stdout.splitlines()) == expected
+
+
+def test_native_terminal_profiles_and_controls():
+    _native_matrix('_terminal_login_modes', ('OWNED_TERMINAL ', 'PROFILE_CONTROL '), 70)
+
+
+def test_native_input_framing():
+    _native_matrix('_terminal_login_framing', ('FRAMING ',), 46)
+
+
+def test_native_input_source_file_handoffs():
+    _native_matrix('_terminal_login_handoffs', ('HANDOFF_CASE ',), 7)
 
 
 def main():

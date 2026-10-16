@@ -49,6 +49,39 @@ the existing codec and native session APIs. It preserves the authorization key,
 data centre, own-account ID marker, available own-account cache row and update
 states. Optional absence of an access hash does not make a completed login invalid.
 
+## Entering values
+
+Every prompt, including confirmations, accepts at most **128 UTF-8 bytes**. This is
+128 ASCII characters, or fewer characters when their encoding uses several bytes.
+Supply one value at a time after its prompt: input queued before a prompt and extra
+lines already queued after an answer are discarded.
+
+The command requires a foreground interactive POSIX terminal in its ordinary
+canonical, 8-bit input mode, with Ctrl-C configured as interrupt. Unsupported modes
+or control bindings are refused before login starts and checked again at each
+prompt. Run it directly from the terminal's main thread, outside an existing
+Python event loop.
+
+Input is hidden, including `REPLACE` and save-retry answers. The terminal's
+configured erase key removes one Unicode scalar, which can be only part of a
+combined visible character; its clear-line key clears the current value. Enter
+finishes the value. The configured EOF key (usually Ctrl-D) stops the command,
+including when a partial value has been typed. Ctrl-C requests a stop.
+
+Cursor keys, history, literal-next, software flow controls, quit and suspend keys
+are not supported for entering a value. An oversized line or unsupported input
+control is rejected and remains rejected: erase or clear cannot make its remaining
+suffix into an answer. The command keeps the line hidden and discards it until
+Enter, EOF or Ctrl-C. There is no overall timeout while waiting for your input.
+Malformed UTF-8 also refuses the value; input is never silently shortened or
+normalized. A local input refusal ends this command, so restart it deliberately.
+
+A value reaches login or saving only after terminal settings are restored. If
+restoration or resource cleanup fails, the command reports that failure and releases
+no value. It cannot guarantee repair after an operating-system failure or control
+input written after it has exited. Use the [LoginFlow API](stepwise_login.md) for
+applications needing different input handling or longer values.
+
 ## Destination rules
 
 `--config` defaults to `config.ini`. Session naming matches the reader: an explicit
@@ -128,7 +161,8 @@ SIGKILL, machine failure or arbitrary concurrent writers.
 
 ## Invalid input, waits and interruption
 
-Invalid phone/code/password input can be corrected at the same eligible step.
+Phone/code/password values rejected by the login API can be corrected at the same
+eligible step. Local terminal framing or cleanup failures instead end the command.
 The command does not resend codes automatically. Waits report the remaining delay
 and stop. Expired/restart-required, unsupported and additional password-setup
 responses stop explicitly rather than being silently treated as a saved login.
@@ -138,8 +172,8 @@ check that sends no code. It may discover the completed login or return to an
 eligible input step. It never replays the previous code/password automatically.
 
 EOF and Ctrl-C request a stop for the whole command. At an input prompt, Ctrl-C
-unwinds the input and restores the terminal settings; another Ctrl-C does not
-interrupt that restoration. During authentication, it requests cancellation of the
+records the stop while the input owner discards pending input and restores the
+terminal settings; another Ctrl-C does not interrupt that restoration. During authentication, it requests cancellation of the
 active action once and waits for its owned cleanup. Native password computation
 may need to finish before cancellation is observed. Repeated Ctrl-C does not skip
 cleanup or start another cancellation of the cleanup itself.
@@ -159,10 +193,10 @@ held while waiting for the next input after a settled step.
 |---|---|
 | 0 | Session publication is confirmed. Cleanup/output warnings do not undo it. |
 | 2 | Usage, configuration, terminal or destination preflight refusal; no login started. |
-| 3 | Login stopped: wait, unsupported/restart state, source failure or unsettled cleanup. |
-| 4 | Local preparation/save failed without publication, or a target conflict refused. |
+| 3 | Login stopped: wait, unsupported/restart state, source failure, local input failure or unsettled cleanup. |
+| 4 | Local preparation/save or its confirmation input failed without publication, or a target conflict refused. |
 | 5 | Publication outcome is uncertain; inspect destination and retained recovery files. |
-| 130 | Operator interrupted or declined replacement. The reported publication state still matters: a file may already have been saved, or publication may be uncertain. |
+| 130 | Operator interrupted, supplied EOF or declined replacement. The reported publication state still matters: a file may already have been saved, or publication may be uncertain. |
 
 The command retains save-retry state only in memory. It does not write LoginFlow
 checkpoints or automatically resume a killed process. Applications needing custom
