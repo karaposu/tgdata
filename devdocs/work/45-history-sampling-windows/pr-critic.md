@@ -189,8 +189,13 @@ media download, broad engine rewrite, source retry or logging of content is adde
 
 ## Phase 3 notes
 
-Pending. No High/Medium proposals require tier selection. The Low's disposition
-will be recorded separately after this Phase2 artifact commits.
+Completed after Phase2 commit b874f7b. No High/Medium proposals require tier
+selection. Low1 is consciously left for a focused validation follow-up: it requires
+externally reconstructed data with a matching new digest, does not affect native
+capture/selection, and the hash does not claim source authentication. Its small
+local lower-bound check is recorded above; a broader validation framework has no
+demonstrated additional consumer or justified reach. No product patch is folded
+into this review and no unselected Medium/High mitigation is left ambiguous.
 
 ## Merge boundary
 
