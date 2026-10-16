@@ -1,0 +1,11 @@
+{
+  "passed": 11,
+  "failed": 3,
+  "candidate_sha256": {
+    "candidate_login_cli.py": "860dedd62bef5b3e13134245f05f6b7d198ebd4321489287dc63b9cc3a467c1f",
+    "candidate_login_file.py": "3b526f483d3f0c137ebc45023f2326710781000ec71af090ed83c1b10d001290"
+  },
+  "runtime": "3.11.10",
+  "telethon": "1.45.0",
+  "live": false
+}

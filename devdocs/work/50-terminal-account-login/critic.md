@@ -28,6 +28,11 @@ source effects counted, old/new bytes checked, safe outcome/exit assertions, no
 secret output and no live sockets. An isolated conversion test or a fake flow/
 publisher supplying the desired behavior is non-covering.
 
+Result: PASS — 14 combined groups, including8 actual PTY scenarios, passed with
+unchanged candidate hashes after one fixture-only macOS path normalization; 2026-10-16T10:25:23Z.
+Actual LoginFlow/native SQLite/ordinary reader/SRP, source effects, file barriers,
+old-byte retention and first/repeated/deferred SIGINT exercised. No live source.
+
 ## High-level summary
 
 The bounded file-first approach survives. Two Medium corrections are needed: make

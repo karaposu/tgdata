@@ -2,7 +2,10 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# #50 implementation plan — revision 1
+# #50 implementation plan — revision 2
+
+**Critic folded:** 2026-10-16T10:25:23Z —2 robust mitigations,3 steps changed(1,2,5),0 added.
+Combined prebuild PASS before product work:14 groups including8 actual PTY cases.
 
 ### What is the task
 
@@ -104,6 +107,12 @@ no-clobber creation even when --replace was supplied.
 Create staging under the destination's parent with mode0700. Candidate/backup
 names contain no secret input. Establish actual write/link/directory-sync support
 using owned empty probe files before requesting a code, then remove those probes.
+[folded: Risk1, robust] Sync the destination parent immediately after creating the
+private directory, before authentication/publication, so its recovery name is part
+of the persistence ordering. Before replacing, sync the prior file's bytes through
+the verified backup, then sync the private directory containing that link. Only
+after these barriers may replacement be attempted. The post-replace parent sync
+remains the success barrier. Failure of a prior barrier cannot proceed to replace.
 All operations stay on the same filesystem. A parent identity change or stale
 destination snapshot refuses later publication; such checks are detection, not
 proof that external readers are idle. The operator owns stopping all readers.
@@ -150,6 +159,10 @@ Create a new candidate file with exclusive creation and mode0600 inside the priv
 directory. Instantiate SQLiteSession on that path, use native set_dc/auth_key/
 takeout_id and set_update_state methods. Reconstruct the own-ID0 marker and actual
 account's input-peer row through process_entities on a list of TL input peers.
+[folded: Risk2, robust] The own-ID0 marker must match completion. The separate
+actual-account row is optional: copy/validate it only when present, never invent
+a missing access hash, and compare optional presence during read-back. A completed
+LoginFlow without access_hash must still yield a reusable native reader session.
 This isolated flow holds own identity, not an arbitrary reader's full group cache;
 do not advertise generic session conversion. Preserve available update states.
 
@@ -299,6 +312,11 @@ only helper call order. No test expectation weakening.
 Add smoke README entry. Check an isolated built/installed package entry point
 using existing offline build dependencies, never install into the user's active
 environment or contact PyPI. Assert imported path is the isolated installation.
+
+[folded: Risk1 and Risk2, robust] Trace and fault every pre-replacement persistence
+barrier and retain old bytes on refusal; test missing access_hash through actual
+LoginFlow, native candidate and ordinary reader. Do not present syscall-order
+fault tests as physical power-loss qualification.
 
 ### Output
 Permanent CLI/persistence/lifecycle regression and installation evidence.
