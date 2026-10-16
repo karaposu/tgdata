@@ -47,7 +47,7 @@ rewrites. No cognitive framework/spec redefinition; Layer Commitment not applica
 ## Synthesis Trigger
 - ../2026-10-16_19-25__terminal-login-ownership/finding.md: explicit terminal owner,
   nonthrowing stop, retained LoginFlow/native publication, full composition gate.
-- ../../work/50-terminal-account-login/critic.md: canonical input overflow disproves
+- ../../work/50-terminal-account-login/critic_r6_prebuild.md (read as critic.md at2317623): canonical input overflow disproves
   post-read limit as complete refusal; full prebuild fails and plan is deprecated.
 - ../../work/50-terminal-account-login/critic_r5.md: input transformations must not
   silently alter credentials; actual ISTRIP witness and selected refusal.

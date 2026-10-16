@@ -84,3 +84,7 @@ without silently expanding portability. No new mechanism selected by this pass.
 item omitted. Nine operational and three identity failure modes checked; no
 interpretation/selection/content copied into thin inventory. Manual8/8 structure.
 Verdict: FLAG only for current full-standard retrieval; bounded runtime inquiry can proceed.
+
+Historical-path note: work/50-terminal-account-login/critic.md was read at2317623;
+it is now preserved as critic_r6_prebuild.md. The trace retains its observed path
+and mtime; the archive name resolves that same source for a new reader.
