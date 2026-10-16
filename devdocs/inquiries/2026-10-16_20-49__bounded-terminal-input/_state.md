@@ -8,7 +8,7 @@ A → Su → S → D → I → C → R (always)
 - [x] Surfacing
 - [x] Sensemaking
 - [x] Decomposition
-- [ ] Innovation
+- [x] Innovation
 - [ ] Critique
 - [ ] Routelister
 ## Iteration
@@ -16,7 +16,7 @@ A → Su → S → D → I → C → R (always)
 ## Status
 ACTIVE
 ## Next Discipline
-Innovation
+Critique
 ## Relationships
 - CONTINUES FROM: ../2026-10-16_19-25__terminal-login-ownership/ (qualify input framing after failed full prebuild)
 ## History
@@ -24,3 +24,4 @@ Innovation
 - 2026-10-16_20-51: Surfacing complete;18 items/3 cycles,15 mtimes/3 unavailable; native source frontier explicit. Manual8/8 (checker absent). Next Sensemaking.
 - 2026-10-16_20-54: Sensemaking complete;SV1–SV6,7 ambiguity pairs,native delivery/backpressure/future-flush observations; manual8/8. Next Decomposition.
 - 2026-10-16_20-55: Decomposition complete;4 questions/8 interfaces; runtime determination and temporal assumptions explicit. Manual7/7. Next Innovation.
+- 2026-10-16_20-59: Innovation complete;7 mechanisms,13 tested variations,4 meta-pieces with explicit inversions; bounded streaming assembly and conditional reserves. Manual9/9. Next Critique.
