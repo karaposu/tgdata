@@ -99,9 +99,10 @@ generic converter/supervisor, durable CLI resume, reader rotation, signup, QR/we
 login, background auto-login, proxy exit-IP check or ScrapeOps migration/deployment.
 Applications with different input/storage needs retain the existing Python APIs.
 
-This pass establishes the contract and replacement plan only. No product edits,
-merge, release, dependency/version change or real Telegram login. Later full
-candidate qualification remains mandatory before implementation.
+The description/traverse pass established the contract before product edits. Its
+required full prebuild subsequently passed at b0caa03; the user then authorized
+implementation, now verified in6820446. No merge, release, dependency/version
+change or real Telegram login is included.
 
 ## Priority Level
 

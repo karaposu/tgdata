@@ -2,108 +2,123 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# #50 renewed merge check — PASS
+# #50 revision 8 renewed merge check — PASS
 
-Subject: PR51 revision4, product head34907d42b7b1de1186e4b848eff4a50b2349e9ee,
-tree9e9b562acbc1b1355277b69b71345ff8a36d156a, against freshly fetched
-base77f2f53eba8bdc6922127a3b9118bf17de4efabf. Archive productda890a1 and work18d6747.
-The previous check/rejected critique/prompt are preserved as *_r1.md.
-This is fidelity PASS; the renewed fresh PR critique is pending at this record.
+Subject: the whole PR51 product diff at b1d9dcc7f218876df7f5201dd93e80891fb64720,
+tree0de092b0b0d247c802c98b0ef9f7f7679daaf761, against fetched dev
+77f2f53eba8bdc6922127a3b9118bf17de4efabf; folded revision8 and current description.
+Archive producteb1f564, implementation/evidence6820446. Historical merge check
+preserved as merge-check_r2.md. This is fidelity PASS, not the fresh soundness verdict.
 
-## 0 — Warmth, weight and model
+## 0 — Warmth, weight and provenance
 
-Same warmed session as the implementation and prior review, with full relevant
-login/session/native SDK/file/reader/terminal context retained. Read triage,
-description, folded revision4, plan critique/result, prior rejection, prebuild and
-verification with the actual published seven-file diff. Current CLI/publisher and
-public docs were reread; test functions remain the same executed prebuild/permanent
-ASTs. No base movement or unfamiliar subsystem requires archaeology refresh.
-Triage77c1e85 and traverse15de8c2 are archive ancestors; their absence from the
-product-only PR is intentional under §7.6. Heavy matches GitHub's heavy/enhancement
-labels and remains appropriate. No subagent was used. Current-thread
-2026-10-16T12:53:53.496Z verifies gpt-6-astra/xhigh; §9 is satisfied.
+Same warmed session; no subagent. Triage77c1e85, original traverse15de8c2, bounded
+input inquiry e2f5ab6 and full-prebuild b0caa03 are verified archive ancestors.
+Heavy/enhancement GitHub labels match triage. Auth/SRP/session/native publisher/
+reader/health/cleanup context remains retained; current terminal/command/publisher,
+public docs, permanent test helpers, plan and prior critiques were refreshed together.
+No base movement or unfamiliar subsystem requires another archaeology rewrite.
+Matching active-thread context2026-10-16T20:58:22.840Z records gpt-6-astra/xhigh;
+§9 is satisfied for this review. Live-account and additional-runtime execution limits
+remain unchanged, not silently counted as completed validation.
 
-## 0b — Scope against surfacing
+## 0b — Diff territory
 
-All seven product files belong to the surfaced authentication/session/publication,
-entry-point, docs and tests territory. Revision4 changes four of those files:
-login_cli, smoke48, terminal guide and smoke README. No new subsystem/public API,
-worker supervisor, dependency, version or reader/session behavior entered. Work
-records and unrelated checkout/version/duncan/guide edits stay outside the PR.
+The twelve product paths are README.md, docs/terminal_login.md, setup.py,
+tgdata/_terminal_input.py, login_cli.py, login_file.py, smoke_tests/README.md,
+test_48_terminal_login.py and four _terminal_login_* test helpers. Authentication,
+terminal input, native-session publication, packaging, tests and docs were all in
+the surfaced territory. The private input module and helper filenames emerged in
+the later ownership/framing inquiry; their concepts were already feature-heavy.
+No unrelated reader/auth/storage API, dependency, version, worker supervisor or
+ScrapeOps orchestration was added. No devdocs path enters the product PR.
 
-## 1 — Fidelity and deviations
+## 1 — Implementation fidelity and deviations
 
-_TerminalRun owns persistent stop intent, retained loop and original signal policy.
-Its exact action registrations prevent cancellation from reaching a later action;
-retirement is admissible after stop. Input raises only the first interruption,
-with the input flag cleared before terminal restoration; async signals request
-cancellation instead of injecting arbitrary task exceptions. Completed tasks are
-consumed without re-running the loop. The final exit is chosen after _retire/close.
-_publish feeds the same stop flag to the unchanged native publisher. These implement
-revision4 steps1/3, including separate stop intent and saved/uncertain file effects.
+Steps1–2: fresh plan critic81598e2, robust fold70d32cf and full combined PASS b0caa03
+precede producteb1f564. The experiment includes all declared histories, previously
+unrun revision6 cases and isolated installed-entry/native-SRP interruption. It is
+not a substitution of the inquiry's46+7 premise evidence for a complete candidate.
 
-Step2's full experiment was committed ate0d764f before productda890a1:23 groups,
-25 real PTYs,17 retained review histories,8 stop transitions and14 publication
-crossings. Candidate CLI bytes equal the product and every permanent test function
-AST equals its executed prebuild counterpart. Step4's tests/docs cover executing,
-suspended, terminal and retiring phases. Step5 has committed full/targeted/installed
-evidence and a product-only PR update. No design deviation or test weakening.
+Step3: _terminal_input owns an independent terminal fd, original attributes,
+validation before mutation, bounded streaming, irreversible invalid-line discard,
+protected canonical settlement, exact final restoration/readback and one close
+attempt. Both promoted product modules match the candidate hashes exactly.
+_TerminalRun records SIGINT without throwing into input cleanup, retains exact
+source-action cancellation registration and consumes completed results. _hidden and
+_confirm use the same owner; source/file outcomes remain separate. The native
+publisher and LoginFlow are unchanged by revision8.
 
-The offline setuptools managed install remains the recorded packaging substitution
-for unavailable wheel/build packages. It tests isolated imports, actual generated
-entry, native-SRP interruption and help/headless behavior without changing the active
-environment. A single extra EOF blank line in an extracted work helper was removed;
-the executed candidate/combined suite and expectations were unchanged.
+Step4: permanent smoke48 retains23 groups and adds3 groups containing70 terminal/
+profile/control histories,46 framing histories and7 real handoffs. Observational
+helpers do not manufacture terminal modes or source/publication success. Public
+instructions cover128 UTF-8 bytes, hidden confirmations, supported editing/EOF,
+queued-input disposal and truthful cleanup failure. Existing recovery/exit rules
+remain consistent with the code.
 
-Documentation housekeeping in this check annotates stale “not yet qualified” plan
-phrases with their later e0d764f result; it changes no planned behavior or evidence.
-Issue step2's old “full composition pending” sentence is likewise updated to the
-already-committed PASS when this review is posted. Historical critic prose is kept
-as written, with its explicit Result: PASS supplement as the later gate evidence.
+Step5: affected/full/install evidence is committed; product-only PR equals all111
+tested source hashes and the complete archive product diff. No design deviation
+or product/test-expectation correction occurred after promotion. Recorded mechanical
+adaptations are portable product imports, actual module/installed entry, removal of
+work-folder result writes, and a240-second outer smoke48 allowance for the enlarged
+native matrices. Native per-case deadlines and killed-process failure remain intact.
+The obsolete getpass fallback seam is replaced by actual no-echo/refusal observations;
+the small canonical-limit success follows the explicitly selected streaming contract.
 
-## 2 — Plan still valid
+The offline setuptools managed install is the existing documented substitution
+for unavailable build/wheel packages. It uses temporary directories and existing
+dependencies, not the active environment. A stale description paragraph still called
+the work planning-only; this check annotates its later prebuild/authorized implementation
+without changing scope, behavior or historical evidence.
 
-Yes. The observed failure was terminal task-driving ownership, and the replacement
-stays at that boundary. Existing LoginFlow/native SQLite publication and ordinary
-readers remain byte-unchanged. The revised stop model accommodates in-flight remote
-effects without promising rollback; it prohibits later actions and preserves file
-truth. Local POSIX/stopped-reader and no bounded underlying latency limits remain
-explicit. No broader auth/store rewrite or new cross-command abstraction was needed.
+## 2 — Does the plan still make sense?
 
-## 3 — Findings and experimental gates answered
+Yes. Native evidence disproved post-read canonical overflow detection; the selected
+reader observes bytes before that boundary and retains bounded state. Resource
+settlement belongs to this single private input owner. Authentication/native
+publication remain reusable and are not rebuilt to repair terminal behavior.
+Explicit unsupported-context refusals and local POSIX/stopped-reader requirements
+remain honest limits. Optional live/native3.7/other-host validation is not inferred
+from controlled replies or grammar checks. No undocumented cross-command abstraction
+was needed. This assessment does not pre-judge new soundness findings.
 
-- Original plan Medium1 (recovery directory persistence): staging parent sync,
-  verified/synced old backup and private-directory barrier remain before replace;
-  destination parent sync remains the success barrier. Actual contents/effects are
-  covered in retained fault tests and full prebuild.
-- Original plan Medium2 (optional own-account cache): required row0 plus conditional
-  actual-account row transfer remains, with real native reader restore without hash.
-- Rejected PR Medium R1 (Ctrl-C inside authentication hangs): no async signal-raised
-  KeyboardInterrupt policy; pending action cancelled once; done result consumed
-  without another loop run. Actual native-SRP/PTY interruption now returns130,
-  restores termios state and settles source ownership, including the installed
-  generated command. Defensive done-task tests cover the exact old loop trigger.
-- Fresh revision3 plan critique had no new rated risks; its REORDER gate is closed
-  by the complete e0d764f experiment, not merely the six planning probes.
+## 3 — Prior findings answered
 
-No unaddressed High/Medium or consciously omitted Low in these earlier findings.
-This does not pre-judge fresh soundness findings in the next gate.
+- Original plan recovery-directory durability: parent directory sync, old backup
+  file/directory barriers and destination-parent success sync remain in login_file.
+- Original plan optional own-account row: row0 identity is required; actual own row
+  is conditional. Real reader reopens a login without an own access hash.
+- First rejected PR native-SRP hang: the driver consumes a done exceptional task
+  without entering its loop again; actual native-SRP and installed regressions pass.
+- Second rejected PR first-SIGINT restoration failure: no input-phase exception
+  injection remains; the actual resource owner restores before returning on normal,
+  EOF, error and first/repeated stop paths. All prompt variants are in the native suite.
+- Revision5 plan ISTRIP corruption and revision6 failed canonical premise: transformation
+  profiles refuse before mutation/source work; streaming handles finite oversized
+  pastes, including500,000 bytes plus newline, without admitting a suffix.
+- Revision7 plan Medium R1: intermediate settings derive from the ACTIVE protected
+  profile and change only canonical mode. Quit/suspend/extended/flow controls stay
+  disabled until final restoration. Actual keyboard-control tests cover that stage.
+
+All earlier High/Medium findings have explicit code and covering evidence. No Low
+was consciously left. Fresh soundness review can still identify a new defect.
 
 ## 4 — Status and verification
 
-Issue T/0/1/2/3/4/5 are backed by committed artifacts. Renewed6/7 are unchecked;
-no current review PASS/merge has been claimed. The one stale historical step2
-phrase is corrected as noted above. PR51 remains draft and unmerged.
+Issue T/0/1/2/3/4/5 ticks are backed by committed artifacts. Steps6/7 remain unchecked
+before this check is committed/posted; PR51 remains draft. The implementation result
+is not being presented as review approval. After this commit, step6 may be marked
+PASS with this artifact; step7 waits for the fresh critic.
 
-Current source manifests were compared to the committed full verification: all106
-files match the exact PR tree. Published/local patches match after stripping only
-GitHub's hunk-heading labels. Product diff equals the archive implementation and
-whitespace is clean. The recent1,010 offline checks/34 suites, seven demos, compile/
-3.7 grammar and installed-command PASS therefore apply unchanged; no redundant
-full rerun was necessary. Fresh independent probes follow in the soundness gate.
-Three live cases remain deliberately skipped/excluded; live Telegram, native3.7,
-physical power-loss and active/arbitrary writers are not qualified.
+Published GitHub patch equals the local product diff after normalizing only hunk
+heading labels. Product head/base/tree and111 matching source hashes are captured
+in pr-probes-r3/review-context.json; reviewed.diff preserves the exact published patch.
+Whitespace is clean. Recent1,013 offline checks/34 suites, seven demos,111 compile/
+3.7 grammar checks and isolated installed-command PASS still apply byte-for-byte.
+Three live checks remain excluded. Repeating that unchanged full suite would add no
+new evidence; fresh behavioral probes are required by the next gate instead.
 
-Next: fresh in-session critic-d on this exact head plus folded plan, commit/post
-its verdict, then apply §7.3. A second rejected PR gate would require returning to
-description/traverse under §7.4. No product edit, merge, release or deployment here.
+Next: fresh in-session critic-d over this exact whole-feature diff plus revision8,
+commit/post the verdict and apply §7.3. Two prior PR rejections remain preserved;
+a third rejection invokes task-impl decomposition, not another patch round. No
+product changes, merge, release or deployment occurred in this merge check.
