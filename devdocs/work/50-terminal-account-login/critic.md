@@ -234,10 +234,13 @@ missing access_hash, convert it and authenticate an ordinary reader without a
 second code request. Preserve available update state independently.
 **Why this is robust:** matches the existing valid session representation at this
 one conversion boundary and avoids changing the authentication API.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 
 **Note**
-*Why chosen:* —
+*Why chosen:* This is the only conversion consumer; existing readers already
+handle optional entity data and need no change. A local conditional copy plus
+read-back/real-reader case closes the instance with less extent than a public
+transfer protocol. Selected on merit, not due to an external blocker.
 *For future:* —
 
 ### Mitigation — Long-term
