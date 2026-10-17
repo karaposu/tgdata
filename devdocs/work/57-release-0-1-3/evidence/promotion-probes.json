@@ -1,0 +1,33 @@
+{
+  "result": "PASS",
+  "main": "eaa2f2b659d83e249325f76fcb83857389ded020",
+  "dev": "d8232d186b591a901a61a4e3c2b05bb6bbabea03",
+  "merge_candidate": "c902fdf3bdff8f60bad19e809e4855a340ab08bd",
+  "parents": [
+    "eaa2f2b659d83e249325f76fcb83857389ded020",
+    "d8232d186b591a901a61a4e3c2b05bb6bbabea03"
+  ],
+  "tree": "cec986472018a6fcf07eafb0d3b73f9bc0a6eca5",
+  "positive": [
+    "d8232d186b591a901a61a4e3c2b05bb6bbabea03",
+    "c902fdf3bdff8f60bad19e809e4855a340ab08bd"
+  ],
+  "refused": [
+    "unbumped_dev",
+    "archive_with_work_docs",
+    "stale_user_checkout"
+  ],
+  "tracked_hashes": 180,
+  "published_diff_equal": true,
+  "paths": [
+    "tgdata/__init__.py",
+    "tgdata/_terminal_input.py",
+    "tgdata/smoke_tests/README.md",
+    "tgdata/smoke_tests/_terminal_login_modes.py",
+    "tgdata/smoke_tests/test_42_album_assembly.py",
+    "tgdata/smoke_tests/test_43_photo_trails.py",
+    "tgdata/smoke_tests/test_45_group_profile.py",
+    "tgdata/smoke_tests/test_46_group_activity.py",
+    "tgdata/smoke_tests/test_48_terminal_login.py"
+  ]
+}

@@ -15,11 +15,11 @@ merge=git('rev-parse','FETCH_HEAD');parents=git('show','-s','--format=%P',merge)
 assert parents==[expected['main'],expected['dev']]
 positive=[check(expected['dev']),check(merge)]
 negative=[]
-for label,rev in [('unbumped_dev','bbc0fd6'),('archive_with_work_docs','HEAD'),('stale_user_checkout','a47ba80')]:
+for label,rev in [('unbumped_dev','aec2592'),('archive_with_work_docs','HEAD'),('stale_user_checkout','a47ba80')]:
  try:check(rev)
  except AssertionError:negative.append(label)
  else:raise AssertionError('incorrect authority accepted: '+label)
-remote=subprocess.check_output(['gh','pr','diff','54','--repo','karaposu/tgdata'],text=True)
+remote=subprocess.check_output(['gh','pr','diff','59','--repo','karaposu/tgdata'],text=True)
 local=subprocess.check_output(['git','diff',expected['main']+'...'+expected['dev']],text=True)
 norm=lambda s:re.sub(r'(@@ [^\n]*? @@)[^\n]*',r'\1',s)
 assert norm(remote)==norm(local)
