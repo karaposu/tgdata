@@ -44,3 +44,8 @@ The fix is narrow; terminal safety still needs actual component regression evide
 No planning blocker. Native refusal and three in-memory input/EOF/Ctrl-C controls are
 observed. Complete candidate CLI/profile qualification remains an execution gate
 before product adoption. Live/native3.7/other-host qualification remains separate.
+
+## Continuation authorization
+2026-10-17: the user now explicitly requests fresh PR critique → merge →0.1.3
+release. The earlier scope boundary described the implementation turn. Continue
+through those gates if review passes, preserving the no-new-branch constraint.
