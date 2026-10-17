@@ -1,0 +1,38 @@
+{
+  "result": "PASS",
+  "head": "40b5ab97ccb5d04958fb7aa1902572aa7869239b",
+  "tracked_source_hashes": 180,
+  "positive_artifacts": 2,
+  "negative": [
+    {
+      "case": "actual published0.1.1 wheel",
+      "result": "REFUSED",
+      "error": "AssertionError"
+    },
+    {
+      "case": "missing_input",
+      "result": "REFUSED",
+      "error": "AssertionError"
+    },
+    {
+      "case": "changed_login",
+      "result": "REFUSED",
+      "error": "AssertionError"
+    },
+    {
+      "case": "wrong_entry",
+      "result": "REFUSED",
+      "error": "AssertionError"
+    },
+    {
+      "case": "wrong_version",
+      "result": "REFUSED",
+      "error": "AssertionError"
+    },
+    {
+      "case": "sdist_missing_profile",
+      "result": "REFUSED",
+      "error": "AssertionError"
+    }
+  ]
+}
