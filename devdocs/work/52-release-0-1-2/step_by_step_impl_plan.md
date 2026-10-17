@@ -7,6 +7,9 @@ effort: xhigh
 **Critic folded:**2026-10-17 — zero mitigations; complete real qualification PASS
 before product adoption. See qualification.md. Steps/source scope unchanged.
 
+**Status:** complete — PR53/54 merged, exact-main tag/release published and actual
+PyPI artifacts/install verified. See release-result.md.
+
 ### What is the task
 Publish reviewed devbbc0fd6 as0.1.2 with complete source/artifact qualification,
 reviewed promotion to main and actual vendor read-back. Inputs:descf7d585c,
