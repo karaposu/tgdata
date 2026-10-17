@@ -1,0 +1,47 @@
+{
+  "result": "PASS",
+  "main": "2e6edf2a3b2c016f9fea4a43b5edffd25fc9cf8e",
+  "dev": "de0de3cbbc9a35707e3225e090793090f3879b69",
+  "merge_candidate": "ecc6cf9fbd40e926e92c6e0353883ae525d5b40b",
+  "parents": [
+    "2e6edf2a3b2c016f9fea4a43b5edffd25fc9cf8e",
+    "de0de3cbbc9a35707e3225e090793090f3879b69"
+  ],
+  "tree": "504874349d642b57b07a7d3ff18907eafd918245",
+  "positive": [
+    "de0de3cbbc9a35707e3225e090793090f3879b69",
+    "ecc6cf9fbd40e926e92c6e0353883ae525d5b40b"
+  ],
+  "refused": [
+    "unbumped_dev",
+    "archive_with_work_docs",
+    "stale_user_checkout"
+  ],
+  "tracked_hashes": 180,
+  "published_diff_equal": true,
+  "paths": [
+    "README.md",
+    "docs/group_activity.md",
+    "docs/group_operations.md",
+    "docs/group_profiles.md",
+    "docs/terminal_login.md",
+    "setup.py",
+    "tgdata/__init__.py",
+    "tgdata/_terminal_input.py",
+    "tgdata/group_activity.py",
+    "tgdata/group_profile.py",
+    "tgdata/login_cli.py",
+    "tgdata/login_file.py",
+    "tgdata/smoke_tests/README.md",
+    "tgdata/smoke_tests/_terminal_login_framing.py",
+    "tgdata/smoke_tests/_terminal_login_handoffs.py",
+    "tgdata/smoke_tests/_terminal_login_modes.py",
+    "tgdata/smoke_tests/_terminal_login_observer.py",
+    "tgdata/smoke_tests/test_42_album_assembly.py",
+    "tgdata/smoke_tests/test_43_photo_trails.py",
+    "tgdata/smoke_tests/test_45_group_profile.py",
+    "tgdata/smoke_tests/test_46_group_activity.py",
+    "tgdata/smoke_tests/test_48_terminal_login.py",
+    "tgdata/tgdata.py"
+  ]
+}
