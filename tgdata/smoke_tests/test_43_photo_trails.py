@@ -123,7 +123,7 @@ class PhotoTrailTests(unittest.TestCase):
         self.assertEqual(member_groups(result), ((1,), (2,)))
         self.assertFalse(result.policy.enabled)
         self.assertEqual((result.folded_posts,result.folded_photos),(0,0))
-        self.assertEqual(tgdata.__version__, '0.1.2')
+        self.assertEqual(tgdata.__version__, '0.1.3')
 
     def test_policy_validation_and_immutable_roundtrip(self):
         self.assertEqual(PhotoTrailPolicy.from_dict(ON.to_dict()), ON)
