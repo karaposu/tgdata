@@ -1,0 +1,14 @@
+{
+  "head": "10767de2fb540b7d857112c25e2c06040e9b730c",
+  "base": "de0de3cbbc9a35707e3225e090793090f3879b69",
+  "merge_candidate": "30c37d878728a9fdd2201e64cf6b59ec916eb7fd",
+  "tree": "925e187943f12766e7e30909f88e8db489aa9f3c",
+  "parents": [
+    "de0de3cbbc9a35707e3225e090793090f3879b69",
+    "10767de2fb540b7d857112c25e2c06040e9b730c"
+  ],
+  "published_diff_equal": true,
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "context": "2026-10-17T13:53:38.721Z"
+}
