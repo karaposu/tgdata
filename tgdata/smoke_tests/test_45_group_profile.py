@@ -78,7 +78,7 @@ async def test_defaults_and_full_metadata():
 async def test_public_exports_and_detached_immutable_values():
     import tgdata
     assert {'GroupProfile', 'GroupPinnedMessage'} <= set(tgdata.__all__)
-    assert tgdata.__version__ == '0.1.1'
+    assert tgdata.__version__ == '0.1.2'
     assert len(tgdata.__all__) == len(set(tgdata.__all__))
     tg, _ = setup(pin_response=pins([message()]))
     value = await profile(tg, 3)
