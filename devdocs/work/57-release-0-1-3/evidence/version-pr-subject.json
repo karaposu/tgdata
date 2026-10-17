@@ -1,0 +1,11 @@
+{
+  "result": "PASS",
+  "pr": 58,
+  "merge_candidate": "f18933adefb6d2096efc2cafad7a2925a1d53272",
+  "parents": [
+    "aec25927844e301839b8b0d4f4b722c2e4f297f5",
+    "d2ee26642eb6a4c1c16ae49c2c911184e69f1aa8"
+  ],
+  "tree": "cec986472018a6fcf07eafb0d3b73f9bc0a6eca5",
+  "published_diff_equal": true
+}
