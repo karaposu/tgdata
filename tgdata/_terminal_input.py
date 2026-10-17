@@ -34,9 +34,10 @@ def _control(value):
 def _validate(fd, attrs):
     if os.tcgetpgrp(fd) != os.getpgrp():
         raise TerminalInputError('terminal_not_foreground')
+    # The kernel may report pending input; the owned flush settles it while hidden.
     allowed = 0
     for name in ('ECHO', 'ECHOE', 'ECHOK', 'ECHONL', 'ECHOCTL', 'ECHOKE',
-                 'ECHOPRT', 'ISIG', 'ICANON', 'IEXTEN', 'NOFLSH', 'TOSTOP'):
+                 'ECHOPRT', 'ISIG', 'ICANON', 'IEXTEN', 'NOFLSH', 'TOSTOP', 'PENDIN'):
         allowed |= getattr(termios, name, 0)
     forbidden = (termios.ISTRIP | termios.IGNCR | termios.INLCR
                  | termios.PARMRK | getattr(termios, 'IUCLC', 0))

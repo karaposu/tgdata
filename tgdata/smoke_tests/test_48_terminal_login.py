@@ -945,7 +945,7 @@ def _native_matrix(module, prefixes, expected):
 
 
 def test_native_terminal_profiles_and_controls():
-    _native_matrix('_terminal_login_modes', ('OWNED_TERMINAL ', 'PROFILE_CONTROL '), 70)
+    _native_matrix('_terminal_login_modes', ('OWNED_TERMINAL ', 'PROFILE_CONTROL ', 'PENDIN_CONTEXT '), 80)
 
 
 def test_native_input_framing():
