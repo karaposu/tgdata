@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "base": "aec25927844e301839b8b0d4f4b722c2e4f297f5",
+  "head": "d2ee26642eb6a4c1c16ae49c2c911184e69f1aa8",
+  "tree": "cec986472018a6fcf07eafb0d3b73f9bc0a6eca5",
+  "tracked_hashes": 180,
+  "paths": [
+    "tgdata/__init__.py",
+    "tgdata/smoke_tests/test_42_album_assembly.py",
+    "tgdata/smoke_tests/test_43_photo_trails.py",
+    "tgdata/smoke_tests/test_45_group_profile.py",
+    "tgdata/smoke_tests/test_46_group_activity.py"
+  ]
+}
