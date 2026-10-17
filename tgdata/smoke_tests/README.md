@@ -53,6 +53,46 @@ Tests polling and real-time features:
 
 ## Running Tests
 
+### Terminal account login (offline)
+
+`python -m tgdata.smoke_tests.test_48_terminal_login` combines actual LoginFlow,
+Telethon1.45.0/SRP/session codecs, native SQLite publication and ordinary-reader
+authentication with controlled source replies. It also runs real PTY children for
+hidden input, EOF, first/repeated Ctrl-C and interruption around publication.
+Its 26 groups include 25 retained PTY scenarios, 17 source/file histories, 8 stop
+transitions and 14 publication-stop combinations. Three matrix groups add 50 terminal
+cases, 20 profile/control cases, 46 framing histories and 7 real-component handoffs.
+The private `_terminal_login_*` helpers run native children and observe actual
+input/mode transitions; they do not supply successful restoration or saved outcomes.
+Coverage includes both earlier interruption regressions, 500,000-byte pastes with
+partial-write producers, irreversible invalid-line discard, UTF-8 editing and bounds,
+physical Ctrl-C/quit/suspend bytes, exact restoration and truthful cleanup failures.
+Cases also cover native password proofs, task registration/retirement, optional
+account-cache data, save retry without extra login requests, replacement/conflict/
+sidecar refusal, sync barriers, recovery files, safe diagnostics and module entry.
+Sockets are forbidden; these cases do not qualify live Telegram code delivery.
+See [terminal login](../../docs/terminal_login.md).
+
+### Group activity and engagement (offline)
+
+`python -m tgdata.smoke_tests.test_46_group_activity` exercises bounded public
+measurement on real Telethon 1.45.0 dispatch/TL decoding and SQLite budgets.
+It covers exact/fractional date boundaries, pagination and cap evidence, unavailable
+slots, raw albums/services, author populations, zero/missing counters, daily exposure,
+immutable JSON, malformed-page atomicity, source errors, account ownership, budget,
+heartbeat and cancellation/cleanup. Sockets and login are forbidden; synthetic
+replies are not live qualification. See [the contract](../../docs/group_activity.md).
+
+### Richer group profiles (offline)
+
+`python -m tgdata.smoke_tests.test_45_group_profile` exercises the public profile
+operation on Telethon 1.45.0 with actual SDK/TL decoding, both session backends and
+SQLite budgets. Covers basic groups/channels, expected identity, unknown/zero
+counts, one bounded optional pin search, exact/inexact totals, unavailable rows,
+partial metadata on failure, source-only health, heartbeat and cancellation/cleanup.
+Sockets and login are forbidden. Synthetic replies do not qualify live visibility.
+See [the profile contract](../../docs/group_profiles.md).
+
 ### Reading worker (offline)
 
 `python -m tgdata.smoke_tests.test_37_worker` runs 33 test groups for strict framing and

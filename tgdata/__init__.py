@@ -22,6 +22,8 @@ from .message_engine import GroupAccessError
 from .group_operations import (
     GroupMetadata, GroupLookup, GroupAccess, GroupJoin, GroupReferenceError, GroupResponseError,
 )
+from .group_profile import GroupProfile, GroupPinnedMessage
+from .group_activity import GroupActivity, ActivityMessage
 from .connection_engine import AuthRequiredError, ProxyConfigError
 from .login import LoginFlow, LoginStatus, LoginError
 from .discovery_engine import DiscoveryInterrupted
@@ -72,7 +74,7 @@ from .utils import (
 # Progress tracking
 from .progress import ProgressTracker
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 __all__ = [
     # Explicit account onboarding
@@ -112,6 +114,10 @@ __all__ = [
     "GroupLookup",
     "GroupAccess",
     "GroupJoin",
+    "GroupProfile",
+    "GroupPinnedMessage",
+    "GroupActivity",
+    "ActivityMessage",
     "GroupReferenceError",
     "GroupResponseError",
     "AuthRequiredError",

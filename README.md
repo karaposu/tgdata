@@ -89,6 +89,22 @@ keep working, but new configs should set `session_file` and omit `username`
 
 ### Logging in
 
+For a deliberate terminal login that saves the configured native session, run:
+
+```bash
+tgdata-login --config config.ini
+# Re-login at an existing destination, with explicit replacement confirmation:
+tgdata-login --config config.ini --replace
+```
+
+The command reuses `LoginFlow`, hides phone/code/password input and saves a native
+`.session` file for ordinary readers. Replacement requires stopped readers;
+failed saves never trigger another code request automatically. See
+[terminal login](docs/terminal_login.md) for destination rules, safe retry,
+publication uncertainty, supported local POSIX filesystems and exit codes.
+
+The existing reader's first-run login behavior also remains available:
+
 The first run of a new session, started by hand in a terminal, asks for the
 code Telegram sends you. After that, tgdata never asks Telegram for a login
 code on its own: before connecting it checks with Telegram whether the session
@@ -537,6 +553,33 @@ Handles, supported Telegram links and deterministic numeric references are accep
 Numeric channel IDs need a cached access hash. Readability is distinct from membership
 and does not promise future access. See [the group-operations contract](docs/group_operations.md)
 for input rules, result fields, errors, budget costs and the known SDK cache limitation.
+
+### Richer group profiles
+
+`await tg.get_group_profile("@example_group", account_id=expected_id, pinned_limit=5)`
+returns the description, available member/online counts and a bounded pinned-message
+observation. Pins default off; the explicit limit is 1–100 and uses the existing
+read budget. Returned IDs/text/dates, coverage status, count accuracy and separate
+observation times distinguish empty, limited, unavailable and failed reads.
+
+The method verifies the account and closes its temporary client. Optional pin
+failures raise their original error with completed metadata on `partial_result`
+when supported. Profile success makes no general history-access claim. See
+[group profiles](docs/group_profiles.md) for fields, errors and heartbeat support.
+
+### Activity and engagement measurement
+
+`await tg.measure_group_activity("@example_group", account_id=expected_id,
+start_date=start, end_date=end, max_messages=3000)` returns raw message observations,
+daily activity, author counts and views/reactions/forwards/replies distributions.
+Dates are explicit aware datetimes; the publication window includes start and excludes end.
+
+Check `coverage_complete` and `stop_reason` before treating the result as a whole-window
+measurement. The cap counts every source slot; missing counters remain distinct from
+zero. Counters are observed at collection time, and albums count as raw messages.
+The operation uses the existing verified account, read allowance, heartbeat and
+cleanup policies. See [activity measurement](docs/group_activity.md) for the example,
+precise populations, partial failures and visibility limits.
 
 ### Group discovery — finding groups you are not in
 
@@ -1213,9 +1256,9 @@ The ID must be a positive integer, not a string or boolean. The call is synchron
 it does no connection, authentication or recovery. The returned dictionaries are
 independent copies, with the same fields as the health summary above.
 
-`lookup_group`, `check_group_access` and `join_group` populate this account-owned view. Existing
+`lookup_group`, `check_group_access`, `get_group_profile`, `measure_group_activity` and `join_group` populate this account-owned view. Existing
 message reads and `health_check()` still use their existing health view; the views
-are not combined. A join result does not clear an earlier history-access failure.
+are not combined. A join, profile or activity result does not clear an earlier history-access failure.
 
 Internally, an observation begins after a temporary client proves the expected
 account. Its event and retained state keep that numeric owner even if a cached
