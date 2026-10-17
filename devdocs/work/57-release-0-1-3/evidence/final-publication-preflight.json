@@ -1,0 +1,9 @@
+{
+  "result": "PASS",
+  "utc": "2026-10-17T14:17:32.518053+00:00",
+  "main": "4c47c862597e9d868f09ca3c6e63cdc8192422db",
+  "pypi_http": 404,
+  "remote_tag_absent": true,
+  "local_tag_absent": true,
+  "github_release_http": 404
+}
