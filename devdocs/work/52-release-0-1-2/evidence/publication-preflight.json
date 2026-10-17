@@ -1,0 +1,14 @@
+{
+  "0.1.1": {
+    "exists": true,
+    "version": "0.1.1",
+    "files": [
+      "tgdata-0.1.1-py3-none-any.whl",
+      "tgdata-0.1.1.tar.gz"
+    ]
+  },
+  "0.1.2": {
+    "exists": false
+  },
+  "tag": ""
+}
