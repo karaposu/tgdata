@@ -4,7 +4,8 @@ effort: xhigh
 ---
 # #55 PENDIN correction — revision2
 
-**Status:** implementation/verification complete; requested merge check follows.
+**Status:** implementation/verification and requested merge check8503ea7 complete.
+Draft PR56 is published on the existing branch; fresh PR critique remains pending.
 
 **Critic folded:**2026-10-17 — zero mitigations; mandatory experiment PASS before
 product adoption. Step1 qualification is satisfied by that experiment.
