@@ -1,0 +1,21 @@
+{
+  "base": "77f2f53eba8bdc6922127a3b9118bf17de4efabf",
+  "head": "b1d9dcc7f218876df7f5201dd93e80891fb64720",
+  "candidate": "ba23616e39b2164f9146a47e8433b57bb2063056",
+  "tree": "0de092b0b0d247c802c98b0ef9f7f7679daaf761",
+  "reviewed_tree_equal": true,
+  "paths": [
+    "README.md",
+    "docs/terminal_login.md",
+    "setup.py",
+    "tgdata/_terminal_input.py",
+    "tgdata/login_cli.py",
+    "tgdata/login_file.py",
+    "tgdata/smoke_tests/README.md",
+    "tgdata/smoke_tests/_terminal_login_framing.py",
+    "tgdata/smoke_tests/_terminal_login_handoffs.py",
+    "tgdata/smoke_tests/_terminal_login_modes.py",
+    "tgdata/smoke_tests/_terminal_login_observer.py",
+    "tgdata/smoke_tests/test_48_terminal_login.py"
+  ]
+}
