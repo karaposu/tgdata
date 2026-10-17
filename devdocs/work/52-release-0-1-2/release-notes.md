@@ -15,3 +15,5 @@ Validation: 1,013 offline checks across 34 suites and seven demos passed on Pyth
 Includes reviewed PRs #47, #48 and #51. Release source is the verified `main` commit named by this tag; publication and downloaded-artifact verification are tracked in #52.
 
 [Full changes since 0.1.1](https://github.com/karaposu/tgdata/compare/v0.1.1...v0.1.2)
+
+Verified source: [main eaa2f2b](https://github.com/karaposu/tgdata/commit/eaa2f2b659d83e249325f76fcb83857389ded020), following version PR #53 and promotion PR #54.

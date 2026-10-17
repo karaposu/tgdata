@@ -1,0 +1,7 @@
+{
+  "result": "PASS",
+  "main": "eaa2f2b659d83e249325f76fcb83857389ded020",
+  "pypi_absent": true,
+  "remote_tag_absent": true,
+  "github_release_absent": true
+}
