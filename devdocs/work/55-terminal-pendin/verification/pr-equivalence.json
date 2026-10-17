@@ -1,0 +1,15 @@
+{
+  "result": "PASS",
+  "archive_product": "64b2b10",
+  "pr_head": "10767de2fb540b7d857112c25e2c06040e9b730c",
+  "base": "de0de3cbbc9a35707e3225e090793090f3879b69",
+  "source_files": 111,
+  "tested_hashes_equal": true,
+  "product_diff_equal": true,
+  "paths": [
+    "tgdata/_terminal_input.py",
+    "tgdata/smoke_tests/README.md",
+    "tgdata/smoke_tests/_terminal_login_modes.py",
+    "tgdata/smoke_tests/test_48_terminal_login.py"
+  ]
+}

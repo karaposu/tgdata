@@ -1,0 +1,11 @@
+{
+  "result": "PASS",
+  "candidate_product_equal": {
+    "tgdata/_terminal_input.py": "5b3287502d75e68a67ac08badd753d023cda42c85e01b9512a7081fc8d070725",
+    "tgdata/smoke_tests/_terminal_login_modes.py": "92aec3c07e4c2c0d2b7af0b6b153689d9e465b865e60f04626c60f36293dadc6"
+  },
+  "loader_scope": "Only exact candidate _validate AST loaded in real released module globals during prebuild; product verification imports complete promoted module normally.",
+  "source_paths": 4,
+  "version_unchanged": "0.1.2",
+  "new_branches": 0
+}
