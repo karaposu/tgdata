@@ -61,7 +61,9 @@ authentication with controlled source replies. It also runs real PTY children fo
 hidden input, EOF, first/repeated Ctrl-C and interruption around publication.
 Its 26 groups include 25 retained PTY scenarios, 17 source/file histories, 8 stop
 transitions and 14 publication-stop combinations. Three matrix groups add 50 terminal
-cases, 20 profile/control cases, 46 framing histories and 7 real-component handoffs.
+cases, 19 other profile/control cases, 11 initial-PENDIN contexts, 46 framing
+histories and 7 real-component handoffs. The PENDIN contexts include native 2FA,
+restoration after normal/EOF input, cancellation, overflow and unrelated-flag refusal.
 The private `_terminal_login_*` helpers run native children and observe actual
 input/mode transitions; they do not supply successful restoration or saved outcomes.
 Coverage includes both earlier interruption regressions, 500,000-byte pastes with

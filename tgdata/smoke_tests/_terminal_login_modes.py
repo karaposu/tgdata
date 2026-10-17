@@ -18,12 +18,18 @@ MODES=FIRST+['after_restore_normal','after_restore_eof']+['stop_'+p for p in ('a
  'unicode','editing','limit128','limit129','kernel_overflow','invalid_utf8','partial_eof','typeahead',
  'two_terminals','no_controlling','background','noncanonical','istrip','istrip_afterphone','bad_cr','small_canon','no_termios','echo_off']
 BASE_MODES=tuple(MODES)
-PROFILE_MODES=('no_isig','inlcr','parmrk','no_icrnl','pendin','flusho','unknown_lflag','bad_intr','disabled_eof','overlap_controls','newline_control','bad_vdisable','short_cc','thread','running_loop')
+PROFILE_MODES=('no_isig','inlcr','parmrk','no_icrnl','flusho','unknown_lflag','bad_intr','disabled_eof','overlap_controls','newline_control','bad_vdisable','short_cc','thread','running_loop')
 CONTROL_MODES=('quit_intermediate','suspend_intermediate','intr_intermediate','keyboard_cancel','keyboard_discard')
-MODES+=list(PROFILE_MODES)+list(CONTROL_MODES)
+PENDIN_MODES=('pendin','pendin_password','pendin_first_phone_normal','pendin_first_phone_eof',
+ 'pendin_first_code_eof','pendin_first_password_normal','pendin_first_replace_normal',
+ 'pendin_first_retry_eof','pendin_keyboard_discard','pendin_kernel_overflow','pendin_unknown_lflag')
+MODES+=list(PROFILE_MODES)+list(CONTROL_MODES)+list(PENDIN_MODES)
 
 
 def child(mode):
+    case=mode
+    pendin_context=mode=='pendin' or mode.startswith('pendin_')
+    if mode.startswith('pendin_'):mode=mode[len('pendin_'):]
     if mode=='background':
         pid=os.fork()
         if pid:
@@ -44,7 +50,7 @@ def child(mode):
         if mode=='inlcr':attrs[0]|=termios.INLCR
         if mode=='parmrk':attrs[0]|=termios.PARMRK
         if mode=='no_icrnl':attrs[0]&=~termios.ICRNL
-        if mode=='pendin':attrs[3]|=termios.PENDIN
+        if pendin_context:attrs[3]|=termios.PENDIN
         if mode=='flusho':attrs[3]|=termios.FLUSHO
         if mode=='bad_intr':attrs[6][termios.VINTR]=b'\x18'
         if mode=='disabled_eof':attrs[6][termios.VEOF]=b'\xff'
@@ -52,8 +58,9 @@ def child(mode):
         if mode=='newline_control':attrs[6][termios.VEOF]=b'\n'
         if attrs is not None and mode!='background':termios.tcsetattr(control,termios.TCSANOW,attrs)
         before_control=termios.tcgetattr(control) if control is not None else None
+        if pendin_context:assert before_control[3]&termios.PENDIN
         before_stdin=termios.tcgetattr(0)
-        phase=mode.split('_')[1] if mode.startswith('first_') else 'phone'
+        phase=mode.split('_')[1] if mode.startswith('first_') else 'password' if mode=='password' else 'phone'
         two_factor=phase=='password'
         existing=phase in ('replace','retry')
         state=dict(selected=False, fd=None, fired=False, restored=False, reads=0, value=False, two_observed=False, candidate_mode_writes=0, hidden=False, intermediate=False, key_signals=0, quit_signals=0, suspend_signals=0)
@@ -218,7 +225,7 @@ def child(mode):
             if mode=='two_terminals':assert state['two_observed'] and get(0)==before_stdin
             assert signal.getsignal(signal.SIGINT)==original_handler
             assert all(not w.up for w in service.wires)
-            saved=mode in ('typeahead','two_terminals','echo_off','small_canon')
+            saved=mode in ('typeahead','two_terminals','echo_off','small_canon','pendin','password')
             expected_code=0 if saved else 2 if mode in ('no_controlling','background','noncanonical','istrip','bad_cr','no_termios')+PROFILE_MODES else 3 if (mode.startswith('fault_') and mode!='fault_restore_stop') or mode in ('limit129','kernel_overflow','invalid_utf8','istrip_afterphone') else 130
             assert code==expected_code,(mode,code,expected_code)
             if mode in PROFILE_MODES or mode in ('background','no_controlling','noncanonical','istrip','bad_cr','no_termios','stop_acquire','stop_snapshot'):
@@ -230,12 +237,14 @@ def child(mode):
             expected_codes=1 if phase!='phone' or saved or mode=='istrip_afterphone' else 0
             assert service.calls.count('SendCodeRequest')==expected_codes,(mode,service.calls)
             if phase=='code' or mode=='istrip_afterphone':assert 'SignInRequest' not in service.calls
-            if phase=='password':assert 'CheckPasswordRequest' not in service.calls
+            if phase=='password' and not saved:assert 'CheckPasswordRequest' not in service.calls
+            if mode=='password':assert service.srp_accepted==1
             if mode in ('unicode','editing','limit128'):assert state['value']
             if mode.startswith(('first_','after_restore_','stop_','fault_')):assert state['fired'],mode
-            result=dict(mode=mode,exit=code,terminal_restored=restoration_observed,codes=expected_codes,saved=saved,
+            result=dict(mode=case,exit=code,terminal_restored=restoration_observed,codes=expected_codes,saved=saved,
                         signal_or_fault_fired=state['fired'],value_checked=state['value'],two_terminals_observed=state['two_observed'])
             result['candidate_mode_writes']=state['candidate_mode_writes']
+            result['initial_pendin']=bool(before_control is not None and before_control[3]&termios.PENDIN)
             result['key_signals']=state['key_signals']
             if mode=='flusho':put(control,termios.TCSANOW,original_control)
             print('\nMATRIX_RESULT '+json.dumps(result),flush=True)
@@ -248,6 +257,8 @@ def child(mode):
 
 
 def parent(mode):
+    case=mode
+    if mode.startswith('pendin_'):mode=mode[len('pendin_'):]
     master,slave=pty.openpty(); extra=[]
     stdin_slave=slave
     if mode=='two_terminals':
@@ -255,14 +266,14 @@ def parent(mode):
     def control():
         os.setsid()
         if mode!='no_controlling':fcntl.ioctl(slave,termios.TIOCSCTTY,0)
-    process=subprocess.Popen([sys.executable,str(Path(__file__).resolve()),'--child',mode],
+    process=subprocess.Popen([sys.executable,str(Path(__file__).resolve()),'--child',case],
         stdin=stdin_slave,stdout=slave,stderr=slave,preexec_fn=control,pass_fds=(slave,),
         env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1'))
     os.close(slave)
     if mode=='two_terminals':os.close(stdin_slave);extra.remove(stdin_slave)
     os.set_blocking(master,False)
     data=bytearray();seen={};deadline=time.monotonic()+15;pending=b'';written=0;requested=0;stage_sent=False;cancel_sent=False
-    target_phase=mode.split('_')[1] if mode.startswith('first_') else 'phone'
+    target_phase=mode.split('_')[1] if mode.startswith('first_') else 'password' if mode=='password' else 'phone'
     try:
         while time.monotonic()<deadline:
             reads,writes,_=select.select([master],[master] if pending else [],[],0.005)
@@ -325,7 +336,7 @@ def run():
     results=[]
     for mode in MODES:
         row=parent(mode);results.append(row)
-        print(('OWNED_TERMINAL ' if mode in BASE_MODES else 'PROFILE_CONTROL ')+json.dumps(row),flush=True)
+        print(('OWNED_TERMINAL ' if mode in BASE_MODES else 'PENDIN_CONTEXT ' if mode in PENDIN_MODES else 'PROFILE_CONTROL ')+json.dumps(row),flush=True)
     return results
 
 if __name__=='__main__':
