@@ -18,3 +18,9 @@ pass and match the PR. No product/test correction needed; no live Telegram.
 Fresh PR critique is the next gate. The current request was implementation plus
 merge check; PR56 remains draft/unmerged, version stays0.1.2 and0.1.3 is not published.
 Original user checkout/version edit, duncan and pending PR49 remain separate.
+
+## Completed continuation — 2026-10-17
+Fresh PR critique80f25fd PASS (zero findings/22 new histories), PR56 merged into dev
+aec2592. Release0.1.3 now published from main4c47c86 via PR58/59; actual PyPI artifacts
+and installed PENDIN plain/2FA command checks PASS. See ../57-release-0-1-3/release-result.md.
+No outstanding work for this fix; existing branches preserved.

@@ -7,6 +7,9 @@ effort: xhigh
 **Critic folded:** zero mitigations; complete real candidate PASS before adoption.
 See qualification.md. All steps and scope retained.
 
+**Status:** complete — PR58/59 merged, exact-main tag published; actual PyPI
+artifacts and installed PENDIN command verified. See release-result.md.
+
 ## Task and blockers
 Publish frozen devaec25927844e301839b8b0d4f4b722c2e4f297f5 with five version
 substitutions, following the proven #52 route. Description1022f1d/triage9b10fdb.
