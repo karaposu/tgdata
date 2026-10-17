@@ -30,7 +30,10 @@ setup(
     long_description_content_type='text/markdown',  # Type of the long description
     
     packages=find_packages(),  # Automatically find packages in the directory
-    entry_points={'console_scripts': ['tgdata-worker=tgdata.worker:main']},
+    entry_points={'console_scripts': [
+        'tgdata-worker=tgdata.worker:main',
+        'tgdata-login=tgdata.login_cli:main',
+    ]},
     install_requires=[
         # min_id is exclusive in Telethon 1.x (the off-by-one fix relies on it);
         # 2.0 is a breaking API rewrite, so cap below it. Verified on 1.40.
