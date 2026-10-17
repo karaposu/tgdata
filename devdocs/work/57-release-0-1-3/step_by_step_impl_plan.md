@@ -2,7 +2,10 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# Exact-source 0.1.3 release — revision1
+# Exact-source 0.1.3 release — revision2
+
+**Critic folded:** zero mitigations; complete real candidate PASS before adoption.
+See qualification.md. All steps and scope retained.
 
 ## Task and blockers
 Publish frozen devaec25927844e301839b8b0d4f4b722c2e4f297f5 with five version

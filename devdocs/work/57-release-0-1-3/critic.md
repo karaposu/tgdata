@@ -2,12 +2,18 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-**IMPLEMENT AS WRITTEN**
+**REORDER — TEST BEFORE BUILD**
 
 Falsifier: actual candidate packages/install cannot preserve frozen merged source
 and native PENDIN behavior with only five version substitutions. Affordable now:
 yes; step1 executes complete real build/install/native/full-suite qualification before
-any dependent adoption or merge. This ordering needs no change.
+any dependent adoption or merge. Retain step1 before step2; no product adoption yet.
+Experiment: real source-only wheel/sdist build, strict payload checks, fresh installed
+CLI/PENDIN/SRP behavior and all34 offline suites/seven demos. Cost: local bounded
+build/native tests; no account access. Must precede step2. Pass means all exact-source,
+artifact and behavior requirements hold; product redesign/relaxed requirements fail.
+The initial verdict wording said IMPLEMENT despite the affordable unrun experiment;
+this corrects the verdict label, not the already-gated execution order.
 
 ## Summary
 Zero High/Medium/Low findings. No planning blocker. Actual candidate PASS, reviewed
@@ -46,3 +52,6 @@ None; no mitigation selections. Keep existing qualified dependencies/build tools
 no workflow/API/dependency changes. Full first experiment and actual read-back are
 mandatory. Local Darwin/Python3.11/Telethon1.45 qualification is not live Telegram,
 native3.7 or universal-host certification. No product edit yet.
+
+Experiment result: PASS. Complete artifacts/installed PENDIN/full-suite evidence
+retained in qualification.md and evidence/. No product or test-oracle correction.
