@@ -1,0 +1,1 @@
+Initial source extraction used host python3, whose tarfile.extractall lacks filter=. It failed before extraction. The immediately attempted build then refused the empty source directory. Repeated source preparation with the qualified Python3.11.10 runtime; no product, expected payload or behavior change.

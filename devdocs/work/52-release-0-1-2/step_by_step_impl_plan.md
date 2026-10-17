@@ -2,7 +2,10 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# Gated0.1.2 publication — revision1
+# Gated0.1.2 publication — revision2
+
+**Critic folded:**2026-10-17 — zero mitigations; complete real qualification PASS
+before product adoption. See qualification.md. Steps/source scope unchanged.
 
 ### What is the task
 Publish reviewed devbbc0fd6 as0.1.2 with complete source/artifact qualification,

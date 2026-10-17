@@ -1,0 +1,111 @@
+PASS test_absent_auth_never_requests_login
+PASS test_account_required_and_invalid_before_client
+PASS test_bad_pin_responses_keep_metadata_and_raise
+PASS test_basic_count_comes_from_matching_entity_not_users
+PASS test_basic_pins_and_maximum_limit_are_bounded
+PASS test_budget_charges_returned_slots_and_refuses_before_send
+health: logged out [account] AUTH_KEY_UNREGISTERED — call=get_group_profile account=test account
+PASS test_changed_owner_or_auth_blocks_pin_admission
+PASS test_channel_count_never_falls_back_to_entity
+PASS test_cleanup_cancellation_waits_for_sdk_and_stays_cancellation
+Account operation cleanup failed (RuntimeError)
+Account operation cleanup failed (RuntimeError)
+PASS test_cleanup_failure_preserves_result_and_original_failure
+PASS test_content_and_service_pins_retain_ids_dates_and_empty_text
+PASS test_defaults_and_full_metadata
+PASS test_empty_exact_is_complete_not_omitted
+PASS test_full_read_failure_has_no_fabricated_profile
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (RuntimeError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (CancelledError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (ChannelPrivateError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+Batch heartbeat callback failed (TypeError)
+PASS test_heartbeat_progress_and_callback_failure_isolation
+PASS test_held_pin_has_no_fake_beats_and_cancellation_retains_profile
+PASS test_inexact_and_unavailable_are_independent
+PASS test_invalid_limits_and_callbacks_precede_io
+PASS test_invite_already_and_peek_use_safe_labels
+PASS test_invite_preview_refuses_without_join_or_full_read
+PASS test_limit_and_short_slice_coverage
+PASS test_local_pin_errors_stay_local_and_original
+PASS test_metadata_is_available_with_zero_budget
+PASS test_negative_full_counts_refuse_without_health
+PASS test_numeric_namespace_and_hash_extremes_with_both_stores
+PASS test_one_exact_filtered_request_and_separate_times
+PASS test_persistent_selection_and_legacy_state_do_not_change
+PASS test_pin_source_denial_keeps_original_and_owned_event
+PASS test_pin_wait_propagates_without_sleep_or_retry
+PASS test_profile_and_pins_never_clear_history_denial
+PASS test_public_exports_and_detached_immutable_values
+PASS test_refusing_exception_annotation_preserves_primary_error
+PASS test_supported_families_use_expected_full_request
+PASS test_unusable_and_unsupported_peers_refuse
+PASS test_verified_b_cached_a_and_factory_policy
+PASS test_wrong_full_shapes_ids_and_namespace_refuse
+PASS test_wrong_owner_prevents_every_group_request
+PASS test_zero_unknown_and_full_description_preserved
+38 passed; 0 failed

@@ -1,0 +1,21 @@
+{
+  "result": "PASS",
+  "version": "0.1.2",
+  "origin": "/private/tmp/tgdata-release-0.1.2-evidence/local-installed/tgdata/__init__.py",
+  "target": "/private/tmp/tgdata-release-0.1.2-evidence/local-installed",
+  "runtime": "3.11.10",
+  "telethon": "1.45.0",
+  "exports": 106,
+  "optional_heartbeat_signatures": 7,
+  "entries": {
+    "tgdata-login": "tgdata.login_cli:main",
+    "tgdata-worker": "tgdata.worker:main"
+  },
+  "entry_checks": {
+    "tgdata-login": 0,
+    "tgdata-worker": 0,
+    "login_headless": 2
+  },
+  "native_srp_interruption": true,
+  "network": false
+}

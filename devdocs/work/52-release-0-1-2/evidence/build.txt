@@ -1,0 +1,536 @@
+* Getting build dependencies for sdist...
+running egg_info
+creating tgdata.egg-info
+writing tgdata.egg-info/PKG-INFO
+writing dependency_links to tgdata.egg-info/dependency_links.txt
+writing entry points to tgdata.egg-info/entry_points.txt
+writing requirements to tgdata.egg-info/requires.txt
+writing top-level names to tgdata.egg-info/top_level.txt
+writing manifest file 'tgdata.egg-info/SOURCES.txt'
+reading manifest file 'tgdata.egg-info/SOURCES.txt'
+writing manifest file 'tgdata.egg-info/SOURCES.txt'
+WARNING License classifiers are deprecated.
+!!
+
+        ********************************************************************************
+        Please consider removing the following classifiers in favor of a SPDX license expression:
+
+        License :: OSI Approved :: MIT License
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+* Building sdist...
+running sdist
+running egg_info
+writing tgdata.egg-info/PKG-INFO
+writing dependency_links to tgdata.egg-info/dependency_links.txt
+writing entry points to tgdata.egg-info/entry_points.txt
+writing requirements to tgdata.egg-info/requires.txt
+writing top-level names to tgdata.egg-info/top_level.txt
+reading manifest file 'tgdata.egg-info/SOURCES.txt'
+writing manifest file 'tgdata.egg-info/SOURCES.txt'
+running check
+creating tgdata-0.1.2
+creating tgdata-0.1.2/tgdata
+creating tgdata-0.1.2/tgdata.egg-info
+creating tgdata-0.1.2/tgdata/smoke_tests
+copying files to tgdata-0.1.2...
+copying README.md -> tgdata-0.1.2
+copying setup.py -> tgdata-0.1.2
+copying tgdata/__init__.py -> tgdata-0.1.2/tgdata
+copying tgdata/_terminal_input.py -> tgdata-0.1.2/tgdata
+copying tgdata/account_operation.py -> tgdata-0.1.2/tgdata
+copying tgdata/account_pool.py -> tgdata-0.1.2/tgdata
+copying tgdata/album.py -> tgdata-0.1.2/tgdata
+copying tgdata/backfill.py -> tgdata-0.1.2/tgdata
+copying tgdata/backfill_engine.py -> tgdata-0.1.2/tgdata
+copying tgdata/backfill_state.py -> tgdata-0.1.2/tgdata
+copying tgdata/batch_engine.py -> tgdata-0.1.2/tgdata
+copying tgdata/batch_files.py -> tgdata-0.1.2/tgdata
+copying tgdata/batch_heartbeat.py -> tgdata-0.1.2/tgdata
+copying tgdata/budget_client.py -> tgdata-0.1.2/tgdata
+copying tgdata/connection_engine.py -> tgdata-0.1.2/tgdata
+copying tgdata/discovery_engine.py -> tgdata-0.1.2/tgdata
+copying tgdata/group_activity.py -> tgdata-0.1.2/tgdata
+copying tgdata/group_operations.py -> tgdata-0.1.2/tgdata
+copying tgdata/group_profile.py -> tgdata-0.1.2/tgdata
+copying tgdata/health.py -> tgdata-0.1.2/tgdata
+copying tgdata/history_window.py -> tgdata-0.1.2/tgdata
+copying tgdata/join_budget.py -> tgdata-0.1.2/tgdata
+copying tgdata/join_client.py -> tgdata-0.1.2/tgdata
+copying tgdata/login.py -> tgdata-0.1.2/tgdata
+copying tgdata/login_cli.py -> tgdata-0.1.2/tgdata
+copying tgdata/login_file.py -> tgdata-0.1.2/tgdata
+copying tgdata/message_batch.py -> tgdata-0.1.2/tgdata
+copying tgdata/message_engine.py -> tgdata-0.1.2/tgdata
+copying tgdata/models.py -> tgdata-0.1.2/tgdata
+copying tgdata/owned_health.py -> tgdata-0.1.2/tgdata
+copying tgdata/photo_trails.py -> tgdata-0.1.2/tgdata
+copying tgdata/pool_lifecycle.py -> tgdata-0.1.2/tgdata
+copying tgdata/pool_observation.py -> tgdata-0.1.2/tgdata
+copying tgdata/pool_result.py -> tgdata-0.1.2/tgdata
+copying tgdata/pool_source.py -> tgdata-0.1.2/tgdata
+copying tgdata/pool_state.py -> tgdata-0.1.2/tgdata
+copying tgdata/progress.py -> tgdata-0.1.2/tgdata
+copying tgdata/progress_facade.py -> tgdata-0.1.2/tgdata
+copying tgdata/read_budget.py -> tgdata-0.1.2/tgdata
+copying tgdata/session_store.py -> tgdata-0.1.2/tgdata
+copying tgdata/sync_engine.py -> tgdata-0.1.2/tgdata
+copying tgdata/sync_store.py -> tgdata-0.1.2/tgdata
+copying tgdata/tgdata.py -> tgdata-0.1.2/tgdata
+copying tgdata/utils.py -> tgdata-0.1.2/tgdata
+copying tgdata/worker.py -> tgdata-0.1.2/tgdata
+copying tgdata/worker_engine.py -> tgdata-0.1.2/tgdata
+copying tgdata/worker_protocol.py -> tgdata-0.1.2/tgdata
+copying tgdata.egg-info/PKG-INFO -> tgdata-0.1.2/tgdata.egg-info
+copying tgdata.egg-info/SOURCES.txt -> tgdata-0.1.2/tgdata.egg-info
+copying tgdata.egg-info/dependency_links.txt -> tgdata-0.1.2/tgdata.egg-info
+copying tgdata.egg-info/entry_points.txt -> tgdata-0.1.2/tgdata.egg-info
+copying tgdata.egg-info/requires.txt -> tgdata-0.1.2/tgdata.egg-info
+copying tgdata.egg-info/top_level.txt -> tgdata-0.1.2/tgdata.egg-info
+copying tgdata/smoke_tests/__init__.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/_terminal_login_framing.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/_terminal_login_handoffs.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/_terminal_login_modes.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/_terminal_login_observer.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/my_test.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/pool_storage_cases.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_00_connection.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_01_list_group_chats.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_02_get_message_count.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_03_get_all_messages.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_04_get_all_messages_in_batches.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_05_with_progress_feature.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_06_polling_simple.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_07_on_new_message_simple.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_07_real_time_event_handler.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_08_batch_callback.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_08_polling.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_10_advanced_features.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_11_discover_groups.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_12_proxy.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_13_device_identity.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_14_flood_threshold.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_15_login_checks.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_16_health_events.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_17_session_store.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_18_read_budget.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_19_message_batches.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_22_daily_continuation.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_23_fixed_windows.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_24_backfill_state.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_25_backfill_delivery.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_26_backfill_completion.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_27_backfill_pacing.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_28_backfill_controls.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_29_backfill_public.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_30_backfill_integration.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_31_account_pool.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_32_account_operation.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_33_owned_health.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_34_group_access.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_35_join_budget.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_36_group_join.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_37_worker.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_38_worker_process.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_39_pool_lifecycle.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_40_pool_outcomes.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_41_stepwise_login.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_42_album_assembly.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_43_photo_trails.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_44_batch_heartbeat.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_45_group_profile.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_46_group_activity.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_48_terminal_login.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_debug_min_id.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_polling_debug.py -> tgdata-0.1.2/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_username_support.py -> tgdata-0.1.2/tgdata/smoke_tests
+Writing tgdata-0.1.2/setup.cfg
+Creating tar archive
+removing 'tgdata-0.1.2' (and everything under it)
+WARNING License classifiers are deprecated.
+!!
+
+        ********************************************************************************
+        Please consider removing the following classifiers in favor of a SPDX license expression:
+
+        License :: OSI Approved :: MIT License
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+* Building wheel from sdist
+* Getting build dependencies for wheel...
+running egg_info
+writing tgdata.egg-info/PKG-INFO
+writing dependency_links to tgdata.egg-info/dependency_links.txt
+writing entry points to tgdata.egg-info/entry_points.txt
+writing requirements to tgdata.egg-info/requires.txt
+writing top-level names to tgdata.egg-info/top_level.txt
+reading manifest file 'tgdata.egg-info/SOURCES.txt'
+writing manifest file 'tgdata.egg-info/SOURCES.txt'
+WARNING License classifiers are deprecated.
+!!
+
+        ********************************************************************************
+        Please consider removing the following classifiers in favor of a SPDX license expression:
+
+        License :: OSI Approved :: MIT License
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+creating build/lib/tgdata
+copying tgdata/sync_engine.py -> build/lib/tgdata
+copying tgdata/connection_engine.py -> build/lib/tgdata
+copying tgdata/history_window.py -> build/lib/tgdata
+copying tgdata/worker.py -> build/lib/tgdata
+copying tgdata/budget_client.py -> build/lib/tgdata
+copying tgdata/owned_health.py -> build/lib/tgdata
+copying tgdata/_terminal_input.py -> build/lib/tgdata
+copying tgdata/worker_engine.py -> build/lib/tgdata
+copying tgdata/models.py -> build/lib/tgdata
+copying tgdata/login_cli.py -> build/lib/tgdata
+copying tgdata/health.py -> build/lib/tgdata
+copying tgdata/account_pool.py -> build/lib/tgdata
+copying tgdata/group_profile.py -> build/lib/tgdata
+copying tgdata/account_operation.py -> build/lib/tgdata
+copying tgdata/sync_store.py -> build/lib/tgdata
+copying tgdata/__init__.py -> build/lib/tgdata
+copying tgdata/pool_state.py -> build/lib/tgdata
+copying tgdata/album.py -> build/lib/tgdata
+copying tgdata/backfill_state.py -> build/lib/tgdata
+copying tgdata/group_activity.py -> build/lib/tgdata
+copying tgdata/tgdata.py -> build/lib/tgdata
+copying tgdata/join_client.py -> build/lib/tgdata
+copying tgdata/batch_engine.py -> build/lib/tgdata
+copying tgdata/backfill_engine.py -> build/lib/tgdata
+copying tgdata/join_budget.py -> build/lib/tgdata
+copying tgdata/message_engine.py -> build/lib/tgdata
+copying tgdata/backfill.py -> build/lib/tgdata
+copying tgdata/pool_source.py -> build/lib/tgdata
+copying tgdata/utils.py -> build/lib/tgdata
+copying tgdata/login_file.py -> build/lib/tgdata
+copying tgdata/group_operations.py -> build/lib/tgdata
+copying tgdata/read_budget.py -> build/lib/tgdata
+copying tgdata/photo_trails.py -> build/lib/tgdata
+copying tgdata/pool_lifecycle.py -> build/lib/tgdata
+copying tgdata/batch_heartbeat.py -> build/lib/tgdata
+copying tgdata/progress_facade.py -> build/lib/tgdata
+copying tgdata/message_batch.py -> build/lib/tgdata
+copying tgdata/login.py -> build/lib/tgdata
+copying tgdata/progress.py -> build/lib/tgdata
+copying tgdata/session_store.py -> build/lib/tgdata
+copying tgdata/pool_observation.py -> build/lib/tgdata
+copying tgdata/worker_protocol.py -> build/lib/tgdata
+copying tgdata/discovery_engine.py -> build/lib/tgdata
+copying tgdata/pool_result.py -> build/lib/tgdata
+copying tgdata/batch_files.py -> build/lib/tgdata
+creating build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/_terminal_login_framing.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_username_support.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_31_account_pool.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_00_connection.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_37_worker.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_32_account_operation.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_07_real_time_event_handler.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_12_proxy.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_05_with_progress_feature.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/pool_storage_cases.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_30_backfill_integration.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/_terminal_login_observer.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_17_session_store.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_08_polling.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_36_group_join.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_18_read_budget.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_14_flood_threshold.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/my_test.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_45_group_profile.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_03_get_all_messages.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_29_backfill_public.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_28_backfill_controls.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/__init__.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_42_album_assembly.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_04_get_all_messages_in_batches.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_02_get_message_count.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_33_owned_health.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_26_backfill_completion.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_38_worker_process.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_polling_debug.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/_terminal_login_handoffs.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_48_terminal_login.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/_terminal_login_modes.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_16_health_events.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_06_polling_simple.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_debug_min_id.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_13_device_identity.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_19_message_batches.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_08_batch_callback.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_27_backfill_pacing.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_15_login_checks.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_22_daily_continuation.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_40_pool_outcomes.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_01_list_group_chats.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_39_pool_lifecycle.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_44_batch_heartbeat.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_25_backfill_delivery.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_35_join_budget.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_24_backfill_state.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_43_photo_trails.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_34_group_access.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_46_group_activity.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_41_stepwise_login.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_11_discover_groups.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_07_on_new_message_simple.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_23_fixed_windows.py -> build/lib/tgdata/smoke_tests
+copying tgdata/smoke_tests/test_10_advanced_features.py -> build/lib/tgdata/smoke_tests
+installing to build/bdist.macosx-11.1-arm64/wheel
+running install
+running install_lib
+creating build/bdist.macosx-11.1-arm64/wheel
+creating build/bdist.macosx-11.1-arm64/wheel/tgdata
+copying build/lib/tgdata/sync_engine.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/connection_engine.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/history_window.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/worker.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/budget_client.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/owned_health.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/_terminal_input.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+creating build/bdist.macosx-11.1-arm64/wheel/tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/_terminal_login_framing.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_username_support.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_31_account_pool.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_00_connection.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_37_worker.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_32_account_operation.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_07_real_time_event_handler.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_12_proxy.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_05_with_progress_feature.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/pool_storage_cases.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_30_backfill_integration.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/_terminal_login_observer.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_17_session_store.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_08_polling.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_36_group_join.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_18_read_budget.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_14_flood_threshold.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/my_test.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_45_group_profile.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_03_get_all_messages.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_29_backfill_public.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_28_backfill_controls.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/__init__.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_42_album_assembly.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_04_get_all_messages_in_batches.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_02_get_message_count.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_33_owned_health.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_26_backfill_completion.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_38_worker_process.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_polling_debug.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/_terminal_login_handoffs.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_48_terminal_login.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/_terminal_login_modes.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_16_health_events.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_06_polling_simple.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_debug_min_id.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_13_device_identity.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_19_message_batches.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_08_batch_callback.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_27_backfill_pacing.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_15_login_checks.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_22_daily_continuation.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_40_pool_outcomes.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_01_list_group_chats.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_39_pool_lifecycle.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_44_batch_heartbeat.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_25_backfill_delivery.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_35_join_budget.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_24_backfill_state.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_43_photo_trails.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_34_group_access.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_46_group_activity.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_41_stepwise_login.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_11_discover_groups.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_07_on_new_message_simple.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_23_fixed_windows.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/smoke_tests/test_10_advanced_features.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata/smoke_tests
+copying build/lib/tgdata/worker_engine.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/models.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/login_cli.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/health.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/account_pool.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/group_profile.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/account_operation.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/sync_store.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/__init__.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/pool_state.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/album.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/backfill_state.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/group_activity.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/tgdata.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/join_client.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/batch_engine.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/backfill_engine.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/join_budget.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/message_engine.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/backfill.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/pool_source.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/utils.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/login_file.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/group_operations.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/read_budget.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/photo_trails.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/pool_lifecycle.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/batch_heartbeat.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/progress_facade.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/message_batch.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/login.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/progress.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/session_store.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/pool_observation.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/worker_protocol.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/discovery_engine.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/pool_result.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+copying build/lib/tgdata/batch_files.py -> build/bdist.macosx-11.1-arm64/wheel/./tgdata
+running install_egg_info
+running egg_info
+writing tgdata.egg-info/PKG-INFO
+writing dependency_links to tgdata.egg-info/dependency_links.txt
+writing entry points to tgdata.egg-info/entry_points.txt
+writing requirements to tgdata.egg-info/requires.txt
+writing top-level names to tgdata.egg-info/top_level.txt
+reading manifest file 'tgdata.egg-info/SOURCES.txt'
+writing manifest file 'tgdata.egg-info/SOURCES.txt'
+Copying tgdata.egg-info to build/bdist.macosx-11.1-arm64/wheel/./tgdata-0.1.2-py3.11.egg-info
+running install_scripts
+creating build/bdist.macosx-11.1-arm64/wheel/tgdata-0.1.2.dist-info/WHEEL
+creating '/private/tmp/tgdata-release-0.1.2-evidence/dist/.tmp-syl0r4z1/tgdata-0.1.2-py3-none-any.whl' and adding 'build/bdist.macosx-11.1-arm64/wheel' to it
+adding 'tgdata/__init__.py'
+adding 'tgdata/_terminal_input.py'
+adding 'tgdata/account_operation.py'
+adding 'tgdata/account_pool.py'
+adding 'tgdata/album.py'
+adding 'tgdata/backfill.py'
+adding 'tgdata/backfill_engine.py'
+adding 'tgdata/backfill_state.py'
+adding 'tgdata/batch_engine.py'
+adding 'tgdata/batch_files.py'
+adding 'tgdata/batch_heartbeat.py'
+adding 'tgdata/budget_client.py'
+adding 'tgdata/connection_engine.py'
+adding 'tgdata/discovery_engine.py'
+adding 'tgdata/group_activity.py'
+adding 'tgdata/group_operations.py'
+adding 'tgdata/group_profile.py'
+adding 'tgdata/health.py'
+adding 'tgdata/history_window.py'
+adding 'tgdata/join_budget.py'
+adding 'tgdata/join_client.py'
+adding 'tgdata/login.py'
+adding 'tgdata/login_cli.py'
+adding 'tgdata/login_file.py'
+adding 'tgdata/message_batch.py'
+adding 'tgdata/message_engine.py'
+adding 'tgdata/models.py'
+adding 'tgdata/owned_health.py'
+adding 'tgdata/photo_trails.py'
+adding 'tgdata/pool_lifecycle.py'
+adding 'tgdata/pool_observation.py'
+adding 'tgdata/pool_result.py'
+adding 'tgdata/pool_source.py'
+adding 'tgdata/pool_state.py'
+adding 'tgdata/progress.py'
+adding 'tgdata/progress_facade.py'
+adding 'tgdata/read_budget.py'
+adding 'tgdata/session_store.py'
+adding 'tgdata/sync_engine.py'
+adding 'tgdata/sync_store.py'
+adding 'tgdata/tgdata.py'
+adding 'tgdata/utils.py'
+adding 'tgdata/worker.py'
+adding 'tgdata/worker_engine.py'
+adding 'tgdata/worker_protocol.py'
+adding 'tgdata/smoke_tests/__init__.py'
+adding 'tgdata/smoke_tests/_terminal_login_framing.py'
+adding 'tgdata/smoke_tests/_terminal_login_handoffs.py'
+adding 'tgdata/smoke_tests/_terminal_login_modes.py'
+adding 'tgdata/smoke_tests/_terminal_login_observer.py'
+adding 'tgdata/smoke_tests/my_test.py'
+adding 'tgdata/smoke_tests/pool_storage_cases.py'
+adding 'tgdata/smoke_tests/test_00_connection.py'
+adding 'tgdata/smoke_tests/test_01_list_group_chats.py'
+adding 'tgdata/smoke_tests/test_02_get_message_count.py'
+adding 'tgdata/smoke_tests/test_03_get_all_messages.py'
+adding 'tgdata/smoke_tests/test_04_get_all_messages_in_batches.py'
+adding 'tgdata/smoke_tests/test_05_with_progress_feature.py'
+adding 'tgdata/smoke_tests/test_06_polling_simple.py'
+adding 'tgdata/smoke_tests/test_07_on_new_message_simple.py'
+adding 'tgdata/smoke_tests/test_07_real_time_event_handler.py'
+adding 'tgdata/smoke_tests/test_08_batch_callback.py'
+adding 'tgdata/smoke_tests/test_08_polling.py'
+adding 'tgdata/smoke_tests/test_10_advanced_features.py'
+adding 'tgdata/smoke_tests/test_11_discover_groups.py'
+adding 'tgdata/smoke_tests/test_12_proxy.py'
+adding 'tgdata/smoke_tests/test_13_device_identity.py'
+adding 'tgdata/smoke_tests/test_14_flood_threshold.py'
+adding 'tgdata/smoke_tests/test_15_login_checks.py'
+adding 'tgdata/smoke_tests/test_16_health_events.py'
+adding 'tgdata/smoke_tests/test_17_session_store.py'
+adding 'tgdata/smoke_tests/test_18_read_budget.py'
+adding 'tgdata/smoke_tests/test_19_message_batches.py'
+adding 'tgdata/smoke_tests/test_22_daily_continuation.py'
+adding 'tgdata/smoke_tests/test_23_fixed_windows.py'
+adding 'tgdata/smoke_tests/test_24_backfill_state.py'
+adding 'tgdata/smoke_tests/test_25_backfill_delivery.py'
+adding 'tgdata/smoke_tests/test_26_backfill_completion.py'
+adding 'tgdata/smoke_tests/test_27_backfill_pacing.py'
+adding 'tgdata/smoke_tests/test_28_backfill_controls.py'
+adding 'tgdata/smoke_tests/test_29_backfill_public.py'
+adding 'tgdata/smoke_tests/test_30_backfill_integration.py'
+adding 'tgdata/smoke_tests/test_31_account_pool.py'
+adding 'tgdata/smoke_tests/test_32_account_operation.py'
+adding 'tgdata/smoke_tests/test_33_owned_health.py'
+adding 'tgdata/smoke_tests/test_34_group_access.py'
+adding 'tgdata/smoke_tests/test_35_join_budget.py'
+adding 'tgdata/smoke_tests/test_36_group_join.py'
+adding 'tgdata/smoke_tests/test_37_worker.py'
+adding 'tgdata/smoke_tests/test_38_worker_process.py'
+adding 'tgdata/smoke_tests/test_39_pool_lifecycle.py'
+adding 'tgdata/smoke_tests/test_40_pool_outcomes.py'
+adding 'tgdata/smoke_tests/test_41_stepwise_login.py'
+adding 'tgdata/smoke_tests/test_42_album_assembly.py'
+adding 'tgdata/smoke_tests/test_43_photo_trails.py'
+adding 'tgdata/smoke_tests/test_44_batch_heartbeat.py'
+adding 'tgdata/smoke_tests/test_45_group_profile.py'
+adding 'tgdata/smoke_tests/test_46_group_activity.py'
+adding 'tgdata/smoke_tests/test_48_terminal_login.py'
+adding 'tgdata/smoke_tests/test_debug_min_id.py'
+adding 'tgdata/smoke_tests/test_polling_debug.py'
+adding 'tgdata/smoke_tests/test_username_support.py'
+adding 'tgdata-0.1.2.dist-info/METADATA'
+adding 'tgdata-0.1.2.dist-info/WHEEL'
+adding 'tgdata-0.1.2.dist-info/entry_points.txt'
+adding 'tgdata-0.1.2.dist-info/top_level.txt'
+adding 'tgdata-0.1.2.dist-info/RECORD'
+removing build/bdist.macosx-11.1-arm64/wheel
+WARNING License classifiers are deprecated.
+!!
+
+        ********************************************************************************
+        Please consider removing the following classifiers in favor of a SPDX license expression:
+
+        License :: OSI Approved :: MIT License
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+Successfully built tgdata-0.1.2.tar.gz and tgdata-0.1.2-py3-none-any.whl

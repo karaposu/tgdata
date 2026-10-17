@@ -1,0 +1,1 @@
+ERROR Source /private/tmp/tgdata-release-0.1.2-evidence/candidate does not appear to be a Python project: no pyproject.toml or setup.py

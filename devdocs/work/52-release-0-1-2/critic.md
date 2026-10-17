@@ -18,6 +18,11 @@ correct installed origins/behavior and all named suites pass with unchanged sour
 Disqualifying result: product/packaging redesign or relaxed payload/behavior is needed
 to succeed. Preserve failure evidence and stop; local tool-only correction is recorded.
 
+Result: PASS — 2026-10-17T06:50:42.187336+00:00; complete candidate
+1,013 offline checks/34 suites/seven demos,3 live skips; real wheel/sdist each102
+Python files/45 runtime modules, exact payload/metadata, isolated106 exports/both
+commands and native-SRP stop PASS. Source hashes unchanged. See qualification.md.
+
 ## High-level summary
 Zero rated High/Medium/Low findings. The selected release transport is the established
 mechanism, with the current five-file version scope and both commands explicitly
