@@ -2,7 +2,10 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# #55 PENDIN correction — revision1
+# #55 PENDIN correction — revision2
+
+**Critic folded:**2026-10-17 — zero mitigations; mandatory experiment PASS before
+product adoption. Step1 qualification is satisfied by that experiment.
 
 ### What is the task
 Accept legitimate PENDIN terminal state in the installed CLI and replace its incorrect
@@ -13,7 +16,7 @@ triagec260fc2, desc.md, native baseline and the already released ownership desig
 #### Planning Blockers
 None. Native/Apple-source observations establish the specific false admission rule.
 #### Execution Blockers
-Complete candidate CLI/mode matrix must PASS before step2 product adoption; agent
+Complete candidate CLI/mode matrix PASS before step2 product adoption; status DONE. Agent
 can run it locally with synthetic transport and native terminals. No unavailable
 external prerequisite. Live/native3.7/other-host claims remain outside this correction.
 

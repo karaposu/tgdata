@@ -20,6 +20,10 @@ run with product source unchanged. Disqualifying result: candidate contract fail
 preserve/deprecate/stop, rather than broadening flags or weakening settlement checks.
 Fixture-only corrections retain evidence and assertions and rerun the full matrix.
 
+Result: PASS —80/80 native histories on first complete run, including11 initial-PENDIN
+contexts; corrected released-code acceptance test fails at exit2-vs0. Product/candidate
+hashes unchanged.41.958seconds. See prebuild/result.json.
+
 ## High-level summary
 Zero rated High/Medium/Low findings. Existing allowlist incorrectly rejects a legitimate
 pending-input state. Native/source evidence supports the local correction, but three

@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/work/55-terminal-pendin/prebuild/modes_candidate.py", line 326, in parent
+    assert process.returncode==0,(mode,text)
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('pendin', 'Stopped: terminal_mode_unsupported\r\nTraceback (most recent call last):\r\n  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/work/55-terminal-pendin/prebuild/modes_candidate.py", line 351, in <module>\r\n    if len(sys.argv)>1:raise SystemExit(child(sys.argv[2]))\r\n                                        ^^^^^^^^^^^^^^^^^^\r\n  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/work/55-terminal-pendin/prebuild/modes_candidate.py", line 237, in child\r\n    assert code==expected_code,(mode,code,expected_code)\r\n           ^^^^^^^^^^^^^^^^^^^\r\nAssertionError: (\'pendin\', 2, 0)\r\n')
