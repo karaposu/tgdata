@@ -11,7 +11,8 @@ Revision6 remains DEPRECATED_step_by_step_impl_plan.md, with its failed experime
 in critic_r6_prebuild.md. Revision8 folds the fresh plan critique; its full combined prebuild passed before
 product edits (b0caa03). Revision8 is now implemented and verified: see implementation.md
 and verification.md. Renewed merge check0ca6da9 and fresh PR critique625b4d0
-both PASS;35 fresh histories, zero findings. Merge awaits maintainer go-ahead.
+both PASS;35 fresh histories, zero findings. Authorized merge completed into dev
+at bbc0fd6; see merge.md and merged-code verification.
 
 **Session warmth:** same retained #43/#44/#45/#50 context; dev77f2f53. LoginFlow,
 SDK/SRP, session conversion, native publisher, reader, command lifecycle and full
@@ -129,6 +130,6 @@ No shortened value is admitted; persistent cleanup faults correctly remain failu
 Historical failure remains in critic_r6_prebuild.md and prebuild-r6/.
 
 No open planning blocker identified. The complete revision8 experimental composition has now passed before product
-changes; promotion and product verification now pass. Renewed review now passes; merge is not performed. Live
+changes; promotion and product verification now pass. Renewed review passes and the authorized dev merge is complete. Live
 source delivery/real-account2FA requires an authorized exclusive setup; native3.7
 runtime remains unavailable. Current-turn §9 verification is resolved by the matching trace.

@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "merged": "bbc0fd69f4c0e320d3dd9401f37f41cb1ab3fb3c",
+  "tree": "0de092b0b0d247c802c98b0ef9f7f7679daaf761",
+  "parents": [
+    "77f2f53eba8bdc6922127a3b9118bf17de4efabf",
+    "b1d9dcc7f218876df7f5201dd93e80891fb64720"
+  ],
+  "all_tested_sources_match": 111,
+  "branches_preserved": true,
+  "version": "0.1.1"
+}

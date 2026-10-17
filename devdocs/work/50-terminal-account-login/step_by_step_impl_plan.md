@@ -8,7 +8,8 @@ effort: xhigh
 **Status:** fresh critique REORDER; full combined prebuild PASS (prebuild-r8/result.json).
 The experimental gate is satisfied; product promotion and verification are complete.
 See implementation.md/verification.md. Renewed merge check0ca6da9 and fresh PR
-critique625b4d0 PASS (zero findings,35 fresh histories); merge awaits go-ahead.
+critique625b4d0 PASS (zero findings,35 fresh histories). Authorized dev merge
+bbc0fd6 is complete after merged-code verification; see merge.md.
 First complete run:23 retained groups plus all50 terminal/20 profile-control/46 framing/
 7 handoff cases and isolated installed entry/native-SRP checks; source hashes unchanged. Revision6 remains deprecated;
 its failed critique is critic_r6_prebuild.md. The prior selected plan critique is
