@@ -1,0 +1,35 @@
+{
+  "system": "Darwin",
+  "released_cli": {
+    "mode": "pendin",
+    "exit": 2,
+    "terminal_restored": true,
+    "codes": 0,
+    "saved": false,
+    "signal_or_fault_fired": false,
+    "value_checked": false,
+    "two_terminals_observed": false,
+    "candidate_mode_writes": 0,
+    "key_signals": 0,
+    "producer_requested": 0,
+    "producer_written": 0
+  },
+  "transitions": [
+    {
+      "phase": "fresh",
+      "pendin": false
+    },
+    {
+      "phase": "set",
+      "pendin": true
+    },
+    {
+      "phase": "attempt_clear",
+      "pendin": true
+    },
+    {
+      "phase": "flush",
+      "pendin": false
+    }
+  ]
+}
