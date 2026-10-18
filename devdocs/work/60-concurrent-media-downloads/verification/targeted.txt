@@ -1,0 +1,22 @@
+{"name": "test_19_message_batches", "passed": true, "exit_code": 0, "counts": [33, 33], "live_skips": 0, "duration_s": 1.265}
+{"name": "test_22_daily_continuation", "passed": true, "exit_code": 0, "counts": [25, 25], "live_skips": 0, "duration_s": 2.479}
+{"name": "test_18_read_budget", "passed": true, "exit_code": 0, "counts": [28, 28], "live_skips": 0, "duration_s": 4.192}
+{"name": "test_23_fixed_windows", "passed": true, "exit_code": 0, "counts": [22, 22], "live_skips": 0, "duration_s": 1.718}
+{"name": "test_24_backfill_state", "passed": true, "exit_code": 0, "counts": [23, 23], "live_skips": 0, "duration_s": 1.616}
+{"name": "test_25_backfill_delivery", "passed": true, "exit_code": 0, "counts": [41, 41], "live_skips": 0, "duration_s": 2.977}
+{"name": "test_14_flood_threshold", "passed": true, "exit_code": 0, "counts": [11, 11], "live_skips": 0, "duration_s": 9.223}
+{"name": "test_16_health_events", "passed": true, "exit_code": 0, "counts": [21, 21], "live_skips": 0, "duration_s": 9.643}
+{"name": "test_26_backfill_completion", "passed": true, "exit_code": 0, "counts": [16, 16], "live_skips": 0, "duration_s": 5.348}
+{"name": "test_28_backfill_controls", "passed": true, "exit_code": 0, "counts": [32, 32], "live_skips": 0, "duration_s": 2.544}
+{"name": "test_27_backfill_pacing", "passed": true, "exit_code": 0, "counts": [32, 32], "live_skips": 0, "duration_s": 3.688}
+{"name": "test_39_pool_lifecycle", "passed": true, "exit_code": 0, "counts": [48, 48], "live_skips": 0, "duration_s": 3.625}
+{"name": "test_31_account_pool", "passed": true, "exit_code": 0, "counts": [46, 46], "live_skips": 0, "duration_s": 5.938}
+{"name": "test_29_backfill_public", "passed": true, "exit_code": 0, "counts": [23, 23], "live_skips": 0, "duration_s": 8.362}
+{"name": "test_40_pool_outcomes", "passed": true, "exit_code": 0, "counts": [25, 25], "live_skips": 0, "duration_s": 3.787}
+{"name": "test_41_stepwise_login", "passed": true, "exit_code": 0, "counts": [23, 23], "live_skips": 0, "duration_s": 3.102}
+{"name": "test_30_backfill_integration", "passed": true, "exit_code": 0, "counts": [15, 15], "live_skips": 0, "duration_s": 10.932}
+{"name": "test_44_batch_heartbeat", "passed": true, "exit_code": 0, "counts": [31, 31], "live_skips": 0, "duration_s": 1.356}
+{"name": "test_42_album_assembly", "passed": true, "exit_code": 0, "counts": [57, 57], "live_skips": 0, "duration_s": 6.002}
+{"name": "test_43_photo_trails", "passed": true, "exit_code": 0, "counts": [53, 53], "live_skips": 0, "duration_s": 4.491}
+{"name": "test_49_media_concurrency", "passed": true, "exit_code": 0, "counts": [38, 38], "live_skips": 0, "duration_s": 7.413}
+RESULT PASS offline 643 suites 21 demos 0 live skips 0

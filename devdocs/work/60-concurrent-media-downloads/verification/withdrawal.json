@@ -1,0 +1,25 @@
+{
+  "reason": "Native export-creation cancellation leaves unowned connected sender and live SDK loops",
+  "candidate_preserved_in": "prebuild/candidate",
+  "candidate_commit": "4a65f88",
+  "paths": [
+    "README.md",
+    "docs/media_downloads.md",
+    "tgdata/account_pool.py",
+    "tgdata/backfill_engine.py",
+    "tgdata/batch_engine.py",
+    "tgdata/batch_heartbeat.py",
+    "tgdata/connection_engine.py",
+    "tgdata/health.py",
+    "tgdata/media_downloads.py",
+    "tgdata/message_engine.py",
+    "tgdata/progress_facade.py",
+    "tgdata/smoke_tests/README.md",
+    "tgdata/smoke_tests/test_49_media_concurrency.py",
+    "tgdata/sync_engine.py",
+    "tgdata/tgdata.py"
+  ],
+  "before_restore_all_hashes_match": true,
+  "product_commit_created": false,
+  "utc": "2026-10-18T06:08:32.255803+00:00"
+}

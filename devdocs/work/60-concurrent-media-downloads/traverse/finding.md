@@ -5,6 +5,10 @@ effort: xhigh
 ---
 # Finding: concurrent downloads need bounded ownership and ordered acceptance
 
+> Subsequent evidence: the native exported-sender creation probe invalidates the
+> iterator-only resource coverage assumed for implementation. This inquiry remains
+> historical; see ../verification/blocked.md before planning from it.
+
 ## Question
 How can tgdata overlap media downloads while preserving both readers, their saved
 progress, and the configured Telegram wait policy? The user wants an optional

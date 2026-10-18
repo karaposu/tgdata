@@ -2,12 +2,11 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-**REORDER — TEST BEFORE BUILD**
+**DO NOT IMPLEMENT — MEANING GAP (experiment failed)**
 
-Falsifier: the real SDK and public readers cannot satisfy bounded ownership, unchanged
-policy and ordered prefixes together without changing the proposed contract.
-Affordable now: yes — local candidate, installed Telethon1.45 and native files; no
-live account or publication needed.
+Falsifier: — the creation-ownership premise has now been falsified by a native probe.
+Original review required the following affordable experiment before adoption; its
+initial coverage proved incomplete and its final result is FAIL.
 
 Experiment: build the complete planned candidate in a git-free copy of devd8232d1,
 including the selected nested-scope mitigation below. Run the new native SDK/public
@@ -29,14 +28,18 @@ source fork beyond the planned private seam, weaker prefix/cleanup semantics or 
 regression expectations. Record FAIL, deprecate plan and stop; do not patch architecture
 under the same plan. Live throughput is not part of the pass claim.
 
-Result: PASS — complete candidate at2026-10-18:1,051 offline checks/35 suites/seven
-demos, three optional live skips;113 sources compile/pass3.7 grammar.38 concurrency
-cases plus an actual public SDK CDN payload probe PASS. Three local call-site/fixture
-corrections are retained with first outputs; no design change or weakened assertion.
-See prebuild/result.md and manifest.json. Product adoption had not begun.
+Result: FAIL — 2026-10-18. Actual public batch cancellation during native exported-
+sender creation leaves sender_connected=true, wire_connected=true, send_loop_running=
+true and receive_loop_running=true. It is absent from the client cache. The fixture
+performs cleanup only AFTER observing this failure. See export_creation_probe.json.
+The earlier1,051-check/35-suite/seven-demo PASS and public CDN payload PASS did not
+cover the pre-borrow creation stage; their coverage was insufficient. The initial
+PASS is withdrawn, not silently extended with another ownership patch. Plan deprecated;
+all staged product changes restored from HEAD, candidate/evidence retained.
 
 ## High-level summary
-Zero High, one Medium, zero Low findings. Shape survives with explicit client-bound
+Original plan-review summary (before the failed experiment): zero High, one Medium,
+zero Low findings. The provisional shape required explicit client-bound
 contexts and masking at public nested read boundaries. Full native prebuild remains
 required; native lifetime and nested-context observations alone do not replace it.
 Same warmed session, current-thread GPT6 Astra/xhigh verified; no subagent. Plan a4db484,
@@ -159,3 +162,15 @@ existing callback behavior. General capability redesign has no demonstrated addi
 instance requiring it and would expand scope; robust survives any later common system.
 No other findings or selections. Do not re-critique after folding. Experiment now runs
 against plan plus selected mitigation before any product adoption.
+
+## Failed premise and required return to planning
+Tracking download iterators and created CDN helpers does not own every source resource.
+Telethon._create_exported_sender constructs and connects a new MTProtoSender, then
+awaits ExportAuthorization before returning it to _borrow_exported_sender. Until that
+return, the iterator still holds the old sender and the new sender is not cached.
+Cancellation stops the public task but the chosen finalizer has no reference to the
+new connection. This rewrites step1's resource-registration/admission boundary and
+its combined proof, not a naming or missed wrapper correction. No fourth local fix.
+Re-plan source ownership from resource creation through transfer into the SDK cache;
+review direct sender.send for ImportAuthorization as well. Other design work and
+tests remain archived, but no candidate is qualified to merge.

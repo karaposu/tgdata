@@ -1,0 +1,27 @@
+{
+  "result": "ABORTED",
+  "reason": "exported sender creation is outside planned ownership",
+  "source_probe": {
+    "result": "FAIL",
+    "observation": {
+      "public_task_cancelled": true,
+      "export_auth_cancelled": true,
+      "exported_sender_connected": true,
+      "wire_connected": true,
+      "send_loop_running": true,
+      "receive_loop_running": true,
+      "reachable_in_client_cache": false,
+      "temporary_files": 0
+    },
+    "fixture_cleanup_after_observation": true
+  },
+  "prebuild_initial_checks": 1051,
+  "prebuild_initial_suites": 35,
+  "post_adoption_targeted_checks": 643,
+  "post_adoption_full_initial": "FAIL: timing-sensitive heartbeat assertion",
+  "heartbeat_unchanged_rerun": "PASS:31 tests",
+  "product_changes_withdrawn": true,
+  "product_commit": null,
+  "merge": null,
+  "release": null
+}

@@ -28,3 +28,4 @@ COMPLETE
 - 2026-10-18_08-24: CritiqueD1–D8,allvariants screened, assemblyS SURVIVE; manualstructural5/5 PASS; next Routelister.
 - 2026-10-18_08-25: Routelister9 identities/two files, no selections; manual header/type/record/index/no-control checks5/5 PASS; next CONCLUDE.
 - 2026-10-18_08-26: CONCLUDE: bounded engine-owned windows, ordered acceptance and SDK policy retained. Finding written; six discipline files archived, both route files remain. Manual completeness/readability checks PASS; COMPLETE.
+- 2026-10-18_09-10: Subsequent native verification found export-creation ownership gap. Finding is historical and insufficient for implementation; see ../verification/blocked.md. No new inquiry iteration run.

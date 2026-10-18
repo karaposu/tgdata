@@ -1,5 +1,5 @@
 {
-  "result": "PASS",
+  "result": "FAIL",
   "base": "d8232d186b591a901a61a4e3c2b05bb6bbabea03",
   "changed": [
     "README.md",
@@ -209,5 +209,7 @@
   "suites": 35,
   "demos": 7,
   "live_skips": 3,
-  "telethon": "1.45.0"
+  "telethon": "1.45.0",
+  "initial_suite_result": "PASS",
+  "invalidated_by": "export_creation_probe.json"
 }

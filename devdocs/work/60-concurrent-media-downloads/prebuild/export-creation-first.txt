@@ -1,0 +1,18 @@
+{"result": "FAIL", "observation": {"public_task_cancelled": true, "export_auth_cancelled": true, "exported_sender_connected": true, "wire_connected": true, "send_loop_running": true, "receive_loop_running": true, "reachable_in_client_cache": false, "temporary_files": 0}, "fixture_cleanup_after_observation": true}
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/work/60-concurrent-media-downloads/prebuild/export_creation_probe.py", line 63, in <module>
+    b.f.TMP=Path(tmp);asyncio.run(main(Path(tmp)))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-50-terminal-account-login/devdocs/work/60-concurrent-media-downloads/prebuild/export_creation_probe.py", line 60, in main
+    assert passed,'exported sender creation escaped media ownership after cancellation'
+           ^^^^^^
+AssertionError: exported sender creation escaped media ownership after cancellation

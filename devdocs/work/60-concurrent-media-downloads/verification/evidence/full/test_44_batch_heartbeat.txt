@@ -1,0 +1,30 @@
+...................F...........
+======================================================================
+FAIL: test_owned_sleep_ticks_only_while_waiting (__main__.HeartbeatTests.test_owned_sleep_ticks_only_while_waiting)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-50-terminal-account-login/tgdata/smoke_tests/test_44_batch_heartbeat.py", line 305, in test_owned_sleep_ticks_only_while_waiting
+    self.run_async(run)
+  File "/private/tmp/tgdata-50-terminal-account-login/tgdata/smoke_tests/test_44_batch_heartbeat.py", line 85, in run_async
+    return asyncio.run(run())
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-50-terminal-account-login/tgdata/smoke_tests/test_44_batch_heartbeat.py", line 78, in run
+    try:return await work()
+               ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-50-terminal-account-login/tgdata/smoke_tests/test_44_batch_heartbeat.py", line 299, in run
+    self.assertGreaterEqual(beats.count('flood-wait'),3)
+AssertionError: 2 not greater than or equal to 3
+
+----------------------------------------------------------------------
+Ran 31 tests in 0.744s
+
+FAILED (failures=1)

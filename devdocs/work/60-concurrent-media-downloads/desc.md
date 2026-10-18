@@ -79,8 +79,24 @@ Medium / P2: daily media throughput matters, but correct progress and cancellati
 are prerequisites to enabling the option. Classification remains feature-heavy.
 
 ## Known Blockers
-No open planning blocker: source behavior is readable/probeable and the contract
-is settled in traverse/finding.md. Complete combined native prebuild is an execution
-gate before product adoption. Actual live gains remain unqualified; a separately
-authorized bounded benchmark needs an account/group/shared allowance. That later
-measurement does not gate delivering the default-off, offline-qualified option.
+
+### Ownership before an exported sender is returned — CLOSED: premise disproved
+**Question tested:** do tracked download iterators and owned CDN helpers cover all
+resources created during an opted-in download? **Answer:** no. The native public-path
+probe in prebuild/export_creation_probe.py cancelled while ExportAuthorization was
+pending, after a real MTProtoSender had connected to the controlled transport and
+started its actual SDK loops. The public read and authorization request cancelled,
+but the sender/transport and both loops remained active. The sender was not cached.
+
+**Why the plan changes:** the next design must own an exported sender from creation,
+before asynchronous connect/authorization and before SDK cache handoff. Iterator-only
+finalization cannot find this resource. Step1's ownership boundary and its proof must
+be re-planned; direct ImportAuthorization sender admission also needs examination.
+**Source:** post-adoption native verification on2026-10-18, recorded as a failed
+prebuild premise. All candidate product changes withdrawn; plan deprecated.
+**Who closes the next design:** task-plan/critic-d using this measured fact, followed
+by a new complete real-component prebuild. No user/account secret is needed to study it.
+
+The earlier suite pass was insufficient coverage, not evidence that the leak is
+acceptable. Do not resume from the folded plan. No live tests, merge or release took
+place. Live throughput remains a separately authorized future measurement.

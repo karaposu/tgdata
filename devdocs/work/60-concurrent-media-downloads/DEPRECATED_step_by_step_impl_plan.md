@@ -2,10 +2,16 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# Concurrent media downloads — revision 2
+# Concurrent media downloads — revision 2 (deprecated)
+
+**DEPRECATED — native creation-ownership experiment failed on2026-10-18.**
+The earlier complete-suite claim omitted the pre-borrow export-creation boundary.
+All adopted product changes withdrawn. Do not implement from this plan; see
+verification/blocked.md and the measured closed premise in desc.md.
 
 **Critic folded:** 2026-10-18 — one robust mitigation (steps1–3 changed, zero added).
-Complete native prebuild PASS before adoption; see prebuild/result.md. No re-critique.
+Initial prebuild suite PASS was invalidated by the later creation-lifetime probe.
+See prebuild/result.md for both observations. No re-critique or structural patch.
 
 ### What is the task
 Implement issue60's optional `download_concurrency=1` on both readers and their

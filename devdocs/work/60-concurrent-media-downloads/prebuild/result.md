@@ -2,7 +2,13 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# Combined native prebuild — PASS before product adoption
+# Combined native prebuild — qualification withdrawn
+
+**Current gate: FAIL.** The later native exported-sender creation probe found a
+connection and both native SDK loops still alive after public cancellation. The
+sender was not yet in the client cache. Initial suite/CDN evidence below remains
+historically true, but did not cover this creation boundary and is insufficient.
+See ../verification/blocked.md. All adopted product changes were withdrawn.
 
 Frozen devd8232d1, git-free candidate at /private/tmp/tgdata-60-media-prebuild/candidate.
 Planrevision1 plus selected robust nested-scope mitigation; no product code changed
