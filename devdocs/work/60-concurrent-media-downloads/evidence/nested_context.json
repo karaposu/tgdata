@@ -1,0 +1,7 @@
+{
+  "result": "OBSERVED",
+  "nested_sends": 2,
+  "same_task": true,
+  "inherited_outer_context": true,
+  "different_client": true
+}
