@@ -3,7 +3,7 @@
 What ownership, ordered-completion and wait contract lets optional parallel media downloads coexist with tgdata readers, durable progress and existing SDK policy without a general scheduler?
 Agent-framed inquiry under user-authorized issue60, whose raw request is ../request.md.
 ## Articulation Reference
-articulate_simple.md; count1; I1; HIGH-PROCEED; no flagged condition.
+docarchive/articulate_simple.md; count1; I1; HIGH-PROCEED; no flagged condition.
 ## Question
 What ownership, ordered-completion and wait contract lets optional parallel media downloads coexist with tgdata readers, durable progress and existing SDK policy without a general scheduler?
 From I1 literal/MQ1/MQ3: minimal reader-specific versus reusable ownership primitive;
