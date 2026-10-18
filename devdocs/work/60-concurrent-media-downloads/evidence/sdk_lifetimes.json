@@ -1,0 +1,16 @@
+[
+  {
+    "case": "success",
+    "borrowed": 1,
+    "returned": 1,
+    "cancelled": false,
+    "pending_cancelled": true
+  },
+  {
+    "case": "cancel",
+    "borrowed": 1,
+    "returned": 0,
+    "cancelled": true,
+    "pending_cancelled": true
+  }
+]
