@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "public_batch": true,
+  "actual_sdk_cdn_request": [
+    "GetCdnFileRequest"
+  ],
+  "plaintext_bytes": 272,
+  "sha256": "43e341c41c8258fe06a83501a325b4a3348e2ca49427900e0b6f32a49ef6276a",
+  "helpers_created": 1,
+  "helper_closed": true,
+  "parent_connected": true,
+  "wait_threshold": 0,
+  "request_retries": 0
+}

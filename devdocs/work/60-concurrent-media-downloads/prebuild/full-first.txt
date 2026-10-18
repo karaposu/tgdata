@@ -1,0 +1,43 @@
+{"name": "test_13_device_identity", "passed": true, "exit_code": 0, "counts": [6, 6], "live_skips": 1, "duration_s": 0.938}
+{"name": "test_15_login_checks", "passed": true, "exit_code": 0, "counts": [11, 11], "live_skips": 0, "duration_s": 2.956}
+{"name": "test_17_session_store", "passed": true, "exit_code": 0, "counts": [12, 12], "live_skips": 0, "duration_s": 0.604}
+{"name": "test_18_read_budget", "passed": true, "exit_code": 0, "counts": [28, 28], "live_skips": 0, "duration_s": 3.47}
+{"name": "test_19_message_batches", "passed": true, "exit_code": 0, "counts": [33, 33], "live_skips": 0, "duration_s": 0.815}
+{"name": "test_14_flood_threshold", "passed": true, "exit_code": 0, "counts": [11, 11], "live_skips": 0, "duration_s": 9.024}
+{"name": "test_16_health_events", "passed": true, "exit_code": 0, "counts": [21, 21], "live_skips": 0, "duration_s": 9.133}
+{"name": "test_22_daily_continuation", "passed": true, "exit_code": 0, "counts": [25, 25], "live_skips": 0, "duration_s": 2.475}
+{"name": "test_23_fixed_windows", "passed": true, "exit_code": 0, "counts": [22, 22], "live_skips": 0, "duration_s": 1.729}
+{"name": "test_24_backfill_state", "passed": true, "exit_code": 0, "counts": [23, 23], "live_skips": 0, "duration_s": 1.613}
+{"name": "test_12_proxy", "passed": true, "exit_code": 0, "counts": [7, 7], "live_skips": 2, "duration_s": 13.015}
+{"name": "test_25_backfill_delivery", "passed": true, "exit_code": 0, "counts": [41, 41], "live_skips": 0, "duration_s": 3.078}
+{"name": "test_27_backfill_pacing", "passed": true, "exit_code": 0, "counts": [32, 32], "live_skips": 0, "duration_s": 3.179}
+{"name": "test_28_backfill_controls", "passed": true, "exit_code": 0, "counts": [32, 32], "live_skips": 0, "duration_s": 2.171}
+{"name": "test_26_backfill_completion", "passed": true, "exit_code": 0, "counts": [16, 16], "live_skips": 0, "duration_s": 5.064}
+{"name": "test_32_account_operation", "passed": true, "exit_code": 0, "counts": [28, 28], "live_skips": 0, "duration_s": 0.669}
+{"name": "test_33_owned_health", "passed": true, "exit_code": 0, "counts": [62, 62], "live_skips": 0, "duration_s": 0.723}
+{"name": "test_34_group_access", "passed": true, "exit_code": 0, "counts": [49, 49], "live_skips": 0, "duration_s": 1.025}
+{"name": "test_31_account_pool", "passed": true, "exit_code": 0, "counts": [46, 46], "live_skips": 0, "duration_s": 6.587}
+{"name": "test_29_backfill_public", "passed": true, "exit_code": 0, "counts": [23, 23], "live_skips": 0, "duration_s": 8.473}
+{"name": "test_35_join_budget", "passed": true, "exit_code": 0, "counts": [35, 35], "live_skips": 0, "duration_s": 4.074}
+{"name": "test_37_worker", "passed": true, "exit_code": 0, "counts": [33, 33], "live_skips": 0, "duration_s": 1.148}
+{"name": "test_30_backfill_integration", "passed": true, "exit_code": 0, "counts": [15, 15], "live_skips": 0, "duration_s": 10.678}
+{"name": "test_39_pool_lifecycle", "passed": true, "exit_code": 0, "counts": [48, 48], "live_skips": 0, "duration_s": 3.058}
+{"name": "test_40_pool_outcomes", "passed": true, "exit_code": 0, "counts": [25, 25], "live_skips": 0, "duration_s": 3.029}
+{"name": "test_41_stepwise_login", "passed": true, "exit_code": 0, "counts": [23, 23], "live_skips": 0, "duration_s": 2.983}
+{"name": "test_36_group_join", "passed": true, "exit_code": 0, "counts": [44, 44], "live_skips": 0, "duration_s": 7.634}
+{"name": "test_44_batch_heartbeat", "passed": true, "exit_code": 0, "counts": [31, 31], "live_skips": 0, "duration_s": 1.372}
+{"name": "test_45_group_profile", "passed": true, "exit_code": 0, "counts": [38, 38], "live_skips": 0, "duration_s": 0.917}
+{"name": "test_46_group_activity", "passed": true, "exit_code": 0, "counts": [35, 35], "live_skips": 0, "duration_s": 0.825}
+{"name": "test_43_photo_trails", "passed": true, "exit_code": 0, "counts": [53, 53], "live_skips": 0, "duration_s": 4.525}
+{"name": "test_42_album_assembly", "passed": true, "exit_code": 0, "counts": [57, 57], "live_skips": 0, "duration_s": 5.938}
+{"name": "example_account_pool", "passed": true, "exit_code": 0, "counts": null, "live_skips": 0, "duration_s": 0.555}
+{"name": "example_daily_continuation", "passed": true, "exit_code": 0, "counts": null, "live_skips": 0, "duration_s": 0.564}
+{"name": "example_backfill_runs", "passed": true, "exit_code": 0, "counts": null, "live_skips": 0, "duration_s": 1.613}
+{"name": "example_reading_worker", "passed": true, "exit_code": 0, "counts": null, "live_skips": 0, "duration_s": 1.199}
+{"name": "example_stepwise_login", "passed": true, "exit_code": 0, "counts": null, "live_skips": 0, "duration_s": 0.771}
+{"name": "example_album_assembly", "passed": true, "exit_code": 0, "counts": null, "live_skips": 0, "duration_s": 0.602}
+{"name": "example_photo_trails", "passed": true, "exit_code": 0, "counts": null, "live_skips": 0, "duration_s": 0.554}
+{"name": "test_49_media_concurrency", "passed": true, "exit_code": 0, "counts": [38, 38], "live_skips": 0, "duration_s": 7.375}
+{"name": "test_38_worker_process", "passed": true, "exit_code": 0, "counts": [25, 25], "live_skips": 0, "duration_s": 44.475}
+{"name": "test_48_terminal_login", "passed": true, "exit_code": 0, "counts": [26, 26], "live_skips": 0, "duration_s": 95.465}
+RESULT PASS offline 1051 suites 35 demos 7 live skips 3

@@ -29,6 +29,12 @@ source fork beyond the planned private seam, weaker prefix/cleanup semantics or 
 regression expectations. Record FAIL, deprecate plan and stop; do not patch architecture
 under the same plan. Live throughput is not part of the pass claim.
 
+Result: PASS — complete candidate at2026-10-18:1,051 offline checks/35 suites/seven
+demos, three optional live skips;113 sources compile/pass3.7 grammar.38 concurrency
+cases plus an actual public SDK CDN payload probe PASS. Three local call-site/fixture
+corrections are retained with first outputs; no design change or weakened assertion.
+See prebuild/result.md and manifest.json. Product adoption had not begun.
+
 ## High-level summary
 Zero High, one Medium, zero Low findings. Shape survives with explicit client-bound
 contexts and masking at public nested read boundaries. Full native prebuild remains

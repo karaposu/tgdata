@@ -2,7 +2,10 @@
 model: gpt-6-astra
 effort: xhigh
 ---
-# Concurrent media downloads — revision 1
+# Concurrent media downloads — revision 2
+
+**Critic folded:** 2026-10-18 — one robust mitigation (steps1–3 changed, zero added).
+Complete native prebuild PASS before adoption; see prebuild/result.md. No re-critique.
 
 ### What is the task
 Implement issue60's optional `download_concurrency=1` on both readers and their
@@ -21,7 +24,7 @@ for correctness or a promised outcome.
 #### Execution Blockers
 - Complete combined real-component prebuild PASS is required before step1 adoption.
   Agent runs it in a git-free candidate, using actual Telethon, files, budgets and
-  public consumers. Status: pending experiment, no external dependency.
+  public consumers. Status: PASS, no external dependency; full combined evidence committed before adoption.
 - Live throughput comparison requires a suitable account/group/shared allowance and
   explicit bounded read-only authorization. Not part of product adoption steps;
   record unqualified performance and provide an opt-in procedure, no deployment.
@@ -43,6 +46,12 @@ before copying product bytes, then run affected/full regression suites.
 |6|Verification and separate commits|Qualified feature implementation and honest issue handoff|
 
 ## Step 1 — owned media work and request policy
+
+[folded: Risk1, robust] Media contexts require both active task and explicit client
+membership (root plus owned CDN helpers). Every new public reader invocation masks
+inherited media state; N1 remains masked. Owned verified account handles are unchanged.
+Native prebuild also covers SDK-internal iterator close and queued stop before enqueue,
+using the planned retained cleanup and cancellation rules.
 ### Proposed changes
 Add private `tgdata/media_downloads.py` with strict integer1–16 validation and a
 kwargs helper omitting1. Do not accept bool/coercible strings/floats. Use ValueError
@@ -107,6 +116,9 @@ Context ownership, SDK retry/send order, budgets, exported/CDN lifetime, health,
 5
 
 ## Step 2 — bounded batch attachment preparation
+
+[folded: Risk1, robust] Start each batch-reader call behind a fresh media boundary.
+N1/reference-only reads must not inherit an outer callback's media owner.
 ### Proposed changes
 Extend BatchEngine.fetch_batch and TgData.get_message_batch with the default option.
 Validate before directories/source work. N1 calls the existing preparation loop with
@@ -131,6 +143,9 @@ Window/date scans, raw records, blob publication, pool captures, batch limits.
 4
 
 ## Step 3 — legacy attachment preparation without changing default behavior
+
+[folded: Risk1, robust] Mask inherited media state before legacy reader setup. Test
+nested callback reads using the same and different clients and N1/N3 options.
 ### Proposed changes
 Keep the current fetch implementation as the inline default. Add a wrapper/optional
 private owner argument so above-one media reads retain ownership across any existing

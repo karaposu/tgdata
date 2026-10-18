@@ -1,0 +1,21 @@
+Ready: offline-demo accounts: 0
+{
+  "version": 1,
+  "worker_id": "offline-demo",
+  "instance_id": "e39a5df74ccd4a6a939642083df77697",
+  "request_id": 1,
+  "account_id": "111",
+  "operation": "lookup_group",
+  "kind": "result",
+  "ok": false,
+  "data": null,
+  "error": {
+    "category": "worker_error",
+    "type": "WorkerError",
+    "code": "unknown_account"
+  },
+  "partial_result": null,
+  "health_dropped": 0,
+  "worker_stopping": false
+}
+Offline demo complete: ready, local refusal, EOF. No account was opened.

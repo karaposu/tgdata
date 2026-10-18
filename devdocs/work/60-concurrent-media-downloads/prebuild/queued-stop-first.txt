@@ -1,0 +1,30 @@
+F
+======================================================================
+FAIL: test_queued_heartbeat_stop_precedes_next_page_admission (tgdata.smoke_tests.test_49_media_concurrency.ConcurrentMediaTests.test_queued_heartbeat_stop_precedes_next_page_admission)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 643, in test_queued_heartbeat_stop_precedes_next_page_admission
+    self.run_async(run)
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 112, in run_async
+    return asyncio.run(run())
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 106, in run
+    return await work()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 640, in run
+    self.assertEqual(len(sender.reads),1)
+AssertionError: 2 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.472s
+
+FAILED (failures=1)

@@ -1,0 +1,113 @@
+.....Error fetching messages: caller stopped
+....E.Failed to load media bytes for message 101: controlled source failure
+Error fetching messages: controlled source failure
+.....Error fetching messages: source failed
+.Error fetching messages: existing artifact failed size verification
+..F...............
+======================================================================
+ERROR: test_cleanup_only_failure_is_local_not_success (__main__.ConcurrentMediaTests.test_cleanup_only_failure_is_local_not_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 522, in test_cleanup_only_failure_is_local_not_success
+    self.run_async(run)
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 112, in run_async
+    return asyncio.run(run())
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 106, in run
+    return await work()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 518, in run
+    with self.assertRaises(RuntimeError) as got:await self.batch(tg,limit=1,download_concurrency=3)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 122, in batch
+    return await tg.get_message_batch(CHAT, after_id=100, limit=kwargs.pop('limit', 3),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/tgdata.py", line 86, in wrapper
+    result = await method(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/tgdata.py", line 441, in get_message_batch
+    return await self.batch_engine.fetch_batch(group_id, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/batch_engine.py", line 164, in fetch_batch
+    return await self._fetch_batch(group_id, after_id=after_id, limit=limit,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/batch_engine.py", line 267, in _fetch_batch
+    await flush()
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/batch_engine.py", line 232, in flush
+    await _media_owner.window(items, download, accept)
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/media_downloads.py", line 223, in window
+    raise primary
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/media_downloads.py", line 170, in run
+    value = await work(item)
+            ^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/batch_engine.py", line 221, in download
+    media['blob'] = await download_blob(media_directory, writer, expected_size=media['size'])
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/batch_files.py", line 155, in download_blob
+    result = await writer(output)
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/batch_engine.py", line 220, in writer
+    return await client.download_media(message, file=output, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/media_downloads.py", line 311, in download_media
+    return await super().download_media(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/lib/python3.11/site-packages/telethon/client/downloads.py", line 441, in download_media
+    return await self._download_document(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/lib/python3.11/site-packages/telethon/client/downloads.py", line 932, in _download_document
+    result = await self._download_file(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/lib/python3.11/site-packages/telethon/client/downloads.py", line 566, in _download_file
+    async for chunk in self._iter_download(
+  File "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/lib/python3.11/site-packages/telethon/requestiter.py", line 74, in __anext__
+    if await self._load_next_chunk():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/lib/python3.11/site-packages/telethon/client/downloads.py", line 83, in _load_next_chunk
+    await self.close()
+  File "/Users/ns/Desktop/projects/telegram-group-scraper/.venv/lib/python3.11/site-packages/telethon/client/downloads.py", line 147, in close
+    await self.client._return_exported_sender(self._sender)
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 516, in fail
+    async def fail(sender):raise errors.ChannelPrivateError(request=None)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+telethon.errors.rpcerrorlist.ChannelPrivateError: The channel specified is private and you lack permission to access it. Another reason may be that you were banned from it (caused by NoneType)
+
+======================================================================
+FAIL: test_legacy_reuse_and_date_exclusion (__main__.ConcurrentMediaTests.test_legacy_reuse_and_date_exclusion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 594, in test_legacy_reuse_and_date_exclusion
+    self.run_async(run)
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 112, in run_async
+    return asyncio.run(run())
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ns/miniconda3/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 106, in run
+    return await work()
+           ^^^^^^^^^^^^
+  File "/private/tmp/tgdata-60-media-prebuild/candidate/tgdata/smoke_tests/test_49_media_concurrency.py", line 593, in run
+    self.assertEqual(second.MediaPath.tolist(),first.MediaPath.tolist());self.assertEqual(len(transfer.requests),2)
+                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 4 != 2
+
+----------------------------------------------------------------------
+Ran 35 tests in 6.163s
+
+FAILED (failures=1, errors=1)

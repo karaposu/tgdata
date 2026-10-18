@@ -1,0 +1,10 @@
+.....Error fetching messages: caller stopped
+.......Failed to load media bytes for message 101: controlled source failure
+Error fetching messages: controlled source failure
+.....Error fetching messages: source failed
+.Error fetching messages: existing artifact failed size verification
+....................
+----------------------------------------------------------------------
+Ran 38 tests in 6.787s
+
+OK
