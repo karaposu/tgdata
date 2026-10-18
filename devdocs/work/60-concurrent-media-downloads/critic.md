@@ -125,9 +125,11 @@ context. Add real nested callback cases for same/different client, N1/N3 and bac
 inheritance. Do not broaden verified account-operation or owned-health authority.
 **Why this is robust:** closes the concrete same-task leak at the public operation
 boundary while retaining explicit source ownership; covers both affected readers.
-- [ ] selected   - [ ] elegant   - [ ] last_resort
+- [x] selected   - [x] elegant   - [ ] last_resort
 **Note**
-*Why chosen:* —
+*Why chosen:* Both reader entry points share this exact context leak. One client-bound
+private context plus boundary masking covers them without moving unrelated APIs.
+No demonstrated class requires replacing the already verified ownership systems.
 *For future:* —
 
 ### Long-term mitigation
@@ -144,3 +146,10 @@ a shared capability might enforce all task/client/resource boundaries uniformly.
 Complete real prebuild before adoption. No externally blocked implementation step;
 separate live benchmark requires explicit account/group/allowance authority. No new
 branch, schema, package version, dependency, release or deployment in this run.
+
+## Phase3 selection record
+One robust mitigation selected, elegant, not last_resort. Quick restriction discards
+existing callback behavior. General capability redesign has no demonstrated additional
+instance requiring it and would expand scope; robust survives any later common system.
+No other findings or selections. Do not re-critique after folding. Experiment now runs
+against plan plus selected mitigation before any product adoption.
