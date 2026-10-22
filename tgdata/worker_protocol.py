@@ -38,13 +38,13 @@ _CANONICAL_AUTH_REASONS = frozenset(
 
 _CODES = frozenset(('invalid_json', 'invalid_envelope', 'invalid_request_id',
     'stale_request_id', 'unknown_account', 'unknown_operation', 'invalid_parameters',
-    'join_disabled', 'invalid_config', 'worker_busy', 'worker_stopping',
+    'join_disabled', 'media_disabled', 'invalid_config', 'worker_busy', 'worker_stopping',
     'delivery_failed', 'frame_too_large', 'incomplete_frame', 'input_failure',
     'output_failure', 'unsupported_sdk'))
 _FIELDS = frozenset(('version', 'request_id', 'account_id', 'operation', 'params',
     'group_id', 'target', 'after_id', 'limit', 'start_date', 'end_date', 'worker_id',
     'accounts', 'config_path', 'session_store', 'label', 'read_budget', 'join_budget',
-    'session', 'input', 'output'))
+    'session', 'input', 'output', 'download_media', 'media_directory'))
 _IDS = frozenset(('id', 'peer_id', 'user_id', 'account_id', 'expected_account_id',
                   'actual_account_id', 'bot_id', 'query_id', 'target', 'group'))
 _DECIMAL = re.compile(r'-?(?:0|[1-9][0-9]*)\Z')
@@ -130,9 +130,12 @@ def _parameters(operation, params):
             raise WorkerError('invalid_parameters', field='params')
         _parse_target(params['target'])
         return (('target', params['target']),)
-    allowed = {'group_id', 'after_id', 'limit', 'start_date', 'end_date'}
+    allowed = {'group_id', 'after_id', 'limit', 'start_date', 'end_date', 'download_media'}
     if 'group_id' not in params or not set(params) <= allowed:
         raise WorkerError('invalid_parameters', field='params')
+    media = params.get('download_media', False)
+    if type(media) is not bool:
+        raise WorkerError('invalid_parameters', field='download_media')
     target = params['group_id']
     _parse_target(target)
     after = canonical_id(params.get('after_id', '0'), 0, MAX_MESSAGE_ID, 'after_id')
@@ -141,8 +144,11 @@ def _parameters(operation, params):
         raise WorkerError('invalid_parameters', field='limit')
     start, end = (_date(params.get(name), name) for name in ('start_date', 'end_date'))
     _HistoryWindow.from_dates(start, end)
-    return tuple(dict(group_id=target, after_id=after, limit=limit,
-                      start_date=start, end_date=end).items())
+    options = dict(group_id=target, after_id=after, limit=limit,
+                   start_date=start, end_date=end)
+    if media:
+        options['download_media'] = True
+    return tuple(options.items())
 
 
 class RequestDecoder:

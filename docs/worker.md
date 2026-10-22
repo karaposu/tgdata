@@ -51,8 +51,8 @@ the shared ledger if another authorized component has already provisioned it.
 }
 ```
 
-The manifest accepts exactly these keys; `join_budget` and account `label` are
-optional. `worker_id` is 1–64 ASCII letters/digits/`_`/`.`/`-`, starting with a
+The manifest accepts these keys and the optional `media_directory` described below;
+`join_budget` and account `label` are optional. `worker_id` is 1–64 ASCII letters/digits/`_`/`.`/`-`, starting with a
 letter or digit. Labels are at most 128 characters. Account IDs are canonical
 positive decimal strings up to signed 64-bit maximum. Duplicate IDs, config
 paths and known shared session addresses are refused. This is local validation,
@@ -102,7 +102,7 @@ uncertain job merely because the new process accepts the same number.
 
 | Operation | Parameters | Result |
 |---|---|---|
-| `read_batch` | `group_id`; optional `after_id` (default `"0"`), `limit` (default 200), paired `start_date`/`end_date` | Unchanged MessageBatch v1, references-only media |
+| `read_batch` | `group_id`; optional `after_id` (default `"0"`), `limit` (default 200), paired `start_date`/`end_date`, `download_media` (default `false`) | Unchanged MessageBatch v1; references by default, downloaded file descriptors when enabled |
 | `lookup_group` | `target` | Qualified group details, including invite previews |
 | `check_group_access` | `target` | `readable`, `denied` or `unprobed`; a real history probe costs read allowance |
 | `join_group` | `target` | `joined`, `already_joined`, `requested`, `payment_required` or `interaction_required` |
@@ -125,6 +125,66 @@ Membership and readability are different facts. A join request awaiting approval
 is not membership; successful membership is not proof that history can be read.
 See [group joining](group_joining.md) for qualified results, conservative claim
 accounting and interactive/payment outcomes that the worker does not complete.
+
+## Download attachments on the worker machine
+
+Add a trusted output directory to `worker.json`:
+
+```json
+"media_directory": "media"
+```
+
+This is a local configuration field, never a job parameter. Relative paths resolve
+against the manifest's directory and are pinned at startup. Omission or `null`
+disables media downloads. A nonempty path string is required when enabled; an
+existing non-directory or malformed path produces `invalid_config` with field
+`media_directory`. A missing directory is permitted. The existing batch reader
+creates it and its parents on the first media-enabled read; startup and
+references-only reads do not create it. Directory permissions and later filesystem
+changes can still cause local operation errors when a read uses it.
+
+Then submit a read with the strict boolean `download_media` option:
+
+```json
+{"version":1,"request_id":1,"account_id":"123456789","operation":"read_batch","params":{"group_id":"@example_group","after_id":"100","limit":20,"download_media":true}}
+```
+
+Omitting the flag or using `false` preserves references-only behavior. Strings,
+numbers and `null` are not booleans and are refused. A media-enabled read without a
+configured directory returns `media_disabled` before opening a client or spending
+read allowance. All three other operations remain target-only. Job paths, including
+`media_directory` or `download_media_to`, are rejected as unknown parameters.
+
+The worker uses the existing **sequential** batch downloader. Successful `data`
+has `media_mode: "download"`; each supported downloadable photo/document/video
+contains a `media.blob` with `sha256`, `size` and `path`. The path is the hash
+basename under the configured directory. No media bytes or absolute output root
+are embedded in the reply. Non-downloadable messages retain their normal records.
+
+On download failure, `ok` remains false and `partial_result`, when available,
+contains only completely prepared messages before the failure. Its `next_after_id`
+never advances past the failed attachment. Validate the payload using
+`MessageBatch.from_json(json.dumps(frame["data"]))` (or `partial_result`); this
+checks the batch representation, not the files. Verify local file sizes and hashes
+separately when receiving/uploading them. Local filesystem failures are not Telegram
+health events; the existing source, budget and cleanup policies remain in force.
+
+Completed files stay on disk after success, partial failure, result-delivery
+failure and worker exit. Your relay owns upload and eventual deletion. A hash may
+be referenced by several messages or jobs: delete it only after every dependent
+delivery no longer needs it. The worker has no upload acknowledgment, durable file
+inventory or automatic garbage collector. Temporary incomplete artifacts follow
+the reader's existing cleanup behavior. Cancellation keeps the existing worker
+contract; it does not promise a terminal partial-result reply.
+
+Batch identity includes media mode and blob descriptors. The same messages read
+with media off and on therefore have different `batch_id` values. Keep the relay's
+chosen media mode consistent and use the returned identity. Files on disk do not
+prove that a result reached the relay or that the destination accepted an upload.
+
+For a trusted Python bootstrap, pass `media_directory` to `serve` (or `Worker`)
+as a text path or `Path`; a relative path resolves against the startup working
+directory. It is still configuration, never part of a submitted job.
 
 ## Read replies
 
@@ -175,7 +235,7 @@ raw exception messages, reprs or tracebacks. Categories include `worker_error`,
 `operation_error`, `authentication_required`, `identity_mismatch`, `allowance_error`,
 `group_error`, `configuration_error` and `telegram_error`. Local refusal codes
 include `unknown_account`, `unknown_operation`, `stale_request_id`,
-`invalid_parameters` and `join_disabled`. Treat unknown categories/types as errors.
+`invalid_parameters`, `join_disabled` and `media_disabled`. Treat unknown categories/types as errors.
 Authentication errors retain boolean `first_login` and `banned` flags. A `reason`
 appears only for a recognized SDK authentication code, such as `SESSION_REVOKED`
 or `AUTH_KEY_UNREGISTERED`, or an existing banned-account code. Unknown Telegram
@@ -239,6 +299,8 @@ Run the provided caller from an installed package environment:
 python examples/reading_worker.py --demo
 python examples/reading_worker.py --config worker.json --account 123456789 \
   --target @example_group --after-id 100 --limit 20
+python examples/reading_worker.py --config worker.json --account 123456789 \
+  --target @example_group --after-id 100 --limit 20 --download-media
 ```
 
 The offline demo uses an empty inventory and a new temporary ledger. It demonstrates
@@ -246,6 +308,8 @@ ready, a local unknown-account refusal and EOF; it does not simulate an SDK read
 Normal mode drains correlated health frames before the result and prints it.
 It neither saves messages nor retries. `--operation` can explicitly select another
 verb; selecting `join_group` authorizes that real operation for the supplied target.
+`--download-media` is valid only with `read_batch` and uses the worker-configured
+directory; the example does not upload or delete the downloaded files.
 
 For store-backed sessions, use trusted Python setup in a **dedicated process's
 main thread**, outside any running event loop:
@@ -259,7 +323,8 @@ from tgdata.worker import WorkerAccount, serve
 account = WorkerAccount(123456789, '/srv/reader/account.ini', session_store=store)
 raise SystemExit(serve([account], worker_id='database-reader',
     read_budget=ReadBudget('/srv/reader/read.sqlite3'),
-    join_budget=JoinBudget('/srv/reader/join.sqlite3', create=False)))
+    join_budget=JoinBudget('/srv/reader/join.sqlite3', create=False),
+    media_directory='/srv/reader/media')))
 ```
 
 `serve` owns an event loop, returns the exit code, and restores logging/signal state.
@@ -275,3 +340,10 @@ authentication errors, quiet request cancellation, stops around job creation,
 retained cleanup and process failures. Held cleanup is released explicitly by the
 test parent; no child polling timer supplies progress. This is not live qualification
 or evidence that two machines may share a session safely.
+
+`python -m tgdata.smoke_tests.test_49_worker_media` covers opt-in media with actual
+worker/SDK reads, local files and SQLite, plus CLI subprocess configuration and
+JSON replies. Wire responses are synthetic and external sockets are forbidden.
+A live check requires separate authorization for an existing account/group and a
+bounded read. These tests do not qualify new concurrency or repair the separate
+auxiliary connection-lifecycle issues.
