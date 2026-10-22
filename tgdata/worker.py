@@ -50,7 +50,7 @@ def load_inventory(path):
     value = wire.decode_json(raw)
     required = {'version', 'worker_id', 'read_budget', 'accounts'}
     if (type(value) is not dict or not required <= set(value)
-            or not set(value) <= required | {'join_budget'}
+            or not set(value) <= required | {'join_budget', 'media_directory'}
             or type(value['version']) is not int or value['version'] != wire.VERSION):
         raise wire.WorkerError('invalid_config')
     rows = value['accounts']
@@ -69,7 +69,11 @@ def load_inventory(path):
     join = None
     if value.get('join_budget') is not None:
         join = JoinBudget(_path(value['join_budget'], path.parent, 'join_budget'), create=False)
-    return dict(accounts=accounts, worker_id=value['worker_id'], read_budget=budget, join_budget=join)
+    options = dict(accounts=accounts, worker_id=value['worker_id'], read_budget=budget, join_budget=join)
+    if value.get('media_directory') is not None:
+        options['media_directory'] = _path(value['media_directory'], path.parent,
+                                            'media_directory', must_exist=False)
+    return options
 
 
 def _raw_output(stream):
@@ -102,7 +106,7 @@ def _fatal(error, output, category='configuration_error'):
 
 
 def serve(accounts, *, worker_id, read_budget, join_budget=None,
-          input_stream=None, output_stream=None):
+          media_directory=None, input_stream=None, output_stream=None):
     """Run in a dedicated process's main thread and return its exit code.
 
     A Python bootstrap can supply trusted session stores via WorkerAccount.
@@ -153,7 +157,8 @@ def serve(accounts, *, worker_id, read_budget, join_budget=None,
         for sig in (signal.SIGINT, signal.SIGTERM):
             handlers[sig] = signal.getsignal(sig)
             signal.signal(sig, stop)
-        worker = Worker(accounts, worker_id=worker_id, read_budget=read_budget, join_budget=join_budget)
+        worker = Worker(accounts, worker_id=worker_id, read_budget=read_budget,
+                        join_budget=join_budget, media_directory=media_directory)
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         decoder = wire.RequestDecoder()

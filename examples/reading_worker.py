@@ -80,7 +80,11 @@ def main():
                         'check_group_access', 'join_group'), default='read_batch')
     parser.add_argument('--after-id', default='0')
     parser.add_argument('--limit', type=int, default=20)
+    parser.add_argument('--download-media', action='store_true',
+                        help='download attachments into the worker-configured media_directory')
     args = parser.parse_args()
+    if args.download_media and args.operation != 'read_batch':
+        parser.error('--download-media is only valid with read_batch')
     if args.demo:
         with tempfile.TemporaryDirectory(prefix='tgdata_worker_demo_') as directory:
             root = Path(directory)
@@ -97,6 +101,8 @@ def main():
         parser.error('normal use requires --config, --account and --target')
     params = dict(group_id=args.target, after_id=args.after_id, limit=args.limit) \
         if args.operation == 'read_batch' else dict(target=args.target)
+    if args.download_media:
+        params['download_media'] = True
     run(args.config, dict(version=1, request_id=1, account_id=args.account,
                          operation=args.operation, params=params))
 

@@ -640,3 +640,11 @@ messages/window/dialog phases, repeated/cached waits, callback and logger errors
 async callback refusal, cancellation, concurrent/background isolation, budget
 charges, source pending/replay, all pool APIs and existing injected readers.
 See [the heartbeat contract](../../docs/batch_heartbeat.md).
+
+`python -m tgdata.smoke_tests.test_49_worker_media` checks optional worker media
+reads on Telethon 1.45.0. It covers strict boolean/path refusal, trusted directory
+loading/lazy creation, actual sequential photo/video downloads and file hashes,
+partial results, local failures, quota refresh, cancellation and completed-file
+retention after failed replies. CLI subprocesses verify config-to-reader forwarding
+from a different working directory. All accounts, replies and files are synthetic
+or temporary; external sockets are forbidden. Live checks require separate approval.
