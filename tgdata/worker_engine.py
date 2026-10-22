@@ -24,6 +24,23 @@ from . import worker_protocol as wire
 _CURRENT_JOB = contextvars.ContextVar('tgdata_worker_job', default=None)
 
 
+def _media_root(value):
+    """Pin trusted configuration without creating output for reference-only jobs."""
+    if value is None:
+        return None
+    try:
+        text = os.fspath(value)
+        if (type(text) is not str or not text or '\x00' in text
+                or text == ':memory:' or text.lower().startswith('file:')):
+            raise ValueError
+        root = Path(text).expanduser().resolve()
+        if root.exists() and not root.is_dir():
+            raise ValueError
+        return root
+    except (TypeError, ValueError, OSError, RuntimeError):
+        raise wire.WorkerError('invalid_config', field='media_directory') from None
+
+
 @dataclass(frozen=True)
 class WorkerAccount:
     account_id: int
@@ -87,7 +104,8 @@ class Worker:
     exclusively assigned for the lifetime of that process.
     """
 
-    def __init__(self, accounts, *, worker_id, read_budget, join_budget=None):
+    def __init__(self, accounts, *, worker_id, read_budget, join_budget=None,
+                 media_directory=None):
         if telethon.__version__ != '1.45.0':
             raise wire.WorkerError('unsupported_sdk')
         if type(worker_id) is not str or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,63}', worker_id):
@@ -96,6 +114,7 @@ class Worker:
             raise wire.WorkerError('invalid_config', field='read_budget')
         if join_budget is not None and not isinstance(join_budget, JoinBudget):
             raise wire.WorkerError('invalid_config', field='join_budget')
+        self._media_directory = _media_root(media_directory)
         try:
             accounts = tuple(accounts)
         except TypeError:
@@ -163,6 +182,10 @@ class Worker:
         return frame
 
     async def _read(self, app, job, options):
+        if options.pop('download_media', False):
+            if self._media_directory is None:
+                raise wire.WorkerError('media_disabled')
+            options['download_media_to'] = self._media_directory
         target = _parse_target(options.pop('group_id'))
         async with app._account_health_operation(
                 job.account_id, 'worker_read_batch', target.label) as (operation, observation):
