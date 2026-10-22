@@ -76,7 +76,7 @@ async def test_exports_frozen_values_and_json():
     assert isinstance(value, GroupActivity) and isinstance(value.messages[0], ActivityMessage)
     assert value.schema_version == 1 and value.account_id == 222
     assert {'GroupActivity', 'ActivityMessage'} <= set(tgdata.__all__)
-    assert tgdata.__version__ == '0.1.3' and len(set(tgdata.__all__)) == len(tgdata.__all__)
+    assert tgdata.__version__ == '0.1.4' and len(set(tgdata.__all__)) == len(tgdata.__all__)
     for obj, key in ((value, 'coverage_complete'), (value.messages[0], 'views'), (value.group, 'title')):
         fx.refuses(FrozenInstanceError, lambda: setattr(obj, key, 42))
     data = value.to_dict()
