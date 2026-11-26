@@ -129,8 +129,14 @@ The operator can confirm the transport is active three ways:
 
     Any Telegram error that appears only under WebSocket is recorded.
 
-**Open items — decided by observation, not by this description:**
-- **Is the `Origin: https://web.telegram.org` header required?** Every recorded probe run sent it, so the transport sends it for now. One no-account probe run with `--no-origin` for DC 1–5 settles it: if all five work without it, the header may be dropped; otherwise it stays, with the reason in a code comment.
+**Settled by observation:**
+- **The `Origin` header is not required, and the transport does not send one.**
+  - **The run:** a no-account probe with `--no-origin`, 2026-11-26 13:32 UTC, through the same kind of proxy.
+  - **The result:** DC 1–5 (pluto, venus, aurora, vesta, flora) each completed TLS (certificate `*.web.telegram.org`), the WebSocket `101` with `protocol=binary`, an auth key and a ping — every connection from the proxy's assigned address.
+  - **Why drop it rather than keep it:** tgdata presents a desktop-app identity when it connects (the pinned device identity), and a browser `Origin` would contradict that rather than blend in. It is also one constant fewer.
+  - **Re-confirmation:** the live run (criterion 14) uses this configuration, so it re-confirms the result with the real account.
+
+**Still open — decided by observation, not by this description:**
 - **The live calibration** (criterion 14). The name map and the plain obfuscation header are calibrated on one day's no-account probe. If the real account disagrees, the fix is local to the transport's connection class. Criterion 14 is where that would show.
 
 ## Scope Boundaries
@@ -144,7 +150,7 @@ The operator can confirm the transport is active three ways:
 - **Pin Telethon at runtime for this transport.** The canary (criterion 10) guards the internals. The exact pins that `AccountPool` and `Worker` already have stay as they are.
 - **Send transport-level pings.** Telethon's 60 s keep-alive runs on every connected client, strict ones included. Connections to other DCs are closed by Telethon after 60–120 s idle, inside the 150–300 s idle cut.
 - **Change session files, device identity, the request-level guards** (read budget, join admission, heartbeat, health evidence, per-request flood threshold), **`AccountPool._failure` or `health.classify`.**
-- **Imitate the web clients beyond the handshake.** No change to the wire codec or to the identity fields Telethon sends at login.
+- **Imitate the web clients.** The handshake sends no `Origin` header, and there is no change to the wire codec or to the identity fields Telethon sends at login.
 - **Support Telethon 2.x,** or any Telethon other than the 1.45.0 baseline it is verified on.
 - **File or draft anything upstream** with Telethon.
 

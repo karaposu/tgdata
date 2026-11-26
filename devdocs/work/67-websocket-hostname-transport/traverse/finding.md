@@ -353,4 +353,5 @@ A formula (`kws{N}`) would remove the five-entry table, but would trade away tha
 - **The name map re-opens** if Telegram publishes WebSocket hostnames (derive from that source instead), or if the live run or a later probe shows a planet name failing.
 - **The decision not to pin a Telethon version for this transport re-opens** if the version canary fails on a Telethon 1.x patch release.
 - **Keeping `Origin` re-opens** when the `--no-origin` probe shows all five data centres work without it.
+  - **Fired 2026-11-26:** the `--no-origin` probe completed for all five data centres. `desc.md` now records the decision not to send the header.
 - **The plain obfuscation header re-opens** if the live run shows the door answering the handshake but not the encryption exchange.
