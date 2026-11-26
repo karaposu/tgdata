@@ -60,7 +60,7 @@ None open. Four questions that could have rewritten steps were closed during pla
   - **What must happen:** the maintainer says go.
   - **Who:** the maintainer. The run happens in the operator's environment, from the brief written in step 13.
   - **Blocks:** step 14.
-  - **Status:** OPEN.
+  - **Status:** **WAIVED by the maintainer, 2026-11-26** — "No need for live run. Live run will be kind of tested … after the release, and when we test it, we will understand." Step 14 is not run before the merge. The pre-build prototype check on the account PASSED (`critic.md`), and the built code is observed in use after the release.
 
 ### How this implementation moves toward desired state
 

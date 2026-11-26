@@ -46,4 +46,4 @@
 | 10 | the version canary | test_50 item 11 |
 | 11 | no new runtime dependency | `ws_stream` imports only the standard library (item 11); `setup.py` is unchanged |
 | 12–13 | documentation | `2133d7e`: the corrected comment and docstrings, the README section, `docs/stepwise_login.md` |
-| 14 | the live run on the built code | **pending — plan step 14, gated on the maintainer's go (E1).** The pre-build prototype check PASSED (`critic.md`). |
+| 14 | the live run on the built code | **waived before the merge by the maintainer (2026-11-26); observed after the release.** The pre-build prototype check on the same account PASSED (`critic.md`). |

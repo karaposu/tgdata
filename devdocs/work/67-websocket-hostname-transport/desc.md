@@ -142,7 +142,7 @@ The operator can confirm the transport is active three ways:
   - **The correction it makes.** The connections were **cut anyway**: the DC 2 connection within about 60 s of idle, and the DC 4 connection after 180–240 s, despite Telethon's 60 s pings. Telethon reconnected by name each time. So what keeps a WebSocket account working is Telethon's reconnect, not its keep-alive. Who cuts the connection — the proxy or the door — is unknown.
 
 **Still open — decided by observation, not by this description:**
-- **The live calibration of the built code** (criterion 14). The prototype check above calibrated the account, the name map and the plain obfuscation header. Criterion 14 confirms that tgdata's own code behaves the same way.
+- **The live calibration of the built code** (criterion 14). **Waived before the merge by the maintainer (2026-11-26).** It is observed in use after the release instead. The prototype check above calibrated the account, the name map and the plain obfuscation header. Criterion 14 confirms that tgdata's own code behaves the same way.
 
 ## Scope Boundaries
 
