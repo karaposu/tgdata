@@ -6,7 +6,8 @@ Probe: can Telethon reach Telegram through its WebSocket door
 No account, no login, no session file, no api_id. For each target it:
   1. opens a tunnel to <name>:443 through the proxy BY NAME
      (HTTP CONNECT <name>:443, or SOCKS5 with remote DNS) and records the
-     proxy's exit-IP header (Bright Data: x-brd-ip) when it sends one;
+     proxy's own x-* response headers, and its exit IP when --exit-ip-header
+     (or $TG_WS_EXIT_IP_HEADER) names the header that carries it;
   2. does TLS with SNI = <name>, certificate verified;
   3. does the WebSocket handshake: GET /apiws, Sec-WebSocket-Protocol: binary;
   4. runs Telethon 1.45.0's own obfuscated2 transport and MTProto handshake
@@ -23,7 +24,7 @@ locally: targets that look like IPs are refused, and without a proxy it
 refuses to run unless --direct is given.
 
 Usage (the proxy URL from the environment keeps it out of shell history):
-    export TG_WS_PROXY='http://USER:PASS@brd.superproxy.io:33335'
+    export TG_WS_PROXY='http://USER:PASS@HOST:PORT'
     python ws_door_probe.py                    # DC1-5, kws* and planet names, with -1 variants
     python ws_door_probe.py --dc 4 --hold 600  # one DC, then 10 idle minutes
     python ws_door_probe.py --codec intermediate
@@ -56,6 +57,7 @@ from telethon.network.connection.tcpobfuscated import ConnectionTcpObfuscated, O
 from telethon.tl.functions import PingRequest
 
 DOMAIN = "web.telegram.org"
+EXIT_IP_HEADER = (os.environ.get("TG_WS_EXIT_IP_HEADER") or "").strip().lower() or None   # set by --exit-ip-header
 PLANETS = {1: "pluto", 2: "venus", 3: "aurora", 4: "vesta", 5: "flora"}   # GramJS's names; DC mapping unverified
 WS_GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
 
@@ -253,9 +255,9 @@ async def open_tunnel(proxy: Optional[ProxySpec], host: str, port: int, report: 
         lines = head.split("\r\n")
         status = lines[0]
         headers = {k.strip().lower(): v.strip() for k, v in (l.split(":", 1) for l in lines[1:] if ":" in l)}
-        report.exit_ip = headers.get("x-brd-ip") or headers.get("x-luminati-ip")
-        brd = {k: v for k, v in headers.items() if k.startswith(("x-brd", "x-luminati"))}
-        report.steps["tunnel"] = f"{status}" + (f" {brd}" if brd else "")
+        report.exit_ip = headers.get(EXIT_IP_HEADER) if EXIT_IP_HEADER else None
+        extra = {k: v for k, v in headers.items() if k.startswith("x-")}
+        report.steps["tunnel"] = f"{status}" + (f" {extra}" if extra else "")
         if " 200" not in status:
             raise ConnectionError(f"proxy refused CONNECT: {status}")
         return sock
@@ -437,6 +439,7 @@ def show(r: Report) -> None:
 
 
 async def main() -> int:
+    global EXIT_IP_HEADER
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--proxy", default=os.environ.get("TG_WS_PROXY"),
                     help="http://user:pass@host:port or socks5://… (default: $TG_WS_PROXY)")
@@ -448,10 +451,13 @@ async def main() -> int:
     ap.add_argument("--codec", choices=("abridged", "intermediate"), default="abridged")
     ap.add_argument("--no-origin", action="store_true", help="omit the Origin header")
     ap.add_argument("--hold", type=float, default=0, help="idle seconds before a second ping")
+    ap.add_argument("--exit-ip-header", default=EXIT_IP_HEADER,
+                    help="name of the CONNECT response header carrying the exit IP, if the proxy sends one")
     ap.add_argument("--timeout", type=float, default=15)
     ap.add_argument("--verbose", action="store_true", help="show Telethon's own log lines")
     args = ap.parse_args()
     args.dc = args.dc or [1, 2, 3, 4, 5]
+    EXIT_IP_HEADER = (args.exit_ip_header or "").strip().lower() or None
 
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.CRITICAL,
                         format="   log %(name)s %(levelname)s: %(message)s")
