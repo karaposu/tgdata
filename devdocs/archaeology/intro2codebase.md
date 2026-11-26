@@ -1,133 +1,125 @@
-# Architecture Introduction — `tgdata`
+# tgdata — an architecture introduction (from the code at `784d851`, 2026-11-26, version 0.1.4)
 
-*Onboarding notes for a new engineer. This is about **how the code is put together**, not what features it has. Read `small_summary.md` first if you want the "what/why."*
+This is the walk-through I'd give a new engineer on day one. tgdata is a Python library over Telethon 1.45.0 (a Telegram client library) that reads Telegram groups through user accounts. It has grown in two layers:
+- an original, convenience-first interface that returns pandas tables;
+- a newer, strict layer built for unattended, multi-account collection.
 
----
+Both are live, and they share one connection core.
 
-## 1. The 30-second mental model
-
-There is **one class you talk to — `TgData`** — and it delegates almost all real work to **two engines** sitting behind it:
+## 1. The shape in one picture
 
 ```
-                 ┌─────────────────────────────────────────┐
-   your script → │                 TgData                  │   ← the facade (public API)
-                 │  state: current_group, connection/msg   │
-                 │         engines, (unused) _metrics       │
-                 └───────────────┬─────────────┬───────────┘
-                                 │ delegates    │ delegates
-                    ┌────────────▼───────┐  ┌───▼───────────────────┐
-                    │  ConnectionEngine  │  │     MessageEngine      │
-                    │  (transport layer) │◄─┤  (message domain layer)│
-                    │  owns Telethon     │  │  depends on ConnEngine │
-                    │  client + pool     │  │  via constructor       │
-                    └─────────┬──────────┘  └───────────┬───────────┘
-                              │                          │
-                              ▼                          ▼
-                         Telethon  ──────────────►  Telegram servers
-
-   Everything a fetch produces becomes a pandas DataFrame, and from that
-   point on the flat, stateless helpers in utils.py + progress.py do the rest.
+ Entry points                 Orchestration                       Telegram boundary
+ ───────────                  ─────────────                       ─────────────────
+ TgData (facade) ───────┬──> MessageEngine / DiscoveryEngine ─┐
+   + ProgressFacade     ├──> BatchEngine ──> MessageBatch      │
+                        ├──> SyncEngine / BackfillEngine        ├──> ConnectionEngine._new_client()
+                        └──> group_* (verified operations)     │        │
+ AccountPool ──> _OwnedSource (a ConnectionEngine) ────────────┤        ▼
+ Worker (tgdata-worker) ──> one TgData per account ────────────┤   client class = mixins + TelegramClient
+ LoginFlow (tgdata-login) ──> _new_client(_client_base=…) ─────┘        │
+                                                                         ▼
+ Local state: ReadBudget / JoinBudget (SQLite), sync/backfill/pool    Telethon: MTProtoSender ─> Connection
+ stores (async load + compare_and_swap), session store (load/save)    (TCP to the DC's IP, via the proxy)
 ```
 
-So three tiers, loosely: a **facade** (`TgData`), a **service/engine layer** (`ConnectionEngine`, `MessageEngine`), and a set of **stateless functions + dataclasses** (`utils.py`, `models.py`, `progress.py`). It's small — ~1,700 lines across 7 files — and the skeleton is clean. The messiness is in the seams, which we'll get to honestly in §7.
+There is no server or UI. Callers are Python programs, plus two console commands.
 
----
+## 2. The connection core — read this first
 
-## 2. The main abstractions
+**`ConnectionEngine` (`connection_engine.py`)** owns everything about reaching Telegram for one account config (`config.ini`, section `[Telegram]`):
+- **It reads the config once** (`_load_config`): api id and hash, the session name, an optional proxy with `require_proxy`, and an optional pinned device identity. A bad proxy setting raises `ProxyConfigError` before any socket opens.
+- **`_new_client()` is the only factory.** Every Telethon client tgdata builds is made here:
+  - the persistent client;
+  - the legacy pool's extra connections;
+  - the use-and-close `ephemeral_client()`;
+  - the verified `_account_operation()`;
+  - `LoginFlow`'s auth-only client;
+  - `AccountPool`'s owned sources, which subclass the engine and tighten `_new_client`'s options.
 
-Learn these six things and you know the codebase:
+  It passes the session — a file name, or a `StoredSession` when a session store is configured — the proxy and the device identity to the client constructor.
+- **The client class is a stack of mixins** in front of `TelegramClient`, built and cached by `_client_class()`:
+  - `_AnswerEvidence` — notes every request Telegram answers, for health "ok" evidence;
+  - `JoinClientMixin` — join admission against the join budget, only inside a verified operation;
+  - `BudgetClientMixin` — read-budget reservation at Telethon's send seam;
+  - `BatchHeartbeatMixin` — liveness callbacks per request;
+  - `_PerCallFloodThreshold` — makes Telethon's per-request flood threshold actually work.
 
-- **`TgData` (`tgdata.py`)** — the facade and the only class users are meant to touch. It holds a tiny bit of state (`current_group`, the two engines) and is mostly thin pass-through methods: it picks the target group, wires up an optional default progress printer, and forwards to an engine. It also owns the two *stateful* long-running flows (polling and real-time event registration) because those don't belong to a single fetch.
+  All of them intercept at Telethon's request layer (`__call__`, `_call(sender, …)`, and wrapping the sender's `send`). None touch the network transport below it: that is still Telethon's own `Connection` class, opened by `MTProtoSender`.
+- **Login safety.** tgdata asks Telegram directly whether a session is logged in, with `GetState`. It never runs Telethon's interactive `start()` unless a human can type the code. Otherwise it raises `AuthRequiredError`, with `.reason`, `.banned` and `.first_login`.
+- **The legacy `health_check()` / `validate_connection()`** confirm the login with Telegram before calling a connection healthy.
 
-- **`ConnectionEngine` (`connection_engine.py`)** — the transport layer. It owns the Telethon client's whole lifecycle: reading `config.ini`, authenticating, reconnecting, health checks, and rate-limit handling. Think of it as "everything about *having a live pipe to Telegram*." It's engine #1 and has no idea what a message is.
+**Sessions** (`session_store.py`). `StoredSession` is Telethon's `MemorySession` that loads from and saves to an application-supplied store:
+- it keeps only groups, channels and the account's own rows;
+- it never overwrites a login it didn't load;
+- it logs failures without the error's text;
+- its copies (`clone()`) stay in memory.
 
-- **`MessageEngine` (`message_engine.py`)** — the domain layer for messages. Fetching, per-message processing, search, and count all live here. It **depends on `ConnectionEngine`** (passed into its constructor — a light dependency-injection move) and asks it for a client whenever it needs one. Engine #2 knows nothing about connections beyond "give me a client."
+Without a store, Telethon's SQLite `.session` file is used, as originally.
 
-- **`ConnectionPool` (inside `connection_engine.py`)** — a helper object implementing the object-pool pattern: a list of clients handed out round-robin, each tagged with `RateLimitInfo` so flood-limited connections get skipped. It's only instantiated when `pool_size > 1`. (In practice it's largely dead — see §7.)
+## 3. Data flows, end to end
 
-- **The data models (`models.py`)** — four plain `@dataclass`es: `MessageData`, `GroupInfo`, `ConnectionConfig`, `RateLimitInfo`. These are dumb records. The important one is **`MessageData.to_dict()`**, which is the bridge from typed object to pandas row (it renames fields to PascalCase: `MessageId`, `SenderId`, `Message`, `Date`, …). Keep an eye on that method — it defines a schema the whole downstream depends on.
+1. **The legacy table read** (`TgData.get_messages`). `@_reported` opens a health call, then `MessageEngine.fetch_messages` runs:
+   - it calls `engine.session()`, which is the persistent client, and `get_entity`, falling back to a dialog sync then `GroupAccessError`;
+   - it iterates `iter_messages`, waiting out flood waits and resuming from a cursor;
+   - the rows become `MessageData`, then a pandas `DataFrame`.
 
-- **The stateless toolbox (`utils.py` + `progress.py`)** — free functions that operate on a DataFrame and return a DataFrame or a dict: export to CSV/JSON, filter by sender/keyword/date, compute statistics, save photos. `ProgressTracker` is a small stateful helper for rate/ETA math. None of these know anything about Telegram — they're pure post-processing over the table.
+   Media is downloaded inline or later through `download_media_by_id`.
+2. **The strict batch read** (`get_message_batch` → `BatchEngine.fetch_batch`):
+   - it pages oldest-first after an exclusive message id, within an optional UTC window (`history_window`);
+   - it builds validated records and, optionally, content-addressed media blobs (`batch_files`);
+   - it returns an immutable, versioned `MessageBatch` (canonical JSON, `batch_id`, `next_after_id`).
 
-The organizing concept, then, is **"connection vs. message, wrapped in a facade, producing a table."**
+   On failure, the completed prefix rides on `error.partial_result`.
+3. **Durable progress** (`ProgressFacade`, mixed into both `TgData` and `AccountPool`):
+   - `SyncEngine` keeps one pending batch per group in a store with async `load` / `compare_and_swap`. `sync_group` prepares or replays it; only `acknowledge_sync(batch_id)` advances the cursor.
+   - `BackfillEngine` does the same for historical runs, with explicit start and control requests, pacing, recovery and receipts.
 
----
+   Both call back into an injected batch reader. Replaying a pending batch never contacts Telegram.
+4. **Verified group operations** — `lookup_group`, `check_group_access`, `get_group_profile`, `measure_group_activity` and `join_group`:
+   - `TgData._account_health_operation` opens `ConnectionEngine._account_operation(expected_account_id)`. That is a fresh client with strict options (no retries, no auto-reconnect, no updates) that proves the expected account with a self request before any work.
+   - The work runs in `group_operations` / `group_profile` / `group_activity` on that handle.
+   - Health is recorded by an owned, fixed-account monitor (`owned_health`), and notifications run after the client is cleaned up.
+5. **The pool read** (`AccountPool.read` / `get_message_batch`). A pool-state document (async `load` / CAS, `pool_state`) records each account's waits, repairs and per-group restrictions. A read then:
+   - preflights the sessions, refusing duplicates;
+   - admits one attempt per account in that document;
+   - runs `_OwnedSource.run`, which verifies identity and uses its `BatchEngine`;
+   - settles the outcome — ok, waiting, transport, no access, logged out and so on, classified by `health` — then tries the next eligible account.
 
-## 3. The central data flow — trace `get_messages()` end to end
+   Results come with provenance (`PoolReadResult`) and a caller-retained capture.
+6. **The worker** (`tgdata-worker`, `worker.py` / `worker_engine.py` / `worker_protocol.py`):
+   - JSON-line jobs come in on stdin, from a trusted local inventory of accounts and budgets;
+   - each job runs serially on one `TgData` per account, through the verified-operation path;
+   - result and health frames go out, size-bounded.
+7. **Login** (`LoginFlow`, `tgdata-login`):
+   - each step (phone, code, password) builds a short-lived auth-only client through `_new_client`;
+   - its progress is an exportable secret checkpoint, bound to the config (api id, proxy, identity);
+   - the result is session text, which `login_file` publishes atomically as a native `.session` file.
 
-This is the spine of the system. Follow it once and everything else rhymes:
+## 4. Cross-cutting abstractions
 
-1. **Entry** — caller invokes `TgData.get_messages(group_id=..., limit=..., after_id=...)`.
-2. **Facade bookkeeping** — `TgData` resolves the target group (argument or `current_group`), optionally installs a default console progress callback, and translates `after_id` into a Telethon `min_id` (`after_id + 1`, to make it exclusive). Then it forwards to the engine.
-3. **Get a client** — `MessageEngine.fetch_messages()` calls `self.connection_engine.get_client()`. The connection engine ensures the primary client exists, is connected (reconnecting with retry if not), and — as a side effect — runs a health check if 5 minutes have elapsed.
-4. **Stream from Telegram** — inside `async with client:` it resolves the entity (`get_entity`, so a numeric ID *or* an `@username` both work) and iterates `client.iter_messages(...)` with kwargs assembled from the filters. Date filters and `min_id` deduplication are applied in the loop.
-5. **Per-message transform** — each raw Telethon message goes through `_process_message()`, which pulls sender info, builds a **`MessageData`** dataclass, optionally downloads a profile photo, and returns it. Failures return `None` and are skipped.
-6. **The DataFrame pivot** — each `MessageData` is immediately turned into a dict via `.to_dict()` and appended to a list. At the end, that list becomes a **`pandas.DataFrame`**. *This is the architectural keystone (see §4).*
-7. **Optional batching** — if `batch_size` + `batch_callback` were given, the loop flushes chunks to the callback as it goes (with an optional inter-batch delay), rather than only returning at the end. This is the streaming/generator-ish escape hatch for large groups.
-8. **Return** — the DataFrame flows back up through the facade to the caller.
-9. **Output/storage** — there is **no database**. "Storage" is entirely the caller's choice via the `utils` exporters (`export_to_csv` / `export_to_json`) or raw pandas. The *only* persisted state the library itself keeps is the Telethon **`.session` file** (a SQLite auth cache) so you don't re-login every run.
+- **Health** (`health.py`). `classify()` maps Telegram's own error names to verdicts: waiting, logged out, banned, restricted, no access, unclassified. Two attribution styles coexist:
+  - **legacy ambient calls** — a context variable for "which public call, in which task"; engines call `report()` at handled or swallowed errors; a logging filter captures Telethon's silent sleeps;
+  - **owned calls** — `_OwnedCall`, which records evidence at the client boundary.
 
-Rate limiting wraps the whole loop: a `FloodWaitError` is caught, handed to `ConnectionEngine.handle_rate_limit()` (which sleeps, with a `wait` or `exponential`+jitter strategy), and then `fetch_messages` **recursively retries itself**.
+  Observers never raise into the observed work.
+- **Budgets.** `ReadBudget` and `JoinBudget` are SQLite ledgers keyed by verified account id. A request is reserved before it is sent and settled after, at Telethon's sender seam.
+- **Stores are opaque-text, compare-and-swap.** Sync, backfill and pool state all use the same contract, so the caller owns persistence and tgdata owns correctness.
+- **Context variables** carry scoping that must follow tasks: health calls, heartbeat scopes, the per-call flood threshold, pool scopes, the worker's current job. Several are owner-task checked.
 
----
+## 5. Patterns, and how consistently they're applied
 
-## 4. The DataFrame is the spine — understand this or nothing makes sense
+- **A facade over engines** (`TgData` → engines), with the connection engine as a single gateway. This is consistent.
+- **Interception by mixins at Telethon's request seam**, rather than wrapping every call site. Consistent, and the reason features compose: budget, join, heartbeat, evidence and flood all work on every path.
+- **Explicit ownership and lifetimes** in the newer code: owned tasks, shielded cleanup, "never detach work", credential-free errors, fail-closed defaults. It is thorough, dense and heavily commented. The older modules (`message_engine`, `discovery_engine`, the legacy `ConnectionPool`) are looser and older in style.
+- **In transition:**
+  - Two health models: legacy ambient vs owned.
+  - Two read stacks: DataFrame vs `MessageBatch`.
+  - Two multi-account mechanisms: the old in-engine `ConnectionPool` round-robin vs `AccountPool`.
+  - The newer code pins Telethon 1.45.0 exactly (`AccountPool`, `Worker`), while package metadata says `>=1.45,<2.0` and lists old Python versions.
 
-The single most important design decision: **a message is a strongly-typed `MessageData` for about one line of its life, and a loosely-typed pandas row for the rest.**
+  New work should follow the newer layer's conventions.
 
-Once `to_dict()` runs, everything downstream — filtering, statistics, export, printing, and even the polling deduplication — operates on DataFrames addressed by **hardcoded string column names** (`MessageId`, `SenderId`, `Message`, `Date`, `ReplyToId`, `ForwardedFrom`, `PhotoData`). `utils.py` reaches straight into `df['SenderId']`, `df['Message']`, etc.
+## 6. Where to look first
 
-Consequences you should internalize:
-- The DataFrame is the **universal interface** between layers. It's why the `utils` functions can be dumb and Telegram-agnostic, and it's genuinely convenient for analysts (the whole point of the library).
-- But the schema contract is **implicit and duplicated**. `MessageData.to_dict()` is the only definition of those column names, and half a dozen call sites depend on it with no shared constant. Rename a key there and things break *silently* three files away. There is no schema validation layer.
-- Two of the models are used very unevenly: `MessageData` earns its keep; `GroupInfo` is mostly bypassed (see §7).
-
----
-
-## 5. The secondary flows
-
-Three other flows branch off the same skeleton:
-
-- **`list_groups()`** — doesn't go through `MessageEngine` at all; `TgData` iterates `client.iter_dialogs()` directly and builds a DataFrame of group/channel metadata **as raw dicts** (not `GroupInfo` objects). It's the discovery entry point — run it to find the IDs/usernames you'll feed to `get_messages`.
-
-- **Polling (`poll_for_messages`)** — a stateful loop living in `TgData`. Each iteration calls `get_messages(after_id=...)`, advances `after_id` to the max ID seen, and — importantly — maintains its own `seen_message_ids` **set** to filter duplicates on top of what `min_id` already does. This belt-and-suspenders dedup exists because of a real, documented message-skipping bug (`issue_1.md`); the defensive layering is a scar from fighting Telegram's `min_id` semantics.
-
-- **Real-time events (`on_new_message` / `run_with_event_loop`)** — a **decorator-based, event-driven** path that leans directly on Telethon's own event system. Handlers registered via the decorator are queued on `self._pending_handlers`, then bound to the live client when the event loop starts. This is a different concurrency model from the request/response fetch flow — push, not pull — bolted onto the same class.
-
----
-
-## 6. Design patterns in play
-
-The codebase mixes several patterns, mostly coherently:
-
-- **Facade** — `TgData` is a textbook facade over the engines + utils. This is the dominant, load-bearing pattern.
-- **Layered architecture** — API → engines → models/utils, with a clean dependency direction (message layer depends on connection layer, never the reverse).
-- **Composition + light dependency injection** — `MessageEngine` receives its `ConnectionEngine`; engines are composed into `TgData`. No global singletons.
-- **Object pool** — `ConnectionPool` (round-robin + rate-limit-aware).
-- **Callback / hook extensibility** — `progress_callback`, `batch_callback`, and the polling `callback` are all inversion-of-control seams so callers can stream-process without the library knowing their intent.
-- **Event-driven** — the real-time handler path, delegated to Telethon.
-- **Async context manager** — `TgData` supports `async with` (`__aenter__`/`__aexit__` → `close()`), and individual operations use `async with client:` internally.
-
-The consistent thread is **async/await everywhere I/O touches Telegram**, with a clean sync boundary for the pure DataFrame post-processing (`print_messages`, `filter_messages`, `export_messages`, `get_statistics` are all synchronous — they never touch the network).
-
----
-
-## 7. Where it's inconsistent or in transition — read this before you trust the design
-
-This code was **recently refactored** from a heavier multi-class "ETL framework" (see the `deprecated/` notes and the module docstring "Single class with all features, delegating to specialized engines"). The new facade+engines skeleton is clean, but the refactor left seams and vestigial parts that haven't been reconciled. Be aware:
-
-1. **The connection lifecycle contradicts itself — this is the big one.** `ConnectionEngine` is built for a *persistent, pooled* client: `get_client()` caches `_primary_client`, checks `is_connected()`, reconnects, and runs periodic health checks. But **every actual operation wraps the client in `async with client:`** (`list_groups`, `fetch_messages`, `search_messages`, `get_message_count`), and Telethon's context manager **disconnects on exit**. So the "persistent" connection is torn down and re-established on essentially every call. The persistence machinery and the usage pattern are working against each other.
-
-2. **Connection pooling is effectively dead code.** `pool_size` defaults to 1, and even if you raise it, the `async with client:` teardown at every call site undermines the pool's whole premise. `ConnectionPool` is well-written but, as wired today, load-bearing for nothing. Treat it as aspirational.
-
-3. **Rate-limit handling is spread across three places.** `_connect_with_retry` handles floods during *connect*; `handle_rate_limit` (with strategy + jitter) handles them during *fetch*; and `ConnectionPool.mark_rate_limited` + `RateLimitInfo` track them for the (dead) pool. Overlapping responsibility, no single owner. Also note the fetch retry path recurses via `fetch_messages(...)` but **drops `batch_delay` and `rate_limit_strategy`** on the recursive call — the retry isn't a faithful replay of the original.
-
-4. **`min_id` / polling logic is the least clean area.** `after_id + 1` is computed in `tgdata.py`, then partially *un-computed* in `message_engine.py` (`original_min_id = min_id - 1`), with manual skip-filtering, forced `reverse=True`, `offset_date` popping, and verbose per-message logging — then a *second* dedup set in `poll_for_messages`. This is defensive complexity that accreted around the Telegram skipping bug, not a designed abstraction. Tread carefully when editing it.
-
-5. **Vestigial / unevenly-used state.** `TgData._metrics` is initialized and **never read** (`get_metrics` builds a fresh local dict). `create_metrics_report` is exported and imported but not called by any `TgData` method. `TgData.current_group` is a `GroupInfo` created with empty `title`/`username` that never gets populated. And `GroupInfo` as a type is largely bypassed — `list_groups` emits plain dicts instead. The `MessageData` model is used well; the others are half-wired.
-
-6. **A compatibility hack in session naming.** `_init_primary_client` uses `config.username` as the Telethon session name "for compatibility with original code," falling back to `session_file`. That's a bridge to the pre-refactor world, not an intentional design choice — expect more small artifacts like it.
-
-7. **The schema contract is implicit** (covered in §4): no shared column-name constants, no validation. It works, but it's fragile to change.
-
-**Net:** the *shape* is a clean facade-over-layered-engines with async I/O and a DataFrame spine — a good design to build on. But the connection/pooling/rate-limit corner is mid-transition and partly contradictory, and there's dead/vestigial state to ignore or clean up. When something surprises you, assume "refactor in progress" before assuming intent.
+`connection_engine.py`, then `tgdata.py`, `session_store.py`, `health.py`, `batch_engine.py` / `message_batch.py`, `account_pool.py` / `pool_source.py`, and `login.py`. Tests live in `tgdata/smoke_tests/`, numbered by feature. Most run offline against Telethon's real request code with a scripted connection.
