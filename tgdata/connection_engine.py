@@ -163,7 +163,11 @@ class TransportConfigError(ProxyConfigError):
 
 
 # URL scheme -> Telethon proxy type. 'socks5h' / 'socks4a' are accepted as
-# spellings: Telegram's servers are addressed by IP, so remote DNS is moot.
+# spellings of the same thing: tgdata always asks the proxy to resolve names
+# (rdns), which is what carries the WebSocket transport's hostname
+# (transport = websocket) to the proxy — the account's machine never resolves
+# it. Under the default TCP transport Telegram is addressed by IP, so it is
+# unused there.
 _PROXY_SCHEMES = {'socks5': 'socks5', 'socks5h': 'socks5',
                   'socks4': 'socks4', 'socks4a': 'socks4',
                   'http': 'http'}
@@ -184,6 +188,10 @@ def parse_proxy_url(url: str) -> Tuple[Dict[str, Any], str]:
     password must be percent-encoded (e.g. '@' as %40). MTProto proxies
     (tg://proxy?..., t.me/proxy?...) are a different protocol and are not
     supported.
+
+    The dict always asks the proxy to resolve names (rdns): SOCKS5 sends the
+    hostname, SOCKS4 sends it as SOCKS4a, and HTTP CONNECT always does. The
+    WebSocket transport relies on this to reach Telegram by name.
 
     Returns:
         (proxy_dict, display) — display has the password replaced by '***'.
@@ -578,6 +586,12 @@ class ConnectionEngine:
         With no proxy configured the client is direct, exactly as before.
         The config is read first, so a ProxyConfigError (bad URL, missing
         library, require_proxy without a proxy) stops before any socket opens.
+
+        With `transport = websocket` the client carries ConnectionWebSocket
+        (websocket_transport.py): every connection it opens — reconnects and
+        other data centres included — reaches Telegram's WebSocket door by
+        hostname, never by IP, through the proxy when one is configured.
+        Without the key nothing changes: no `connection=` argument is passed.
 
         Every client also carries the account's pinned device identity, if the
         config sets one; unpinned fields keep Telethon's machine defaults.
