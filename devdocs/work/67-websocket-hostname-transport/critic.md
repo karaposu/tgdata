@@ -49,6 +49,11 @@ Passing result:      steps 1–6 succeed; every "Connecting to" line names a *.w
                      the built code.
 ```
 
+**Experiment status:** prepared, not run.
+- **The script:** `experiment_account_check.py`, with an offline self-test passing 10/10 on loopback only (no Telegram).
+- **The brief:** `experiment_account_check.md`.
+- **Waiting on:** the maintainer's go (E1). `Result:` is recorded here once it runs.
+
 ## High level summary
 
 **The plan's shape is right.** It is the traverse's design, ordered bottom-up, with the default-path values captured first. The code reading and probes behind this critique confirm its mechanical premises:
