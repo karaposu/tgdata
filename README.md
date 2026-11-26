@@ -316,7 +316,9 @@ included.
   existed.
 
 **Failures:**
-- **`tgdata.TransportConfigError`** stops at once and is never retried. It covers an
+- **`tgdata.TransportConfigError`** stops at once: it is never retried when
+  connecting. After a dropped connection, Telethon's own reconnect loop may try a
+  few times, logging each attempt, before giving up. It covers an
   unknown `transport` value, a data centre with no WebSocket name, and a certificate
   that does not verify (a proxy that intercepts TLS, or a missing trust store). It is
   a `ProxyConfigError`, so polling stops on it, the worker reports a

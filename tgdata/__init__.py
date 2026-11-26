@@ -74,7 +74,7 @@ from .utils import (
 # Progress tracking
 from .progress import ProgressTracker
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 __all__ = [
     # Explicit account onboarding
