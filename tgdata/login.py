@@ -156,6 +156,11 @@ class LoginFlow:
             settings = dict(api_id=int(config.api_id), api_hash=config.api_hash,
                             proxy=config.proxy, require_proxy=config.require_proxy,
                             identity=self._engine._identity_kwargs(config))
+            if config.transport != 'tcp':
+                # Bound like the proxy: it changes where the conversation leaves
+                # from. Present only when not the default, so every TCP
+                # checkpoint keeps the exact hash it had before (#67).
+                settings['transport'] = config.transport
             self._binding = hashlib.sha256(json.dumps(
                 settings, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
             self._session = StoredSession(_MemoryStore(), 'login')

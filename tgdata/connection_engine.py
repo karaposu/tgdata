@@ -150,8 +150,24 @@ class ProxyConfigError(ValueError):
     broken proxy setting can never turn into a direct connection."""
 
 
+class TransportConfigError(ProxyConfigError):
+    """The WebSocket transport (`transport = websocket`) cannot be used as
+    configured or reached: an unknown `transport` value (raised while reading
+    the config), a data centre with no WebSocket host (when a connection is
+    built), or a certificate that does not verify (when it connects — a proxy
+    that intercepts TLS, or a missing trust store). Never retried.
+
+    A ProxyConfigError, so every check for "the configured route to Telegram
+    cannot be used" covers it: polling stops, the worker reports a
+    configuration_error, and the account pool stops the account (ValueError)."""
+
+
 # URL scheme -> Telethon proxy type. 'socks5h' / 'socks4a' are accepted as
-# spellings: Telegram's servers are addressed by IP, so remote DNS is moot.
+# spellings of the same thing: tgdata always asks the proxy to resolve names
+# (rdns), which is what carries the WebSocket transport's hostname
+# (transport = websocket) to the proxy — the account's machine never resolves
+# it. Under the default TCP transport Telegram is addressed by IP, so it is
+# unused there.
 _PROXY_SCHEMES = {'socks5': 'socks5', 'socks5h': 'socks5',
                   'socks4': 'socks4', 'socks4a': 'socks4',
                   'http': 'http'}
@@ -172,6 +188,10 @@ def parse_proxy_url(url: str) -> Tuple[Dict[str, Any], str]:
     password must be percent-encoded (e.g. '@' as %40). MTProto proxies
     (tg://proxy?..., t.me/proxy?...) are a different protocol and are not
     supported.
+
+    The dict always asks the proxy to resolve names (rdns): SOCKS5 sends the
+    hostname, SOCKS4 sends it as SOCKS4a, and HTTP CONNECT always does. The
+    WebSocket transport relies on this to reach Telegram by name.
 
     Returns:
         (proxy_dict, display) — display has the password replaced by '***'.
@@ -453,6 +473,21 @@ class ConnectionEngine:
                 f"require_proxy is set in {self.config_path} but no proxy is configured — "
                 f"refusing to connect to Telegram directly")
 
+        # How connections reach Telegram (optional). No `transport` key = 'tcp',
+        # Telethon's default, exactly as before. 'websocket' = Telegram's
+        # WebSocket door by hostname, never an IP (websocket_transport.py).
+        # Independent of the proxy: with no proxy it connects directly by name,
+        # and require_proxy keeps its meaning. Read raw, first token, like the
+        # proxy keys.
+        raw_transport = _first_token(section.get('transport', raw=True)).lower()
+        if raw_transport in ('', 'tcp'):
+            transport = 'tcp'
+        elif raw_transport == 'websocket':
+            transport = 'websocket'
+        else:
+            raise TransportConfigError(
+                f"transport = {raw_transport!r} in {self.config_path} — use tcp or websocket")
+
         # The account's device identity (optional): what every connection tells
         # Telegram it is running on. With no keys, Telethon derives it from the
         # machine (CPU type, OS release) and from its own version, so the same
@@ -492,7 +527,8 @@ class ConnectionEngine:
             proxy=proxy,
             proxy_display=proxy_display,
             require_proxy=require_proxy,
-            **identity
+            **identity,
+            transport=transport,
         )
 
         return self._config
@@ -551,6 +587,12 @@ class ConnectionEngine:
         The config is read first, so a ProxyConfigError (bad URL, missing
         library, require_proxy without a proxy) stops before any socket opens.
 
+        With `transport = websocket` the client carries ConnectionWebSocket
+        (websocket_transport.py): every connection it opens — reconnects and
+        other data centres included — reaches Telegram's WebSocket door by
+        hostname, never by IP, through the proxy when one is configured.
+        Without the key nothing changes: no `connection=` argument is passed.
+
         Every client also carries the account's pinned device identity, if the
         config sets one; unpinned fields keep Telethon's machine defaults.
 
@@ -575,10 +617,12 @@ class ConnectionEngine:
         config = self._load_config()
         identity = self._identity_kwargs(config)
         if not self._route_logged:
+            over = (", over Telegram's WebSocket transport by hostname"
+                    if config.transport == 'websocket' else "")
             if config.proxy:
-                logger.info(f"Telegram connections go via proxy {config.proxy_display}")
+                logger.info(f"Telegram connections go via proxy {config.proxy_display}{over}")
             else:
-                logger.info("Telegram connections are direct (no proxy configured)")
+                logger.info(f"Telegram connections are direct (no proxy configured){over}")
             if identity:
                 logger.info("Device identity pinned: " +
                             ", ".join(f"{key}={value!r}" for key, value in identity.items()))
@@ -587,6 +631,11 @@ class ConnectionEngine:
             self._route_logged = True
         # TelegramClient is looked up here, at call time, so a test that stands
         # in for it (test_13) still controls what is built.
+        if config.transport == 'websocket':
+            # Imported only for accounts that chose it: a TCP account never
+            # loads the module, so nothing in it can affect one.
+            from .websocket_transport import ConnectionWebSocket
+            client_options = dict(client_options, connection=ConnectionWebSocket)
         name = session_file or config.session_file
         session = StoredSession(self.session_store, name) if self.session_store is not None else name
         client = _client_class(_client_base or TelegramClient)(
@@ -814,6 +863,13 @@ class ConnectionEngine:
             logger.error(f"Authentication failed: {e}")
             raise
 
+        except ProxyConfigError as e:
+            # The configured route cannot be used (e.g. the WebSocket
+            # transport's TransportConfigError): keep the type, so callers
+            # stop instead of retrying a ConnectionError.
+            logger.error(f"Authentication failed: {e}")
+            raise
+
         except Exception as e:
             logger.error(f"Authentication failed: {e}")
             raise ConnectionError(f"Failed to authenticate: {e}")
@@ -910,6 +966,9 @@ class ConnectionEngine:
                 self._pool.mark_rate_limited(client, wait_time)
             await heartbeat_sleep(wait_time)
             await client.connect()
+        except ProxyConfigError as e:
+            logger.error(f"Connection failed: {e}")
+            raise                                   # the route cannot be used: keep the type
         except Exception as e:
             logger.error(f"Connection failed: {e}")
             raise ConnectionError(f"Failed to connect: {e}")
@@ -933,6 +992,7 @@ class ConnectionEngine:
             'primary_connection': False,
             'pool_connections': [],
             'proxy': self._config.proxy_display if self._config else None,  # masked; None = direct
+            'transport': self._config.transport if self._config else None,  # 'tcp' or 'websocket'
             'device_identity': None,   # what connections present; filled below once the config is read
             'errors': []
         }
