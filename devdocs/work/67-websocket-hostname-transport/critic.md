@@ -49,10 +49,30 @@ Passing result:      steps 1–6 succeed; every "Connecting to" line names a *.w
                      the built code.
 ```
 
-**Experiment status:** prepared, not run.
-- **The script:** `experiment_account_check.py`, with an offline self-test passing 10/10 on loopback only (no Telegram).
-- **The brief:** `experiment_account_check.md`.
-- **Waiting on:** the maintainer's go (E1). `Result:` is recorded here once it runs.
+**Experiment status:** run on the maintainer's go — 2026-11-26, 14:25–14:33 UTC, `experiment_account_check.py` at `9154537`, Telethon 1.45.0, through the account's hostname-routing proxy with IP targets refused.
+
+```
+Result: PASS — on the account's existing session (DC 4), over the WebSocket door by name:
+        connect + GetState, get_me, a read, an 11.8 MB download stored on DC 2 (through an
+        exported sender), and a read after 330 s idle all succeeded. Every connection Telethon
+        opened named vesta/venus.web.telegram.org:443, never an IP. 2026-11-26.
+```
+
+**Observed alongside the result, and recorded because it corrects P2:**
+- **The connections were cut anyway, and Telethon reconnected by name.**
+  - The DC 2 download connection was closed by the server within about 60 s of idle.
+  - The main DC 4 connection was closed between 180 and 240 s of idle, even with Telethon's 60 s pings running.
+  - Both times, Telethon reconnected by name ("Closing current connection to begin reconnect… Connecting to vesta.web.telegram.org:443/WebSocket… complete"), and the read after the idle succeeded.
+- **What that means for P2.** As stated — "the keep-alive keeps a held connection alive" — P2 is **false**. What keeps an ordinary client working is Telethon's automatic reconnect, which was verified here.
+- **Who cuts the connection is unknown:** the proxy or the door.
+- **Nothing in the plan's steps changes.** The plan never added transport pings, and pings would not have helped. The consequences go to `desc.md`'s criterion 14 and its accepted risks:
+  - strict clients (owned operations, pool sources, the stepwise login) do not reconnect in the middle of an operation;
+  - a pool account sees a `transport` outcome and a 30 s cooldown after a cut.
+- **A benign log line.** During the disconnect of a reconnected borrowed sender, Telethon logged `ssl.SSLError … APPLICATION_DATA_AFTER_CLOSE_NOTIFY` at INFO. Telethon's own "disconnecting should never raise" handler caught it, so it is not an error.
+
+**Two notes on the run itself:**
+- **The control was not possible.** The account has no other application, and the proxy cannot carry the ordinary TCP connection. A PASS needs no control, because the control only disambiguates a refusal.
+- **The brief was wrong about python-socks.** It is needed for an `http://` proxy too, because Telethon's own proxy code uses it for every proxy kind. The brief and the script docstring are corrected.
 
 ## High level summary
 

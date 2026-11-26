@@ -124,7 +124,7 @@ The operator can confirm the transport is active three ways:
 14. **The real account over `transport = websocket`:**
     - logs in, reads, and downloads from another DC;
     - reuses an existing session file made over TCP;
-    - stays connected through more than 300 s idle;
+    - still works after more than 300 s idle — the next request succeeds, Telethon having reconnected by name if the connection was cut;
     - every exit leaves from the proxy's assigned address, and none by IP.
 
     Any Telegram error that appears only under WebSocket is recorded.
@@ -136,8 +136,13 @@ The operator can confirm the transport is active three ways:
   - **Why drop it rather than keep it:** tgdata presents a desktop-app identity when it connects (the pinned device identity), and a browser `Origin` would contradict that rather than blend in. It is also one constant fewer.
   - **Re-confirmation:** the live run (criterion 14) uses this configuration, so it re-confirms the result with the real account.
 
+- **The account works over the door — observed before the build.**
+  - **The run:** a prototype check on 2026-11-26 (`experiment_account_check.py`, demanded by `critic.md`).
+  - **The result:** on the account's existing session (DC 4), through its hostname-routing proxy, everything succeeded — `GetState`, `get_me`, a read, an 11.8 MB download stored on DC 2, and a read after 330 s idle. Every connection named a planet host and never an IP.
+  - **The correction it makes.** The connections were **cut anyway**: the DC 2 connection within about 60 s of idle, and the DC 4 connection after 180–240 s, despite Telethon's 60 s pings. Telethon reconnected by name each time. So what keeps a WebSocket account working is Telethon's reconnect, not its keep-alive. Who cuts the connection — the proxy or the door — is unknown.
+
 **Still open — decided by observation, not by this description:**
-- **The live calibration** (criterion 14). The name map and the plain obfuscation header are calibrated on one day's no-account probe. If the real account disagrees, the fix is local to the transport's connection class. Criterion 14 is where that would show.
+- **The live calibration of the built code** (criterion 14). The prototype check above calibrated the account, the name map and the plain obfuscation header. Criterion 14 confirms that tgdata's own code behaves the same way.
 
 ## Scope Boundaries
 
@@ -148,7 +153,7 @@ The operator can confirm the transport is active three ways:
 - **Make the hostnames configurable.** No per-account host override, and no switching between the planet and `kwsN` families on reconnect. A renamed endpoint is answered by a release.
 - **Add a dependency.** No WebSocket library, and no new extra.
 - **Pin Telethon at runtime for this transport.** The canary (criterion 10) guards the internals. The exact pins that `AccountPool` and `Worker` already have stay as they are.
-- **Send transport-level pings.** Telethon's 60 s keep-alive runs on every connected client, strict ones included. Connections to other DCs are closed by Telethon after 60–120 s idle, inside the 150–300 s idle cut.
+- **Send transport-level pings.** They would not help: the 2026-11-26 check saw connections cut within minutes, even with Telethon's 60 s pings running. Ordinary clients recover through Telethon's own reconnect, by name.
 - **Change session files, device identity, the request-level guards** (read budget, join admission, heartbeat, health evidence, per-request flood threshold), **`AccountPool._failure` or `health.classify`.**
 - **Imitate the web clients.** The handshake sends no `Origin` header, and there is no change to the wire codec or to the identity fields Telethon sends at login.
 - **Support Telethon 2.x,** or any Telethon other than the 1.45.0 baseline it is verified on.
@@ -160,6 +165,10 @@ The operator can confirm the transport is active three ways:
 - **The web relays may have rate limits of their own.** Unverified.
 - **A login key made over TCP should keep working over WebSocket,** because keys belong to a DC, not a transport. Only the live run (criterion 14) shows it.
 - **Servers need a working certificate store.** Without one, every WebSocket connection stops at once, with a certificate error.
+- **Connections are cut every few minutes.** On 2026-11-26 the cuts came within about 1–4 min, origin unknown.
+  - **Ordinary clients** — `TgData`'s persistent client — reconnect by name on their own. That was observed.
+  - **Strict clients** — owned account operations, `AccountPool` sources, the stepwise login — never reconnect in the middle of an operation, by design. A request after a cut fails as a retryable transport error, and the client reconnects on its next use. An `AccountPool` account therefore takes a `transport` outcome and the default 30 s cooldown after a cut.
+  - **The cost** is throughput, not correctness. A WebSocket-aware reconnect policy for the pool would be a separate issue.
 - **A policy refusal could look like an account problem.** If Telegram ever refuses the web transport by policy as a Telegram error on the first request, and its code is one `health.classify` reports as `unclassified`, it would read as an account problem. Operators should compare against `transport = tcp` before treating such an event as an account verdict.
 
 ## Priority Level

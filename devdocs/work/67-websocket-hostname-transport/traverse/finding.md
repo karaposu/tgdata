@@ -340,6 +340,11 @@ A formula (`kws{N}`) would remove the five-entry table, but would trade away tha
 - **Does the plain obfuscation header work on the real account for every data centre?** The probe used it without the data-centre number in the header. If the live run disagrees, the fix is local to the class (the probe already has the alternative header).
 - **Do the web relays rate-limit per address,** and does Telegram treat a desktop-app `api_id` differently over the web endpoint? Observable in the live run.
 
+- **Observed 2026-11-26, before the build:**
+  - the account works over the door (a prototype check: PASS);
+  - connections are cut within minutes **despite** the keep-alive, and Telethon's reconnect, by name, is what recovers them.
+  This corrects section 5's "no connection sits idle near the cut" reasoning. The decision itself — no transport-level pings — stands, since pings would not help. See `desc.md` and `critic.md`.
+
 ### Blocked
 
 - **The live calibration** — account behaviour, an existing TCP-made session over WebSocket, idle beyond 300 seconds — is blocked on the maintainer's explicit go to use the real account.

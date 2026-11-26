@@ -42,7 +42,8 @@ The config is a tgdata [Telegram] section: api_id, api_hash, session_file, proxy
 and optional device_model / system_version / app_version / lang_code /
 system_lang_code.
 
-Needs: telethon==1.45.0, and python-socks[asyncio] for a socks5:// or socks4:// proxy.
+Needs: telethon==1.45.0 and python-socks[asyncio] — for every proxy kind, http:// included
+(Telethon's own proxy code uses it).
 """
 from __future__ import annotations
 

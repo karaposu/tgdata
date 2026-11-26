@@ -20,7 +20,7 @@
    ```bash
    pip install telethon==1.45.0
    ```
-   Also run `pip install 'python-socks[asyncio]'`, if the account's proxy is `socks5://` or `socks4://`.
+   Also run `pip install 'python-socks[asyncio]'` — always, for every proxy kind, `http://` included: the script uses Telethon's own proxy code, which needs it.
 2. Download the script from the public branch:
    ```bash
    curl -fsSLo experiment_account_check.py https://raw.githubusercontent.com/karaposu/tgdata/feat/67-websocket-hostname-transport/devdocs/work/67-websocket-hostname-transport/experiment_account_check.py
