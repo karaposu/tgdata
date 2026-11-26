@@ -193,6 +193,30 @@ the older cancellation hierarchy; no native Python3.7 run is claimed. Sockets, l
 and bot web-view requests are blocked. No live joining or safe-rate claim is made.
 See [joining groups](../../docs/group_joining.md).
 
+### WebSocket transport (offline)
+
+`python -m tgdata.smoke_tests.test_50_websocket_transport` proves the WebSocket
+transport (`transport = websocket`) on Telethon 1.45.0 with loopback sockets only.
+A local TLS WebSocket server stands in for Telegram's door, and a local proxy
+(HTTP CONNECT and SOCKS5) records every destination it is asked for.
+
+- **The opener** (`ws_stream`): the handshake and the framing.
+- **The connection class:** naming each DC at construction, and the DC map.
+- **No IP on any path:** main connect and Telethon's reconnect, an exported sender,
+  owned operations, `LoginFlow`, pool sources, a mixed `tcp` + `websocket` pool, and
+  the direct case.
+- **Classification:** through Telethon's real retry loop and `AccountPool._failure`,
+  plus polling and the worker.
+- **No health noise.**
+- **The default path is byte-identical** to values captured before #67.
+- **The login binding.**
+
+**Needs** the `openssl` command, to make a throwaway test certificate authority in a
+temp folder. Without it, the TLS items are reported SKIPPED.
+
+**Item 11 is a canary: RUN IT AFTER ANY TELETHON UPGRADE.** It checks the Telethon
+internals the transport relies on.
+
 ### Run Individual Test:
 ```bash
 # Basic tests

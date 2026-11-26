@@ -24,7 +24,7 @@ from .group_operations import (
 )
 from .group_profile import GroupProfile, GroupPinnedMessage
 from .group_activity import GroupActivity, ActivityMessage
-from .connection_engine import AuthRequiredError, ProxyConfigError
+from .connection_engine import AuthRequiredError, ProxyConfigError, TransportConfigError
 from .login import LoginFlow, LoginStatus, LoginError
 from .discovery_engine import DiscoveryInterrupted
 from .message_batch import MessageBatch, BatchFormatError
@@ -74,7 +74,7 @@ from .utils import (
 # Progress tracking
 from .progress import ProgressTracker
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 __all__ = [
     # Explicit account onboarding
@@ -122,6 +122,7 @@ __all__ = [
     "GroupResponseError",
     "AuthRequiredError",
     "ProxyConfigError",
+    "TransportConfigError",
     "DiscoveryInterrupted",
     "MessageBatch",
     "BatchFormatError",

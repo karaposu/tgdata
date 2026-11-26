@@ -122,3 +122,7 @@ class ConnectionConfig:
     app_version: Optional[str] = None
     lang_code: Optional[str] = None
     system_lang_code: Optional[str] = None
+    # How connections reach Telegram: 'tcp' (Telethon's default, by IP — the
+    # behaviour before #67) or 'websocket' (Telegram's WebSocket door, by
+    # hostname only). Kept last so positional construction stays valid.
+    transport: str = 'tcp'

@@ -87,9 +87,10 @@ accept an arbitrary browser-supplied checkpoint. Encoding is not encryption.
 Protection, expiry and deletion of these values belong to the application.
 The checkpoint excludes the code and password inputs themselves.
 
-Restoration checks the API, proxy, proxy requirement and explicitly configured
-device settings. Effective device defaults are frozen in the checkpoint so another
-worker uses the same values. A changed binding or malformed/unsupported state raises
+Restoration checks the API, proxy, proxy requirement, a non-default network
+transport (`transport = websocket`) and explicitly configured device settings.
+Effective device defaults are frozen in the checkpoint so another worker uses the
+same values. A changed binding or malformed/unsupported state raises
 `invalid_state`. Changing the config file does not mutate an already-created flow;
 construct it again when loading a checkpoint. Pin device settings for subsequent
 ordinary reader clients too.

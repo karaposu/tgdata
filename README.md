@@ -271,6 +271,95 @@ require_proxy = true
 - An existing session keeps working through a proxy; a session file is not
   tied to an IP.
 
+### Connecting through Telegram's WebSocket door (optional)
+
+By default, tgdata (through Telethon) connects to each Telegram data centre by
+**IP address**. Some proxies send a connection out from an account's assigned
+exit address only when the target is a **hostname**. For those, set the account's
+network transport to Telegram's WebSocket door, which is reached by name:
+
+```ini
+[Telegram]
+api_id = 1234566
+api_hash = a24adjfakjdfakjshdflkajsbdflk
+session_file = /absolute/path/to/my_session
+proxy = http://user:password@proxy.example:8080
+transport = websocket
+```
+
+**How it connects.**
+- Every connection the account opens goes to
+  `wss://<name>.web.telegram.org/apiws`: login, reads, downloads from other data
+  centres, owned operations, the account pool, the worker, and every reconnect.
+- The names are `pluto`, `venus`, `aurora`, `vesta` and `flora` (`.web.telegram.org`),
+  for data centres 1–5. They are chosen when each connection is built.
+- **Never an IP, and no fallback.** A data centre with no known name is an error,
+  never a guess, and nothing falls back to the ordinary connection.
+
+**What the proxy must allow:** a tunnel to `*.web.telegram.org:443`, by HTTP CONNECT
+or SOCKS. tgdata always asks the proxy to resolve names (SOCKS4 is sent as
+SOCKS4a). `pip install 'tgdata[proxy]'` is needed for every proxy kind, `http://`
+included.
+
+**Inside the tunnel:**
+- TLS to the hostname, with the certificate verified against the system's trust
+  store;
+- a WebSocket upgrade, `GET /apiws` with `Sec-WebSocket-Protocol: binary` and no
+  `Origin` header;
+- Telethon's own obfuscated transport, carried in binary frames.
+
+**What stays as it is:**
+- session files, the device identity, and every other setting;
+- `require_proxy`. With no proxy, the transport connects directly, by name, from
+  the machine's own address.
+- The default is `transport = tcp`, exactly the behaviour before this option
+  existed.
+
+**Failures:**
+- **`tgdata.TransportConfigError`** stops at once: it is never retried when
+  connecting. After a dropped connection, Telethon's own reconnect loop may try a
+  few times, logging each attempt, before giving up. It covers an
+  unknown `transport` value, a data centre with no WebSocket name, and a certificate
+  that does not verify (a proxy that intercepts TLS, or a missing trust store). It is
+  a `ProxyConfigError`, so polling stops on it, the worker reports a
+  `configuration_error`, and the account pool stops the account.
+- **Anything else** — a refused upgrade, a reset, the door closing the connection —
+  is a `ConnectionError`, retried like any network failure.
+- **Discovery** waits out connect errors until its `max_offline` limit, as it does for
+  any connection error.
+
+**Confirming it is active:**
+- the engine logs once "…, over Telegram's WebSocket transport by hostname";
+- `health_check()['transport']` is `'websocket'`;
+- with Telethon's INFO logging on, every connection appears as
+  `Connecting to vesta.web.telegram.org:443/WebSocket...`. That line never shows
+  an IP.
+
+**Expect reconnects.** Connections through the door have been seen cut every few
+minutes, even with Telethon's keep-alive pings running.
+- An ordinary `TgData` client reconnects on its own, by name.
+- Strict clients never reconnect in the middle of an operation: owned operations,
+  `AccountPool` sources and the stepwise login. A request after a cut fails as a
+  retryable transport error, and the client reconnects on its next use. A pool
+  account takes a `transport` outcome and the 30 s default cooldown.
+
+**Verified on Telethon 1.45.0.** The transport relies on Telethon's connection
+internals. After any Telethon upgrade, run the canary:
+`python -m tgdata.smoke_tests.test_50_websocket_transport`.
+
+**Risks to accept:**
+- **The names are not published by Telegram,** and could change. A renamed endpoint
+  looks exactly like an outage: every attempt fails at the proxy's name lookup.
+- **Telegram's treatment of an account** whose earlier sessions came from a desktop
+  app, and which now arrives through the web transport, is not documented.
+- **The web relays may have rate limits of their own.**
+- **A login key made over the ordinary connection** worked over the door in a live
+  check (2026-11-26). Keys belong to a data centre, not to a transport.
+- **A policy refusal could look like an account problem.** If Telegram ever refuses
+  the web transport with an error on the first request, the health events could
+  report it as `unclassified`. Compare against `transport = tcp` before reading it as
+  an account verdict.
+
 ### A fixed device identity (optional)
 
 Every connection tells Telegram what device it is running on — a device
