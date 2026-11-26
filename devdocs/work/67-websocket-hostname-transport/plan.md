@@ -5,6 +5,8 @@ effort: unknown
 
 # Plan — #67 WebSocket transport by hostname
 
+**Revision 2.** **Critic folded:** 2026-11-26 — 3 mitigations (9 steps changed, 0 added): Risk 1 → steps 2, 3, 4, 5, 9; Risk 2 → steps 7, 8, 9; Risk 3 → steps 13, 14. Each change is tagged `[folded: Risk N, robust]`. The REORDER experiment ran first and PASSED (`critic.md`, `002fd9c`).
+
 ### What is the task
 
 Add a per-account `transport = websocket` setting. With it, every connection tgdata opens for that account reaches Telegram's WebSocket endpoint (`wss://<planet>.web.telegram.org/apiws`) **by hostname**, through the configured proxy or directly by name, and never by IP address.
@@ -66,7 +68,7 @@ None open. Four questions that could have rewritten steps were closed during pla
 
 **The change:**
 1. **Two new modules:**
-   - a standard-library-only WebSocket opener (`tgdata/ws_stream.py`), which also defines the transport's "stop immediately" error;
+   - a standard-library-only WebSocket opener (`tgdata/ws_stream.py`) that raises only standard-library errors;
    - a Telethon connection class that hands Telethon the DC's hostname in place of the IP it was given (`tgdata/websocket_transport.py`).
 2. **Small, conditional edits to existing code:**
    - the config reader learns `transport`;
@@ -91,9 +93,9 @@ The live run then confirms the remaining account-level unknowns.
 | Step | Description | Expected Output |
 |------|-------------|-----------------|
 | 1 | Capture today's default-path values | `test_50` skeleton holding today's constructor kwargs, route text and binding hash as literals |
-| 2 | WebSocket opener + `TransportConfigError` | `tgdata/ws_stream.py` (standard library only) |
+| 2 | WebSocket opener | `tgdata/ws_stream.py` (standard library only) |
 | 3 | The connection class and the DC map | `tgdata/websocket_transport.py` (`ConnectionWebSocket`) |
-| 4 | The `transport` config key | `ConnectionConfig.transport`, validation, `TransportConfigError` exported |
+| 4 | The `transport` config key, and `TransportConfigError(ProxyConfigError)` | `ConnectionConfig.transport`, validation, the error class defined and exported |
 | 5 | Factory branch, wrappers, route line, `health_check` | the transport wired through the one door |
 | 6 | Conditional login-binding entry | `LoginFlow` binding includes `transport` only when it is not `tcp` |
 | 7 | Test harness, plus stream and class items | test PKI, fake door, recording proxy; items 1–3 |
@@ -141,22 +143,23 @@ test_13's stand-in `TelegramClient` patch point, `_new_client` client options, `
 
 ---
 
-### Step 2 — The WebSocket opener and `TransportConfigError` (`tgdata/ws_stream.py`)
+### Step 2 — The WebSocket opener (`tgdata/ws_stream.py`) [folded: Risk 1, robust]
 
 #### Proposed changes
 
 A new module that imports **only the standard library**. It is a rule, checked in step 10, that it never imports Telethon or tgdata. It is adapted from the probe — `client_frame` / `_xor` / `WsReader` / `WsWriter` / `open_websocket`, at `ws_door_probe.py:115–300` — and **drops the probe's `Origin` header**.
 
-**`class TransportConfigError(ValueError)`**
-- **Its docstring:** "The WebSocket transport cannot be used as configured or reached: an unknown `transport` value, a data centre with no WebSocket hostname, a certificate that does not verify, or an IP address where a hostname is required. Never retried."
-- **Messages** start with `WebSocket transport:`, name the host, and never carry a credential.
+**No tgdata error class lives here** [folded: Risk 1, robust]. The module stays standard-library only, so it cannot import `ProxyConfigError`, which lives in `connection_engine.py` beside Telethon.
+- Its "stop immediately" cases raise **standard** types: a plain `ValueError` for an IP-literal host, and an unconverted `ssl.SSLCertVerificationError` for a certificate failure.
+- Step 3 converts the certificate error into `TransportConfigError`.
+- Messages start with `WebSocket transport:`, name the host, and never carry a credential.
 
 **`async def open_websocket(host, *, sock=None, port=443, timeout=None, ssl_context=None) -> (WsReader, WsWriter)`**
-- **Refuses an IP literal.** `ipaddress.ip_address(host.strip('[]'))` succeeding raises `TransportConfigError`.
+- **Refuses an IP literal.** `ipaddress.ip_address(host.strip('[]'))` succeeding raises `ValueError("WebSocket transport: refusing an IP address as the host …")` [folded: Risk 1, robust].
 - **TLS.** `ctx = ssl_context or ssl.create_default_context()`. Then either:
   - `asyncio.open_connection(sock=sock, ssl=ctx, server_hostname=host)` when a tunnelled socket is given;
   - or `asyncio.open_connection(host, port, ssl=ctx, server_hostname=host)` for the direct case, where the OS resolves the name.
-- **A certificate failure stops immediately.** `ssl.SSLCertVerificationError` becomes `TransportConfigError(... verify_message ...)`, raised `from` the original. Any other TLS or socket error stays an `OSError`, which Telethon retries.
+- **A certificate failure propagates unchanged** as `ssl.SSLCertVerificationError`; step 3 converts it [folded: Risk 1, robust]. Any other TLS or socket error stays an `OSError`, which Telethon retries.
 - **The handshake:**
   - **Request:** `GET /apiws HTTP/1.1` with `Host`, `Upgrade: websocket`, `Connection: Upgrade`, a random 16-byte `Sec-WebSocket-Key`, `Sec-WebSocket-Version: 13` and `Sec-WebSocket-Protocol: binary`. **No `Origin`.**
   - **Response reading:** read the status and header block with a 16 KiB cap.
@@ -183,7 +186,7 @@ A new module that imports **only the standard library**. It is a rule, checked i
 
 #### Output
 
-`tgdata/ws_stream.py` with `TransportConfigError`, `open_websocket`, `WsReader` and `WsWriter`, importable with only the standard library.
+`tgdata/ws_stream.py` with `open_websocket`, `WsReader` and `WsWriter`, importable with only the standard library.
 
 #### Safe in nature
 True — a new module; nothing imports it yet.
@@ -196,13 +199,15 @@ RFC 6455 client framing, `ssl.create_default_context` / SNI, `asyncio.open_conne
 
 ---
 
-### Step 3 — The connection class and the DC map (`tgdata/websocket_transport.py`)
+### Step 3 — The connection class and the DC map (`tgdata/websocket_transport.py`) [folded: Risk 1, robust]
 
 #### Proposed changes
 
 ```python
 DC_HOSTS = {1: 'pluto', 2: 'venus', 3: 'aurora', 4: 'vesta', 5: 'flora'}   # wss://<name>.web.telegram.org/apiws
 DOMAIN, PORT = 'web.telegram.org', 443
+
+from .connection_engine import TransportConfigError   # fully loaded before this lazy import runs: no cycle
 
 def host_for(dc_id) -> str:            # unmapped (CDN, test, unknown) -> TransportConfigError
 
@@ -214,12 +219,24 @@ class ConnectionWebSocket(ConnectionTcpObfuscated):
 
     async def _connect(self, timeout=None, ssl=None):
         sock = await self._proxy_connect(timeout=timeout) if self._proxy else None
-        self._reader, self._writer = await open_websocket(
-            self._ip, sock=sock, port=self._port, timeout=timeout, ssl_context=self._ssl_context)
-        self._codec = self.packet_codec(self)
-        self._init_conn()              # ObfuscatedIO captures _reader/_writer here
-        await self._writer.drain()
+        try:
+            self._reader, self._writer = await open_websocket(
+                self._ip, sock=sock, port=self._port, timeout=timeout, ssl_context=self._ssl_context)
+        except ssl_module.SSLCertVerificationError as e:          # [folded: Risk 1, robust]
+            ...close sock...
+            raise TransportConfigError(f"WebSocket transport: the certificate of {self._ip} did not verify ({e.verify_message})") from e
+        except BaseException:
+            ...close sock...
+            raise
+        try:
+            self._codec = self.packet_codec(self)
+            self._init_conn()          # ObfuscatedIO captures _reader/_writer here
+            await self._writer.drain()
+        except BaseException:
+            self._writer.close()       # Telethon's disconnect() skips a connect that never completed
+            raise
 ```
+The connect argument named `ssl` shadows the module, so the module is imported as `ssl_module`. This exact shape ran live in the REORDER experiment (`experiment_account_check.py`).
 
 - **The provenance comment on `DC_HOSTS`:**
   - an independent client (gotd/td `telegram/dcs/prod.go`, `b4bf604`) uses the same map;
@@ -246,13 +263,15 @@ True — new and unwired.
 
 ---
 
-### Step 4 — The `transport` config key
+### Step 4 — The `transport` config key, and `TransportConfigError` [folded: Risk 1, robust]
 
 #### Proposed changes
 
 - **`tgdata/models.py` `ConnectionConfig`.** Append `transport: str = 'tcp'` as the **last** field, with a comment ("'tcp' or 'websocket'; how connections reach Telegram"). Appending keeps every existing positional construction valid.
 - **`tgdata/connection_engine.py`:**
-  - import `TransportConfigError` from `.ws_stream` at the top. That module is standard-library only, so TCP users import no Telethon internals through it.
+  - **define** `class TransportConfigError(ProxyConfigError)` directly after `ProxyConfigError` [folded: Risk 1, robust].
+    - **Its docstring:** "The WebSocket transport cannot be used as configured or reached: an unknown `transport` value, a data centre with no WebSocket hostname, or a certificate that does not verify. Never retried."
+    - **Why a subclass:** every existing check for `ProxyConfigError` also covers it — `TgData`'s polling (`_polling_cannot_recover`, `tgdata.py:97`, which stops for good), the worker (`describe_error`, `worker_protocol.py:262`, which reports `configuration_error`), and user code — with no consumer edit. `AccountPool._failure` still reads it as a `ValueError`, so it stops (`unknown`).
   - In `_load_config`, beside the proxy keys, read `transport` raw with `_first_token(...)`, lowercased:
     - `''` or `'tcp'` → `'tcp'`;
     - `'websocket'` → `'websocket'`;
@@ -262,20 +281,20 @@ True — new and unwired.
 
 #### Output
 
-`_load_config()` returns `transport`. A bad value fails before any client is built, and `from tgdata import TransportConfigError` works.
+`_load_config()` returns `transport`. A bad value fails before any client is built, `from tgdata import TransportConfigError` works, and `isinstance(TransportConfigError(...), ProxyConfigError)` holds.
 
 #### Safe in nature
 False — it touches `_load_config` and `ConnectionConfig`, which every client depends on. With no key, the record is equal to today's apart from the new field holding its default.
 
 #### Peripheral concepts
-`ConnectionConfig` dataclass field order, `_first_token` inline-comment handling, `ProxyConfigError` precedent, the public exports in `tgdata/__init__.py`
+`ConnectionConfig` dataclass field order, `_first_token` inline-comment handling, the `ProxyConfigError` hierarchy and its consumers (polling, worker, pool), the public exports in `tgdata/__init__.py`
 
 #### Hardness Lvl
 2
 
 ---
 
-### Step 5 — The factory branch, the connect wrappers, the route line and `health_check`
+### Step 5 — The factory branch, the connect wrappers, the route line and `health_check` [folded: Risk 1, robust]
 
 #### Proposed changes
 
@@ -289,8 +308,8 @@ In `tgdata/connection_engine.py`:
   ```
   For `tcp`, `client_options` is untouched, so the call is byte-identical. No caller passes `connection=` today (grep: none).
 - **The route log line.** Inside the existing once-per-engine block, append `", over Telegram's WebSocket transport by hostname"` to the proxy line and to the direct line, **only** when `config.transport == 'websocket'`. The TCP text is unchanged.
-- **`_authenticate`.** Add `except TransportConfigError: logger.error(...); raise` before `except Exception`, mirroring the existing `AuthRequiredError` clause.
-- **`_ensure_connected`.** Add `except TransportConfigError: raise` before `except Exception`. Today both wrappers turn every connect error into `ConnectionError`; the configuration error must keep its type, so callers and the pool stop rather than retry.
+- **`_authenticate`.** Add `except ProxyConfigError: logger.error(...); raise` before `except Exception`, mirroring the existing `AuthRequiredError` clause. It covers `TransportConfigError`, a subclass [folded: Risk 1, robust].
+- **`_ensure_connected`.** Add `except ProxyConfigError: raise` before `except Exception` [folded: Risk 1, robust]. Today both wrappers turn every connect error into `ConnectionError`; the configuration error must keep its type, so callers and the pool stop rather than retry.
 - **`health_check()`.** Add `'transport': self._config.transport if self._config else None` beside `'proxy'`.
 
 #### Output
@@ -334,7 +353,7 @@ False — it edits a security-relevant hash input. It is conditional, and step 9
 
 ---
 
-### Step 7 — Test harness, stream items and class items (`test_50` part 1)
+### Step 7 — Test harness, stream items and class items (`test_50` part 1) [folded: Risk 2, robust]
 
 #### Proposed changes
 
@@ -347,8 +366,15 @@ Extend `test_50_websocket_transport.py`, following the smoke-test conventions: a
   - it answers `101` with the correct accept key and `protocol: binary`, or a scripted status (403);
   - it unmasks client frames into a byte log;
   - scripted actions: send binary, ping, close or text frames; drop the connection; decode Telethon's obfuscated header and first MTProto message (`req_pq_multi`). The decoding logic comes from the probe's end-to-end test.
+  - **Modes** [folded: Risk 2, robust]:
+    - `mtproto="close_after_first"`, the default: record the first MTProto message, then send a close frame. Telethon's key exchange then fails at once and deterministically, instead of waiting forever — `MTProtoPlainSender.send` awaits `recv()` with no timeout.
+    - `mtproto="silent"`, used only by the timeout item.
 - **`RecordingProxy`** — a loopback proxy speaking both **HTTP CONNECT** and **SOCKS5** (both no-auth and user / password; the RFC 1928/1929 code follows test_12's `Socks5Relay`). It records every requested `(host, port)`, and forwards every tunnel to `FakeDoor`, whatever host was asked for. That is how a hostname target reaches a local server.
 - **Trust.** Tests set `ConnectionWebSocket._ssl_context` to a context trusting the test authority, and restore it afterwards. Calls straight to `open_websocket` pass `ssl_context`.
+- **Termination and isolation helpers** [folded: Risk 2, robust]:
+  - **`bounded(coro, seconds=5)`** wraps every connect-type call;
+  - **`restoring(client)`** is a context manager that, in `finally`, deletes the `_config` (and `_cdn_config`) attribute set on `type(client)` and restores `ConnectionWebSocket._ssl_context`. `_get_dc` caches its config on the client's class, and every client built by `_client_class(TelegramClient)` in the process shares one class;
+  - **`delay=0` / `retry_delay=0`** wherever retries are counted. Telethon's default sleeps 1 s between attempts.
 
 **Items:**
 1. **The opener's handshake:**
@@ -385,11 +411,11 @@ test_12's `Socks5Relay`, the probe's end-to-end obfuscated-header decoding, `MTP
 
 ---
 
-### Step 8 — No IP on every construction path (`test_50` part 2)
+### Step 8 — No IP on every construction path (`test_50` part 2) [folded: Risk 2, robust]
 
 #### Proposed changes
 
-Each item builds clients **through the real factory**, from a scratch ini with `transport = websocket` and `proxy = socks5://…` or `http://…` pointing at `RecordingProxy`. A run without a key in the session times out early; the assertion is on the proxy's record.
+Each item builds clients **through the real factory**, from a scratch ini with `transport = websocket` and `proxy = socks5://…` or `http://…` pointing at `RecordingProxy`. Every connect runs inside `bounded(…)`, against a `FakeDoor` in `close_after_first` mode, so a key-less connect ends when the door closes; the assertion is on the proxy's record [folded: Risk 2, robust].
 
 **Items:**
 
@@ -398,11 +424,11 @@ Each item builds clients **through the real factory**, from a scratch ini with `
    - A reconnect through Telethon's real `MTProtoSender`, built with a random `AuthKey` and `auto_reconnect=True`: `FakeDoor` drops the connection after the handshake. The second recorded destination is the same name, so the same connection object was reused.
    - Both runs are done over SOCKS5 and over HTTP CONNECT.
 5. **A connection to another DC.**
-   - Preset the client class's cached `_config` with DC options holding IP literals for DC 4, and restore it afterwards.
+   - Preset `type(client)._config` with DC options holding IP literals for DC 4, inside `restoring(client)` [folded: Risk 2, robust].
    - Call `await client._create_exported_sender(4)` with a short timeout.
    - The record holds `vesta.web.telegram.org:443` and **no IP**.
 6. **The strict paths, the mixed pool and the direct case:**
-   - **Strict paths.** For `ConnectionEngine._account_operation`, an `AccountPool` source (`_OwnedSource._new_client`) and `LoginFlow._make_client`: the built client's `_connection is ConnectionWebSocket`, and one connect attempt records only planet names.
+   - **Strict paths.** For `ConnectionEngine._account_operation`, an `AccountPool` source (`_OwnedSource._new_client`) and `LoginFlow._make_client`: the built client's `_connection is ConnectionWebSocket`, and one connect attempt records only planet names. Build pool sources with the existing offline pool builders (`tgdata/smoke_tests/pool_storage_cases.py`, as test_31 does), not hand-assembled internals [folded: Risk 2, robust].
    - **The mixed pool.** Two sources in one pool, one `tcp` and one `websocket`. The TCP client keeps Telethon's default connection class, and its tunnel request is the DC's IP, as today. The WebSocket client's requests are names only. Neither changes the other.
    - **The direct case** (`websocket` with no proxy). Spy on `ws_stream.open_websocket`: it is called with the hostname and `sock=None`, and nothing passes an IP.
 
@@ -421,15 +447,16 @@ True — test code only.
 
 ---
 
-### Step 9 — Classification, health, the default path and the binding (`test_50` part 3)
+### Step 9 — Classification, health, the default path and the binding (`test_50` part 3) [folded: Risk 1, robust; Risk 2, robust]
 
 #### Proposed changes
 
 7. **Classification through Telethon's real retry loop:**
-   - **A refused upgrade is retried, then classified as `transport`.** `FakeDoor` returns 403 on every attempt. `MTProtoSender` with `retries=2` makes three attempts, counted at the door, then raises Telethon's `ConnectionError`. `AccountPool._failure(error, None)` — called on a minimal stand-in carrying the pool's default policy — returns `('transport', True, …)`.
+   - **A refused upgrade is retried, then classified as `transport`.** `FakeDoor` returns 403 on every attempt. `MTProtoSender` with `retries=2, delay=0` makes three attempts (`retry_range(2)` yields 3), counted at the door, then raises Telethon's `ConnectionError` [folded: Risk 2, robust]. `AccountPool._failure(error, None)` — called on a minimal stand-in carrying the pool's default policy — returns `('transport', True, …)`.
    - **A certificate failure stops at once, classified as `unknown`.** With the default trust store: exactly **one** attempt, the `TransportConfigError` escapes unchanged, and `_failure` returns `('unknown', False, None)`.
    - **Configuration errors stop before any connection.** An unknown `transport` value raises at `_load_config`, and an unmapped DC raises at construction.
    - **`TgData`'s wrappers pass the error through.** With a stub client whose `connect()` raises `TransportConfigError`, `_authenticate` and `_ensure_connected` re-raise it as itself. A plain `OSError` is still wrapped as `ConnectionError("Failed to …")`, as today.
+   - **The consumers that key on `ProxyConfigError` recognise it** [folded: Risk 1, robust]: `tgdata.tgdata._polling_cannot_recover(TransportConfigError(...))` is `True`, and `worker_protocol.describe_error(...)['category'] == 'configuration_error'`.
 8. **No health noise, and quiet mid-session closes:**
    - `health.classify(e)` is `None` for every transport error above;
    - a mid-session close from `FakeDoor` is logged by Telethon at WARNING ("Server closed the connection"), with **no** "Unexpected exception" record, checked by capturing the `telethon` loggers.
@@ -555,12 +582,14 @@ the smoke-test suites' network requirements
 
 ---
 
-### Step 13 — The live-check script and the operator brief (written, not run)
+### Step 13 — The live-check script and the operator brief (written, not run) [folded: Risk 3, robust]
 
 #### Proposed changes
 
 - **`devdocs/work/67-websocket-hostname-transport/live_check.py`**, for the operator's environment:
-  - it reads a tgdata config path, plus a backup check — it refuses to run unless a `.bak` copy of the session file exists;
+  - it reads a tgdata config path. It **refuses to run without `--exclusive-confirmed`**, and works on a copy of the session file, leaving the original untouched [folded: Risk 3, robust]. Telegram revokes a key used from two addresses at once (`AUTH_KEY_DUPLICATED`, Telethon's `AuthKeyDuplicatedError`: "used under two different IP addresses simultaneously, and can no longer be used");
+  - it reports `AUTH_KEY_DUPLICATED` as **INVALID RUN**, never as a failure of the transport;
+  - it is modelled on `experiment_account_check.py`, which already ran live with these safeguards, but drives tgdata's own built code through its public API;
   - it requires `transport = websocket` and a proxy in that config;
   - it runs, through tgdata's public API:
     1. `TgData(config)` connects with the existing session — no new login;
@@ -569,7 +598,7 @@ the smoke-test suites' network requirements
     4. an idle wait of 330 s, then a second read on the same client.
   - it prints each step's result, `health_check()`, and every `Connecting to …` line Telethon logged, which must all be hostnames;
   - it records any Telegram error, with the call that produced it.
-- **`live_check.md`** — the brief, written like the Task A brief for the other session: background, safety (back up the session; nothing is written to the account), setup, the command, how to read the output, and what to send back (privately).
+- **`live_check.md`** — the brief, written like `experiment_account_check.md`: background; safety — the first step is stopping every application that uses the session, on every machine [folded: Risk 3, robust]; setup, with `python-socks[asyncio]` required for every proxy kind; the command; how to read the output, where a cut followed by a reconnect by name is expected; and what to send back, privately.
 
 #### Output
 
@@ -586,11 +615,11 @@ True — new files in the work folder; no network.
 
 ---
 
-### Step 14 — The live run on the real account — **gated by E1**
+### Step 14 — The live run on the real account — **gated by E1** [folded: Risk 3, robust]
 
 #### Proposed changes
 
-After the maintainer's explicit go, the operator runs `live_check.py` per `live_check.md` and returns the output privately. Record the result for criterion 14 in `verify.md`:
+After the maintainer's explicit go — and with every other user of the session stopped (`--exclusive-confirmed`) — the operator runs `live_check.py` per `live_check.md` and returns the output privately. Record the result for criterion 14 in `verify.md`:
 - login;
 - read;
 - the other-DC download;
