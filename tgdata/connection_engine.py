@@ -147,7 +147,9 @@ class ProxyConfigError(ValueError):
     installed, or require_proxy set with no proxy configured.
 
     Raised while reading the config — before any connection is opened — so a
-    broken proxy setting can never turn into a direct connection."""
+    broken proxy setting can never turn into a direct connection. (Its
+    subclass TransportConfigError can also be raised when a connection is
+    built or opened.)"""
 
 
 class TransportConfigError(ProxyConfigError):
@@ -155,7 +157,9 @@ class TransportConfigError(ProxyConfigError):
     configured or reached: an unknown `transport` value (raised while reading
     the config), a data centre with no WebSocket host (when a connection is
     built), or a certificate that does not verify (when it connects — a proxy
-    that intercepts TLS, or a missing trust store). Never retried.
+    that intercepts TLS, or a missing trust store). Never retried when
+    connecting; after a dropped connection, Telethon's own reconnect loop may
+    try a few times, logging each attempt, before it gives up.
 
     A ProxyConfigError, so every check for "the configured route to Telegram
     cannot be used" covers it: polling stops, the worker reports a
